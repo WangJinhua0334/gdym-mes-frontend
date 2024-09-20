@@ -1,8 +1,12 @@
 import type { RouteLocationNormalized, RouteRecordNormalized } from 'vue-router';
 import type { App, Plugin } from 'vue';
-
+import printJS from 'print-js';
+import { defHttp } from '/@/utils/http/axios';
 import { unref } from 'vue';
 import { isObject } from '/@/utils/is';
+import { useGlobSetting } from '/@/hooks/setting';
+
+const globSetting = useGlobSetting();
 
 // update-begin--author:sunjianlei---date:20220408---for: 【VUEN-656】配置外部网址打不开，原因是带了#号，需要替换一下
 export const URL_HASH_TAB = `__AGWE4H__HASH__TAG__PWHRG__`;
@@ -74,10 +78,10 @@ export function getDynamicProps<T, U>(props: T): Partial<U> {
  * @updateBy:zyf
  */
 export function getValueType(props, field) {
-  let formSchema = unref(unref(props)?.schemas);
+  const formSchema = unref(unref(props)?.schemas);
   let valueType = 'string';
   if (formSchema) {
-    let schema = formSchema.filter((item) => item.field === field)[0];
+    const schema = formSchema.filter((item) => item.field === field)[0];
     valueType = schema.componentProps && schema.componentProps.valueType ? schema.componentProps.valueType : valueType;
   }
   return valueType;
@@ -107,7 +111,7 @@ export function cloneObject(obj) {
 
 export const withInstall = <T>(component: T, alias?: string) => {
   //console.log("---初始化---", component)
-  
+
   const comp = component as any;
   comp.install = (app: App) => {
     app.component(comp.name || comp.displayName, component);
@@ -123,11 +127,11 @@ export const withInstall = <T>(component: T, alias?: string) => {
  * @param paraName
  */
 export function getUrlParam(paraName) {
-  let url = document.location.toString();
-  let arrObj = url.split('?');
+  const url = document.location.toString();
+  const arrObj = url.split('?');
 
   if (arrObj.length > 1) {
-    let arrPara = arrObj[1].split('&');
+    const arrPara = arrObj[1].split('&');
     let arr;
 
     for (let i = 0; i < arrPara.length; i++) {
@@ -166,7 +170,7 @@ export function sleep(ms: number, fn?: Fn) {
  * @returns {String} 替换后的字符串
  */
 export function replaceAll(text, checker, replacer) {
-  let lastText = text;
+  const lastText = text;
   text = text.replace(checker, replacer);
   if (lastText !== text) {
     return replaceAll(text, checker, replacer);
@@ -211,7 +215,7 @@ export function showDealBtn(bpmStatus) {
  */
 export function numToUpper(value) {
   if (value != '') {
-    let unit = new Array('仟', '佰', '拾', '', '仟', '佰', '拾', '', '角', '分');
+    const unit = new Array('仟', '佰', '拾', '', '仟', '佰', '拾', '', '角', '分');
     const toDx = (n) => {
       switch (n) {
         case '0':
@@ -236,10 +240,10 @@ export function numToUpper(value) {
           return '玖';
       }
     };
-    let lth = value.toString().length;
+    const lth = value.toString().length;
     value *= 100;
     value += '';
-    let length = value.length;
+    const length = value.length;
     if (lth <= 8) {
       let result = '';
       for (let i = 0; i < length; i++) {
@@ -297,7 +301,6 @@ export function importViewsFile(path): Promise<any> {
 }
 //update-end-author:taoyan date:2022-6-8 for:解决老的vue2动态导入文件语法 vite不支持的问题
 
-
 /**
  * 跳转至积木报表的 预览页面
  * @param url
@@ -307,23 +310,23 @@ export function importViewsFile(path): Promise<any> {
 export function goJmReportViewPage(url, id, token) {
   // update-begin--author:liaozhiyang---date:20230904---for：【QQYUN-6390】eval替换成new Function，解决build警告
   // URL支持{{ window.xxx }}占位符变量
-  url = url.replace(/{{([^}]+)?}}/g, (_s1, s2) => _eval(s2))
+  url = url.replace(/{{([^}]+)?}}/g, (_s1, s2) => _eval(s2));
   // update-end--author:liaozhiyang---date:20230904---for：【QQYUN-6390】eval替换成new Function，解决build警告
   if (url.includes('?')) {
-    url += '&'
+    url += '&';
   } else {
-    url += '?'
+    url += '?';
   }
-  url += `id=${id}`
-  url += `&token=${token}`
-  window.open(url)
+  url += `id=${id}`;
+  url += `&token=${token}`;
+  const viewWindow = window.open(url);
+  return viewWindow;
 }
 
 /**
  * 获取随机颜色
  */
 export function getRandomColor(index?) {
-
   const colors = [
     'rgb(100, 181, 246)',
     'rgb(77, 182, 172)',
@@ -346,7 +349,7 @@ export function getRandomColor(index?) {
     'rgb(254, 161, 172)',
     'rgb(194, 163, 205)',
   ];
-  return index && index < 19 ? colors[index] : colors[Math.floor((Math.random()*(colors.length-1)))];
+  return index && index < 19 ? colors[index] : colors[Math.floor(Math.random() * (colors.length - 1))];
 }
 
 export function getRefPromise(componentRef) {
@@ -370,7 +373,7 @@ export function getRefPromise(componentRef) {
  * 用new Function替换eval
  */
 export function _eval(str: string) {
- return new Function(`return ${str}`)();
+  return new Function(`return ${str}`)();
 }
 
 /**
@@ -415,7 +418,7 @@ export const setPopContainer = (node, selector) => {
       const retrospect = (node, elems) => {
         let ele = node.parentNode;
         while (ele) {
-          const findParentNode = elems.find(item => item === ele);
+          const findParentNode = elems.find((item) => item === ele);
           if (findParentNode) {
             ele = null;
             return findParentNode;
@@ -438,3 +441,87 @@ export const setPopContainer = (node, selector) => {
     return selector;
   }
 };
+/**
+ * 积木报表预览
+ * @param id 报表ID
+ * @param params 参数
+ * @param token token
+ */
+export function viewJimuReport(id, params, token) {
+  let url = globSetting.apiUrl.trimEnd('/') + '/jmreport/view/' + id + '?token=' + token;
+  if (params) {
+    for (const key in params) {
+      url += `&${key}=${params[key]}`;
+    }
+  }
+
+  window.open(url);
+}
+
+/**
+ * 积木报表打印
+ * @param id 报表ID
+ * @param params 参数
+ * @param token token
+ * @param [preview=false] 是否预览
+ */
+export function printJimuReport(id, params, token, preview = false, callback) {
+  if (!!preview) {
+    viewJimuReport(id, params, token);
+    return;
+  } else {
+    defHttp
+      .post(
+        {
+          url: '/jmreport/exportPdfStream',
+          data: { excelConfigId: id, queryParam: { ...params, token: token } },
+          responseType: 'blob',
+        },
+        { isTransformResponse: false }
+      )
+      .then((res) => {
+        //创建url
+        const fileURL = URL.createObjectURL(res);
+        printJS({
+          printable: fileURL,
+          type: 'pdf',
+          showModal: true,
+          onPrintDialogClose: () => {
+            if (callback) {
+              callback();
+            }
+          },
+        });
+      });
+  }
+}
+
+export async function loopPrintJimuReport(printSet, token, callback) {
+  const reportIds = Object.keys(printSet);
+
+  for (const reportId of reportIds) {
+    const parameters: any = printSet[reportId];
+
+    let i = 0;
+    let printing = true;
+
+    printJimuReport(reportId, parameters, token, false, () => {
+      printing = false;
+    });
+
+    await new Promise<void>((resolve) => {
+      const intervalId = setInterval(() => {
+        i += 200;
+        if (!printing) {
+          clearInterval(intervalId);
+          console.log('打印完成, 耗时：' + i + '毫秒');
+          resolve();
+        }
+      }, 200);
+    });
+  }
+
+  if (callback) {
+    callback();
+  }
+}

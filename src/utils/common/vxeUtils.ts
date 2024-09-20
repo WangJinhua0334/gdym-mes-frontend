@@ -12,15 +12,15 @@ export async function validateFormModelAndTables(validate, formData, cases, prop
     throw `validate 参数需要的是一个方法，而传入的却是${typeof validate}`;
   }
   let dataMap = {};
-  let values = await new Promise((resolve, reject) => {
+  const values = await new Promise((resolve, reject) => {
     // 验证主表表单
     validate()
       .then(() => {
         //update-begin---author:wangshuai ---date:20220507  for：[VUEN-912]一对多用户组件（所有风格，单表和树没问题）保存报错------------
-        for (let data in formData) {
+        for (const data in formData) {
           //如果该数据是数组
           if (formData[data] instanceof Array) {
-            let valueType = getValueType(props, data);
+            const valueType = getValueType(props, data);
             //如果是字符串类型的需要变成以逗号分割的字符串
             if (valueType === 'string') {
               formData[data] = formData[data].join(',');
@@ -36,7 +36,7 @@ export async function validateFormModelAndTables(validate, formData, cases, prop
   });
   Object.assign(dataMap, { formValue: values });
   // 验证所有子表的表单
-  let subData = await validateTables(cases, autoJumpTab);
+  const subData = await validateTables(cases, autoJumpTab);
   // 合并最终数据
   dataMap = Object.assign(dataMap, { tablesValue: subData });
   return dataMap;
@@ -51,17 +51,30 @@ export function validateTables(cases, autoJumpTab = true) {
     throw `'validateTables'函数的'cases'参数需要的是一个数组，而传入的却是${typeof cases}`;
   }
   return new Promise((resolve, reject) => {
-    let tablesData: any = [];
+    const tablesData: any = [];
     let index = 0;
     if (!cases || cases.length === 0) {
       resolve(tablesData);
     }
     (function next() {
-      let vm = cases[index];
+      const vm = cases[index];
       vm.value.validateTable().then((errMap) => {
         // 校验通过
         if (!errMap) {
-          tablesData[index] = { tableData: vm.value.getTableData() };
+          // 子表格多选数组转成字符串
+          const rows = vm.value.getTableData();
+          for (let i = 0; i < rows.length; i++) {
+            const values = rows[i];
+            for (const key in values) {
+              if (values[key] instanceof Array) {
+                const value = values[key][0];
+                if (typeof value === 'string') {
+                  values[key] = values[key].join(',');
+                }
+              }
+            }
+          }
+          tablesData[index] = { tableData: rows };
           // 判断校验是否全部完成，完成返回成功，否则继续进行下一步校验
           if (++index === cases.length) {
             resolve(tablesData);
@@ -69,12 +82,12 @@ export function validateTables(cases, autoJumpTab = true) {
         } else {
           // 尝试获取tabKey，如果在ATab组件内即可获取
           let paneKey;
-          let tabPane = getVmParentByName(vm.value, 'ATabPane');
+          const tabPane = getVmParentByName(vm.value, 'ATabPane');
           if (tabPane) {
             paneKey = tabPane.$.vnode.key;
             // 自动跳转到该表格
             if (autoJumpTab) {
-              let tabs = getVmParentByName(tabPane, 'Tabs');
+              const tabs = getVmParentByName(tabPane, 'Tabs');
               tabs && tabs.setActiveKey && tabs.setActiveKey(paneKey);
             }
           }
@@ -89,12 +102,12 @@ export function validateTables(cases, autoJumpTab = true) {
 }
 
 export function getVmParentByName(vm, name) {
-  let parent = vm.$parent;
+  const parent = vm.$parent;
   if (parent && parent.$options) {
     if (parent.$options.name === name) {
       return parent;
     } else {
-      let res = getVmParentByName(parent, name);
+      const res = getVmParentByName(parent, name);
       if (res) {
         return res;
       }

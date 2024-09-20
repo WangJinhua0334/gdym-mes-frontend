@@ -1,5 +1,5 @@
 <template>
-  <a-tree-select v-bind="getAttrs" @change="handleChange">
+  <a-tree-select v-bind="getAttrs" :treeLine="true" :treeDefaultExpandAll="treeDefaultExpandAll" @change="handleChange">
     <template #[item]="data" v-for="item in Object.keys($slots)">
       <slot :name="item" v-bind="data || {}"></slot>
     </template>
@@ -24,6 +24,7 @@
       params: { type: Object },
       immediate: { type: Boolean, default: true },
       resultField: propTypes.string.def(''),
+      treeDefaultExpandAll: { type: Boolean, default: false },
     },
     emits: ['options-change', 'change'],
     setup(props, { attrs, emit }) {

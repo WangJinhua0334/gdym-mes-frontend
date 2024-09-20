@@ -46,6 +46,9 @@ export enum JVxeTypes {
   file = 'file',
   // 省市区
   pca = 'pca',
+  selectDictCustomSearch = 'selectDictCustomSearch',
+  popupCustom = 'popupCustom',
+  uploadCustom = 'uploadCustom',
 }
 
 // 为了防止和 vxe 内置的类型冲突，所以加上一个前缀

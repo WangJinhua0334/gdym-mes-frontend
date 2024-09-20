@@ -128,7 +128,7 @@
       watch(
         () => props.value,
         () => {
-          if (props.value === '') {
+          if (props.value === '' || props.value === undefined) {
             emit('change', '');
             nextTick(() => formItemContext.onFieldChange());
           }

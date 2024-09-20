@@ -156,5 +156,7 @@ export type ComponentType =
   | 'linkRecordSelect'
   | 'RangeTime'
   | 'JRangeNumber'
+  | 'JSearchSelectCustom'
+  | 'JPopupCustom'
+  | 'JUploadCustom'
   | 'JInputSelect';
-  

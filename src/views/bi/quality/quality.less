@@ -1,0 +1,617 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.qualityPage {
+    width: 100%;
+    background: url('image/bg.gif') center center no-repeat;
+    background-size: 100% 100%;
+
+    .title-bg {
+        width: 100%;
+        height: .875rem;
+        background: url('image/title.png') center center no-repeat;
+        background-size: 100% 100%;
+
+        .title {
+            width: 100%;
+            height: .625rem;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .title-logo {
+                width: .5625rem;
+                // height: 0.55rem;
+                margin-top: .125rem;
+                margin-right: .2rem;
+
+                img {
+                    width: 100%;
+                    // height: 100%;
+                }
+            }
+
+            .title-info {
+                font-size: .375rem;
+                // font-family: "PingFang-SC-Heavy";
+                font-weight: 800;
+                color: #FFFFFF;
+                line-height: .625rem;
+                height: .625rem;
+                background: linear-gradient(0deg, #33FFFF 0%, #FFFFFF 45%, #33FFFF 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+    }
+
+    .cont {
+        width: 100%;
+        height: calc(100% - .875rem);
+        padding: 0 .3rem;
+        display: flex;
+
+        h3 {
+            width: 60%;
+            font-size: .225rem;
+            line-height: .425rem;
+            height: .425rem;
+            color: #fff;
+            font-family: 'PingFangBold';
+        }
+
+        .cont-lt {
+            width: 32%;
+
+            h3 {
+                width: 60%;
+                font-size: .225rem;
+                line-height: .425rem;
+                height: .425rem;
+                color: #fff;
+                font-family: 'PingFangBold';
+            }
+            .center-title {
+                display: flex;
+                width: 100%;
+
+                .statistics-status {
+                    width: 40%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: right;
+                    color: #fff;
+
+                    .status-item {
+                        flex: 1;
+                        display: flex;
+                        align-items: center;
+
+                        p {
+                            font-size: .15rem;
+                            font-family: 'PingFangBold';
+                        }
+
+                        .status-icon {
+                            width: .125rem;
+                            height: .0625rem;
+                            margin-right: .125rem;
+                        }
+
+                        .status-icon1 {
+                            background-color: #FFA070;
+                        }
+
+                        .status-icon2 {
+                            background-color: #3BEDDE;
+                        }
+                    }
+                }
+            }
+
+            .lt-top {
+                width: 100%;
+                height: 25%;
+                background: url('image/lt1.png') center center no-repeat;
+                background-size: 100% 100%;
+                padding: .15rem .2125rem;
+                margin-bottom: 2%;
+
+                .statistics-echarts {
+                    width: 90%;
+                    height: calc(100% - 1.5rem);
+                    margin: .35rem .3rem;
+                    display: flex;
+                    background: url('image/lt-top.gif') center center no-repeat;
+                    background-size: 100% 100%;
+                    justify-content: center;
+                    align-items: center;
+                    >div{
+                        flex: 1;
+                        text-align: center;
+                        .parameter{
+                            height: .5rem;
+                            font-weight: 600;
+                            line-height: 1;
+                            height: .5rem;
+                            color: #fff;
+                            font-family: 'PingFangRegular';
+                        }
+                        .parameter-num{
+                            display: flex;
+                            font-size: .175rem;
+                            color: #fff;
+                            align-items: center;
+                            justify-content: center;
+                            span{
+                                display: block;
+                                font-size: .325rem;
+                                color: #33FFFF;
+                                font-family: 'num';
+                            }
+                        }
+                    }
+                }
+            }
+
+            .lt-center {
+                width: 100%;
+                height: 35%;
+                background: url('image/lt2.png') center center no-repeat;
+                background-size: 100% 100%;
+                padding: .2rem .2125rem;
+                margin-bottom: 2%;
+
+                
+
+                .statistics-echarts {
+                    width: 100%;
+                    height: calc(100% - .425rem);
+
+                    .echarts-title {
+                        width: 1.75rem;
+                        height: .25rem;
+                        background: url('image/fenlei.png') center center no-repeat;
+                        background-size: 100% 100%;
+                        margin: 0 auto;
+                        color: #fff;
+                        text-align: center;
+                        font-size: .15rem;
+                        font-family: 'PingFangBold';
+                        line-height: .25rem;
+                    }
+                }
+            }
+
+            .lt-bot {
+                width: 100%;
+                height: 35%;
+                background: url('image/lt2.png') center center no-repeat;
+                background-size: 100% 100%;
+                padding: .2rem .2125rem;
+
+                .table {
+                    width: 100%;
+                    height: calc(100% - 2.77vh);
+
+                    .table-list {
+                        width: 100%;
+                        height: .5rem;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        margin-top: .0625rem;
+                        .qualified-progress{
+                            width: 40%;
+                            height: 100%;
+                            margin-top: .1875rem;
+                            display: flex;
+                        }
+                        .qualified-progress1{
+                            transform: rotateY(180deg);
+                        }
+                        .qualified-title{
+                            width: 20%;
+                            text-align: center;
+                            line-height: 0.5rem;
+                            font-size: .175rem;
+                            color: #fff;
+                            font-family: 'PingFangRegular';
+                            margin-top: .1875rem;
+                        }
+                        .percent-num{
+                            color: #ffa070;
+                            font-size: .175rem;
+                            margin-left: .1rem;
+                            line-height: .5rem;
+                            margin-top: .0625rem
+                        }
+                    }
+                }
+            }
+        }
+
+        .cont-center {
+            width: 36%;
+            margin: 0 1%;
+
+            .center-top {
+                width: 100%;
+                height: 50%;
+                position: relative;
+                .top-item{
+                    width: 1.225rem;
+                    height: 1.3rem;
+                    background: url('image/data-border.gif') center center no-repeat;
+                    background-size: 100% 100%;
+                    text-align: center;
+                    padding-top: .25rem;
+                    position: absolute;
+                    .item-value{
+                        font-size: .4rem;
+                        line-height: .5rem;
+                        font-family: 'num';
+                    }
+                    .item-title{
+                        font-size: .175rem;
+                        line-height: .25rem;
+                        color: #fff;
+                        font-family: 'PingFang-SC-Heavy';
+                    }
+                }
+                .top-item1{
+                    left: 20%;
+                    top: 12%;
+                    .item-value{
+                        color: #FF8F57;
+                    }
+                }
+                .top-item2{
+                    right: 24%;
+                    top: 12%;
+                    .item-value{
+                        color: #57FF84;
+                    }
+                }
+                .top-item3{
+                    left: 20%;
+                    bottom: 3%;
+                    .item-value{
+                        color: #33FFFF;
+                    }
+                }
+                .top-item4{
+                    right: 24%;
+                    bottom: 3%;
+                    .item-value{
+                        color: #FAE087;
+                    }
+                }
+                .hegelv{
+                    width: 1.5rem;
+                    height: 1.125rem;
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-60%,-30%);
+                    .hegelv1{
+                        font-size: .2rem;
+                        color: #fff;
+                        text-align: center;
+                    }
+                    .hegelv2{
+                        font-size: .2rem;
+                        line-height: 1;
+                        color: #FFFFFF;
+                        background: linear-gradient(0deg, #33FFFF 0%, #FFFFFF 100%);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        text-align: center;
+                        span{
+                            font-size: .75rem;
+                            font-family: 'num';
+                            line-height: 1;
+                        }
+                    }
+                }
+            }
+
+            .center-bot {
+                width: 100%;
+                height: 46%;
+                background: url('image/center.png') center center no-repeat;
+                background-size: 100% 100%;
+                padding: .3rem .2125rem;
+                margin-top: 2%;
+
+                .center-title {
+                    display: flex;
+                    width: 100%;
+
+                    .statistics-status {
+                        width: 40%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: right;
+                        color: #fff;
+
+                        .status-item {
+                            flex: 1;
+                            display: flex;
+                            align-items: center;
+
+                            p {
+                                font-size: .15rem;
+                                font-family: 'PingFangBold';
+                            }
+
+                            .status-icon {
+                                width: .125rem;
+                                height: .0625rem;
+                                margin-right: .125rem;
+                            }
+
+                            .status-icon1 {
+                                background-color: #FFA070;
+                            }
+
+                            .status-icon2 {
+                                background-color: #3BEDDE;
+                            }
+                        }
+                    }
+                }
+                .statistics-echart{
+                    width: 100%;
+                    height: calc(100% - .425rem);
+                    padding-top: 0.1rem;
+                    ::v-deep .dv-scroll-board .header .header-item{
+                        padding: 0 !important;
+                    }
+                    ::v-deep .dv-scroll-board .rows .ceil{
+                        padding: 0 !important;
+                    }
+                }
+            }
+
+        }
+
+        .cont-rt {
+            width: 30%;
+            height: 100%;
+            .rt-top{
+                width: 100%;
+                height: 30%;
+                background: url('image/lt1.png') center center no-repeat;
+                background-size: 100% 100%;
+                padding: .2rem .2125rem;
+                margin-bottom: 2%;
+                .table {
+                    width: 100%;
+                    height: calc(100% - 2.77vh);
+                    margin-top: .125rem;
+                    .race-lamp-card {
+                        height: calc(100% - 3.15vh);
+                        position: relative;
+                        overflow: hidden;
+                        margin-top: 0.5vh;
+
+                        .horseLamp_list1 {
+                            animation: scroll 10s linear infinite normal;
+                        }
+
+                        .horseLamp_list {
+                            width: 100%;
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+
+
+                            .order-list {
+                                width: 100%;
+                                margin-bottom: 1vh;
+
+                                .list {
+                                    display: flex;
+                                    width: 100%;
+                                    background: url('image/test.gif') center center no-repeat;
+                                    background-size: 100% 100%;
+                                    height: .625rem;
+
+                                    .list-lt{
+                                        width: 18%;
+                                        text-align: center;
+                                        .time{
+                                            font-size: .15rem;
+                                            line-height: .25rem;
+                                            color: #33FFFF;
+                                        }
+                                        .num{
+                                            font-size: .3rem;
+                                            line-height: .375rem;
+                                            font-family: 'num';
+                                            color: #fff;
+                                        }
+                                    }
+                                    .list-rt{
+                                        flex: 1;
+                                        line-height: .625rem;
+                                        color: #fff;
+                                        font-family: 'PingFangRegular';
+                                        overflow:hidden;
+                                        text-overflow:ellipsis;
+                                        white-space:nowrap;
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                        @keyframes scroll {
+                            100% {
+                                /* 需要滚动内容的总高度 */
+                                top: -3.5rem;
+                            }
+                        }
+                    }
+                }
+            }
+            .rt-center{
+                width: 100%;
+                height: 30%;
+                background: url('image/lt2.png') center center no-repeat;
+                background-size: 100% 100%;
+                padding: .125rem .2125rem;
+                margin-bottom: 2%;
+                .center-echarts{
+                    width: 100%;
+                    height: calc(100% - .425rem);
+                }
+            }
+            .rt-bot{
+                width: 100%;
+                height: 35%;
+                background: url('image/lt2.png') center center no-repeat;
+                background-size: 100% 100%;
+                padding: .2rem .2125rem;
+                margin-bottom: 2%;
+                .marquee {
+                    width: 100%;
+                    align-items: center;
+                    box-sizing: border-box;
+                    overflow: hidden;
+                  }
+                  .marquee_box {
+                    display: block;
+                    position: relative;
+                    width: 100%;
+                    overflow: hidden;
+                  }
+                  .marquee_list {
+                    width: 100%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                  }
+                  .marquee_list li {
+                    height: .625rem;
+                    line-height: .225rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    .marquee-icon{
+                        width: .325rem;
+                        height: .325rem;
+                        border-radius: 50%;
+                        margin-right: .125rem;
+                        img{
+                            width: 100%;
+                            height: 100%;
+                        }
+                    }
+                    .marquee-icon1{
+                        width: .325rem;
+                        height: .325rem;
+                        border-radius: 50%;
+                        margin-right: .125rem;
+                        border: .0125rem solid #1F78FF;
+                        text-align: center;
+                        color: #1F78FF;
+                        line-height: .325rem;
+                        font-size: .225rem;
+                    }
+                    .marquee-title{
+                        width: 28%;
+                        font-size: .2rem;
+                        line-height: 1;
+                        color: #fff;
+                        font-family: 'PingFangRegular';
+                        margin-right: .125rem;
+                    }
+                    .marquee-progress{
+                        flex: 1;
+                        height: .375rem;
+                        //background: url('image/schedule.png') center center no-repeat;
+                        background-size: 100% 100%;
+                        margin-right: .125rem;
+                        position: relative;
+                        line-height: .375rem;
+                        .progress{
+                            line-height: .375rem;
+                            height:.375rem;;
+                        }
+                    }
+                    .marquee-num{
+                        width: .75rem;
+                        height: .375rem;
+                        background-color: #030F4D;
+                        border-radius: .1875rem;
+                        text-align: center;
+                        color: #fff;
+                        line-height: .375rem;
+                    }
+                  }
+                  
+            }
+            
+
+
+        }
+    }
+
+    .ant-progress-outer .ant-progress-inner {
+        background-color: #007799 !important;
+        opacity: 0.5 !important;
+    }
+
+    @media only screen and (max-width: 800px) {
+        
+    }
+
+    @media only screen and (max-width: 1910px) {
+        
+        .cont-rt{
+            .rt-top{
+                .table{
+                    .race-lamp-card{
+                        .horseLamp_list{
+                            .order-list{
+                                .list{
+                                    .list-rt{
+                                        font-size: .175rem;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media only screen and (min-width: 1920px) {
+        
+        .cont-rt{
+            .rt-top{
+                .table{
+                    .race-lamp-card{
+                        .horseLamp_list{
+                            .order-list{
+                                .list{
+                                    .list-rt{
+                                        font-size: .2rem;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}

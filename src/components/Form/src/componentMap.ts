@@ -70,12 +70,15 @@ import JAddInput from './jeecg/components/JAddInput.vue';
 import { Time } from '/@/components/Time';
 import JRangeNumber from './jeecg/components/JRangeNumber.vue';
 import UserSelect from './jeecg/components/userSelect/index.vue';
-import JRangeDate from './jeecg/components/JRangeDate.vue'
-import JRangeTime from './jeecg/components/JRangeTime.vue'
-import JInputSelect from './jeecg/components/JInputSelect.vue'
+import JRangeDate from './jeecg/components/JRangeDate.vue';
+import JRangeTime from './jeecg/components/JRangeTime.vue';
+import JInputSelect from './jeecg/components/JInputSelect.vue';
 import RoleSelectInput from './jeecg/components/roleSelect/RoleSelectInput.vue';
-import {DatePickerInFilter, CascaderPcaInFilter} from "@/components/InFilter";
-
+import { DatePickerInFilter, CascaderPcaInFilter } from '@/components/InFilter';
+//MOM新增
+import JSearchSelectCustom from './jeecg/components/JSearchSelectCustom.vue';
+import JPopupCustom from './jeecg/components/JPopupCustom.vue';
+import JUploadCustom from './jeecg/components/JUpload/JUploadCustom.vue';
 const componentMap = new Map<ComponentType, Component>();
 
 componentMap.set('Time', Time);
@@ -170,7 +173,10 @@ componentMap.set('RangeTime', JRangeTime);
 componentMap.set('RoleSelect', RoleSelectInput);
 componentMap.set('JInputSelect', JInputSelect);
 
-
+//MOM新增
+componentMap.set('JSearchSelectCustom', JSearchSelectCustom);
+componentMap.set('JPopupCustom', JPopupCustom);
+componentMap.set('JUploadCustom', JUploadCustom);
 
 export function add(compName: ComponentType, component: Component) {
   componentMap.set(compName, component);

@@ -31,5 +31,10 @@ export { default as JEditor } from './src/jeecg/components/JEditor.vue';
 export { default as JImageUpload } from './src/jeecg/components/JImageUpload.vue';
 // Jeecg自定义校验
 export { JCronValidator } from '/@/components/Form/src/jeecg/components/JEasyCron';
+// MOM自定义组件
+export { default as JSearchSelectCustom } from './src/jeecg/components/JSearchSelectCustom.vue';
+export { default as JPopupCustom } from './src/jeecg/components/JPopupCustom.vue';
+// jeecg自定义拍照上传
+export { default as JUploadCustom } from './src/jeecg/components/JUpload/JUploadCustom.vue';
 
 export { BasicForm };

@@ -29,4 +29,6 @@ export enum CompTypeEnum {
   Popup = 'popup',
   //部门选择
   SelDepart = 'sel_depart',
+  //输入框模糊
+  JInput = 'JInput',
 }

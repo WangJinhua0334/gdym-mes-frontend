@@ -12,5 +12,9 @@ export enum PageEnum {
   //文件路由
   SYS_FILES_PATH = '/file/share',
   // 邮件中的跳转地址
-  TOKEN_LOGIN = '/tokenLogin'
+  TOKEN_LOGIN = '/tokenLogin',
+  // 自定义首页
+  CUSTOM_HOME = '/home',
+
+  MES_WorkBench = '/mes/workbench',
 }

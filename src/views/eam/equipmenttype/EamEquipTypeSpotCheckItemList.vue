@@ -1,0 +1,184 @@
+<template>
+  <div>
+    <!--引用表格-->
+    <BasicTable @register="registerTable" :rowSelection="rowSelection" :searchInfo="searchInfo">
+      <!--插槽:table标题-->
+      <template #tableTitle>
+        <a-button
+          type="primary"
+          @click="handleCreate"
+          v-auth="'org.jeecg.modules:eam_equip_type_spot_check_item:add'"
+          preIcon="ant-design:plus-outlined"
+        >
+          新增</a-button
+        >
+        <a-button
+          type="primary"
+          preIcon="ant-design:export-outlined"
+          v-auth="'org.jeecg.modules:eam_equip_type_spot_check_item:exportXls'"
+          @click="onExportXls"
+        >
+          导出</a-button
+        >
+        <j-upload-button
+          type="primary"
+          preIcon="ant-design:import-outlined"
+          v-auth="'org.jeecg.modules:eam_equip_type_spot_check_item:importExcel'"
+          @click="onImportXls"
+          >导入</j-upload-button
+        >
+        <a-dropdown v-if="selectedRowKeys.length > 0">
+          <a-button
+            >批量操作
+            <Icon icon="mdi:chevron-down" />
+          </a-button>
+        </a-dropdown>
+      </template>
+      <!--操作栏-->
+      <template #action="{ record }">
+        <TableAction :actions="getTableAction(record)" />
+      </template>
+      <!--字段回显插槽-->
+      <template #htmlSlot="{ text }">
+        <div v-html="text"></div>
+      </template>
+      <template #fileSlot="{ text }">
+        <span v-if="!text" style="font-size: 12px; font-style: italic">无文件</span>
+        <a-button v-else :ghost="true" type="primary" preIcon="ant-design:download-outlined" size="small" @click="downloadFile(text)">下载</a-button>
+      </template>
+    </BasicTable>
+
+    <EamEquipTypeSpotCheckItemModal @register="registerModal" @success="handleSuccess" />
+  </div>
+</template>
+
+<script lang="ts" setup>
+  import { ref, computed, unref, inject, watch } from 'vue';
+  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import { useListPage } from '/@/hooks/system/useListPage';
+  import { useModal } from '/@/components/Modal';
+  import EamEquipTypeSpotCheckItemModal from './components/EamEquipTypeSpotCheckItemModal.vue';
+  import { eamEquipTypeSpotCheckItemColumns } from './EamEquipmentType.data';
+  import {
+    eamEquipTypeSpotCheckItemList,
+    eamEquipTypeSpotCheckItemDelete,
+    eamEquipTypeSpotCheckItemDeleteBatch,
+    eamEquipTypeSpotCheckItemExportXlsUrl,
+    eamEquipTypeSpotCheckItemImportUrl,
+  } from './EamEquipmentType.api';
+  import { isEmpty } from '/@/utils/is';
+  import { useMessage } from '/@/hooks/web/useMessage';
+  import { downloadFile } from '/@/utils/common/renderUtils';
+
+  //接收主表id
+  const mainId = inject('mainId') || '';
+  //提示弹窗
+  const $message = useMessage();
+  //弹窗model
+  const [registerModal, { openModal }] = useModal();
+  const searchInfo = {};
+  // 列表页面公共参数、方法
+  const { prefixCls, tableContext, onImportXls, onExportXls } = useListPage({
+    tableProps: {
+      api: eamEquipTypeSpotCheckItemList,
+      columns: eamEquipTypeSpotCheckItemColumns,
+      canResize: false,
+      useSearchForm: false,
+      actionColumn: {
+        width: 180,
+      },
+      pagination: {
+        current: 1,
+        pageSize: 5,
+        pageSizeOptions: ['5', '10', '20'],
+      },
+    },
+    exportConfig: {
+      name: '设备分类点检项',
+      url: eamEquipTypeSpotCheckItemExportXlsUrl,
+      params: {
+        equipTypeId: mainId,
+      },
+    },
+    importConfig: {
+      url: () => {
+        return eamEquipTypeSpotCheckItemImportUrl + '/' + unref(mainId);
+      },
+    },
+  });
+
+  //注册table数据
+  const [registerTable, { reload }, { rowSelection, selectedRowKeys }] = tableContext;
+
+  watch(mainId, () => {
+    searchInfo['equipTypeId'] = unref(mainId);
+    reload();
+  });
+
+  /**
+   * 新增事件
+   */
+  function handleCreate() {
+    if (isEmpty(unref(mainId))) {
+      $message.createMessage.warning('请选择一个主表信息');
+      return;
+    }
+    openModal(true, {
+      isUpdate: false,
+      showFooter: true,
+    });
+  }
+
+  /**
+   * 编辑事件
+   */
+  async function handleEdit(record: Recordable) {
+    openModal(true, {
+      record,
+      isUpdate: true,
+      showFooter: true,
+    });
+  }
+
+  /**
+   * 删除事件
+   */
+  async function handleDelete(record) {
+    await eamEquipTypeSpotCheckItemDelete({ id: record.id }, handleSuccess);
+  }
+
+  /**
+   * 批量删除事件
+   */
+  async function batchHandleDelete() {
+    await eamEquipTypeSpotCheckItemDeleteBatch({ ids: selectedRowKeys.value }, handleSuccess);
+  }
+
+  /**
+   * 成功回调
+   */
+  function handleSuccess() {
+    (selectedRowKeys.value = []) && reload();
+  }
+
+  /**
+   * 操作栏
+   */
+  function getTableAction(record) {
+    return [
+      {
+        label: '编辑',
+        onClick: handleEdit.bind(null, record),
+        auth: 'org.jeecg.modules:eam_equip_type_spot_check_item:edit',
+      },
+      {
+        label: '删除',
+        popConfirm: {
+          title: '是否确认删除',
+          confirm: handleDelete.bind(null, record),
+        },
+        auth: 'org.jeecg.modules:eam_equip_type_spot_check_item:delete',
+      },
+    ];
+  }
+</script>

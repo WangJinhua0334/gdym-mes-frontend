@@ -1,0 +1,238 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.table-fixedHeader {
+  height: 70vh;
+  overflow-y: auto;
+  overflow-x: auto;
+  display: block;
+  width: 100%;
+  table-layout: fixed;
+  --vetialBorder: 1px;
+}
+
+.table-fixedHeader thead {
+  border-left: 1px solid #DFE2EB;
+  border-top: 1px solid #DFE2EB;
+  //position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  z-index:10;
+}
+
+.table-fixedHeader thead tr {
+  height: 40px;
+  line-height: 40px;
+}
+
+.table-fixedHeader thead tr>th {
+  background-color: #fafafa;
+  font-weight: bold;
+  border-bottom: 1px solid #DFE2EB;
+  border-right: var(--vetialBorder) solid #DFE2EB;
+  color: #909399;
+  text-align: center;
+  min-width: 60px;
+}
+
+.table-fixedHeader thead tr>th>div {
+  min-width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-fixedHeader tbody {
+  border-left: 1px solid #DFE2EB;
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.table-fixedHeader tbody tr {
+  height: 40px;
+  line-height: 40px;
+}
+
+.table-fixedHeader tbody tr td {
+  border-bottom: 1px solid #DFE2EB;
+  border-right: var(--vetialBorder) solid #DFE2EB;
+  text-align: center;
+}
+
+.ganttPage {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+
+  .formbox {
+    width: 100%;
+    // height: 120px;
+    // padding: 24px;
+    padding-top: 24px;
+    padding-left: 24px;
+    background-color: #fff;
+    margin-bottom: 10px;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  p {
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    flex-shrink: 0;
+  }
+  .pages{
+    width: 100%;
+    overflow-x: auto;
+    display: block;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  // .tables {
+  //   //width: 100%; //自定义表格整体宽度
+  //   font-size: 12px;
+  //   box-sizing: border-box;
+  //   //display: flex;
+  //   //flex-direction: column;
+  //   //position: relative;
+  //   border: 1px solid #ccc;
+  //   tbody {
+  //     height: 70vh; //自定义表格内容高度
+  //     overflow-y: auto;
+  //   }
+  //   tr {
+  //     height: 40px;
+  //     background-color: #fff;
+  //   }
+    
+  //   tr th{
+  //       width: 150px;
+  //       background-color: #fff;
+  //       border-bottom: 1px solid #ccc;
+  //       border-right: 1px solid #ccc;
+  //     }
+  //     .titsRight-date{
+  //       width: 60px;
+  //       p {
+  //         width: 60px;
+  //         height: 20px;
+  //         line-height: 20px;
+  //       }
+  //     }tr td{
+  //       width: 150px;
+  //       background-color: #fff;
+  //       border-bottom: 1px solid #ccc;
+  //       border-right: 1px solid #ccc;
+  //     }
+  //     .titsRight-date{
+  //       width: 60px;
+  //       p {
+  //         width: 60px;
+  //         height: 20px;
+  //         line-height: 20px;
+  //       }
+  //     }
+
+
+
+  //   .tbodyLeft {
+  //     // overflow: hidden;
+  //     white-space: nowrap;
+  //     //height: 100%;
+  //     float: left;
+  //     background-color: #fff;
+  //     z-index: 1;
+  //     .tbodyLeftItem {
+  //       background-color: #fff;
+  //       left: 0;
+  //       top: 0;
+  //       position: absolute;
+
+  //       div {
+  //         width: 120px;
+          
+  //         .line{
+  //           line-height: 40px;
+  //           border-bottom: 1px solid #ccc;
+  //           border-right: 1px solid #ccc;
+  //         }
+  //       }
+  //       // padding-top: 40px;
+  //       // bottom: 17px; //避开下方滚动条位置
+  //     }
+  //   }
+  //   .tbodyRight {
+  //     white-space: nowrap;
+  //     background-color: none;
+  //     //display: flex;
+  //     //flex-direction: column;
+  //     float: left;
+  //     .row {
+  //       // display: flex;
+  //       // height: 40px;
+  //       position: relative;
+        
+  //       >div{
+  //         display: flex;
+  //         height: 40px;
+  //         border-bottom: 1px solid #ccc;
+  //       }
+  //       .nav-progress{
+  //         position: absolute;
+  //         line-height: 40px;
+  //       }
+  //     }
+  //   }
+  // }
+}
+/*滚动条样式*/
+.tbody::-webkit-scrollbar {
+  height: 6px;
+}
+
+.tbody::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.tbody::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* 控制左边固定的核心代码 */
+td:nth-child(1),
+th:nth-child(1) {
+  position:sticky;
+  left:0; /* 首行在左 */
+  z-index:1;
+  background-color:white;
+}
+td:nth-child(2),
+th:nth-child(2) {
+  position:sticky;
+  left:150px;
+  z-index:1;
+  background-color:white;
+}
+td:nth-child(3),
+th:nth-child(3) {
+  position:sticky;
+  left:270px;
+  z-index:1;
+  background-color:white;
+}
+
+

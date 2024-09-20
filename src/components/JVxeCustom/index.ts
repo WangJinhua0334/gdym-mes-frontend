@@ -1,6 +1,7 @@
 import { registerComponent, registerAsyncComponent, registerASyncComponentReal } from '/@/components/jeecg/JVxeTable';
 import { JVxeTypes } from '/@/components/jeecg/JVxeTable/types';
 import { DictSearchSpanCell, DictSearchInputCell } from './src/components/JVxeSelectDictSearchCell';
+import { DictSearchSpanCustomCell, DictSearchInputCustomCell } from './src/components/JVxeSelectDictSearchCustomCell';
 import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
 export async function registerJVxeCustom() {
   // ----------------- ⚠ 注意事项 ⚠ -----------------
@@ -12,7 +13,9 @@ export async function registerJVxeCustom() {
   await registerAsyncComponent(JVxeTypes.popup, import('./src/components/JVxePopupCell.vue'));
 
   // 注册【字典搜索下拉】组件（高级封装方式）
-  registerComponent(JVxeTypes.selectDictSearch, DictSearchInputCell, DictSearchSpanCell);
+  await registerComponent(JVxeTypes.selectDictSearch, DictSearchInputCell, DictSearchSpanCell);
+  await registerAsyncComponent(JVxeTypes.popupCustom, import('./src/components/JVxePopupCustomCell.vue'));
+  await registerAsyncComponent(JVxeTypes.selectDictCustomSearch, import('./src/components/JVxeSelectDictSearchCustomCell.vue'));
 
   // 注册【文件上传】组件
   await registerAsyncComponent(JVxeTypes.file, import('./src/components/JVxeFileCell.vue'));

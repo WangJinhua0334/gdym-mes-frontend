@@ -1,0 +1,374 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.productionLinePage{
+    width: 100%;
+    background: url('image/bg.png') center center no-repeat;
+    background-size: 100% 100%;
+    .title-bg{
+        width: 100%;
+        height: .875rem;
+        background: url('image/title.png') center center no-repeat;
+        background-size: 100% 100%;
+        .title{
+            width: 100%;
+            height: .625rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .title-logo{
+                width: .5625rem;
+                // height: 0.55rem;
+                margin-top: .125rem;
+                margin-right: .2rem;
+                img{
+                    width: 100%;
+                    // height: 100%;
+                }
+            }
+            .title-info{
+                font-size: .375rem;
+                // font-family: "PingFang-SC-Heavy";
+                font-weight: 800;
+                color: #FFFFFF;
+                line-height: .625rem;
+                height: .625rem;
+                background: linear-gradient(0deg, #33FFFF 0%, #FFFFFF 45%, #33FFFF 100%);
+                -webkit-background-clip:text; 
+                -webkit-text-fill-color:transparent;
+            }
+        }
+    }
+    
+    .cont{
+        width: 100%;
+        height: calc(100% - .875rem);
+        padding: 0 .3rem;
+        .cont-top{
+            width: 100%;
+            height: 55%;
+            margin-bottom: 1%;
+            background: url('image/lineBg.png') center center no-repeat;
+            background-size: 100% 100%;
+            padding: .25rem;
+            .top-equiment{
+                width: 100%;
+                height: 100%;
+                background: url('image/equiment.png') center center no-repeat;
+                background-size: 100% 100%;
+                position: relative;
+                .equiment-info{
+                    width: 3.625rem;
+                    height: 1.825rem;
+                    background: url('image/equiment-border.png') center center no-repeat;
+                    background-size: 100% 100%;
+                    padding: .1875rem 0.3rem;
+                    position: absolute;
+                    .info-title{
+                        font-size: .175rem;
+                        line-height: .35rem;
+                        font-family: "PingFang-SC-Heavy";
+                        color: #FFFFFF;
+                        background: linear-gradient(0deg, #FFFFFF 0%, #33FFFF 100%);
+                        -webkit-background-clip:text; 
+                        -webkit-text-fill-color:transparent;
+                        margin-bottom: .0625rem;
+                    }
+                    .info-detail{
+                        display: flex;
+                        .info-lt{
+                            flex: 1;
+                            >div{
+                                margin-bottom: .0625rem;
+                                .product-name{
+                                    font-size: .125rem;
+                                    font-family: 'PingFang-SC-Heavy';
+                                    color: #fff;
+                                    line-height: .225rem;
+                                }
+                                .product-text{
+                                    font-size: .15rem;
+                                    font-family: 'num';
+                                    background: linear-gradient(0deg, #FFFFFF 0%, #33FFFF 100%);
+                                    -webkit-background-clip:text; 
+                                    -webkit-text-fill-color:transparent;
+                                    line-height: .25rem;
+                                }
+                            }
+                        }
+                    }
+                    .point-icon{
+                        width: .9rem;
+                        height: 1.0375rem;
+                        background: url('image/point-icon.png') center center no-repeat;
+                        background-size: 100% 100%;
+                        position: absolute;
+                        
+                    }
+                }
+                .equiment-info1{
+                    left: 7%;
+                    top: 32%;
+                    .point-icon{
+                        top: -0.6rem;
+                        left: -0.5rem;
+                    }
+                }
+                .equiment-info2{
+                    left: 31%;
+                    top: 0%;
+                    .point-icon{
+                        bottom: -0.5rem;
+                        left: -0.55rem;
+                        transform: rotate(-90deg);
+                    }
+                }
+                .equiment-info3{
+                    left: 56%;
+                    top: 55%;
+                    .point-icon{
+                        top: -0.6rem;
+                        left: -0.5rem;
+                    }
+                }
+                .equiment-info4{
+                    right: 3%;
+                    top: 2%;
+                    .point-icon{
+                        bottom: -0.5rem;
+                        left: -0.55rem;
+                        transform: rotate(-90deg);
+                    }
+                }
+                .equiment-status{
+                    width: 9.875rem;
+                    height: .75rem;
+                    background: url('image/status-border.png') center center no-repeat;
+                    background-size: 100% 100%;
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    display: flex;
+                    padding: 0 .25rem;
+                    .status-title{
+                        width: 40%;
+                        display: flex;
+                        align-items: center;
+                        .status-arrow{
+                            height: .75rem;
+                            img{
+                                width: .3rem;
+                                margin-top: .1875rem;
+                                margin-right: .125rem;
+                            }
+                        }
+                        .status-info{
+                            font-size: .175rem;
+                            color: #fff;
+                        }
+                    }
+                    .status-lamp{
+                        width: 60%;
+                        display: flex;
+                        align-items: center;
+                        >div{
+                            flex: 1;
+                            display: flex;
+                            align-items: center;
+                            p{
+                                margin-right: .125rem;
+                                color: #fff;
+                                font-size: .15rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .cont-bot{
+            width: 100%;
+            height: 40%;
+            display: flex;
+            .workstation-item{
+                flex: 1;
+                height: 100%;
+                background: url('image/workstation.png') center center no-repeat;
+                background-size: 100% 100%;
+                margin-right: .125rem;
+                padding: .125rem .3rem;
+                box-sizing: border-box;
+                .item-title{
+                    height: .475rem;
+                    display: flex;
+                    margin-bottom: .0625rem;
+                    .title{
+                        flex: 1;
+                        font-size: .225rem;
+                        line-height: .475rem;
+                        color: #fff;
+                        font-family: "PingFang-SC-Heavy";
+                    }
+                    .workstation-status{
+                        flex: 1;
+                        display: flex;
+                        align-items: center;
+                        justify-content: right;
+                        .status-info{
+                            font-size: .15rem;
+                            line-height: .475rem;
+                            color: #fff;
+                        }
+                        .status-icon{
+                            display: block;
+                            width: .25rem;
+                            height: .25rem;
+                            margin-left: .125rem;
+                        }
+                        .status-icon1{
+                            background: url('image/runing.png') center center no-repeat;
+                            background-size: 100% 100%;
+                        }
+                        .status-icon2{
+                            background: url('image/warning.png') center center no-repeat;
+                            background-size: 100% 100%;
+                        }
+                        .status-icon3{
+                            background: url('image/daiji.png') center center no-repeat;
+                            background-size: 100% 100%;
+                        }
+                        .status-icon4{
+                            background: url('image/tiaoshi.png') center center no-repeat;
+                            background-size: 100% 100%;
+                        }
+                        .status-icon5{
+                            background: url('image/lixian.png') center center no-repeat;
+                            background-size: 100% 100%;
+                        }
+                    }
+                }
+                .item-equiment{
+                    display: flex;
+                    .equiment-img{
+                        width: 1.75rem;
+                        margin-right: .125rem;
+                        margin-bottom: .0625rem;
+                        .img-box{
+                            width: 1.75rem;
+                            height: 1.125rem;
+                            background: url('image/border.png') center center no-repeat;
+                            background-size: 100% 100%;
+                            img{
+                                width: 1.125rem;
+                                height: 1.125rem;
+                                margin: .0625rem auto;
+                            }
+                        }
+                        .capacity{
+                            width: 1.75rem;
+                            height: .375rem;
+                            background: url('image/capacity.png') center center no-repeat;
+                            background-size: 100% 100%;
+                            font-size: 12px;
+                            font-family: 'PingFang-SC-Heavy';
+                            text-align: center;
+                            color: #fff;
+                            span{
+                                font-size: .2rem;
+                                line-height: .375rem;
+                                font-family: "num";
+                                color: #FFFFFF;
+                                font-weight: 600;
+                                background: linear-gradient(0deg, #FFFFFF 0%, #33FFFF 100%);
+                                -webkit-background-clip:text; 
+                                -webkit-text-fill-color:transparent;
+                            }
+                        }
+                    }
+                    .equiment-parameter{
+                        p{
+                            font-size: .15rem;
+                            line-height: .375rem;
+                            color: #fff;
+                            font-family: 'PingFangBold';
+                            span{
+                                font-size: .175rem;
+                                line-height: .375rem;
+                                font-family: "num";
+                                color: #FFFFFF;
+                                background: linear-gradient(0deg, #FFFFFF 0%, #33FFFF 100%);
+                                -webkit-background-clip:text; 
+                                -webkit-text-fill-color:transparent;
+                            }
+                        }
+                    }
+                }
+                .warning-info{
+                    width: 100%;
+                    height: .25rem;
+                    background: url('image/warning-line.png') center center no-repeat;
+                    background-size: 100% 100%;
+                    font-size: .225rem;
+                    font-family: 'PingFang-SC-Heavy';
+                    color: #33FFFF;
+                    line-height: .25rem;
+                    padding-left: .5rem;
+                    display: flex;
+                    margin-bottom: .0625rem;
+                    span{
+                        display: block;
+                        line-height: .25rem;
+                        font-size: .175rem;
+                        color: #FF1F44;
+                        font-family: 'PingFang-SC-Heavy';
+                        margin-left: .125rem;
+                        width: calc(100% - 1.25rem);
+                        overflow: hidden;
+                        span{
+                            width: 100%;
+                            display: block;
+                            animation: marquee 10s linear infinite;
+                        }
+                    }
+                    @keyframes marquee {
+                        from { transform: translateX(100%); }
+                        to { transform: translateX(-100%); }
+                    }
+                }
+                .workstation-info{
+                    width: 100%;
+                    display: flex;
+                    >div{
+                        flex: 1;
+                        p{
+                            font-size: .15rem;
+                            line-height: .25rem;
+                            color: #fff;
+                        }
+                    }
+                    .noinfo{
+                        width: 100%;
+                        font-size: 16px;
+                        line-height: 1rem;
+                        color: #33FFFF;
+                        font-family: 'PingFang-SC-Heavy';
+                        text-align: center;
+                    }
+                }
+            }
+            .workstation-item:last-child{
+                margin-right: 0;
+            }
+        }
+    }
+    @media only screen and (max-width: 800px) {
+        
+    }
+    @media only screen and (max-width: 1200px) {
+        
+    }
+    @media only screen and (min-width: 1200px) {
+        
+    }
+    
+}

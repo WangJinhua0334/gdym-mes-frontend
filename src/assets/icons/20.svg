@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="98.001" height="72" viewBox="0 0 98.001 72">
+  <defs>
+    <filter id="联合_5" x="0" y="24.001" width="98.001" height="47.999" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#344a75" flood-opacity="0.259"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <radialGradient id="radial-gradient" cx="0.5" cy="0.5" r="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#a6e0cd"/>
+      <stop offset="1" stop-color="#d6fff1"/>
+    </radialGradient>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#bccbe0"/>
+      <stop offset="1" stop-color="#ebf3ff"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#1affb3" stop-opacity="0"/>
+      <stop offset="1" stop-color="#1fffb4" stop-opacity="0.361"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-3" x1="0.071" y1="0.039" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#a1fbdd"/>
+      <stop offset="1" stop-color="#00c29a"/>
+    </linearGradient>
+    <filter id="减去_190" x="29" y="0" width="40" height="43" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur result="blur-2"/>
+      <feFlood flood-color="#34755f"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="组_8720" data-name="组 8720" transform="translate(-902 -678)">
+    <g id="组_8458" data-name="组 8458" transform="translate(251 471.771)">
+      <g transform="matrix(1, 0, 0, 1, 651, 206.23)" filter="url(#联合_5)">
+        <path id="联合_5-2" data-name="联合 5" d="M-9581-2203.771v-4h1.439c4.67-6.341,20.165-11,38.56-11s33.893,4.657,38.563,11H-9501v4c0,8.284-17.909,15-40,15S-9581-2195.487-9581-2203.771Z" transform="translate(9590 2248.77)" fill="#7da89a"/>
+      </g>
+      <ellipse id="椭圆_13" data-name="椭圆 13" cx="40" cy="15" rx="40" ry="15" transform="translate(740 262.229) rotate(180)" fill="url(#radial-gradient)"/>
+      <g id="椭圆_14" data-name="椭圆 14" transform="translate(733 255.229) rotate(180)" stroke="#fff" stroke-width="0.5" fill="url(#linear-gradient)">
+        <ellipse cx="33" cy="11" rx="33" ry="11" stroke="none"/>
+        <ellipse cx="33" cy="11" rx="33.25" ry="11.25" fill="none"/>
+      </g>
+      <path id="联合_4" data-name="联合 4" d="M-3980-1119l-8-26h82l-8,26c0,6.075-14.775,11-33,11S-3980-1112.925-3980-1119Z" transform="translate(4647 1363.229)" fill="url(#linear-gradient-2)"/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 902, 678)" filter="url(#减去_190)">
+      <path id="减去_190-2" data-name="减去 190" d="M18351.465,13912h-23.533a6.221,6.221,0,0,1-4.457-1.917,7.4,7.4,0,0,1-2.062-4.689h-1.18a2.232,2.232,0,0,1,0-4.464h1.16v-6.607h-1.16a2.232,2.232,0,0,1,0-4.464h1.16v-6.607h-1.16a2.232,2.232,0,0,1,0-4.464h1.17a6.815,6.815,0,0,1,6.529-6.787h23.533c3.6,0,6.537,3.2,6.537,7.142v25.718C18358,13908.8,18355.068,13912,18351.465,13912Zm-20.248-21.248a2.232,2.232,0,0,0,0,4.464h17.857a2.232,2.232,0,1,0,0-4.464Zm0-8.035a2.23,2.23,0,1,0,0,4.46h7.141a2.23,2.23,0,1,0,0-4.46Z" transform="translate(-18289 -13872)" fill="url(#linear-gradient-3)"/>
+    </g>
+  </g>
+</svg>

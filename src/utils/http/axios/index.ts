@@ -18,10 +18,12 @@ import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { joinTimestamp, formatRequestDate } from './helper';
 import { useUserStoreWithOut } from '/@/store/modules/user';
-import { cloneDeep } from "lodash-es";
+import { cloneDeep } from 'lodash-es';
+import { message } from 'ant-design-vue';
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
 const { createMessage, createErrorModal } = useMessage();
+let licenseMessage = true;
 
 /**
  * @description: 数据处理，方便区分多种处理方式
@@ -209,6 +211,10 @@ const transform: AxiosTransform = {
    * @description: 响应拦截器处理
    */
   responseInterceptors: (res: AxiosResponse<any>) => {
+    if (res.data.licenseMessage && licenseMessage) {
+      createMessage.warning(res.data.licenseMessage);
+      licenseMessage = false;
+    }
     return res;
   },
 
@@ -261,7 +267,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
         // authenticationScheme: 'Bearer',
         authenticationScheme: '',
         //接口超时设置
-        timeout: 10 * 1000,
+        timeout: 100 * 1000,
         // 基础接口地址
         // baseURL: globSetting.apiUrl,
         headers: { 'Content-Type': ContentTypeEnum.JSON },

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="98.001" height="72" viewBox="0 0 98.001 72">
+  <defs>
+    <filter id="联合_5" x="0" y="24.001" width="98.001" height="47.999" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#344a75" flood-opacity="0.259"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <radialGradient id="radial-gradient" cx="0.5" cy="0.5" r="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#a6bde0"/>
+      <stop offset="1" stop-color="#d6e6ff"/>
+    </radialGradient>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#bccbe0"/>
+      <stop offset="1" stop-color="#ebf3ff"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#1890ff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#06f" stop-opacity="0.361"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-3" x1="0.071" y1="0.039" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#9ec3f6"/>
+      <stop offset="1" stop-color="#1890ff"/>
+    </linearGradient>
+    <filter id="联合_13" x="29" y="0" width="40" height="43" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur result="blur-2"/>
+      <feFlood flood-color="#344a75"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="组_8711" data-name="组 8711" transform="translate(-658 -497)">
+    <g id="组_8441" data-name="组 8441" transform="translate(7 290.771)">
+      <g transform="matrix(1, 0, 0, 1, 651, 206.23)" filter="url(#联合_5)">
+        <path id="联合_5-2" data-name="联合 5" d="M-9581-2203.771v-4h1.439c4.67-6.341,20.165-11,38.56-11s33.893,4.657,38.563,11H-9501v4c0,8.284-17.909,15-40,15S-9581-2195.487-9581-2203.771Z" transform="translate(9590 2248.77)" fill="#7d8ea8"/>
+      </g>
+      <ellipse id="椭圆_13" data-name="椭圆 13" cx="40" cy="15" rx="40" ry="15" transform="translate(740 262.229) rotate(180)" fill="url(#radial-gradient)"/>
+      <g id="椭圆_14" data-name="椭圆 14" transform="translate(733 255.229) rotate(180)" stroke="#fff" stroke-width="0.5" fill="url(#linear-gradient)">
+        <ellipse cx="33" cy="11" rx="33" ry="11" stroke="none"/>
+        <ellipse cx="33" cy="11" rx="33.25" ry="11.25" fill="none"/>
+      </g>
+      <path id="联合_4" data-name="联合 4" d="M-3980-1119l-8-26h82l-8,26c0,6.075-14.775,11-33,11S-3980-1112.925-3980-1119Z" transform="translate(4647 1363.229)" fill="url(#linear-gradient-2)"/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 658, 497)" filter="url(#联合_13)">
+      <path id="联合_13-2" data-name="联合 13" d="M18322.422,13912a4.288,4.288,0,0,1-.8-.079,4.671,4.671,0,0,1-.789-.226,4.93,4.93,0,0,1-.746-.356,4.841,4.841,0,0,1-.674-.473,4.549,4.549,0,0,1-.574-.573,3.844,3.844,0,0,1-.443-.657,3.17,3.17,0,0,1-.391-1.509v-7.768l13.334-11.641v-3.326h3.3v3.326h6.678v-3.326h3.328v3.326l13.355,11.641v7.768a3.119,3.119,0,0,1-.4,1.509,3.846,3.846,0,0,1-.455.657,4.653,4.653,0,0,1-.586.573,5.171,5.171,0,0,1-.686.473,5.25,5.25,0,0,1-.758.356,4.808,4.808,0,0,1-.8.226,4.344,4.344,0,0,1-.809.079Zm15.2-18.777a1.424,1.424,0,0,0-.367.188,2.313,2.313,0,0,0-.656.752l-6.3,10.941a2.3,2.3,0,0,0-.324.945,1.443,1.443,0,0,0,.021.413,1.139,1.139,0,0,0,.135.359,1.246,1.246,0,0,0,.244.3,1.451,1.451,0,0,0,.346.224,2.307,2.307,0,0,0,.979.191h12.611a2.3,2.3,0,0,0,.977-.191,1.422,1.422,0,0,0,.346-.224,1.223,1.223,0,0,0,.244-.3,1.153,1.153,0,0,0,.135-.36,1.374,1.374,0,0,0,.021-.413,2.323,2.323,0,0,0-.322-.945l-6.307-10.941a2.286,2.286,0,0,0-.654-.752,1.456,1.456,0,0,0-.367-.188,1.18,1.18,0,0,0-.758,0Zm.379,12.37a1.172,1.172,0,0,1-.85-.349,1.134,1.134,0,0,1-.268-.384,1.122,1.122,0,0,1-.09-.459,1.186,1.186,0,0,1,.088-.459,1.25,1.25,0,0,1,.27-.393,1.124,1.124,0,0,1,.383-.264,1.153,1.153,0,0,1,.455-.093h.012a1.166,1.166,0,0,1,.457.089,1.232,1.232,0,0,1,.393.268,1.218,1.218,0,0,1,.268.392,1.2,1.2,0,0,1,.09.46,1.18,1.18,0,0,1-.09.459,1.266,1.266,0,0,1-.65.642,1.156,1.156,0,0,1-.451.091Zm-.557-3.124c-.088-1.057-.326-2.384-.484-3.263-.1-.532-.164-.918-.164-1.034a1.4,1.4,0,0,1,.086-.5,1.254,1.254,0,0,1,.252-.409h0a1.113,1.113,0,0,1,.387-.275,1.221,1.221,0,0,1,.48-.092,1.243,1.243,0,0,1,.48.09,1.15,1.15,0,0,1,.387.272,1.254,1.254,0,0,1,.254.41,1.414,1.414,0,0,1,.084.5c0,.123-.072.545-.17,1.131v0c-.154.9-.363,2.145-.459,3.164Zm-19.365-15.946c-.863-3.229,5.547-9.845,17.443-13.043s20.746-.685,21.609,2.545c.75,2.809,2.574,6.833-3.264,7.726-5.977.93-6.209-1.342-6.908-4.239-.613-2.018-5.434-1.248-9.861-.133-4.479,1.2-8.986,2.867-8.424,4.974.789,2.949,1.719,5.031-3.869,7.136a7.547,7.547,0,0,1-2.68.6C18319.021,13892.085,18318.686,13888.8,18318.078,13886.522Z" transform="translate(-18289 -13872)" fill="url(#linear-gradient-3)"/>
+    </g>
+  </g>
+</svg>

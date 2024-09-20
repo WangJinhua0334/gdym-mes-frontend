@@ -1,0 +1,636 @@
+p {
+    margin: 0;
+    padding: 0;
+}
+
+.workbenchPage {
+    width: 100%;
+    height: 100%;
+    background: url('./image/bg.gif') center center no-repeat;
+    background-size: 100% 100%;
+    display: flex;
+    padding: 22px;
+    overflow: hidden;
+
+    .cont-lt {
+        height: 100%;
+        overflow: hidden;
+        margin-right: 10px;
+        position: relative;
+
+        .lt-top {
+            width: 100%;
+            height: 130px;
+            margin-bottom: 10px;
+
+            .footer-downLine {
+                width: 100%;
+                height: 88px;
+                border-radius: 6px;
+                background-color: rgba(31, 41, 92, .6);
+                padding: 13px 20px;
+                box-sizing: border-box;
+                display: flex;
+                position: relative;
+
+                .footer-downLine-lt {
+                    width: 80%;
+                    height: 100%;
+
+                    .footer-downLine-title {
+                        font-size: 20px;
+                        line-height: 30px;
+                        color: #fff;
+                    }
+
+                    .info-list {
+                        width: 100%;
+                        height: 44px;
+                        display: flex;
+
+                        .line {
+                            width: 3px;
+                            margin: 0 10px;
+                        }
+
+                        .text {
+                            width: 40%;
+                            text-wrap: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+
+                        li {
+                            font-size: 14px;
+                            line-height: 44px;
+                            color: #7D8EA8;
+                            display: flex;
+                        }
+                    }
+                }
+
+                .footer-downLine-rt {
+                    width: 20%;
+                    margin-top: 11px;
+
+                    div {
+                        width: 102px;
+                        height: 36px;
+                        border-radius: 18px;
+                        background-color: #1F295C;
+                        line-height: 36px;
+                        color: #1890FF;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                }
+
+                .change-icon {
+                    width: 12px;
+                    height: 12px;
+                    background: url('./image/change.png') center center no-repeat;
+                    background-size: 100% 100%;
+                    cursor: pointer;
+                    margin: 0 0 0 5px;
+                }
+
+                .sanjiao1 {
+                    width: 16px;
+                    height: 16px;
+                    background: url('./image/1.png') center center no-repeat;
+                    background-size: 100% 100%;
+                    position: absolute;
+                    left: 0;
+                    bottom: -14px;
+                }
+
+                .sanjiao2 {
+                    width: 16px;
+                    height: 16px;
+                    background: url('./image/2.png') center center no-repeat;
+                    background-size: 100% 100%;
+                    position: absolute;
+                    right: 0;
+                    bottom: -14px;
+                }
+            }
+
+            .text-list {
+                width: 100%;
+                height: 40px;
+                margin-top: 2px;
+                padding: 0 15px;
+                box-sizing: border-box;
+                display: flex;
+
+                .text-list-info {
+                    width: 29.5%;
+                    margin-right: 1%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    cursor: pointer;
+                    padding: 0 10px;
+                    background-color: rgba(31, 41, 92, .6);
+                    border-radius: 6px;
+                    color: #fff;
+
+                    .test-icon {
+                        height: 40px;
+                        line-height: 40px;
+
+                        p {
+                            font-size: 12px;
+                            color: #1890FF;
+                            height: 40px;
+                            line-height: 40px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+
+                            span {
+                                display: block;
+                                width: 14px;
+                                height: 7px;
+                                margin-top: 3px;
+                                margin-left: 5px;
+                            }
+
+                            .span1 {
+                                background: url('./image/zhankai.png') center center no-repeat;
+                            }
+
+                            .span2 {
+                                background: url('./image/shouqi.png') center center no-repeat;
+                            }
+                        }
+                    }
+                }
+
+                .flowCard {
+                    flex: 1;
+                    position: relative;
+                    line-height: 44px;
+                    color: #fff;
+                    background-color: rgba(31, 41, 92, .6);
+                    border-radius: 6px;
+                    padding: 0 10px;
+
+                    .flowCard-search {
+                        width: 100%;
+                        height: 40px;
+                        display: flex;
+
+                        .clear-button {
+                            font-size: 12px;
+                            color: #727171;
+                            background: linear-gradient(180deg, #f4f7fc 0%, #ffe9e9 100%);
+                            width: 60px;
+                            line-height: 24px;
+                            border-radius: 5px;
+                            height: 24px;
+                            margin-top: 8px;
+                            margin-right: 10px;
+                            text-align: center;
+                            cursor: pointer;
+                        }
+                        .search-button {
+                            font-size: 12px;
+                            color: #fff;
+                            background: linear-gradient(180deg, #9EC3F6 0%, #1890FF 100%);
+                            width: 60px;
+                            line-height: 24px;
+                            border-radius: 5px;
+                            height: 24px;
+                            margin-top: 8px;
+                            text-align: center;
+                            cursor: pointer;
+                        }
+                    }
+
+                    .flowCardClose {
+                        position: absolute;
+                        top: 10px;
+                        right: 30%;
+                        cursor: pointer;
+                    }
+
+                    .ant-input {
+                        background-color: transparent !important;
+                        color: #fff;
+                        border: none;
+                        outline: none;
+                    }
+
+                    .ant-input:focus,
+                    .ant-input-focused {
+                        box-shadow: none;
+                    }
+
+                    .flowCardListDiv {
+                        position: absolute;
+                        top: 40px;
+                        left: 75px;
+                        width: 400px;
+                        padding: 10px;
+                        z-index: 99;
+                        max-height: 400px;
+                        overflow: auto;
+                        background-color: #fff;
+                        border-radius: 6px;
+                        li {
+                            font-size: 16px;
+                            cursor: pointer;
+                            padding: 2px;
+                            color: #333;
+
+                        }
+                    }
+                }
+            }
+        }
+
+        .lt-bot {
+            width: 100%;
+            height: calc(100% - 140px);
+            display: flex;
+            overflow: hidden;
+
+            .scroll-wrap {
+                width: 30%;
+                overflow: hidden;
+                background-color: rgba(31, 41, 92, .6);
+                border-radius: 6px;
+                padding: 16px;
+                box-sizing: border-box;
+                margin-right: 1%;
+
+                .warp-status-box{
+                    width: 100%;
+                    height: 40px;
+                    overflow-x: scroll;
+                    overflow-y: hidden;
+                }
+                .warp-status {
+                    width: 180%;
+                    height: 30px;
+                    display: flex;
+                    background-color: #fff;
+                    border-radius: 5px;
+                    padding: 0 2px;
+                    margin-bottom: 10px;
+
+                    li {
+                        flex: 1;
+                        font-size: 12px;
+                        line-height: 26px;
+                        color: #344A75;
+                        height: 26px;
+                        margin-top: 2px;
+                        border-radius: 5px;
+                        text-align: center;
+                        cursor: pointer;
+                    }
+
+                    .active {
+                        background: linear-gradient(180deg, #9EC3F6 0%, #1890FF 100%);
+                        color: #fff;
+                    }
+                }
+
+                ::-webkit-scrollbar {
+                    /*隐藏滚轮*/
+                    // display: none;
+                }
+
+                .task-list {
+                    height: 90%;
+                    overflow-y: scroll;
+
+                    li {
+                        background: #CEE0F5;
+                        border-radius: 5px;
+                        margin: 5px 0;
+                        cursor: pointer;
+                        position: relative;
+                        padding: 10px;
+
+                        .task-title {
+                            width: 100%;
+                            height: 30px;
+                            display: flex;
+                            align-items: center;
+
+                            .status-icon {
+                                width: 24px;
+                                height: 24px;
+                            }
+
+                            .status-icon1 {
+                                background: url('./image/producting.png') center center no-repeat;
+                                background-size: 100% 100%;
+                            }
+
+                            .status-icon2 {
+                                background: url('./image/wait_product.png') center center no-repeat;
+                                background-size: 100% 100%;
+                            }
+
+                            .status-icon3 {
+                                background: url('./image/complate.png') center center no-repeat;
+                                background-size: 100% 100%;
+                            }
+
+                            .status-icon4 {
+                                background: url('./image/outline.png') center center no-repeat;
+                                background-size: 100% 100%;
+                            }
+
+                            .taskTitleLine {
+                                height: 30px;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                font-size: 14px;
+                                font-weight: 600;
+                                line-height: 30px;
+                                margin-left: 10px;
+                            }
+
+                        }
+
+                        .complate-num {
+                            width: 100%;
+                            height: 20px;
+                            display: flex;
+                            justify-content: space-between;
+
+                            p {
+                                width: 70%;
+                                height: 20px;
+                                background-color: #fff;
+                                border-radius: 5px;
+                                color: #344A75;
+                                font-size: 12px;
+                                text-align: center;
+
+                                span {
+                                    color: #1890FF;
+                                }
+                            }
+                        }
+
+                        .detailLine {
+                            display: flex;
+                            font-size: 12px;
+                        }
+                    }
+
+                    .active {
+                        background-color: #fff;
+
+                        .complate-num {
+                            p {
+                                background-color: #EBF2FA;
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            .operateion-button {
+                flex: 1;
+                padding: 10px 20px;
+                overflow: hidden;
+                background-color: rgba(31, 41, 92, .6);
+                border-radius: 6px;
+
+                .operate-title {
+                    font-size: 14px;
+                    height: 30px;
+                    color: #7D8EA8;
+                    margin-bottom: 10px;
+                }
+
+                .centerDiv {
+                    width: 100%;
+                    height: 40%;
+                    box-sizing: border-box;
+                    overflow: auto;
+                    margin-bottom: 10px;
+                }
+
+                .commandBtn {
+                    margin: 0 auto 10px;
+                    cursor: pointer;
+                    float: left;
+                }
+
+                .commandBtn .text {
+                    height: 30px;
+                    color: #fff;
+                    text-align: center;
+                    font-family: 'PingFangBold';
+                }
+
+                .commandIconDiv {
+                    margin: 0 auto;
+                    color: #1890FF;
+                }
+
+                .form-onlyread {
+                    pointer-events: none;
+
+                    .commandIconDiv {
+                        color: #dfdfdf;
+
+                        .icon {
+                            color: #dfdfdf;
+                        }
+                        .text{
+                            color: #dfdfdf;
+                        }
+                    }
+                }
+            }
+        }
+        .cont-mask{
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,.3);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    }
+
+    .cont-rt {
+        border-radius: 6px;
+        height: 100%;
+        background-color: rgba(31, 41, 92, .6);
+
+        .footer-topLine {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 10px 0 10px;
+            height: 50px;
+
+            .footer-topLine-title {
+                font-size: 16px;
+                font-weight: 700;
+                padding-left: 15px;
+                color: #fff;
+            }
+
+            .flowCardClose {
+                color: #fff;
+            }
+        }
+
+        .workPathDiv {
+            width: 98%;
+            height: calc(100% - 65px);
+            margin: 5px;
+        }
+
+        .workPost {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            padding: 20px 30px;
+
+            .workPost-title {
+                width: 100%;
+                height: 40px;
+                line-height: 40px;
+                color: #7D8EA8;
+                font-size: 20px;
+            }
+
+            .postForm {
+                width: 80%;
+                height: 40%;
+                margin: 60px auto 0;
+                
+            }
+            .btn-box{
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .btn{
+                width: 90px;
+                height: 32px;
+                border-radius: 6px;
+                line-height: 32px;
+                text-align: center;
+                font-size: 12px;
+                float: left;
+                cursor: pointer;
+            }
+            .btn1{
+                background-color: #1890FF;
+                color: #fff;
+            }
+            .btn2{
+                background-color: #fff;
+                color: #7D8EA8;
+                margin-left: 10px;
+            }
+        }
+    }
+}
+
+.workPathDiv-out {
+    .cont-lt {
+        width: 60%;
+    }
+
+    .cont-rt {
+        width: 40%;
+    }
+}
+
+.workPathDiv-in {
+    .cont-lt {
+        width: 0;
+    }
+
+    .cont-rt {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .commandBtn {
+        width: 14%;
+        height: 40px;
+
+        .text {
+            width: 100%;
+            font-size: 12px;
+        }
+
+        .commandIconDiv {
+            width: 60px;
+            height: 40px;
+        }
+
+        .icon {
+            width: 60px !important;
+            height: 40px !important;
+        }
+    }
+
+}
+
+@media only screen and (max-width: 1400px) {
+    .commandBtn {
+        width: 14%;
+        height: 80px;
+
+        .text {
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .commandIconDiv {
+            width: 60px;
+            height: 40px;
+        }
+
+        .icon {
+            width: 60px !important;
+            height: 40px !important;
+        }
+    }
+
+}
+
+@media only screen and (min-width: 1400px) {
+    .commandBtn {
+        width: 127px;
+        height: 110px;
+
+        .text {
+            width: 100%;
+            font-size: 16px;
+        }
+
+        .commandIconDiv {
+            width: 80px;
+            height: 60px;
+        }
+
+        .icon {
+            width: 80px !important;
+            height: 60px !important;
+        }
+    }
+
+}
