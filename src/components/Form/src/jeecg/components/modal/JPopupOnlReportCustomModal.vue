@@ -241,7 +241,7 @@
                 if (item.fuzzy != undefined && !item.fuzzy) {
                   queryParams[key] = unref(queryParam)[key].trim();
                 } else {
-                  queryParams[key] = '*' + unref(queryParam)[key].trim() + '*';
+                  queryParams[key] = unref(queryParam)[key].trim();
                 }
               }
             });
