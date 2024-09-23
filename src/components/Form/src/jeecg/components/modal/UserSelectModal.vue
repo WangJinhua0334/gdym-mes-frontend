@@ -13,7 +13,6 @@
       :centered="true"
       destroyOnClose
       @visible-change="visibleChange"
-      
     >
       <a-row>
         <a-col :span="showSelected ? 18 : 24">
@@ -29,6 +28,7 @@
             :rowSelection="rowSelection"
             :indexColumnProps="indexColumnProps"
             :afterFetch="afterFetch"
+            :beforeFetch="beforeFetch"
           >
             <!-- update-begin-author:taoyan date:2022-5-25 for: VUEN-1112一对多 用户选择 未显示选择条数，及清空 -->
             <template #tableTitle></template>
@@ -125,7 +125,7 @@
       // update-begin--author:liaozhiyang---date:20230811---for：【issues/657】右侧选中列表删除无效
       watch(rowSelection.selectedRowKeys, (newVal) => {
         //update-begin---author:wangshuai ---date: 20230829  for：null指针异常导致控制台报错页面不显示------------
-        if(tableRef.value){
+        if (tableRef.value) {
           tableRef.value.setSelectedRowKeys(newVal);
         }
         //update-end---author:wangshuai ---date: 20230829 for：null指针异常导致控制台报错页面不显示------------
@@ -233,22 +233,22 @@
           closeModal();
         });
       }
-      
+
       //update-begin---author:wangshuai ---date:20230703  for：【QQYUN-5685】5、离职人员可以选自己------------
       /**
        * 用户返回结果逻辑查询
        */
       function afterFetch(record) {
         let excludeList = props.excludeUserIdList;
-        if(!excludeList){
+        if (!excludeList) {
           return record;
         }
-        let arr:any[] = [];
+        let arr: any[] = [];
         //如果存在过滤用户id集合，并且后台返回的数据不为空
-        if(excludeList.length>0 && record && record.length>0){
-          for(let item of record){
-            if(excludeList.indexOf(item.id)<0){
-              arr.push({...item})
+        if (excludeList.length > 0 && record && record.length > 0) {
+          for (let item of record) {
+            if (excludeList.indexOf(item.id) < 0) {
+              arr.push({ ...item });
             }
           }
           return arr;
@@ -266,6 +266,16 @@
       const clientHeight = document.documentElement.clientHeight * 200;
       maxHeight.value = clientHeight > 600 ? 600 : clientHeight;
       // update-end--author:liaozhiyang---date:20240607---for：【TV360X-305】小屏幕展示10条
+      //update-begin---author:wangshuai---date:2024-07-03---for:【TV360X-1629】用户选择组件不是根据创建时间正序排序的---
+      /**
+       * 请求之前根据创建时间排序
+       *
+       * @param params
+       */
+      function beforeFetch(params) {
+        return Object.assign({ column: 'createTime', order: 'desc' }, params);
+      }
+      //update-end---author:wangshuai---date:2024-07-03---for:【TV360X-1629】用户选择组件不是根据创建时间正序排序的---
 
       return {
         //config,
@@ -287,6 +297,7 @@
         afterFetch,
         handleCancel,
         maxHeight,
+        beforeFetch,
       };
     },
   });

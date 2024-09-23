@@ -1,6 +1,6 @@
 <template>
   <a-checkbox-group v-bind="attrs" v-model:value="checkboxArray" :options="checkOptions" @change="handleChange">
-    <template #label="{label, value}">
+    <template #label="{ label, value }">
       <span :class="[useDicColor && getDicColor(value) ? 'colorText' : '']" :style="{ backgroundColor: `${getDicColor(value)}` }">{{ label }}</span>
     </template>
   </a-checkbox-group>
@@ -10,12 +10,12 @@
   import { defineComponent, computed, watch, watchEffect, ref, unref } from 'vue';
   import { propTypes } from '/@/utils/propTypes';
   import { useAttrs } from '/@/hooks/core/useAttrs';
-  import { initDictOptions } from '/@/utils/dict/index';
+  import { getDictItems } from '@/api/common/api';
 
   export default defineComponent({
     name: 'JCheckbox',
     props: {
-      value:propTypes.oneOfType([propTypes.string, propTypes.number]),
+      value: propTypes.oneOfType([propTypes.string, propTypes.number]),
       dictCode: propTypes.string,
       useDicColor: propTypes.bool.def(false),
       options: {
@@ -36,11 +36,11 @@
       watchEffect(() => {
         //update-begin-author:taoyan date:2022-7-4 for:issues/I5E7YX AUTO在线表单进入功能测试之后一直卡在功能测试界面
         let temp = props.value;
-        if(!temp && temp!==0){
-          checkboxArray.value = []
-        }else{
+        if (!temp && temp !== 0) {
+          checkboxArray.value = [];
+        } else {
           temp = temp + '';
-          checkboxArray.value = temp.split(',')
+          checkboxArray.value = temp.split(',');
         }
         //update-end-author:taoyan date:2022-7-4 for:issues/I5E7YX AUTO在线表单进入功能测试之后一直卡在功能测试界面
         //update-begin-author:taoyan date:20220401 for: 调用表单的 resetFields不会清空当前信息，界面显示上一次的数据
@@ -67,21 +67,28 @@
         }
         //根据字典Code, 初始化选项
         if (props.dictCode) {
-          const dictData = await initDictOptions(props.dictCode);
-          checkOptions.value = dictData.reduce((prev, next) => {
-            if (next) {
-              const value = next['value'];
-              prev.push({
-                label: next['text'],
-                value: value,
-                color: next['color'],
-              });
-            }
-            return prev;
-          }, []);
+          loadDictOptions();
         }
       }
-
+      // 根据字典code查询字典项
+      function loadDictOptions() {
+        //update-begin-author:taoyan date:2022-6-21 for: 字典数据请求前将参数编码处理，但是不能直接编码，因为可能之前已经编码过了
+        let temp = props.dictCode || '';
+        if (temp.indexOf(',') > 0 && temp.indexOf(' ') > 0) {
+          // 编码后 是不包含空格的
+          temp = encodeURI(temp);
+        }
+        //update-end-author:taoyan date:2022-6-21 for: 字典数据请求前将参数编码处理，但是不能直接编码，因为可能之前已经编码过了
+        getDictItems(temp).then((res) => {
+          if (res) {
+            checkOptions.value = res.map((item) => ({ value: item.value, label: item.text, color: item.color }));
+            //console.info('res', dictOptions.value);
+          } else {
+            console.error('getDictItems error: : ', res);
+            checkOptions.value = [];
+          }
+        });
+      }
       /**
        * change事件
        * @param $event

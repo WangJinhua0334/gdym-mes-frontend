@@ -11,7 +11,9 @@
     :getPopupContainer="getParentContainer"
   >
     <a-select-option v-for="(item, index) in dictOptions" :key="index" :getPopupContainer="getParentContainer" :value="item.value">
-      <span :class="[useDicColor && item.color ? 'colorText' : '']" :style="{ backgroundColor: `${useDicColor && item.color}` }">{{ item.text || item.label }}</span>
+      <span :class="[useDicColor && item.color ? 'colorText' : '']" :style="{ backgroundColor: `${useDicColor && item.color}` }">{{
+        item.text || item.label
+      }}</span>
     </a-select-option>
   </a-select>
 </template>
@@ -92,6 +94,17 @@
       });
 
       watch(
+        () => props.dictCode,
+        () => {
+          if (props.dictCode) {
+            loadDictOptions();
+          } else {
+            dictOptions.value = props.options;
+          }
+        }
+      );
+
+      watch(
         () => props.value,
         (val) => {
           if (!val) {
@@ -103,13 +116,16 @@
       );
 
       //适用于 动态改变下拉选项的操作
-      watch(()=>props.options, ()=>{
-        if (props.dictCode) {
-          // nothing to do
-        } else {
-          dictOptions.value = props.options;
+      watch(
+        () => props.options,
+        () => {
+          if (props.dictCode) {
+            // nothing to do
+          } else {
+            dictOptions.value = props.options;
+          }
         }
-      });
+      );
 
       function onChange(selectedValue) {
         if (props.triggerChange) {
@@ -147,7 +163,7 @@
         //update-end-author:taoyan date:2022-6-21 for: 字典数据请求前将参数编码处理，但是不能直接编码，因为可能之前已经编码过了
         getDictItems(temp).then((res) => {
           if (res) {
-            dictOptions.value = res.map((item) => ({ value: item.value, label: item.text, color:item.color }));
+            dictOptions.value = res.map((item) => ({ value: item.value, label: item.text, color: item.color }));
             //console.info('res', dictOptions.value);
           } else {
             console.error('getDictItems error: : ', res);
@@ -174,9 +190,9 @@
     },
   });
 </script>
-<style scoped lang='less'>
-.colorText{
-  display: inline-block;
+<style scoped lang="less">
+  .colorText {
+    display: inline-block;
     height: 20px;
     line-height: 20px;
     padding: 0 6px;
@@ -184,5 +200,5 @@
     background-color: red;
     color: #fff;
     font-size: 12px;
-}
+  }
 </style>

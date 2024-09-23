@@ -23,9 +23,10 @@
         :groupId="uniqGroupId"
         :param="param"
         :showAdvancedButton="showAdvancedButton"
-        @ok="callBack"
         :getContainer="getContainer"
-      ></JPopupOnlReportModal>
+        :getFormValues="getFormValues"
+        @ok="callBack"
+      />
     </a-form-item>
     <!-- update-end--author:liaozhiyang---date:20240515---for：【QQYUN-9260】必填模式下会影响到弹窗内antd组件的样式 -->
   </div>
@@ -57,6 +58,7 @@
       formElRef: propTypes.object,
       setFieldsValue: propTypes.func,
       getContainer: propTypes.func,
+      getFormValues: propTypes.func,
       fieldConfig: {
         type: Array,
         default: () => [],

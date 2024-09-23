@@ -1065,10 +1065,10 @@
   resolved "https://registry.npmmirror.com/@istanbuljs/schema/-/schema-0.1.3.tgz#e45e384e4b8ec16bce2fd903af78450f6bf7ec98"
   integrity sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==
 
-"@jeecg/online@3.7.0-beta":
-  version "3.7.0-beta"
-  resolved "https://registry.npmmirror.com/@jeecg/online/-/online-3.7.0-beta.tgz#613d7db112a4200dca31a06e45e9099f75194b76"
-  integrity sha512-bphttMcHSghSOL210RVcn3TcteRs9CmLaBKhNLDgzrjJfgdxzdh7/YkWW7C+lFnsfG+Oz4mvaiuOB5U5UVAhFw==
+"@jeecg/online@3.7.1-RC":
+  version "3.7.1-RC"
+  resolved "https://registry.npmmirror.com/@jeecg/online/-/online-3.7.1-RC.tgz#bf27aa1939cd7cd329ca940b3d4ccc9bb77dcca4"
+  integrity sha512-/QIVZ9kOsMz5qYrtNeMW8eKnre3vIP8BDTsQZ1Cb8+PvYzndRyrbyr2EF2/pmKuh8mlx2DlXSsXJ33teOdU4Jg==
 
 "@jest/console@^27.5.1":
   version "27.5.1"
@@ -2465,6 +2465,11 @@
     chokidar "^3.6.0"
     fast-glob "^3.3.2"
     magic-string "^0.30.8"
+
+"@vant/area-data@^1.5.1":
+  version "1.5.2"
+  resolved "https://registry.npmmirror.com/@vant/area-data/-/area-data-1.5.2.tgz#d2bed822a86ee92f7e28f07f16834929b38a5fba"
+  integrity sha512-Gtxgt6Rjgopt6234ANpO0bBsSwtjZ23lBlVDHIy8Mi2NJqyoj1vgVWY0dri8/2LCZAWzQ6EnwRrUVViUZ0cvMA==
 
 "@vitejs/plugin-vue-jsx@^3.1.0":
   version "3.1.0"
