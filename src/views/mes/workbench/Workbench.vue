@@ -884,26 +884,26 @@
   @import url('Workbench.less');
 
   /*覆盖ant-design-vue 样式**/
-  /deep/ .ant-select-selector {
+  :deep(.ant-select-selector) {
     height: 40px !important;
     border-radius: 8px !important;
     line-height: 40px !important;
   }
 
-  /deep/ .ant-select-selection-search-input {
+  :deep(.ant-select-selection-search-input) {
     height: 40px !important;
     line-height: 40px !important;
   }
 
-  /deep/ .ant-select-selection-placeholder {
+  :deep(.ant-select-selection-placeholder) {
     line-height: 40px !important;
   }
 
-  /deep/ .ant-col label {
+  :deep(.ant-col label) {
     color: #fff !important;
   }
 
-  /deep/ .ant-select-selection-item {
+  :deep(.ant-select-selection-item) {
     line-height: 40px !important;
   }
 </style>

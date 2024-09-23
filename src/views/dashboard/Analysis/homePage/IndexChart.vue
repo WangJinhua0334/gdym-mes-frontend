@@ -142,7 +142,7 @@
     }
   }
   .ant-card {
-    ::v-deep(.ant-card-head-title) {
+    :deep(.ant-card-head-title) {
       font-weight: normal;
     }
   }
