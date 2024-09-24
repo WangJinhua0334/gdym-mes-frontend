@@ -1,5 +1,5 @@
 <template>
-  <Tooltip placement="top" v-bind="getBindProps" >
+  <Tooltip placement="top" v-bind="getBindProps">
     <template #title>
       <span>{{ t('component.table.settingColumn') }}</span>
     </template>
@@ -186,6 +186,7 @@
 
       let sortable: Sortable;
       const sortableOrder = ref<string[]>();
+
       const localeStore = useLocaleStoreWithOut();
       // 列表字段配置缓存
       const { saveSetting, resetSetting } = useColumnsCache(
@@ -224,7 +225,6 @@
         cachePlainOptions.value = columns;
       });
       // update-end--author:liaozhiyang---date:20240724---for：【issues/6908】多语言无刷新切换时，BasicColumn和FormSchema里面的值不能正常切换
-
       function getColumns() {
         const ret: Options[] = [];
         table.getColumns({ ignoreIndex: true, ignoreAction: true }).forEach((item) => {

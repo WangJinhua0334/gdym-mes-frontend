@@ -453,21 +453,6 @@
     });
   }
   /**
-   * 出厂检验是否必填
-   */
-  async function onEditIsRequired(record) {
-    $message.createConfirm({
-      iconType: 'warning',
-      title: '确认修改',
-      content: '是否修改当前工单的出厂检验状态，当前如果是必填，则会修改为不必填',
-      okText: '确定',
-      cancelText: '取消',
-      onOk: () => {
-        editIsRequired({ id: record.id }, handleSuccess);
-      },
-    });
-  }
-  /**
    * 批量删除事件
    */
   async function batchHandleDelete() {
@@ -568,10 +553,6 @@
     arr.push({
       label: '详情',
       onClick: handleDetail.bind(null, record),
-    });
-    arr.push({
-      label: '出厂检验必填修改',
-      onClick: onEditIsRequired.bind(null, record),
     });
     arr.push({
       label: '下发明细',

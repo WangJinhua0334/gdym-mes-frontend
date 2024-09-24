@@ -4400,6 +4400,11 @@ detect-newline@^3.0.0:
   resolved "https://registry.npmmirror.com/detect-newline/-/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
   integrity sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
 
+dhtmlx-gantt@^8.0.3:
+  version "8.0.10"
+  resolved "https://registry.npmmirror.com/dhtmlx-gantt/-/dhtmlx-gantt-8.0.10.tgz#668f78d567354e0ef0447bee43f937a156041e76"
+  integrity sha512-DNfxZw4ctR8zj/N7jHQHtrfsb4i2CRcTBmshFILbpwvui3VyQZqWavWB+CwLxVXjKiO/443yrdqB7K9DOs903Q==
+
 diff-match-patch@^1.0.5:
   version "1.0.5"
   resolved "https://registry.npmmirror.com/diff-match-patch/-/diff-match-patch-1.0.5.tgz#abb584d5f10cd1196dfc55aa03701592ae3f7b37"
