@@ -66,7 +66,7 @@
             const templateIds = Object.keys(reportRs);
             for (const templateId of templateIds) {
               const reportId = reportRs[templateId];
-              printSet[reportId] = { id: `'${res[templateId].join("','")}'` };
+              printSet[reportId] = { id: `${res[templateId].join(',')}` };
             }
 
             loopPrintJimuReport(printSet, getToken, () => {

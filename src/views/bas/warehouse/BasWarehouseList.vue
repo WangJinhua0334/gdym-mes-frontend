@@ -119,7 +119,7 @@
     }
 
     defHttp.get({ url: '/template/basTemplate/getReportIdByCode', params: { code: 'SystemDefaultTemplate', type: 'wh_code' } }).then((res) => {
-      printJimuReport(res, { printAll: true, id: `'${unref(selectedRowKeys).join("','")}'` }, getToken(), false, () => {
+      printJimuReport(res, { printAll: true, id: `${unref(selectedRowKeys).join(',')}` }, getToken(), false, () => {
         $message.createMessage.success('打印成功!');
       });
     });

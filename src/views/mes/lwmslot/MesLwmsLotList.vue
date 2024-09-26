@@ -101,10 +101,10 @@
     });
   }
 
-    /**
+  /**
    * 生成条码事件事件(按工单)
    */
-   function handleGenerateByMo() {
+  function handleGenerateByMo() {
     openGenerateByMoModal(true, {
       isUpdate: false,
       showFooter: true,
@@ -123,12 +123,14 @@
     try {
       // TODO
       defHttp.get({ url: '/template/basTemplate/getReportIdByCode', params: { code: 'SystemDefaultTemplate', type: 'lwms_lot_sn' } }).then((res) => {
-        printJimuReport(res, { printAll: true, id: `'${unref(selectedRowKeys.value).join("','")}'` }, getToken(), false, () => {
+        printJimuReport(res, { printAll: true, id: `${unref(selectedRowKeys.value).join(',')}` }, getToken(), false, () => {
           setLoading(false);
         });
       });
     } catch (e) {
+      setLoading(false);
     } finally {
+      setLoading(false);
     }
   }
 

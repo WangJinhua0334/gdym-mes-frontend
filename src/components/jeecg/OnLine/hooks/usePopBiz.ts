@@ -946,6 +946,8 @@ export function usePopBiz(ob, tableRef?) {
       filterUnuseSelect,
       handleExport,
       getOkSelectRows,
+      filterObj,
+      handleSumColumn,
     },
     {
       hrefComponent,

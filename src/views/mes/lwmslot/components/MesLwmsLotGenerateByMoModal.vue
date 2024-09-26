@@ -189,7 +189,7 @@
       let ids = res.ids;
       console.log('ids', ids);
       defHttp.get({ url: '/template/basTemplate/getReportIdByCode', params: { code: 'SystemDefaultTemplate', type: 'lwms_lot_sn' } }).then((res) => {
-        printJimuReport(res, { printAll: true, id: `'${unref(ids).join("','")}'` }, getToken(), false, () => {
+        printJimuReport(res, { printAll: true, id: `${unref(ids).join(',')}` }, getToken(), false, () => {
           loading.value = false;
           //关闭弹窗
           closeModal();
