@@ -6,6 +6,8 @@ import { unref } from 'vue';
 import { isObject } from '/@/utils/is';
 import { useGlobSetting } from '/@/hooks/setting';
 import type { FormSchema } from '@/components/Form';
+import { getAuthCache } from './auth';
+import { TOKEN_KEY } from '../enums/cacheEnum';
 
 const globSetting = useGlobSetting();
 
@@ -579,16 +581,24 @@ export function printJimuReport(id, params, token, preview = false, callback) {
     viewJimuReport(id, params, token);
     return;
   } else {
+    //console.log(getAuthCache(TOKEN_KEY));
     defHttp
       .post(
         {
           url: '/jmreport/exportPdfStream',
-          data: { excelConfigId: id, queryParam: { ...params, token: token } },
+          data: {
+            excelConfigId: id,
+            queryParam: {
+              ...params,
+              tenantId: '1000',
+            },
+          },
           responseType: 'blob',
         },
         { isTransformResponse: false }
       )
       .then((res) => {
+        console.log(res);
         //创建url
         const fileURL = URL.createObjectURL(res);
         printJS({
