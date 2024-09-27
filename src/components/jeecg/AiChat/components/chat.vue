@@ -235,7 +235,7 @@
       if (typeof EventSource !== 'undefined') {
         const token = getToken();
         evtSource = new EventSourcePolyfill(
-          `${VITE_GLOB_API_URL}/test/ai/chat/send?message=${message}${options.parentMessageId ? '&topicId=' + options.parentMessageId : ''}`,
+          `${VITE_GLOB_API_URL}/kimi/ai/chat/send?message=${message}${options.parentMessageId ? '&topicId=' + options.parentMessageId : ''}`,
           {
             withCredentials: true,
             headers: {
@@ -245,12 +245,13 @@
         ); // 后端接口，要配置允许跨域属性
         // 与事件源的连接刚打开时触发
         evtSource.onopen = function (e) {
-          console.log(e);
+          //console.log(e);
         };
-        // 当从事件源接收到数据时触发
-        evtSource.onmessage = function (e) {
+        evtSource.addEventListener('message', function (e) {
           const data = e.data;
-          // console.log(e);
+          console.log(e);
+          console.log(123456);
+          console.log(data);
           if (data === '[DONE]') {
             updateChatSome(uuid, props.chatData.length - 1, { loading: false });
             scrollToBottom();
@@ -284,9 +285,11 @@
               evtSource.close(); // 关闭连接
             }
           }
-        };
+        });
+        // 当从事件源接收到数据时触发
+        // evtSource.onmessage = function (e) {};
         // 与事件源的连接无法打开时触发
-        evtSource.onerror = function (e) {
+        evtSource.addEventListener('error', function (e) {
           // console.log(e);
           if (e.error?.message || e.statusText) {
             updateChat(uuid.value, props.chatData.length - 1, {
@@ -303,7 +306,7 @@
           evtSource.close(); // 关闭连接
           updateChatSome(uuid.value, props.chatData.length - 1, { loading: false });
           handleStop();
-        };
+        });
       } else {
         console.log('当前浏览器不支持使用EventSource接收服务器推送事件!');
       }
