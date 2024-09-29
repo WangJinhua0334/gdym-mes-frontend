@@ -56,10 +56,10 @@
                           <img v-else style="margin-top: 2px; max-width: initial" :src="codeImg" @click="handleChangeCheckCode" />
                         </div>
                       </div>
-                      <div class="aui-flex" style="margin-top: 20px;">
+                      <div class="aui-flex" style="margin-top: 20px">
                         <div class="aui-flex-box">
                           <div class="aui-choice">
-                            <a-input class="fix-auto-fill" type="checkbox" v-model:value="rememberMe" />
+                            <a-checkbox class="fix-auto-fill" type="checkbox" v-model:checked="rememberMe" />
                             <span style="margin-left: 5px">{{ t('sys.login.rememberMe') }}</span>
                           </div>
                         </div>
@@ -173,6 +173,7 @@
   import CaptchaModal from '@/components/jeecg/captcha/CaptchaModal.vue';
   import { useModal } from '@/components/Modal';
   import { ExceptionEnum } from '@/enums/exceptionEnum';
+  import * as CryptoJS from 'crypto-js';
 
   const IconFont = createFromIconfontCN({
     scriptUrl: '//at.alicdn.com/t/font_2316098_umqusozousr.js',
@@ -188,7 +189,7 @@
     requestCodeSuccess: false,
     checkKey: null,
   });
-  const rememberMe = ref<string>('0');
+  const rememberMe = ref<boolean>(false);
   //手机号登录还是账号登录
   const activeIndex = ref<string>('accountLogin');
   const type = ref<string>('login');
@@ -270,6 +271,14 @@
     }
     try {
       loginLoading.value = true;
+      //如果记住密码，本地存储
+      console.log(rememberMe);
+      if (rememberMe.value) {
+        saveCredentials(formData.username, formData.password);
+      } else {
+        clearCredentials();
+      }
+      debugger;
       const { userInfo } = await userStore.login(
         toRaw({
           password: formData.password,
@@ -298,6 +307,32 @@
     }
   }
 
+  // 保存用户名和加密后的密码到 localStorage
+  function saveCredentials(username, password) {
+    const key = 'zczn@123'; // 你的密钥
+    const encryptedPassword = CryptoJS.AES.encrypt(password, key).toString();
+    localStorage.setItem('jeecg_username', username);
+    localStorage.setItem('jeecg_password', encryptedPassword);
+  }
+  // 清空 localStorage
+  function clearCredentials() {
+    localStorage.removeItem('jeecg_password');
+  }
+
+  // 从 localStorage 中读取并使用保存的凭证
+  function loadCredentials() {
+    const username = localStorage.getItem('jeecg_username');
+    const encryptedPassword = localStorage.getItem('jeecg_password');
+    const key = 'zczn@123'; // 你的密钥
+    if (username) {
+      formData.username = username;
+    }
+    if (encryptedPassword) {
+      const bytes = CryptoJS.AES.decrypt(encryptedPassword ? encryptedPassword : '', key);
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      formData.password = decrypted;
+    }
+  }
   /**
    * 手机号登录
    */
@@ -429,6 +464,7 @@
   onMounted(() => {
     //加载验证码
     handleChangeCheckCode();
+    loadCredentials();
   });
 </script>
 

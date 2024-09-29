@@ -25,12 +25,12 @@
               </div>
             </form>
           </div>
-          <!-- <div class="aui-flex aui-third-text">
+          <div class="aui-flex aui-third-text">
             <div class="aui-flex-box aui-third-border">
               <span>{{ t('sys.login.otherSignIn') }}</span>
             </div>
-          </div> -->
-          <!-- <div class="aui-flex" :class="`${prefixCls}-sign-in-way`"> 
+          </div>
+          <div class="aui-flex" :class="`${prefixCls}-sign-in-way`">
             <div class="aui-flex-box">
               <div class="aui-third-login">
                 <a href="" title="github" @click="onThirdLogin('github')"><GithubFilled /></a>
@@ -51,7 +51,7 @@
                 <a href="" title="微信" @click="onThirdLogin('wechat_open')"><WechatFilled /></a>
               </div>
             </div>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>
