@@ -272,13 +272,12 @@
     try {
       loginLoading.value = true;
       //如果记住密码，本地存储
-      console.log(rememberMe);
+      //console.log(rememberMe);
       if (rememberMe.value) {
         saveCredentials(formData.username, formData.password);
       } else {
         clearCredentials();
       }
-      debugger;
       const { userInfo } = await userStore.login(
         toRaw({
           password: formData.password,
