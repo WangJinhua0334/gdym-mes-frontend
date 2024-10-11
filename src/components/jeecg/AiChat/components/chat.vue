@@ -444,7 +444,7 @@
         const fileUrls = fileValue.value; // 假设 fileValue 是一个响应式对象
         const imgUrls = imgValue.value; // 假设 imgValue 是一个响应式对象
         // evtSource = new EventSourcePolyfill(
-        //   `${VITE_GLOB_API_URL}/kimi/ai/chat/send?message=${message}${options.parentMessageId ? '&topicId=' + options.parentMessageId : ''}`,
+        //   `${VITE_GLOB_API_URL}/ai/chat/send?message=${message}${options.parentMessageId ? '&topicId=' + options.parentMessageId : ''}`,
         //   {
         //     withCredentials: true,
         //     headers: {
@@ -459,7 +459,7 @@
           ...(imgUrls && { imgUrls: imgUrls }),
         }).toString();
 
-        const url = `${VITE_GLOB_API_URL}/kimi/ai/chat/send?${params}`;
+        const url = `${VITE_GLOB_API_URL}/ai/chat/send?${params}`;
 
         evtSource = new EventSourcePolyfill(url, {
           withCredentials: true,
