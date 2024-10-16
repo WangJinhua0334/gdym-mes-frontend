@@ -167,7 +167,7 @@ export function useColumns(
       })
       .map((column) => {
         // update-begin--author:liaozhiyang---date:20230718---for: 【issues-179】antd3 一些警告以及报错(针对表格)
-        if(column.slots?.customRender) {
+        if (column.slots?.customRender) {
           // slots的备份，兼容老的写法，转成新写法避免控制台警告
           column.slotsBak = column.slots;
           delete column.slots;
@@ -186,6 +186,8 @@ export function useColumns(
           column.title = metaTitle;
         }
         //update-end-author:taoyan date:20211203 for:【online报表】分组标题显示错误，都显示成了联系信息 LOWCOD-2343
+        //增加默认配置可拖拽列
+        column.resizable = column.resizable == undefined ? true : column.resizable;
 
         const isDefaultAction = [INDEX_COLUMN_FLAG, ACTION_COLUMN_FLAG].includes(flag!);
         if (!customRender && format && !edit && !isDefaultAction) {
@@ -361,4 +363,3 @@ export function formatCell(text: string, format: CellFormat, record: Recordable,
     return text;
   }
 }
-
