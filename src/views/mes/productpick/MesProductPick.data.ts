@@ -3,6 +3,7 @@ import { FormSchema } from '/@/components/Table';
 import { rules } from '/@/utils/helper/validator';
 import { render } from '/@/utils/common/renderUtils';
 import { JVxeTypes, JVxeColumn } from '/@/components/jeecg/JVxeTable/types';
+import dayjs from 'dayjs';
 //列表数据
 export const columns: BasicColumn[] = [
   {
@@ -131,11 +132,15 @@ export const formSchema: FormSchema[] = [
   {
     label: '计划领料时间',
     field: 'planPickDate',
-    defaultValue: new Date().setHours(0, 0, 0),
     component: 'DatePicker',
+    defaultValue: dayjs().subtract(0, 'day'),
     componentProps: {
-      showTime: false,
+      //日期格式化，页面上显示的值
+      format: 'YYYY-MM-DD',
+      //返回值格式化（绑定值的格式）
       valueFormat: 'YYYY-MM-DD',
+      //是否显示今天按钮
+      showToday: true,
     },
   },
   {

@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { FormSchema } from '/@/components/Table';
 import { dateUtil } from '/@/utils/dateUtil';
 
@@ -61,7 +62,7 @@ export const formSchema: FormSchema[] = [
   {
     label: '开工时间',
     field: 'startTime',
-    defaultValue: new Date(),
+    defaultValue: dayjs().subtract(0, 'day'),
     component: 'DatePicker',
     componentProps: {
       showTime: true,
@@ -74,7 +75,7 @@ export const formSchema: FormSchema[] = [
   {
     label: '完工时间',
     field: 'completeTime',
-    defaultValue: new Date(),
+    defaultValue: dayjs().subtract(0, 'day'),
     component: 'DatePicker',
     componentProps: {
       showTime: true,

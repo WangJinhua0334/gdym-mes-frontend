@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import { FormSchema } from '/@/components/Table';
+import dayjs from 'dayjs';
 
 export const wkpId = ref<string>('');
 
@@ -135,7 +136,7 @@ export const formSchema: FormSchema[] = [
   {
     label: '开工时间',
     field: 'startTime',
-    defaultValue: new Date(),
+    defaultValue: dayjs().subtract(0, 'day'),
     component: 'DatePicker',
     componentProps: {
       showTime: true,
@@ -149,7 +150,7 @@ export const formSchema: FormSchema[] = [
   {
     label: '完工时间',
     field: 'completeTime',
-    defaultValue: new Date(),
+    defaultValue: dayjs().subtract(0, 'day'),
     component: 'DatePicker',
     componentProps: {
       showTime: true,

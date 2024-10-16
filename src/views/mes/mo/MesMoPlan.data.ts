@@ -391,7 +391,7 @@ export function getFormSchema(moCompleteKitCheck): FormSchema[] {
         showTime: true,
       },
       dynamicRules: ({ model, schema, values }) => {
-        return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime)[0] }];
+        return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];
       },
     },
     {
@@ -402,7 +402,7 @@ export function getFormSchema(moCompleteKitCheck): FormSchema[] {
         showTime: true,
       },
       dynamicRules: ({ model, schema, values }) => {
-        return [{ required: true, message: '请选择计划完工日期!' }, { ...rules.endTime(model.planStartTime)[0] }];
+        return [{ required: true, message: '请选择计划完工日期!' }, { ...rules.endTime(model.planStartTime, true)[0] }];
       },
     },
     {

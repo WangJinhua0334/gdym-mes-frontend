@@ -3,6 +3,7 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { rules } from '/@/utils/helper/validator';
 import { render } from '/@/utils/common/renderUtils';
+import dayjs from 'dayjs';
 
 // 表单视图类型：add\edit\detail
 export const viewType = ref<string>();
@@ -209,7 +210,7 @@ export const formSchema: FormSchema[] = [
   {
     label: '开始时间',
     field: 'startTime',
-    defaultValue: new Date().setMinutes(0, 0),
+    defaultValue: dayjs().subtract(0, 'day'),
     component: 'DatePicker',
     componentProps: {
       showTime: true,
@@ -222,7 +223,7 @@ export const formSchema: FormSchema[] = [
   {
     label: '结束时间',
     field: 'completeTime',
-    defaultValue: new Date().setMinutes(0, 0),
+    defaultValue: dayjs().subtract(0, 'day'),
     component: 'DatePicker',
     componentProps: {
       showTime: true,

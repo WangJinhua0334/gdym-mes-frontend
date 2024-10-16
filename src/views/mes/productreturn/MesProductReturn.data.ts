@@ -3,6 +3,7 @@ import { FormSchema } from '/@/components/Table';
 import { rules } from '/@/utils/helper/validator';
 import { render } from '/@/utils/common/renderUtils';
 import { JVxeTypes, JVxeColumn } from '/@/components/jeecg/JVxeTable/types';
+import dayjs from 'dayjs';
 //列表数据
 export const columns: BasicColumn[] = [
   {
@@ -130,7 +131,7 @@ export const formSchema: FormSchema[] = [
   {
     label: '计划退料时间',
     field: 'planReturnDate',
-    defaultValue: new Date().setHours(0, 0, 0),
+    defaultValue: dayjs().subtract(1, 'day'),
     component: 'DatePicker',
     componentProps: {
       showTime: false,

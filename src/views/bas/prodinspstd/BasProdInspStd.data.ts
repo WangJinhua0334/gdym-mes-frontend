@@ -3,6 +3,7 @@ import { FormSchema } from '/@/components/Table';
 import { rules } from '/@/utils/helper/validator';
 import { render } from '/@/utils/common/renderUtils';
 import { ref } from 'vue';
+import dayjs from 'dayjs';
 
 //列表数据
 export const columns: BasicColumn[] = [
@@ -168,12 +169,12 @@ export const formSchema: FormSchema[] = [
     label: '生效日期',
     field: 'effectDateBegin',
     component: 'DatePicker',
-    defaultValue: new Date(),
+    defaultValue: dayjs().subtract(0, 'day'),
     componentProps: {
       getPopupContainer: (node) => document.body, 
     },
     dynamicRules: ({ model, schema, values }) => {
-      return [{ required: true, message: '请输入生效日期!' }, { ...rules.startTime(model.effectDateEnd)[0] }];
+      return [{ required: true, message: '请输入生效日期!' }, { ...rules.startTime(model.effectDateEnd, true)[0] }];
     },
   },
   {
@@ -184,7 +185,7 @@ export const formSchema: FormSchema[] = [
       getPopupContainer: (node) => document.body,
     },
     dynamicRules: ({ model, schema, values }) => {
-      return [{ ...rules.endTime(model.effectDateBegin)[0] }];
+      return [{ ...rules.endTime(model.effectDateBegin, false)[0] }];
     },
   },
   {
