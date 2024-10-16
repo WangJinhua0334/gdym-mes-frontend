@@ -67,7 +67,7 @@ export default {
     signUpFormTitle: '注册',
     forgetFormTitle: '重置密码',
 
-    signInTitle: 'IMOM生产运营管理系统',
+    signInTitle: 'AI-MOM生产运营管理系统',
     signInDesc: '覆盖生产、质量、设备、人员等内容的制造运营管理一体化平台',
     policy: '我同意中创隐私政策',
     scanSign: `扫码后，即可完成登录`,
