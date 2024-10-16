@@ -251,7 +251,7 @@ export function useListTable(tableProps: TableProps): [
     minHeight: 300,
     // update-end--author:liaozhiyang---date:20240603---for【TV360X-861】列表查询区域不可往上滚动
     // 点击行选中
-    clickToRowSelect: false,
+    clickToRowSelect: true,
     // 是否显示边框
     bordered: true,
     // 是否显示序号列
