@@ -142,13 +142,6 @@ export function getColumns(moCompleteKitCheck): BasicColumn[] {
         return !text ? '' : text.length > 16 ? text.substr(0, 16) : text;
       },
     },
-    {
-      title: '出厂检验是否必填',
-      align: 'center',
-      dataIndex: 'isSuitable',
-      width: 200,
-      slots: { customRender: 'switchSlot' },
-    },
   ];
 }
 
@@ -501,14 +494,6 @@ export function getFormSchema(): FormSchema[] {
           labelKey: ['name'],
           placeholder: '请输入',
         };
-      },
-    },
-    {
-      label: '出厂检验是否必填',
-      field: 'isSuitable',
-      component: 'JSwitch',
-      componentProps: {
-        dictCode: 'is_open',
       },
     },
     {
