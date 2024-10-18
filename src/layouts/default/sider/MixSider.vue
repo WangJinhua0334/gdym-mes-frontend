@@ -336,7 +336,7 @@
     z-index: @layout-mix-sider-fixed-z-index;
     height: 100%;
     overflow: hidden;
-    background-color: @sider-dark-bg-color;
+    background: @sider-dark-bg-color;
     transition: all 0.2s ease 0s;
 
     &-dom {
@@ -375,7 +375,7 @@
 
           &--active {
             color: @primary-color;
-            background-color: unset;
+            background: unset;
           }
         }
       }
@@ -408,7 +408,7 @@
         }
       }
       .@{prefix-cls}-menu-list {
-        background-color: @sider-dark-bg-color;
+        background: @sider-dark-bg-color;
 
         &__title {
           color: @white;
@@ -463,7 +463,7 @@
         &--active {
           font-weight: 700;
           color: @white;
-          background-color: @sider-dark-darken-bg-color;
+          background: @sider-dark-darken-bg-color;
 
           &::before {
             position: absolute;
@@ -471,7 +471,7 @@
             left: 0;
             width: 3px;
             height: 100%;
-            background-color: @primary-color;
+            background: @primary-color;
             content: '';
           }
         }
@@ -499,7 +499,7 @@
       color: rgba(255, 255, 255, 0.65);
       text-align: center;
       cursor: pointer;
-      background-color: @trigger-dark-bg-color;
+      background: @trigger-dark-bg-color;
       height: 36px;
       line-height: 36px;
     }
@@ -515,7 +515,7 @@
       top: 0;
       width: 200px;
       height: calc(100%);
-      background-color: #fff;
+      background: #fff;
       transition: all 0.2s;
 
       &__title {
@@ -585,7 +585,7 @@
       width: 1px;
       height: calc(100% - 50px);
       cursor: ew-resize;
-      background-color: #f8f8f9;
+      background: #f8f8f9;
       border-top: none;
       border-bottom: none;
       box-shadow: 0 0 4px 0 rgba(28, 36, 56, 0.15);

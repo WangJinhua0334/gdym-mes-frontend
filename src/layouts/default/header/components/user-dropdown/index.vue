@@ -221,13 +221,13 @@
 
     &--dark {
       &:hover {
-        background-color: @header-dark-bg-hover-color;
+        background: @header-dark-bg-hover-color;
       }
     }
 
     &--light {
       &:hover {
-        background-color: @header-light-bg-hover-color;
+        background: @header-light-bg-hover-color;
       }
 
       .@{prefix-cls}__name {

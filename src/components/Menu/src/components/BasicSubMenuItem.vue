@@ -89,22 +89,22 @@
   @prefix-cls: ~'@{namespace}-basic-subMenu';
   html[data-theme='light'] {
     .@{prefix-cls}.ant-menu-dark {
-      background-color: var(--header-bg-color);
+      background: var(--header-bg-color);
       color: rgba(255, 255, 255, 0.9);
       &.ant-menu-submenu {
         > .ant-menu {
-          background-color: var(--header-bg-color);
+          background: var(--header-bg-color);
         }
       }
       .ant-menu-item-selected {
-        background-color: var(--header-active-menu-bg-color);
+        background: var(--header-active-menu-bg-color);
       }
     }
     //【QQYUN-8922】顶部导航三个点菜单样式调整
     .ant-menu-submenu-placement-bottomLeft.ant-menu-dark.ant-menu-submenu-popup {
-      background-color: var(--header-bg-color);
+      background: var(--header-bg-color);
       &.ant-menu-dark.ant-menu-submenu > .ant-menu {
-        background-color: var(--header-bg-color);
+        background: var(--header-bg-color);
         color: rgba(255, 255, 255, 0.9);
       }
     }

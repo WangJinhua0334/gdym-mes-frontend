@@ -36,8 +36,7 @@ export function updateHeaderBgColor(color?: string) {
   setCssVar(HEADER_MENU_ACTIVE_BG_COLOR_VAR, hoverColor);
 
   // Determine the depth of the color value and automatically switch the theme
-  const isDark = colorIsDark(color!);
-
+  const isDark = true; //colorIsDark(color!);
   appStore.setProjectConfig({
     headerSetting: {
       theme: isDark || darkMode ? ThemeEnum.DARK : ThemeEnum.LIGHT,

@@ -65,13 +65,13 @@ const setting: ProjectConfig = {
   // 头部配置
   headerSetting: {
     // 背景色
-    bgColor: HEADER_PRESET_BG_COLOR_LIST[4],
+    bgColor: HEADER_PRESET_BG_COLOR_LIST[0],
     // 固定头部
     fixed: true,
     // 是否显示顶部
     show: true,
     // 主题
-    theme: ThemeEnum.LIGHT,
+    theme: ThemeEnum.DARK,
     // 开启锁屏功能
     useLockPage: false,
     // 显示全屏按钮
@@ -106,7 +106,7 @@ const setting: ProjectConfig = {
     // 菜单模式
     mode: MenuModeEnum.INLINE,
     // 菜单类型
-    type: MenuTypeEnum.SIDEBAR,
+    type: MenuTypeEnum.MIX_SIDEBAR,
     // 菜单主题
     theme: ThemeEnum.DARK,
     // 分割菜单
@@ -123,6 +123,7 @@ const setting: ProjectConfig = {
     mixSideTrigger: MixSidebarTriggerEnum.CLICK,
     // 是否固定左侧混合菜单
     mixSideFixed: false,
+    isThemeBright: false,
   },
 
   // 多标签
