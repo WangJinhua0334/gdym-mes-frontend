@@ -8,12 +8,12 @@
         <li
           v-for="icon in getPaginationList"
           :key="icon"
-          :class="currentSelect === icon ? 'icon-border' : ''"
+          :class="currentSelect == icon ? 'icon-border' : ''"
           class="p-2 w-1/8 cursor-pointer mr-1 mt-1 flex justify-center items-center border border-solid hover:border-primary"
           @click="handleClick(icon)"
           :title="icon"
         >
-          <SvgIcon v-if="isSvgMode" :name="icon" />
+          <SvgIcon v-if="isSvgMode" :name="icon" @click="handleClick(icon)" />
           <Icon :icon="icon" v-else />
         </li>
       </ul>
@@ -38,7 +38,7 @@
 <script lang="ts" name="icon-list">
   import SvgIcon from '@/components/Icon/src/SvgIcon.vue';
   import Icon from '@/components/Icon/src/Icon.vue';
-  import { defineComponent, ref, unref, watchEffect} from 'vue';
+  import { defineComponent, ref, unref, watchEffect } from 'vue';
   import { useDebounceFn } from '@vueuse/core';
   import { usePagination } from '@/hooks/web/usePagination';
   import { propTypes } from '@/utils/propTypes';
@@ -62,6 +62,7 @@
       isPage: propTypes.bool.def(false),
       isSearch: propTypes.bool.def(false),
       value: propTypes.string.def(''),
+      isMySvg: propTypes.bool.def(false),
     },
     setup(props, { emit }) {
       //选中的值
@@ -87,7 +88,7 @@
        */
       function handleSearchChange(e: ChangeEvent) {
         const value = e.target.value;
-        console.log("value::::",value)
+       // console.log('value::::', value);
         //update-begin---author:wangshuai ---date:20230522  for：【issues/4947】菜单编辑页面菜单图标选择模板，每页显示数量切换无效------------
         setCurrentPage(1);
         current.value = 1;
@@ -134,6 +135,9 @@
             currentSelect.value = icon;
           }
         } else {
+          // if (props.isMySvg) {
+          //   icon = icon + '|svg';
+          // }
           currentSelect.value = icon;
           if (props.copy) {
             clipboardRef.value = icon;
@@ -142,7 +146,11 @@
             }
           }
         }
-        emit('update:value', currentSelect.value);
+        if (props.isMySvg) {
+          emit('update:value', currentSelect.value + '|svg');
+        } else {
+          emit('update:value', currentSelect.value);
+        }
       }
 
       /**
@@ -188,6 +196,9 @@
     border: 1px solid #f1f1f1;
     padding: 0.2rem;
     margin: 0.3rem;
+  }
+  .icon-border {
+    border: 1px solid rgba(24, 144, 255) !important;
   }
   .icon-border span {
     border: 1px solid rgba(24, 144, 255) !important;

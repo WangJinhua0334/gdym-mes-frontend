@@ -1,5 +1,5 @@
 <template>
-  <svg :class="[prefixCls, $attrs.class, spin && 'svg-icon-spin']" :style="getStyle" aria-hidden="true">
+  <svg :class="[prefixCls, $attrs.class, spin && 'svg-icon-spin']" :style="getStyle" aria-hidden="true" @click="$emit('click')">
     <use :xlink:href="symbolId" />
   </svg>
 </template>
@@ -30,7 +30,15 @@
     },
     setup(props) {
       const { prefixCls } = useDesign('svg-icon');
-      const symbolId = computed(() => `#${props.prefix}-${props.name}`);
+      let iconurl = props.name;
+      const SVG_END_WITH_FLAG = '|svg';
+      const isSvgIcon = computed(() => props.name?.endsWith(SVG_END_WITH_FLAG));
+      if (isSvgIcon.value) {
+        iconurl = props.name.replace(SVG_END_WITH_FLAG, '');
+      } else {
+        iconurl = props.name;
+      }
+      const symbolId = computed(() => `#${props.prefix}-${iconurl}`);
 
       const getStyle = computed((): CSSProperties => {
         const { size } = props;
