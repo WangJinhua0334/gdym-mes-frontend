@@ -18,6 +18,8 @@ import { registerThirdComp } from '/@/settings/registerThirdComp';
 import { useSso } from '/@/hooks/web/useSso';
 // 注册online模块lib
 import { registerPackages } from '/@/utils/monorepo/registerPackages';
+//注册自己的图标
+import '/public/resource/js/momIconfont.js';
 
 async function bootstrap() {
   // 创建应用实例

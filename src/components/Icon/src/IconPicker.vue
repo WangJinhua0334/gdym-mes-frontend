@@ -38,7 +38,20 @@
           />
         </a-form-item-rest>
       </a-tab-pane>
-      <a-tab-pane tab="方向性图标" key="1">
+      <a-tab-pane tab="MOM系统图标" key="1">
+        <a-form-item-rest>
+          <icon-list
+            ref="iconListRef"
+            :clear-select="clearSelect"
+            :copy="copy"
+            :is-svg-mode="true"
+            :current-list="momData"
+            v-model:value="selectIcon"
+            :is-my-svg="false"
+          />
+        </a-form-item-rest>
+      </a-tab-pane>
+      <a-tab-pane tab="方向性图标" key="2">
         <a-form-item-rest>
           <icon-list
             ref="iconListRef"
@@ -51,7 +64,7 @@
           />
         </a-form-item-rest>
       </a-tab-pane>
-      <a-tab-pane tab="指示性图标" key="2">
+      <a-tab-pane tab="指示性图标" key="3">
         <a-form-item-rest>
           <icon-list
             ref="iconListRef"
@@ -64,7 +77,7 @@
           />
         </a-form-item-rest>
       </a-tab-pane>
-      <a-tab-pane tab="编辑类图标" key="3">
+      <a-tab-pane tab="编辑类图标" key="4">
         <a-form-item-rest>
           <icon-list
             ref="iconListRef"
@@ -77,7 +90,7 @@
           />
         </a-form-item-rest>
       </a-tab-pane>
-      <a-tab-pane tab="数据类图标" key="4">
+      <a-tab-pane tab="数据类图标" key="5">
         <a-form-item-rest>
           <icon-list
             ref="iconListRef"
@@ -90,7 +103,7 @@
           />
         </a-form-item-rest>
       </a-tab-pane>
-      <a-tab-pane tab="网站通用图标" key="5">
+      <a-tab-pane tab="网站通用图标" key="6">
         <a-form-item-rest>
           <icon-list
             ref="iconListRef"
@@ -103,7 +116,7 @@
           />
         </a-form-item-rest>
       </a-tab-pane>
-      <a-tab-pane tab="品牌和标识" key="6">
+      <!-- <a-tab-pane tab="品牌和标识" key="7">
         <a-form-item-rest>
           <icon-list
             ref="iconListRef"
@@ -115,7 +128,7 @@
             :is-my-svg="false"
           />
         </a-form-item-rest>
-      </a-tab-pane>
+      </a-tab-pane> -->
       <a-tab-pane tab="其他" key="7">
         <a-form-item-rest>
           <icon-list
@@ -142,6 +155,7 @@
   import SvgIcon from './SvgIcon.vue';
 
   import iconsData from '../data/icons.data';
+  import momData from '../data/icons.mom';
   import { propTypes } from '/@/utils/propTypes';
   import { useI18n } from '/@/hooks/web/useI18n';
   import svgIcons from 'virtual:svg-icons-names';
@@ -182,7 +196,6 @@
 
   const isSvgMode = props.mode === 'svg';
   const icons = isSvgMode ? getSvgIcons() : getIcons();
-
   const selectIcon = ref('');
   const currentSelect = ref('');
 
@@ -548,7 +561,6 @@
   const isSvgShow = ref(false);
   watchEffect(() => {
     const isSvgIcon = computed(() => props.value?.endsWith(SVG_END_WITH_FLAG));
-    console.log(props.value);
     if (isSvgIcon.value) {
       isSvgShow.value = true;
     } else {
