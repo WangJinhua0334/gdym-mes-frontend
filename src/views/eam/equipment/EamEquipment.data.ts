@@ -81,13 +81,13 @@ export const searchFormSchema: FormSchema[] = [
   {
     label: '编码',
     field: 'code',
-    component: 'Input',
+    component: 'JInput',
     colProps: { span: 6 },
   },
   {
     label: '名称',
     field: 'name',
-    component: 'Input',
+    component: 'JInput',
     colProps: { span: 6 },
   },
   {
