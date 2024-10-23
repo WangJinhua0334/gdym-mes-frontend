@@ -102,7 +102,7 @@ const setting: ProjectConfig = {
     // Whether to show dom
     hidden: false,
     // 菜单宽度
-    menuWidth: 210,
+    menuWidth: 230,
     // 菜单模式
     mode: MenuModeEnum.INLINE,
     // 菜单类型

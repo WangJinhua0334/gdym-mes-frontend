@@ -8,6 +8,8 @@ import { useMultipleTabStore } from '/@/store/modules/multipleTab';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
 import { useTabs } from '/@/hooks/web/useTabs';
 import { useI18n } from '/@/hooks/web/useI18n';
+import { PageEnum } from '/@/enums/pageEnum';
+import { useGo } from '/@/hooks/web/usePage';
 
 export function useTabDropdown(tabContentProps: TabContentProps, getIsTabs: ComputedRef<boolean>) {
   const state = reactive({
@@ -126,7 +128,7 @@ export function useTabDropdown(tabContentProps: TabContentProps, getIsTabs: Comp
       state.currentIndex = index;
     };
   }
-
+  const go = useGo();
   // Handle right click event
   function handleMenuEvent(menu: DropMenu): void {
     const { event } = menu;
@@ -161,6 +163,10 @@ export function useTabDropdown(tabContentProps: TabContentProps, getIsTabs: Comp
       case MenuEventEnum.CLOSE_ALL:
         // update-begin--author:liaozhiyang---date:20240605---for：【TV360X-732】非当前页右键关闭左侧、关闭右侧、关闭其它功能正常使用
         closeAll(state.current);
+        // 全部关闭之后跳转自定义主页面
+        sessionStorage.removeItem('routerName');
+        go(PageEnum.CUSTOM_HOME);
+        break;
         // update-end--author:liaozhiyang---date:20240605---for：【TV360X-732】非当前页右键关闭左侧、关闭右侧、关闭其它功能正常使用
         break;
     }

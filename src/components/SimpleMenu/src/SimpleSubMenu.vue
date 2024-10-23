@@ -96,8 +96,8 @@
           !menuTreeItem.meta?.hideChildrenInMenu &&
           Reflect.has(menuTreeItem, 'children') &&
           !!menuTreeItem.children &&
-          menuTreeItem.children.length > 0
-          &&checkChildrenHidden(menuTreeItem)
+          menuTreeItem.children.length > 0 &&
+          checkChildrenHidden(menuTreeItem)
         );
       }
 
@@ -115,3 +115,8 @@
     },
   });
 </script>
+<style scoped lang="less">
+  .ml-2 {
+    margin-left: 0.5rem;
+  }
+</style>

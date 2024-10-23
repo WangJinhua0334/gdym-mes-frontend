@@ -22,9 +22,20 @@ export const asyncRoutes = [PAGE_NOT_FOUND_ROUTE, ...routeModuleList];
 export const RootRoute: AppRouteRecordRaw = {
   path: '/',
   name: 'Root',
-  redirect: PageEnum.BASE_HOME,
+  redirect: PageEnum.CUSTOM_HOME, //PageEnum.BASE_HOME,
   meta: {
-    title: 'Root',
+    //title: 'Root',
+    title: t('首页'),
+  },
+};
+
+// 自定义首页
+export const CustomIndex: AppRouteRecordRaw = {
+  path: PageEnum.CUSTOM_HOME,
+  name: 'Home',
+  component: () => import('/@/views/dashboard/AnalysisCustom/index.vue'),
+  meta: {
+    title: t('首页'),
   },
 };
 
@@ -65,4 +76,13 @@ export const TokenLoginRoute: AppRouteRecordRaw = {
   },
 };
 // Basic routing without permission
-export const basicRoutes = [LoginRoute, RootRoute, ...mainOutRoutes, REDIRECT_ROUTE, PAGE_NOT_FOUND_ROUTE, TokenLoginRoute, Oauth2LoginRoute];
+export const basicRoutes = [
+  LoginRoute,
+  CustomIndex,
+  RootRoute,
+  ...mainOutRoutes,
+  REDIRECT_ROUTE,
+  PAGE_NOT_FOUND_ROUTE,
+  TokenLoginRoute,
+  Oauth2LoginRoute,
+];

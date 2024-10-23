@@ -59,6 +59,7 @@
 
   import { useRouter } from 'vue-router';
   import Aide from "/@/views/dashboard/ai/components/aide/index.vue"
+import { PageEnum } from '/@/enums/pageEnum';
 
   export default defineComponent({
     name: 'MultipleTabs',
@@ -84,7 +85,7 @@
       const { getShowQuick, getShowRedo, getShowFold, getTabsTheme } = useMultipleTabSetting();
 
       const getTabsState = computed(() => {
-        return tabStore.getTabList.filter((item) => !item.meta?.hideTab);
+        return tabStore.getTabList.filter((item) => item.path != PageEnum.CUSTOM_HOME && !item.meta?.hideTab); //!item.meta?.hideTab
       });
 
       const unClose = computed(() => unref(getTabsState).length === 1);
