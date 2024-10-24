@@ -1,5 +1,5 @@
 import { h } from 'vue';
-import { Avatar, Tag, Tooltip, Image } from 'ant-design-vue';
+import { Avatar, Tag, Tooltip, Image, Switch } from 'ant-design-vue';
 import { getFileAccessHttpUrl } from '/@/utils/common/compUtils';
 import { Tinymce } from '/@/components/Tinymce';
 import Icon from '/@/components/Icon';
@@ -147,16 +147,45 @@ const render = {
       },
     });
   },
-
-  renderSwitch: (text, arr) => {
-    return text ? filterMultiDictText(arr, text) : '';
-  },
+  //原先的方法禁用
+  // renderSwitch: (text, arr) => {
+  //   return text ? filterMultiDictText(arr, text) : '';
+  // },
   renderCategoryTree: (text, code) => {
     const array = getDictItemsByCode(code);
     return filterMultiDictText(array, text);
   },
   renderTag(text, color) {
     return isEmpty(text) ? h('span', text) : h(Tag, { color }, () => text);
+  },
+
+  /**
+   * 渲染 <a-switch> 组件
+   * @param v 值
+   * @param arr 字典数组
+   * @param disabled 是否禁用，默认为 true
+   * @returns {VNode} 返回 Vue 的 VNode 对象
+   */
+  renderSwitch: (v, arr, disabled = true) => {
+    // 查找已选中的项和未选中的项
+    const checkedItem = arr.find((item) => item.isChecked);
+    const uncheckedItem = arr.find((item) => !item.isChecked);
+
+    // 如果没有找到已选中的项或未选中的项，使用默认值
+    const defaultCheckedItem = { text: '是', value: 'Y', isChecked: true };
+    const defaultUncheckedItem = { text: '否', value: 'N', isChecked: false };
+
+    const checked = checkedItem || defaultCheckedItem;
+    const unchecked = uncheckedItem || defaultUncheckedItem;
+
+    return h(Switch, {
+      disabled: disabled,
+      checkedValue: checked.value,
+      unCheckedValue: unchecked.value,
+      checkedChildren: checked.text,
+      unCheckedChildren: unchecked.text,
+      checked: v,
+    });
   },
 };
 
