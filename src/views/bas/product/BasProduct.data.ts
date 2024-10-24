@@ -5,12 +5,12 @@ import { render } from '/@/utils/common/renderUtils';
 import { JVxeTypes, JVxeColumn } from '/@/components/jeecg/JVxeTable/types';
 //列表数据
 export const columns: BasicColumn[] = [
-
   {
     title: '物料编码',
     align: 'center',
     sorter: true,
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '版本',
@@ -27,22 +27,25 @@ export const columns: BasicColumn[] = [
   {
     title: '是否默认',
     align: 'center',
-    dataIndex: 'isDefault_dictText',
+    dataIndex: 'isDefault',
     width: 80,
+    slots: { customRender: 'switchSlot' },
   },
   {
     title: '是否关键料',
     align: 'center',
     sorter: true,
-    dataIndex: 'isKey_dictText',
-    width: 100,
+    dataIndex: 'isKey',
+    width: 120,
+    slots: { customRender: 'switchSlot' },
   },
   {
     title: '状态',
     align: 'center',
     sorter: true,
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
     width: 100,
+    slots: { customRender: 'switchEndaleSlot' },
   },
   {
     title: '物料组',
@@ -468,6 +471,11 @@ export const formSchema: FormSchema[] = [
         //maxTagCount: 2,
       };
     },
+  },
+  {
+    label: '物料成本',
+    field: 'materialCost',
+    component: 'InputNumber',
   },
   {
     field: 'image',
