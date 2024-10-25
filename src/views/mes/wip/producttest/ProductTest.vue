@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BasicForm @register="registerForm" ref="formRef" @submit="handleSubmit" />
+    <BasicForm @register="registerForm" ref="formRef" />
     <a-tabs v-model:activeKey="activeKey" @change="handleChangeTabs">
       <a-tab-pane tab="调试项" key="testItemPanel" :forceRender="true">
         <JVxeTable
@@ -81,7 +81,7 @@
     editConfig: {
       trigger: 'click',
       mode: 'cell',
-      activeMethod: ({ row, column }) => {
+      beforeEditMethod: ({ row, column }) => {
         if (
           column.property === 'minOperators' ||
           column.property === 'limitMin' ||

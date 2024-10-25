@@ -2,6 +2,7 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { JVxeTypes, JVxeColumn } from '/@/components/jeecg/JVxeTable/types';
 import { ref } from 'vue';
+import { render } from '/@/utils/common/renderUtils';
 
 export const eamEquipId = ref<string>();
 
@@ -11,46 +12,58 @@ export const columns: BasicColumn[] = [
     title: '点检单号',
     align: 'center',
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '车间',
     align: 'center',
     dataIndex: 'workShopId_dictText',
+    width: 150,
   },
   {
     title: '设备编码',
     align: 'center',
     dataIndex: 'equipCode_dictText',
+    width: 150,
   },
   {
     title: '设备',
     align: 'center',
     dataIndex: 'equipId_dictText',
+    width: 150,
   },
   {
     title: '计划点检人',
     align: 'center',
     dataIndex: 'planOperateBy_dictText',
+    width: 150,
   },
   {
     title: '计划点检日期',
     align: 'center',
     dataIndex: 'planOperateTime',
+    width: 150,
   },
   {
     title: '实际点检人',
     align: 'center',
     dataIndex: 'acOperateBy_dictText',
+    width: 150,
   },
   {
     title: '实际点检日期',
     align: 'center',
     dataIndex: 'acOperateTime',
+    width: 150,
   },
   {
     title: '状态',
     align: 'center',
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'equip_spot_check_plan_status', true);
+    },
   },
 ];
 //查询数据

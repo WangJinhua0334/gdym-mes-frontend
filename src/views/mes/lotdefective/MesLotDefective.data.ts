@@ -86,7 +86,10 @@ export const columns: BasicColumn[] = [
     align: 'center',
     width: 100,
     sorter: true,
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'defective_status', true);
+    },
   },
 ];
 //查询数据
@@ -114,7 +117,7 @@ export const searchFormSchema: FormSchema[] = [
     field: 'sourceType',
     component: 'JDictSelectTag',
     componentProps: {
-      dictCode: 'LotDefectiveSouceType',
+      dictCode: 'lot_defective_souce_type',
     },
     colProps: { span: 6 },
   },

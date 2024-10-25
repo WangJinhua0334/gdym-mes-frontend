@@ -37,8 +37,8 @@ export const columns: BasicColumn[] = [
     dataIndex: 'status',
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
-        { text: '生效', value: 'Y' },
-        { text: '无效/审核中', value: 'N' },
+        { text: '生效', value: 'Y', isChecked: true },
+        { text: '无效/审核中', value: 'N', isChecked: false },
       ]);
     },
   },

@@ -46,9 +46,9 @@
     </div>
 
     <!-- 表单区域 -->
-    <EamEquipmentModal @register="registerModal" @success="handleSuccess"></EamEquipmentModal>
-    <CheckRecordModal @register="registerCheckRecordModal" @success="handleSuccess"></CheckRecordModal>
-    <MaintainRecordModal @register="registerMaintainRecordModal" @success="handleSuccess"></MaintainRecordModal>
+    <EamEquipmentModal @register="registerModal" @success="handleSuccess" />
+    <CheckRecordModal @register="registerCheckRecordModal" @success="handleSuccess" />
+    <MaintainRecordModal @register="registerMaintainRecordModal" @success="handleSuccess" />
   </div>
 </template>
 

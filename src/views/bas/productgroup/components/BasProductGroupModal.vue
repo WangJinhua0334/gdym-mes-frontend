@@ -1,26 +1,26 @@
 <template>
   <BasicModal v-bind="$attrs" @register="registerModal" destroyOnClose :width="800" :title="getTitle" @ok="handleSubmit">
-    <BasicForm @register="registerForm"/>
+    <BasicForm @register="registerForm" />
   </BasicModal>
 </template>
 <script lang="ts" setup>
-  import {ref, computed, unref} from 'vue';
-  import {BasicModal, useModalInner} from '/@/components/Modal';
-  import {BasicForm, useForm} from '/@/components/Form';
-  import {formSchema} from '../BasProductGroup.data';
-  import {loadTreeData, saveOrUpdateDict} from '../BasProductGroup.api';
+  import { ref, computed, unref } from 'vue';
+  import { BasicModal, useModalInner } from '/@/components/Modal';
+  import { BasicForm, useForm } from '/@/components/Form';
+  import { formSchema } from '../BasProductGroup.data';
+  import { loadTreeData, saveOrUpdateDict } from '../BasProductGroup.api';
   // 获取emit
   const emit = defineEmits(['register', 'success']);
   const isUpdate = ref(true);
   const expandedRowKeys = ref([]);
   const treeData = ref([]);
   // 当前编辑的数据
-  let model:Nullable<Recordable> = null;
+  let model: Nullable<Recordable> = null;
   //表单配置
-  const [registerForm, {setProps,resetFields, setFieldsValue, validate, updateSchema}] = useForm({
+  const [registerForm, { setProps, resetFields, setFieldsValue, validate, updateSchema }] = useForm({
     schemas: formSchema,
     showActionButtonGroup: false,
-    baseColProps: {span: 24},
+    baseColProps: { span: 24 },
     labelCol: {
       xs: { span: 24 },
       sm: { span: 4 },
@@ -31,11 +31,11 @@
     },
   });
   //表单赋值
-  const [registerModal, {setModalProps, closeModal}] = useModalInner(async (data) => {
+  const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
     //重置表单
     await resetFields();
     expandedRowKeys.value = [];
-    setModalProps({confirmLoading: false, minHeight: 80 ,showOkBtn: !!!data?.hideFooter});
+    setModalProps({ confirmLoading: false, minHeight: 80, showOkBtn: !!!data?.hideFooter });
     isUpdate.value = !!data?.isUpdate;
     if (data?.record) {
       model = data.record;
@@ -47,9 +47,9 @@
       model = null;
     }
     //父级节点树信息
-    treeData.value = await loadTreeData({'async': false,'pcode':''});
+    treeData.value = await loadTreeData({ async: false, pcode: '' });
     // 隐藏底部时禁用整个表单
-    setProps({ disabled: !!data?.hideFooter })
+    setProps({ disabled: !!data?.hideFooter });
   });
   //设置标题
   const getTitle = computed(() => (!unref(isUpdate) ? '新增' : '编辑'));
@@ -59,14 +59,14 @@
    * @param pid
    * @param arr
    */
-  function getExpandKeysByPid(pid,arr){
-    if(pid && arr && arr.length>0){
-      for(let i=0;i<arr.length;i++){
-        if(arr[i].key==pid && unref(expandedRowKeys).indexOf(pid)<0){
+  function getExpandKeysByPid(pid, arr) {
+    if (pid && arr && arr.length > 0) {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].key == pid && unref(expandedRowKeys).indexOf(pid) < 0) {
           expandedRowKeys.value.push(arr[i].key);
-          getExpandKeysByPid(arr[i]['parentId'],unref(treeData))
-        }else{
-          getExpandKeysByPid(pid,arr[i].children)
+          getExpandKeysByPid(arr[i]['parentId'], unref(treeData));
+        } else {
+          getExpandKeysByPid(pid, arr[i].children);
         }
       }
     }
@@ -75,33 +75,33 @@
   async function handleSubmit() {
     try {
       let values = await validate();
-      setModalProps({confirmLoading: true});
+      setModalProps({ confirmLoading: true });
       //提交表单
       await saveOrUpdateDict(values, isUpdate.value);
       //关闭弹窗
       closeModal();
       //展开的节点信息
-      await getExpandKeysByPid(values['pid'],unref(treeData))
+      await getExpandKeysByPid(values['pid'], unref(treeData));
       //刷新列表(isUpdate:是否编辑;values:表单信息;expandedArr:展开的节点信息)
       emit('success', {
         isUpdate: unref(isUpdate),
-        values: {...values},
+        values: { ...values },
         expandedArr: unref(expandedRowKeys).reverse(),
         // 是否更改了父级节点
-        changeParent: model != null && (model['pid'] != values['pid']),
+        changeParent: model != null && model['pid'] != values['pid'],
       });
     } finally {
-      setModalProps({confirmLoading: false});
+      setModalProps({ confirmLoading: false });
     }
   }
 </script>
 <style lang="less" scoped>
-	/** 时间和数字输入框样式 */
-    :deep(.ant-input-number){
-		width: 100%
-	}
+  /** 时间和数字输入框样式 */
+  :deep(.ant-input-number) {
+    width: 100%;
+  }
 
-	:deep(.ant-calendar-picker){
-		width: 100%
-	}
+  :deep(.ant-calendar-picker) {
+    width: 100%;
+  }
 </style>

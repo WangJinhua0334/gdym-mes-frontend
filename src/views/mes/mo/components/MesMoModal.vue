@@ -178,7 +178,7 @@
     editConfig: {
       trigger: 'click',
       mode: 'cell',
-      activeMethod: ({ row, column }) => {
+      beforeEditMethod: ({ row, column }) => {
         if (column.property === 'isPrintSn' || column.property === 'prodId') {
           if (!row.isStart || row.isStart != 'Y') {
             return false;

@@ -6,11 +6,13 @@ export const columns: BasicColumn[] = [
     title: '编码',
     align: 'center',
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '名称',
     align: 'center',
     dataIndex: 'name',
+    width: 150,
   },
   {
     title: '描述',
@@ -72,36 +74,43 @@ export const eamEquipTypeSpotCheckItemColumns: BasicColumn[] = [
     title: '编码',
     align: 'center',
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '名称',
     align: 'center',
     dataIndex: 'name',
+    width: 150,
   },
   {
     title: '点检方式',
     align: 'center',
     dataIndex: 'method',
+    width: 150,
   },
   {
     title: '点检标准',
     align: 'center',
     dataIndex: 'standard',
+    width: 150,
   },
   {
     title: '点检周期（天）',
     align: 'center',
     dataIndex: 'cycle',
+    width: 150,
   },
   {
     title: '提前预警（小时）',
     align: 'center',
     dataIndex: 'alarm',
+    width: 150,
   },
   {
     title: '责任人',
     align: 'center',
     dataIndex: 'responsibleBy_dictText',
+    width: 150,
   },
 ];
 //子表表单数据
@@ -163,36 +172,43 @@ export const eamEquipTypeMaintainItemColumns: BasicColumn[] = [
     title: '编码',
     align: 'center',
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '名称',
     align: 'center',
     dataIndex: 'name',
+    width: 150,
   },
   {
     title: '保养方式',
     align: 'center',
     dataIndex: 'method',
+    width: 150,
   },
   {
     title: '保养标准',
     align: 'center',
     dataIndex: 'standard',
+    width: 150,
   },
   {
     title: '保养周期（天）',
     align: 'center',
     dataIndex: 'cycle',
+    width: 150,
   },
   {
     title: '提前预警（小时）',
     align: 'center',
     dataIndex: 'alarm',
+    width: 150,
   },
   {
     title: '责任人',
     align: 'center',
     dataIndex: 'responsibleBy_dictText',
+    width: 150,
   },
 ];
 //子表表单数据
@@ -244,7 +260,6 @@ export const eamEquipTypeMaintainItemFormSchema: FormSchema[] = [
     label: '提前预警（小时）',
     field: 'alarm',
     component: 'InputNumber',
-
   },
   {
     label: '责任人',

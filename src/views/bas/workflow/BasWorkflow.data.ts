@@ -30,14 +30,24 @@ export const columns: BasicColumn[] = [
     sorter: true,
     dataIndex: 'isDefault',
     width: 120,
-    slots: { customRender: 'switchSlot' },
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '是否发布',
     align: 'center',
     dataIndex: 'isRelease',
     width: 120,
-    slots: { customRender: 'switchSlot' },
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '描述',

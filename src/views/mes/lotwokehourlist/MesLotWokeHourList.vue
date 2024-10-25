@@ -10,9 +10,6 @@
         >
         <a-button type="primary" preIcon="ant-design:export-outlined" v-auth="'mes:mes_lot_work_hour:exportXls'" @click="onExportXls"> 导出</a-button>
       </template>
-      <template #switchSlot="{ text }">
-        <a-switch disabled checkedValue="Y" checked-children="是" unCheckedValue="N" un-checked-children="否" :checked="text" />
-      </template>
       <!--操作栏-->
       <template #action="{ record }">
         <TableAction :actions="getTableAction(record)" />

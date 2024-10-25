@@ -186,8 +186,6 @@ export function useColumns(
           column.title = metaTitle;
         }
         //update-end-author:taoyan date:20211203 for:【online报表】分组标题显示错误，都显示成了联系信息 LOWCOD-2343
-        //增加默认配置可拖拽列
-        column.resizable = column.resizable == undefined ? true : column.resizable;
 
         const isDefaultAction = [INDEX_COLUMN_FLAG, ACTION_COLUMN_FLAG].includes(flag!);
         if (!customRender && format && !edit && !isDefaultAction) {
@@ -200,6 +198,10 @@ export function useColumns(
         if ((edit || editRow) && !isDefaultAction) {
           column.customRender = renderEditCell(column);
         }
+
+        //增加默认配置可拖拽列
+        column.width = column.width == undefined ? 300 : column.width;
+        column.resizable = column.resizable == undefined ? true : column.resizable;
         return reactive(column);
       });
     // update-begin--author:liaozhiyang---date:20230919---for：【QQYUN-6387】展开写法（去掉报错）

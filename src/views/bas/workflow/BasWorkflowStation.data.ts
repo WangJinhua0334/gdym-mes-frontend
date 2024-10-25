@@ -1,5 +1,6 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
+import { render } from '/@/utils/common/renderUtils';
 import { rules } from '/@/utils/helper/validator';
 import { ref, unref } from 'vue';
 
@@ -48,8 +49,14 @@ export const basWorkflowStationColumns: BasicColumn[] = [
   {
     title: '是否开始节点',
     align: 'center',
-    dataIndex: 'isStart_dictText',
+    dataIndex: 'isStart',
     width: 120,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '加工物料',
@@ -72,8 +79,14 @@ export const basWorkflowStationColumns: BasicColumn[] = [
   {
     title: '固定工时',
     align: 'center',
-    dataIndex: 'fixedHours_dictText',
+    dataIndex: 'fixedHours',
     width: 100,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '工时',

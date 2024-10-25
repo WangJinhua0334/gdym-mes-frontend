@@ -29,7 +29,12 @@ export const columns: BasicColumn[] = [
     align: 'center',
     dataIndex: 'isDefault',
     width: 80,
-    slots: { customRender: 'switchSlot' },
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '是否关键料',
@@ -37,7 +42,12 @@ export const columns: BasicColumn[] = [
     sorter: true,
     dataIndex: 'isKey',
     width: 120,
-    slots: { customRender: 'switchSlot' },
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '状态',
@@ -45,7 +55,12 @@ export const columns: BasicColumn[] = [
     sorter: true,
     dataIndex: 'status',
     width: 100,
-    slots: { customRender: 'switchEndaleSlot' },
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '启用', value: 'enable', isChecked: true },
+        { text: '禁用', value: 'disable', isChecked: false },
+      ]);
+    },
   },
   {
     title: '物料组',

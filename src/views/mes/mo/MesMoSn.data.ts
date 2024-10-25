@@ -1,4 +1,5 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
+import { render } from '/@/utils/common/renderUtils';
 
 //列表数据
 export const columns: BasicColumn[] = [
@@ -45,7 +46,12 @@ export const columns: BasicColumn[] = [
     align: 'center',
     dataIndex: 'isUniqSn',
     width: 120,
-    slots: { customRender: 'switchSlot' },
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '数量',
@@ -58,7 +64,12 @@ export const columns: BasicColumn[] = [
     align: 'center',
     dataIndex: 'isInput',
     width: 120,
-    slots: { customRender: 'switchSlot' },
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '投产人',
@@ -83,7 +94,12 @@ export const columns: BasicColumn[] = [
     align: 'center',
     dataIndex: 'isComplete',
     width: 120,
-    slots: { customRender: 'switchSlot' },
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '完工人',
@@ -108,7 +124,12 @@ export const columns: BasicColumn[] = [
     align: 'center',
     dataIndex: 'isScrap',
     width: 120,
-    slots: { customRender: 'switchSlot' },
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '报废人',

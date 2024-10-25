@@ -19,6 +19,7 @@ export const columns: BasicColumn[] = [
     title: '物料名称',
     align: 'center',
     dataIndex: 'prodName_dictText',
+    width: 200,
   },
   {
     title: '版本',
@@ -31,8 +32,14 @@ export const columns: BasicColumn[] = [
     title: '是否启用',
     align: 'center',
     sorter: true,
-    dataIndex: 'isEnable_dictText',
+    dataIndex: 'isEnable',
     width: 120,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '描述',

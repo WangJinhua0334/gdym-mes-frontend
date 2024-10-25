@@ -13,7 +13,7 @@
     </BasicTable>
 
     <!-- 甘特图区域-->
-    <MesMoPlanGanttList @register="registerPlanGanttModal"></MesMoPlanGanttList>
+    <MesMoPlanGanttList @register="registerPlanGanttModal" />
 
     <!-- 查看区域-->
     <!-- <MesMoView @register="registerMesMoViewModal"></MesMoView> -->
@@ -29,7 +29,6 @@
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { useListPage } from '/@/hooks/system/useListPage';
   import { useModal } from '/@/components/Modal';
-  import MesMoView from '../view/MesMoView.vue';
   // import MesMoPlanListView from '../view/plan/MesMoPlanListView.vue';
   // import MesMoPlanBomView from '../view/bom/MesMoPlanBomView.vue';
   import MesMoPlanGanttList from './gantt/MesMoPlanGanttList.vue';

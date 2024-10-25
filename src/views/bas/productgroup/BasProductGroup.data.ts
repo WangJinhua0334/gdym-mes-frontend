@@ -9,12 +9,14 @@ export const columns: BasicColumn[] = [
     align: 'left',
     sorter: true,
     dataIndex: 'code',
+    width: 200,
   },
   {
     title: '名称',
     align: 'center',
     sorter: true,
     dataIndex: 'name',
+    width: 200,
   },
   {
     title: '描述',

@@ -4,30 +4,36 @@ import { rules } from '/@/utils/helper/validator';
 import { render } from '/@/utils/common/renderUtils';
 //列表数据
 export const columns: BasicColumn[] = [
-
   {
     title: '设备编码',
     align: 'center',
     sorter: true,
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '设备名称',
     align: 'center',
     sorter: true,
     dataIndex: 'name',
+    width: 150,
   },
   {
     title: '设备分类',
     align: 'center',
     sorter: true,
     dataIndex: 'equipTypeId_dictText',
+    width: 150,
   },
   {
     title: '设备状态',
     align: 'center',
     sorter: true,
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'equipment_status', true);
+    },
   },
   {
     title: '供应商',
@@ -40,18 +46,21 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'purchaseTime',
+    width: 200,
   },
   {
     title: '出厂编码',
     align: 'center',
     sorter: true,
     dataIndex: 'fixedAssetsCode',
+    width: 200,
   },
   {
     title: '车间',
     align: 'center',
     sorter: true,
     dataIndex: 'workShopId_dictText',
+    width: 150,
   },
 ];
 //查询数据

@@ -1,5 +1,6 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
+import { render } from '/@/utils/common/renderUtils';
 
 //调试记录列表配置
 export const listColumns: BasicColumn[] = [
@@ -75,8 +76,13 @@ export const listColumns: BasicColumn[] = [
     title: '是否返工',
     align: 'center',
     dataIndex: 'isRework',
-    slots: { customRender: 'switchSlot' },
     width: 100,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
 ];
 //调试记录列表查询配置

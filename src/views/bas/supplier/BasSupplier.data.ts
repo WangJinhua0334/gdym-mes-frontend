@@ -10,12 +10,14 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '名称',
     align: 'center',
     sorter: true,
     dataIndex: 'name',
+    width: 200,
   },
   {
     title: '全称',
@@ -27,17 +29,26 @@ export const columns: BasicColumn[] = [
     title: '负责人',
     align: 'center',
     dataIndex: 'principal',
+    width: 150,
   },
   {
     title: '电话号码',
     align: 'center',
     dataIndex: 'telephone',
+    width: 150,
   },
   {
     title: '是否锁定',
     align: 'center',
     sorter: true,
-    dataIndex: 'isLock_dictText',
+    dataIndex: 'isLock',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
 ];
 //查询数据
@@ -175,11 +186,13 @@ export const basSupplierProductColumns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'prodId_dictText',
+    width: 200,
   },
   {
     title: '物料版本',
     align: 'center',
     dataIndex: 'prodVer_dictText',
+    width: 200,
   },
   {
     title: '物料名称',
@@ -191,6 +204,7 @@ export const basSupplierProductColumns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'suppProdCode',
+    width: 200,
   },
 ];
 //子表表格配置

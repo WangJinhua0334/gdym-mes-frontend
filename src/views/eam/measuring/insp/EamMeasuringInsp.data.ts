@@ -15,41 +15,52 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'measuringId_dictText',
+    width: 150,
   },
   {
     title: '量具名称',
     align: 'center',
     dataIndex: 'measuringName_dictText',
+    width: 150,
   },
   {
     title: '检验人',
     align: 'center',
     dataIndex: 'inspBy_dictText',
+    width: 150,
   },
   {
     title: '校验日期',
     align: 'center',
     dataIndex: 'inspTime',
+    width: 150,
   },
   {
     title: '校验结果',
     align: 'center',
-    dataIndex: 'result_dictText',
+    dataIndex: 'result',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'pass_ng', true);
+    },
   },
   {
     title: '校验次数',
     align: 'center',
     dataIndex: 'inspTimes',
+    width: 150,
   },
   {
     title: '校验工时',
     align: 'center',
     dataIndex: 'hours',
+    width: 150,
   },
   {
     title: '文件',
     align: 'center',
     dataIndex: 'attachments',
+    width: 150,
     slots: { customRender: 'fileSlot' },
   },
 ];
@@ -123,36 +134,49 @@ export const eamMeasuringInspItemColumns: BasicColumn[] = [
     title: '序号',
     align: 'center',
     dataIndex: 'orderNo',
+    width: 150,
   },
   {
     title: '编码',
     align: 'center',
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '内容',
     align: 'center',
     dataIndex: 'content',
+    width: 200,
   },
   {
     title: '上限',
     align: 'center',
     dataIndex: 'limitMax',
+    width: 150,
   },
   {
     title: '下限',
     align: 'center',
     dataIndex: 'limitMin',
+    width: 150,
   },
   {
     title: '值',
     align: 'center',
     dataIndex: 'value',
+    width: 150,
   },
   {
     title: '是否合格',
     align: 'center',
-    dataIndex: 'result_dictText',
+    dataIndex: 'result',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
 ];
 //子表表格配置

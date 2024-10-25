@@ -1,5 +1,6 @@
 import { FormSchema } from '/@/components/Table';
 import { isRoleExist } from './role.api';
+import { render } from '/@/utils/common/renderUtils';
 export const columns = [
   {
     title: '角色名称',
@@ -31,8 +32,11 @@ export const userColumns = [
   },
   {
     title: '状态',
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
     width: 80,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'user_status', true);
+    },
   },
 ];
 export const searchFormSchema: FormSchema[] = [
@@ -166,7 +170,7 @@ export const roleIndexFormSchema: FormSchema[] = [
     label: '是否路由菜单',
     helpMessage: '非路由菜单设置成首页，需开启',
     component: 'Switch',
-    defaultValue: true
+    defaultValue: true,
   },
   {
     label: '优先级',

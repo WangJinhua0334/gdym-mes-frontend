@@ -26,9 +26,6 @@
       <template #action="{ record }">
         <TableAction :actions="getTableAction(record)" />
       </template>
-      <template #switchSlot="{ text }">
-        <a-switch disabled="true" checkedValue="Y" checked-children="成功" unCheckedValue="N" un-checked-children="失败" :checked="text" />
-      </template>
       <template #fileSlot="{ text }">
         <span v-if="!text" style="font-size: 12px; font-style: italic">无文件</span>
         <a-button v-else :ghost="true" type="primary" preIcon="ant-design:download-outlined" size="small" @click="downloadFile(text)">下载</a-button>

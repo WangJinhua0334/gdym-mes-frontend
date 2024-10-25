@@ -1,4 +1,5 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
+import { render } from '/@/utils/common/renderUtils';
 
 export const columns: BasicColumn[] = [
   {
@@ -24,8 +25,11 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '发送状态',
-    dataIndex: 'esSendStatus_dictText',
+    dataIndex: 'esSendStatus',
     width: 120,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'msgSendStatus', true);
+    },
   },
   {
     title: '发送时间',

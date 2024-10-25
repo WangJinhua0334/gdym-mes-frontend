@@ -1,6 +1,7 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { JVxeTypes, JVxeColumn } from '/@/components/jeecg/JVxeTable/types';
+import { render } from '/@/utils/common/renderUtils';
 import { queryDefectCategoryIdTree } from '/@/views/eam/equiprepair/EamEquipRepair.api';
 //列表数据
 export const columns: BasicColumn[] = [
@@ -8,61 +9,76 @@ export const columns: BasicColumn[] = [
     title: '维修单号',
     align: 'center',
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '设备编码',
     align: 'center',
     dataIndex: 'equipCode_dictText',
+    width: 150,
   },
   {
     title: '设备名称',
     align: 'center',
     dataIndex: 'equipId_dictText',
+    width: 150,
   },
   {
     title: '车间',
     align: 'center',
     dataIndex: 'workShopId_dictText',
+    width: 150,
   },
   {
     title: '报修人',
     align: 'center',
     dataIndex: 'createBy_dictText',
+    width: 150,
   },
   {
     title: '报修时间',
     align: 'center',
     dataIndex: 'createTime',
+    width: 150,
   },
   {
     title: '报修确认人',
     align: 'center',
     dataIndex: 'confirmBy_dictText',
+    width: 150,
   },
   {
     title: '确认时间',
     align: 'center',
     dataIndex: 'confirmTime',
+    width: 150,
   },
   {
     title: '维修开始时间',
     align: 'center',
     dataIndex: 'repairStartTime',
+    width: 150,
   },
   {
     title: '维修完成时间',
     align: 'center',
     dataIndex: 'repairCompleteTime',
+    width: 150,
   },
   {
     title: '维修工时',
     align: 'center',
     dataIndex: 'repairHours',
+    width: 150,
   },
   {
     title: '维修状态',
     align: 'center',
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'equip_repair_status', true);
+    },
   },
 ];
 //查询数据
@@ -122,7 +138,6 @@ export const searchFormSchema: FormSchema[] = [
     },
     colProps: { span: 6 },
   },
-
 ];
 //表单数据
 export const formSchema: FormSchema[] = [
@@ -671,7 +686,6 @@ export const formReportEquipRepairConfirmSchema: FormSchema[] = [
 ];
 //表单数据
 export const formReportEquipEvaluateSchema: FormSchema[] = [
-
   {
     label: '设备',
     field: 'equipId',

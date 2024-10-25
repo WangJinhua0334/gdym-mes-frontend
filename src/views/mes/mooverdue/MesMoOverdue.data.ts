@@ -27,7 +27,10 @@ export const columns: BasicColumn[] = [
   {
     title: '状态',
     align: 'center',
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'mes_overdue_status', true);
+    },
   },
   {
     title: '逾期类型',
@@ -64,7 +67,7 @@ export const searchFormSchema: FormSchema[] = [
     field: 'overdueType',
     component: 'JSelectMultiple',
     componentProps: {
-      dictCode: 'overdueType',
+      dictCode: 'mes_overdue_type',
     },
     colProps: { span: 6 },
   },
@@ -73,7 +76,7 @@ export const searchFormSchema: FormSchema[] = [
     field: 'status',
     component: 'JSelectMultiple',
     componentProps: {
-      dictCode: 'overdueStatus',
+      dictCode: 'mes_overdue_status',
     },
     colProps: { span: 6 },
   },
@@ -109,7 +112,7 @@ export const formSchema: FormSchema[] = [
     field: 'overdueType',
     component: 'JDictSelectTag',
     componentProps: {
-      dictCode: 'overdueType',
+      dictCode: 'mes_overdue_type',
     },
     dynamicRules: ({ model, schema }) => {
       return [{ required: true, message: '请选择逾期类型!' }];

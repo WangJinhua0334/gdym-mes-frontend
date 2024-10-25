@@ -7,18 +7,21 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'workNo',
+    width: 200,
   },
   {
     title: '姓名',
     align: 'center',
     sorter: true,
     dataIndex: 'realname',
+    width: 200,
   },
   {
     title: '账号状态',
     align: 'center',
     sorter: true,
     dataIndex: 'status_dictText',
+    width: 200,
   },
   {
     title: '职务',
@@ -71,21 +74,25 @@ export const basSkillUserColumns: BasicColumn[] = [
     title: '技能编码',
     align: 'center',
     dataIndex: 'skillId_dictText',
+    width: 150,
   },
   {
     title: '技能名称',
     align: 'center',
     dataIndex: 'skillName_dictText',
+    width: 150,
   },
   {
     title: '技能等级',
     align: 'center',
     dataIndex: 'skillLevelId_dictText',
+    width: 150,
   },
   {
     title: '等级名称',
     align: 'center',
     dataIndex: 'skillLevelName_dictText',
+    width: 150,
   },
   {
     title: '附件',

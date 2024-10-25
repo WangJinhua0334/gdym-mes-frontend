@@ -1,5 +1,6 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
+import { render } from '/@/utils/common/renderUtils';
 
 //调试记录列表配置
 export const testListColumns: BasicColumn[] = [
@@ -34,15 +35,23 @@ export const testListColumns: BasicColumn[] = [
     title: '状态',
     align: 'center',
     sorter: true,
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
     width: 100,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'lot_test_status', true);
+    },
   },
   {
     title: '结果',
     align: 'center',
     dataIndex: 'result',
-    slots: { customRender: 'switchSlot' },
     width: 100,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '缺陷代码',
@@ -205,8 +214,13 @@ export const testItemColumns: BasicColumn[] = [
     title: '测试结果',
     align: 'center',
     dataIndex: 'result',
-    slots: { customRender: 'switchSlot' },
     width: 120,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '附件',

@@ -140,13 +140,13 @@ export const columns: BasicColumn[] = [
     title: '是否投产',
     align: 'center',
     dataIndex: 'isInput',
-    ifShow: false,
-  },
-  {
-    title: '是否投产',
-    align: 'center',
-    dataIndex: 'isInput_dictText',
     width: 100,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
 ];
 

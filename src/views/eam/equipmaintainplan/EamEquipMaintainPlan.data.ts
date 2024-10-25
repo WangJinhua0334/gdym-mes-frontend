@@ -1,7 +1,8 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { JVxeTypes, JVxeColumn } from '/@/components/jeecg/JVxeTable/types';
-import {ref} from "vue";
+import { ref } from 'vue';
+import { render } from '/@/utils/common/renderUtils';
 
 export const eamEquipId = ref<string>();
 //列表数据
@@ -10,73 +11,85 @@ export const columns: BasicColumn[] = [
     title: '保养单号',
     align: 'center',
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '设备编码',
     align: 'center',
     dataIndex: 'equipCode_dictText',
+    width: 150,
   },
   {
     title: '设备',
     align: 'center',
     dataIndex: 'equipId_dictText',
+    width: 150,
   },
   {
     title: '计划保养人',
     align: 'center',
     dataIndex: 'planOperateBy_dictText',
+    width: 150,
   },
   {
     title: '计划保养日期',
     align: 'center',
     dataIndex: 'planOperateTime',
+    width: 150,
   },
   {
     title: '逾期天数',
     align: 'center',
     dataIndex: 'planOperateTime',
-    customRender:({record}) =>{
+    width: 150,
+    customRender: ({ record }) => {
       // @ts-ignore
       try {
         // @ts-ignore
-        let acOperateTime = record?.acOperateTime;
+        const acOperateTime = record?.acOperateTime;
         let acOperateTimeDate;
-        if (!acOperateTime){
+        if (!acOperateTime) {
           acOperateTimeDate = new Date();
-        }else {
+        } else {
           acOperateTimeDate = acOperateTime;
         }
         // @ts-ignore
-        let planOperateTimeDate = record?.planOperateTime?new Date(record?.planOperateTime):new Date;
-        if (acOperateTimeDate.getTime()>planOperateTimeDate.getTime()){
+        const planOperateTimeDate = record?.planOperateTime ? new Date(record?.planOperateTime) : new Date();
+        if (acOperateTimeDate.getTime() > planOperateTimeDate.getTime()) {
           // 计算日期差异的毫秒数
           const timeDifference = acOperateTimeDate.getTime() - planOperateTimeDate.getTime();
           // 将毫秒数转换为天数
           const dayDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-          return `${dayDifference}天`
+          return `${dayDifference}天`;
         }
-      }catch (e){
-        console.log(e)
+      } catch (e) {
+        console.log(e);
       }
 
-      return '0天'
+      return '0天';
     },
   },
   {
     title: '实际保养人',
     align: 'center',
     dataIndex: 'acOperateBy_dictText',
+    width: 150,
   },
 
   {
     title: '实际保养日期',
     align: 'center',
     dataIndex: 'acOperateTime',
+    width: 150,
   },
   {
     title: '状态',
     align: 'center',
     dataIndex: 'status_dictText',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'equip_maintain_plan_status', true);
+    },
   },
 ];
 //查询数据
@@ -110,8 +123,8 @@ export const searchFormSchema: FormSchema[] = [
     componentProps: {
       // 传给后端的时间格式
       valueFormat: 'YYYY-MM-DD HH:mm:ss',
-      showTime:true,
-      width:'100%',
+      showTime: true,
+      width: '100%',
       getPopupContainer: () => document.body,
     },
   },
@@ -123,8 +136,8 @@ export const searchFormSchema: FormSchema[] = [
     componentProps: {
       // 传给后端的时间格式
       valueFormat: 'YYYY-MM-DD HH:mm:ss',
-      showTime:true,
-      width:'100%',
+      showTime: true,
+      width: '100%',
       getPopupContainer: () => document.body,
     },
   },
@@ -538,25 +551,24 @@ export const eamMaintainRecItemJVxeColumns: JVxeColumn[] = [
     title: '备注',
     key: 'remark',
     type: JVxeTypes.textarea,
-    dictCode:'remark',
+    dictCode: 'remark',
     placeholder: '请输入${title}',
-    defaultValue:'',
+    defaultValue: '',
   },
   {
     title: '附件',
     key: 'attachments',
     type: JVxeTypes.file,
     placeholder: '请上传${title}',
-    defaultValue:'',
-  }
-
+    defaultValue: '',
+  },
 ];
 
 /**
  * 流程表单调用这个方法获取formSchema
  * @param param
  */
-export function getBpmFormSchema(_formData): FormSchema[]{
-// 默认和原始表单保持一致 如果流程中配置了权限数据，这里需要单独处理formSchema
+export function getBpmFormSchema(_formData): FormSchema[] {
+  // 默认和原始表单保持一致 如果流程中配置了权限数据，这里需要单独处理formSchema
   return formSchema;
 }

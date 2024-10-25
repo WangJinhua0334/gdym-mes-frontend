@@ -8,21 +8,25 @@ export const columns: BasicColumn[] = [
     title: '物料条码',
     align: 'center',
     dataIndex: 'lwmsSn',
+    width: 150,
   },
   {
     title: '工单',
     align: 'center',
     dataIndex: 'moId_dictText',
+    width: 150,
   },
   {
     title: '物料编码',
     align: 'center',
     dataIndex: 'prodIdCode_dictText',
+    width: 150,
   },
   {
     title: '物料名称',
     align: 'center',
     dataIndex: 'prodId_dictText',
+    width: 200,
   },
   {
     title: '物料规格',
@@ -33,16 +37,19 @@ export const columns: BasicColumn[] = [
     title: '批次号',
     align: 'center',
     dataIndex: 'batchNo',
+    width: 150,
   },
   {
     title: '数量',
     align: 'center',
     dataIndex: 'qty',
+    width: 150,
   },
   {
     title: '供应商',
     align: 'center',
     dataIndex: 'supplierId_dictText',
+    width: 200,
   },
   // {
   //   title: '出库数量',

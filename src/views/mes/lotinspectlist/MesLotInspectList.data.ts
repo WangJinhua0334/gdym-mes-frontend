@@ -14,40 +14,47 @@ export const columns: BasicColumn[] = [
     title: '检验单编号',
     align: 'center',
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '检验条码',
     align: 'center',
     dataIndex: 'lotSn',
+    width: 150,
   },
   {
     title: '工单',
     align: 'center',
     dataIndex: 'moId_dictText',
+    width: 150,
   },
   {
     title: '工序',
     align: 'center',
     dataIndex: 'stationId_dictText',
+    width: 150,
   },
   {
     title: '数量',
     align: 'center',
     dataIndex: 'trackQty_dictText',
+    width: 150,
   },
   {
     title: '抽样数量',
     align: 'center',
     dataIndex: 'samplingQty',
+    width: 150,
   },
   {
     title: '结果',
     align: 'center',
     dataIndex: 'result',
+    width: 150,
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
-        { text: '是', value: 'Y' },
-        { text: '否', value: 'N' },
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
       ]);
     },
   },
@@ -55,11 +62,13 @@ export const columns: BasicColumn[] = [
     title: '缺陷代码',
     align: 'center',
     dataIndex: 'defectIds_dictText',
+    width: 150,
   },
   {
     title: '不良数量',
     align: 'center',
     dataIndex: 'ngQty',
+    width: 150,
   },
   {
     title: '备注',
@@ -70,11 +79,13 @@ export const columns: BasicColumn[] = [
     title: '检验人',
     align: 'center',
     dataIndex: 'inspBy_dictText',
+    width: 150,
   },
   {
     title: '检验时间',
     align: 'center',
     dataIndex: 'inspTime',
+    width: 150,
   },
 ];
 

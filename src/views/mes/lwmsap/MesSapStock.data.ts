@@ -6,6 +6,7 @@ export const columns: BasicColumn[] = [
     title: '物料编码',
     align: 'center',
     dataIndex: 'MATNR',
+    width: 150,
   },
   {
     title: '物料名称',
@@ -17,50 +18,43 @@ export const columns: BasicColumn[] = [
     title: '库存地点',
     align: 'center',
     dataIndex: 'LGORT',
-    format: (text) => {
-      if (text == 'B004') {
-        text = '物探所车间半成品库';
-      } else if (text == '1008') {
-        text = '物探销售领用库';
-      } else if (text == '1010') {
-        text = '物探营销备件库';
-      } else if (text == '1006') {
-        text = '研发库';
-      } else if (text == '1005') {
-        text = '物探成品库';
-      }
-      return text;
-    },
+    width: 150,
   },
   {
     title: '单位',
     align: 'center',
     dataIndex: 'MEINS',
+    width: 150,
   },
   {
     title: '数量',
     align: 'center',
     dataIndex: 'LABST',
+    width: 150,
   },
   {
     title: '批次编号',
     align: 'center',
     dataIndex: 'CHARG',
+    width: 150,
   },
   {
     title: '序列号',
     align: 'center',
     dataIndex: 'SERNR',
+    width: 150,
   },
   {
     title: '物料类型',
     align: 'center',
     dataIndex: 'MTART',
+    width: 150,
   },
   {
     title: '物料组',
     align: 'center',
     dataIndex: 'MATKL',
+    width: 150,
   },
 ];
 //查询数据

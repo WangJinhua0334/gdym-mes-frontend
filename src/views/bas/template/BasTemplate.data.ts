@@ -8,11 +8,13 @@ export const columns: BasicColumn[] = [
     title: '编码',
     align: 'center',
     dataIndex: 'code',
+    width: 200,
   },
   {
     title: '名称',
     align: 'center',
     dataIndex: 'name',
+    width: 200,
   },
   {
     title: '描述',
@@ -74,16 +76,25 @@ export const basTemplateDetailColumns: BasicColumn[] = [
     title: '模板类型',
     align: 'center',
     dataIndex: 'templateType_dictText',
+    width: 200,
   },
   {
     title: '是否启用',
     align: 'center',
-    dataIndex: 'isEnable_dictText',
+    dataIndex: 'isEnable',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '打印设计',
     align: 'center',
     dataIndex: 'reportId_dictText',
+    width: 150,
   },
   {
     title: '附件',

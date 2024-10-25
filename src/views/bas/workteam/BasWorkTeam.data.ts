@@ -8,21 +8,28 @@ export const columns: BasicColumn[] = [
     title: '编码',
     align: 'center',
     dataIndex: 'code',
+    width: 120,
   },
   {
     title: '名称',
     align: 'center',
     dataIndex: 'name',
+    width: 120,
   },
   {
     title: '类型',
     align: 'center',
     dataIndex: 'type_dictText',
+    width: 120,
   },
   {
     title: '状态',
     align: 'center',
-    dataIndex: 'state_dictText',
+    dataIndex: 'state',
+    width: 120,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'work_team_status', true);
+    },
   },
   {
     title: '描述',
@@ -33,6 +40,7 @@ export const columns: BasicColumn[] = [
     title: '部门',
     align: 'center',
     dataIndex: 'deptCode_dictText',
+    width: 200,
   },
 ];
 //查询数据
@@ -157,7 +165,13 @@ export const basWorkTeamStaffColumns: BasicColumn[] = [
   {
     title: '是否班长',
     align: 'center',
-    dataIndex: 'isMonitor_dictText',
+    dataIndex: 'isMonitor',
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
 ];
 //子表数据

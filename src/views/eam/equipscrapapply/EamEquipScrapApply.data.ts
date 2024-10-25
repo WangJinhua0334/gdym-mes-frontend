@@ -1,6 +1,7 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { JVxeTypes, JVxeColumn } from '/@/components/jeecg/JVxeTable/types';
+import { render } from '/@/utils/common/renderUtils';
 //列表数据
 export const columns: BasicColumn[] = [
   {
@@ -12,25 +13,33 @@ export const columns: BasicColumn[] = [
     title: '报废申请人',
     align: 'center',
     dataIndex: 'createBy_dictText',
+    width: 150,
   },
   {
     title: '报废申请时间',
     align: 'center',
     dataIndex: 'createTime',
+    width: 150,
   },
   {
     title: '状态',
     align: 'center',
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'equip_scrap_apply_status', true);
+    },
   },
   {
     title: '审批人',
     align: 'center',
+    width: 150,
     dataIndex: 'approveBy_dictText',
   },
   {
     title: '审批时间',
     align: 'center',
+    width: 150,
     dataIndex: 'approveTime',
   },
   {
@@ -54,7 +63,7 @@ export const searchFormSchema: FormSchema[] = [
     colProps: { span: 6 },
   },
   {
-    label: '审批状态',
+    label: '状态',
     field: 'status',
     component: 'JDictSelectTag',
     componentProps: {
@@ -95,11 +104,13 @@ export const eamEquipScrapItemColumns: BasicColumn[] = [
     title: '设备',
     align: 'center',
     dataIndex: 'equipId_dictText',
+    width: 150,
   },
   {
     title: '净值',
     align: 'center',
     dataIndex: 'netValue',
+    width: 150,
   },
   {
     title: '报废原因',
@@ -110,6 +121,7 @@ export const eamEquipScrapItemColumns: BasicColumn[] = [
     title: '附件',
     align: 'center',
     dataIndex: 'attachments',
+    width: 150,
     slots: { customRender: 'fileSlot' },
   },
   {
@@ -143,8 +155,7 @@ export const eamEquipScrapItemJVxeColumns: JVxeColumn[] = [
     labelKey: 'code',
     //multi: false,
     //maxTagCount: 4,
-    linkmap: [{ name: 'equipName_dictText',value:'old_value'
-    }],
+    linkmap: [{ name: 'equipName_dictText', value: 'old_value' }],
     placeholder: '请输入${title}',
     validateRules: [{ required: true, message: '${title}不能为空' }],
     formatter: ({ cellValue, row, column }) => {

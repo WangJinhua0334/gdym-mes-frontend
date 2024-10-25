@@ -10,12 +10,14 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'code',
+    width: 200,
   },
   {
     title: '规则名称',
     align: 'center',
     sorter: true,
     dataIndex: 'name',
+    width: 200,
   },
   {
     title: '描述',
@@ -76,20 +78,23 @@ export const basPackRuleDetailColumns: BasicColumn[] = [
     title: '包装层级',
     align: 'center',
     dataIndex: 'packLevel',
+    width: 100,
   },
   {
     title: '包装单位',
     align: 'center',
     dataIndex: 'packUnitId_dictText',
+    width: 200,
   },
   {
     title: '最小包装单位',
     align: 'center',
     dataIndex: 'isMinPack',
+    width: 150,
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
-        { text: '是', value: '1' },
-        { text: '否', value: '0' },
+        { text: '是', value: '1', isChecked: true },
+        { text: '否', value: '0', isChecked: false },
       ]);
     },
   },
@@ -97,15 +102,17 @@ export const basPackRuleDetailColumns: BasicColumn[] = [
     title: '包装数量',
     align: 'center',
     dataIndex: 'packQty',
+    width: 100,
   },
   {
     title: '生成包装条码',
     align: 'center',
     dataIndex: 'isNewSn',
+    width: 150,
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
-        { text: '是', value: '1' },
-        { text: '否', value: '0' },
+        { text: '是', value: '1', isChecked: true },
+        { text: '否', value: '0', isChecked: false },
       ]);
     },
   },
@@ -113,15 +120,17 @@ export const basPackRuleDetailColumns: BasicColumn[] = [
     title: '包装编码规则',
     align: 'center',
     dataIndex: 'ruleCode',
+    width: 100,
   },
   {
     title: '是否打印',
     align: 'center',
     dataIndex: 'isPrint',
+    width: 100,
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
-        { text: '是', value: '1' },
-        { text: '否', value: '0' },
+        { text: '是', value: '1', isChecked: true },
+        { text: '否', value: '0', isChecked: false },
       ]);
     },
   },

@@ -8,38 +8,44 @@ export const columns: BasicColumn[] = [
     title: '代码',
     align: 'center',
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '名称',
     align: 'center',
     dataIndex: 'name',
+    width: 150,
   },
   {
     title: '动作',
     align: 'center',
     dataIndex: 'actionName_dictText',
+    width: 150,
   },
   {
     title: '是否启用',
     align: 'center',
-    dataIndex: 'isEnable_dictText',
-    /*customRender: ({ text }) => {
+    dataIndex: 'isEnable',
+    width: 150,
+    customRender: ({ text }) => {
       return render.renderSwitch(text, [
-        { text: '是', value: 'Y' },
-        { text: '否', value: 'N' },
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
       ]);
-    },*/
+    },
   },
   {
     title: '顺序',
     align: 'center',
     dataIndex: 'pageNumber',
+    width: 150,
     slots: { customRender: 'pageSeq' },
   },
   {
     title: '组件',
     align: 'center',
     dataIndex: 'component',
+    width: 150,
   },
   // {
   //  title: '展示位置',

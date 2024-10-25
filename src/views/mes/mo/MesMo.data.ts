@@ -3,6 +3,7 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { JVxeTypes, JVxeColumn } from '/@/components/jeecg/JVxeTable/types';
 import { rules } from '/@/utils/helper/validator';
+import { render } from '/@/utils/common/renderUtils';
 
 /**工单产品ID */
 export const moProdId = ref<string>();
@@ -59,8 +60,11 @@ export function getColumns(moCompleteKitCheck): BasicColumn[] {
       title: '状态',
       align: 'center',
       sorter: true,
-      dataIndex: 'status_dictText',
+      dataIndex: 'status',
       width: 100,
+      customRender: ({ text }) => {
+        return render.renderDict(text, 'mo_status', true);
+      },
     },
     {
       title: '计划数量',
@@ -861,11 +865,14 @@ export const mesMoBomColumns: BasicColumn[] = [
     title: '是否关键料',
     align: 'center',
     sorter: true,
-    dataIndex: 'isKeypart_dictText',
-    format: (text) => {
-      return !text ? '否' : text;
-    },
+    dataIndex: 'isKeypart',
     width: 120,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '需求数',

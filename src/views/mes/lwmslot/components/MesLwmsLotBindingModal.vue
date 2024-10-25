@@ -54,7 +54,7 @@
     editConfig: {
       trigger: 'click',
       mode: 'cell',
-      activeMethod: ({ row, column }) => {
+      beforeEditMethod: ({ row, column }) => {
         if (column.property === 'qty') {
           if (!row.hasEditQty) {
             return false;

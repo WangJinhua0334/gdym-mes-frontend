@@ -9,35 +9,34 @@ export const columns: BasicColumn[] = [
     title: '编码',
     align: 'center',
     sorter: true,
-
+    width: 150,
     dataIndex: 'code',
   },
   {
     title: '描述',
     align: 'center',
     sorter: true,
-
     dataIndex: 'description',
   },
   {
     title: '抽样方式',
     align: 'center',
     sorter: true,
-
+    width: 150,
     dataIndex: 'samplingMode_dictText',
   },
   {
     title: '动态规则',
     align: 'center',
     sorter: true,
-
+    width: 200,
     dataIndex: 'dynamicRuleId_dictText',
   },
   {
     title: '抽样方案',
     align: 'center',
     sorter: true,
-
+    width: 200,
     dataIndex: 'samplingSchemaId_dictText',
   },
 ];

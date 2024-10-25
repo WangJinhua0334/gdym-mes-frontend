@@ -1,6 +1,7 @@
 import { ref, unref } from 'vue';
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
+import { render } from '/@/utils/common/renderUtils';
 
 export const isWorkBench = ref(false);
 
@@ -50,8 +51,11 @@ export const listColumns: BasicColumn[] = [
     title: '状态',
     align: 'center',
     sorter: true,
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
     width: 100,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'abnormal_status', true);
+    },
   },
   {
     title: '提交人',
@@ -65,12 +69,14 @@ export const listColumns: BasicColumn[] = [
     sorter: true,
     align: 'center',
     dataIndex: 'createTime',
+    width: 150,
   },
   {
     title: '期望完成时间',
     sorter: true,
     align: 'center',
     dataIndex: 'expectTime',
+    width: 150,
   },
   {
     title: '负责人',
@@ -96,12 +102,13 @@ export const listColumns: BasicColumn[] = [
     sorter: true,
     align: 'center',
     dataIndex: 'responseTime',
+    width: 150,
   },
   {
     title: '异常原因',
     align: 'center',
     dataIndex: 'reason',
-    width: 160,
+    width: 200,
   },
   {
     title: '处理措施',
@@ -127,12 +134,14 @@ export const listColumns: BasicColumn[] = [
     sorter: true,
     align: 'center',
     dataIndex: 'processTime',
+    width: 150,
   },
   {
     title: '驳回原因',
     sorter: true,
     align: 'center',
     dataIndex: 'remark',
+    width: 200,
   },
 ];
 

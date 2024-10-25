@@ -40,8 +40,11 @@ export const columns: BasicColumn[] = [
     title: '状态',
     align: 'center',
     sorter: true,
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
     width: 80,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'mo_status', true);
+    },
   },
   {
     title: '已完工数量',
@@ -57,12 +60,10 @@ export const columns: BasicColumn[] = [
     dataIndex: 'qty',
     width: 80,
   },
- 
-
 
   {
     title: '进度',
-    align:"center",
+    align: 'center',
     dataIndex: 'progressData',
     slots: { customRender: 'progressData' },
   },
@@ -86,8 +87,6 @@ export const columns: BasicColumn[] = [
       return !text ? '' : text.length > 10 ? text.substr(0, 10) : text;
     },
   },
-
-
 ];
 //查询数据
 export const searchFormSchema: FormSchema[] = [
@@ -154,7 +153,7 @@ export const searchFormSchema: FormSchema[] = [
     field: 'status',
     component: 'JSelectMultiple',
     componentProps: {
-      dictCode: 'MO_STATUS',
+      dictCode: 'mo_status',
     },
     colProps: { span: 6 },
   },

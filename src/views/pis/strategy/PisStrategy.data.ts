@@ -8,38 +8,49 @@ export const columns: BasicColumn[] = [
     title: '策略编码',
     align: 'center',
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '策略名称',
     align: 'center',
     dataIndex: 'name',
+    width: 200,
   },
   {
     title: '部门',
     align: 'center',
     dataIndex: 'deptId_dictText',
+    width: 150,
   },
   {
     title: '策略内容',
     align: 'center',
     dataIndex: 'content',
+    width: 150,
   },
   {
     title: '策略周期(月/次)',
     align: 'center',
     dataIndex: 'cycleTimes',
+    width: 150,
   },
   {
     title: '策略方式',
     align: 'center',
     dataIndex: 'strategyMethod_dictText',
+    width: 150,
   },
   {
     title: '是否启用',
     align: 'center',
     dataIndex: 'isEnable',
     width: 120,
-    slots: { customRender: 'switchSlot' },
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '备注',

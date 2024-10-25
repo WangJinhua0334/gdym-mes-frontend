@@ -75,7 +75,13 @@ export const basUnitColumns: BasicColumn[] = [
   {
     title: '是否默认',
     align: 'center',
-    dataIndex: 'isDefault_dictText',
+    dataIndex: 'isDefault',
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '转换系数',

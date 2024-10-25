@@ -15,9 +15,6 @@
       <template #htmlSlot="{ text }">
         <div v-html="text"></div>
       </template>
-      <template #switchSlot="{ text }">
-        <a-switch disabled checkedValue="Y" checked-children="是" unCheckedValue="N" un-checked-children="否" :checked="text" />
-      </template>
       <!--省市区字段回显插槽-->
       <template #pcaSlot="{ text }">
         {{ getAreaTextByCode(text) }}

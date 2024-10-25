@@ -62,7 +62,9 @@
     editConfig: {
       trigger: 'click',
       mode: 'cell',
-      activeMethod: ({ row, column }) => {
+      beforeEditMethod : ({ row, column }) => {
+        console.log(column);
+        console.log(row);
         if (column.property === 'fillRuleType') {
           return true;
         }

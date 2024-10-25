@@ -107,7 +107,10 @@ export const columns: BasicColumn[] = [
     align: 'center',
     width: 100,
     sorter: true,
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'scrap_status', true);
+    },
   },
 ];
 //查询数据

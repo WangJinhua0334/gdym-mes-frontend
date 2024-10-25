@@ -9,29 +9,46 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'prodId_dictText',
+    width: 200,
   },
   {
     title: '产品名称',
     align: 'center',
     dataIndex: 'prodName_dictText',
+    width: 250,
   },
   {
     title: 'BOM版本',
     align: 'center',
     sorter: true,
     dataIndex: 'version',
+    width: 150,
   },
   {
     title: '是否默认',
     align: 'center',
     sorter: true,
-    dataIndex: 'isDefault_dictText',
+    dataIndex: 'isDefault',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '是否启用',
     align: 'center',
     sorter: true,
-    dataIndex: 'isEnable_dictText',
+    dataIndex: 'isEnable',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '启用', value: 'Y', isChecked: true },
+        { text: '禁用', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '描述',
@@ -52,13 +69,11 @@ export const searchFormSchema: FormSchema[] = [
     label: '产品编码',
     field: 'code',
     component: 'Input',
-    colProps: { span: 12 },
   },
   {
     label: '产品名称',
     field: 'name',
     component: 'Input',
-    colProps: { span: 12 },
   },
 ];
 
@@ -215,34 +230,46 @@ export const basProductBomDetailColumns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'prodCode',
+    width: 200,
   },
   {
     title: '物料名称',
     align: 'center',
     dataIndex: 'prodName',
+    width: 200,
   },
   {
     title: '用量',
     align: 'center',
     dataIndex: 'qty',
+    width: 150,
   },
   {
     title: '单位',
     align: 'center',
     dataIndex: 'unitDesc',
+    width: 150,
   },
 
   {
     title: '是否关键料',
     align: 'center',
     sorter: true,
-    dataIndex: 'isKeypartDesc',
+    dataIndex: 'isKeypart',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '位置',
     align: 'center',
     sorter: true,
     dataIndex: 'location',
+    width: 150,
   },
   {
     title: '描述',

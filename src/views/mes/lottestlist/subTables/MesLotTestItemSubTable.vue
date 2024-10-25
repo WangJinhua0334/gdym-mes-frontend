@@ -15,9 +15,6 @@
       <template #htmlSlot="{ text }">
         <div v-html="text"></div>
       </template>
-      <template #switchSlot="{ text }">
-        <a-switch disabled="true" checkedValue="Y" checked-children="OK" unCheckedValue="N" un-checked-children="NG" :checked="text" />
-      </template>
       <template #fileSlot="{ record, text }">
         <span v-if="!text" style="font-size: 12px; font-style: italic">无文件</span>
         <a-button v-else :ghost="true" type="primary" preIcon="ant-design:download-outlined" size="small" @click="handleDetail(record)"

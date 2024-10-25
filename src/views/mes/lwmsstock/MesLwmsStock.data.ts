@@ -1,6 +1,6 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
-import {queryByLwmsSn, queryWhBinIdTree} from '/@/views/mes/lwmsstock/MesLwmsStock.api';
+import { queryByLwmsSn, queryWhBinIdTree } from '/@/views/mes/lwmsstock/MesLwmsStock.api';
 import { JVxeTypes } from '/@/components/jeecg/JVxeTable/src/types';
 //列表数据
 export const columns: BasicColumn[] = [
@@ -8,36 +8,43 @@ export const columns: BasicColumn[] = [
     title: '仓库',
     align: 'center',
     dataIndex: 'whId_dictText',
+    width: 150,
   },
   {
     title: '区域',
     align: 'center',
     dataIndex: 'whAreaId_dictText',
+    width: 150,
   },
   {
     title: '库位',
     align: 'center',
     dataIndex: 'whBinId_dictText',
+    width: 150,
   },
   {
     title: '供应商',
     align: 'center',
     dataIndex: 'suppId_dictText',
+    width: 200,
   },
   {
     title: '物料条码',
     align: 'center',
     dataIndex: 'lwmsSn',
+    width: 150,
   },
   {
     title: '物料',
     align: 'center',
     dataIndex: 'prodId_dictText',
+    width: 200,
   },
   {
     title: '物料编码',
     align: 'center',
     dataIndex: 'prodIdCode_dictText',
+    width: 150,
   },
   {
     title: '物料规格',
@@ -48,34 +55,38 @@ export const columns: BasicColumn[] = [
     title: '数量',
     align: 'center',
     dataIndex: 'qty',
+    width: 150,
   },
   {
     title: '入库人',
     align: 'center',
     dataIndex: 'warehousingBy_dictText',
+    width: 150,
   },
   {
     title: '出库人',
     align: 'center',
     dataIndex: 'outStockBy_dictText',
+    width: 150,
   },
   {
     title: '领用人',
     align: 'center',
     dataIndex: 'useBy_dictText',
+    width: 150,
   },
   {
     title: '出库事由',
     align: 'center',
-    dataIndex: 'reasonShipment'
+    dataIndex: 'reasonShipment',
   },
 ];
 //列表数据
 export const lwmsStockDetailColumns: BasicColumn[] = [
   {
     title: '类型',
-    align:"center",
-    dataIndex: 'rdType'
+    align: 'center',
+    dataIndex: 'rdType',
   },
   {
     title: '数量',
@@ -84,13 +95,13 @@ export const lwmsStockDetailColumns: BasicColumn[] = [
   },
   {
     title: '操作人',
-    align:"center",
-    dataIndex: 'createBy'
+    align: 'center',
+    dataIndex: 'createBy',
   },
   {
     title: '操作时间',
-    align:"center",
-    dataIndex: 'createTime'
+    align: 'center',
+    dataIndex: 'createTime',
   },
 ];
 //查询数据
@@ -100,10 +111,10 @@ export const searchFormSchema: FormSchema[] = [
     field: 'whBinId',
     component: 'ApiTreeSelect',
     componentProps: {
-      api:queryWhBinIdTree,
-      immediate:true,
-      treeDefaultExpandAll:true,
-    }
+      api: queryWhBinIdTree,
+      immediate: true,
+      treeDefaultExpandAll: true,
+    },
   },
   {
     label: '物料条码',
@@ -148,24 +159,25 @@ export const formSchemaMesLwmsPutStock: FormSchema[] = [
               prodId: mesLwmsLot.prodId,
               prodName: mesLwmsLot.prodId_dictText,
               prodCode: mesLwmsLot.prodIdCode_dictText,
-              whBinId:mesLwmsLot.whBinId,
-              hasWhBinId:!!mesLwmsLot.whBinId,
-              qty:mesLwmsLot.qty,
-              moId:mesLwmsLot.moId,
-              hasChangeQuantity:mesLwmsLot.hasChangeQuantity,
+              whBinId: mesLwmsLot.whBinId,
+              hasWhBinId: !!mesLwmsLot.whBinId,
+              qty: mesLwmsLot.qty,
+              moId: mesLwmsLot.moId,
+              hasChangeQuantity: mesLwmsLot.hasChangeQuantity,
             });
           }
         },
       };
     },
-  },  {
+  },
+  {
     label: '库位',
     field: 'whBinId',
     component: 'ApiTreeSelect',
     componentProps: {
-      api:queryWhBinIdTree,
-      immediate:true,
-      treeDefaultExpandAll:true,
+      api: queryWhBinIdTree,
+      immediate: true,
+      treeDefaultExpandAll: true,
     },
     dynamicDisabled: ({ values }) => {
       return !!values.hasWhBinId;
@@ -224,9 +236,7 @@ export const formSchemaMesLwmsPutStock: FormSchema[] = [
     label: '数量',
     field: 'qty',
     component: 'InputNumber',
-    componentProps: {
-
-    },
+    componentProps: {},
     dynamicDisabled: ({ values }) => {
       return !values.hasChangeQuantity;
     },
@@ -271,7 +281,7 @@ export const formSchemaMesLwmsPutStock: FormSchema[] = [
       labelKey: 'realname',
       rowKey: 'username',
       isRadioSelection: true,
-    }
+    },
   },
   // TODO 主键隐藏字段，目前写死为ID
   {
@@ -305,8 +315,8 @@ export const formSchemaMesLwmsOutStockModal: FormSchema[] = [
               prodId: mesLwmsLot.prodId,
               prodName: mesLwmsLot.prodId_dictText,
               prodCode: mesLwmsLot.prodIdCode_dictText,
-              whBinId_dictText:mesLwmsLot.whBinId_dictText,
-              qty_demo:mesLwmsLot.qty,
+              whBinId_dictText: mesLwmsLot.whBinId_dictText,
+              qty_demo: mesLwmsLot.qty,
             });
           }
         },
@@ -382,7 +392,7 @@ export const formSchemaMesLwmsOutStockModal: FormSchema[] = [
       labelKey: 'realname',
       rowKey: 'username',
       isRadioSelection: true,
-    }
+    },
   },
   {
     label: '领用人',
@@ -392,7 +402,7 @@ export const formSchemaMesLwmsOutStockModal: FormSchema[] = [
       labelKey: 'realname',
       rowKey: 'username',
       isRadioSelection: true,
-    }
+    },
   },
   {
     label: '出库事由',
@@ -441,7 +451,7 @@ export const formSchemaMesLwmsNoCodePutStockModal: FormSchema[] = [
       labelKey: 'realname',
       rowKey: 'username',
       isRadioSelection: true,
-    }
+    },
   },
 ];
 
@@ -468,9 +478,9 @@ export const noCodePutStockTableJVxeColumns = [
     rowKey: 'id',
     labelKey: 'name',
     placeholder: '请输入${title}',
-    linkmap: [{id:'suppId'}],
+    linkmap: [{ id: 'suppId' }],
     validateRules: [{ required: true, message: '${title}不能为空' }],
-    formatter: ({ cellValue, row,column}) => {
+    formatter: ({ cellValue, row, column }) => {
       return row[column.params.key + '_dictText'] || cellValue;
     },
   },
@@ -498,10 +508,10 @@ export const noCodePutStockTableJVxeColumns = [
     ],
     rowKey: 'id',
     labelKey: 'wbinName',
-    linkmap: [{wbinName:'wbinName_dictText',id:'whBinId'}],
+    linkmap: [{ wbinName: 'wbinName_dictText', id: 'whBinId' }],
     placeholder: '请输入${title}',
     validateRules: [{ required: true, message: '${title}不能为空' }],
-    formatter: ({ cellValue, row,column}) => {
+    formatter: ({ cellValue, row, column }) => {
       return row[column.params.key + '_dictText'] || cellValue;
     },
   },
@@ -532,10 +542,10 @@ export const noCodePutStockTableJVxeColumns = [
     validateRules: [
       { required: true, message: '${title}不能为空' },
       {
-        handler({ cellValue}, callback) {
-          if (cellValue <= 0){
+        handler({ cellValue }, callback) {
+          if (cellValue <= 0) {
             callback(false, '${title}不能为0'); // false = 未通过校验
-          }else {
+          } else {
             callback(true); // true = 通过验证
           }
         },
@@ -592,7 +602,7 @@ export const formSchemaMesLwmsNoCodeOutStockModal: FormSchema[] = [
       labelKey: 'realname',
       rowKey: 'username',
       isRadioSelection: true,
-    }
+    },
   },
   {
     label: '领用人',
@@ -602,7 +612,7 @@ export const formSchemaMesLwmsNoCodeOutStockModal: FormSchema[] = [
       labelKey: 'realname',
       rowKey: 'username',
       isRadioSelection: true,
-    }
+    },
   },
   {
     label: '出库事由',
@@ -659,10 +669,10 @@ export const noCodeOutStockTableJVxeColumns = [
     validateRules: [
       { required: true, message: '${title}不能为空' },
       {
-        handler({ cellValue}, callback) {
-          if (cellValue <= 0){
+        handler({ cellValue }, callback) {
+          if (cellValue <= 0) {
             callback(false, '${title}不能为0'); // false = 未通过校验
-          }else {
+          } else {
             callback(true); // true = 通过验证
           }
         },

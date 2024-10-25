@@ -3,6 +3,7 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { JVxeTypes, JVxeColumn } from '/@/components/jeecg/JVxeTable/types';
 import { rules } from '/@/utils/helper/validator';
+import { render } from '/@/utils/common/renderUtils';
 
 /**工单ID */
 export const moId = ref<any>(null);
@@ -54,8 +55,11 @@ export const columns: BasicColumn[] = [
     title: '状态',
     sorter: true,
     align: 'center',
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
     width: 100,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'mo_plan_status', true);
+    },
   },
   {
     title: '数量',
@@ -364,8 +368,8 @@ export function getFormSchema(moCompleteKitCheck): FormSchema[] {
           url: '/workcenter/basWorkCenter/list',
           params: { column: 'createTime', order: 'desc', searchFields: 'code,name', workShopId: '${workShopId}' },
           columns: [
-            {name: '编码',code: 'code'},
-            {name: '名称',code: 'name'}
+            { name: '编码', code: 'code' },
+            { name: '名称', code: 'name' },
           ],
           rowKey: 'id',
           labelKey: ['name'],

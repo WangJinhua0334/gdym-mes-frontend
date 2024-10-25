@@ -12,6 +12,7 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'code',
+    width: 200,
   },
   {
     title: '描述',
@@ -30,19 +31,27 @@ export const columns: BasicColumn[] = [
     title: '是否启用',
     align: 'center',
     sorter: true,
-    dataIndex: 'isEnable_dictText',
+    dataIndex: 'isEnable',
     width: 100,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '抽样过程',
     align: 'center',
     dataIndex: 'samplingProcessId_dictText',
+    width: 150,
   },
   {
     title: '生效日期',
     align: 'center',
     sorter: true,
     dataIndex: 'effectDateBegin',
+    width: 150,
     customRender: ({ text }) => {
       return !text ? '' : text.length > 10 ? text.substr(0, 10) : text;
     },
@@ -52,6 +61,7 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'effectDateEnd',
+    width: 150,
     customRender: ({ text }) => {
       return !text ? '' : text.length > 10 ? text.substr(0, 10) : text;
     },
@@ -281,35 +291,47 @@ export const basProdInspStdItemColumns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '检验标识',
     align: 'center',
     sorter: true,
     dataIndex: 'inspTag_dictText',
+    width: 150,
   },
   {
     title: '是否必检',
     align: 'center',
     sorter: true,
-    dataIndex: 'isSuitable_dictText',
+    dataIndex: 'isSuitable',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '工序',
     align: 'center',
     sorter: true,
+    width: 150,
     dataIndex: 'stationId_dictText',
   },
   {
     title: '检验类别',
     align: 'center',
     sorter: true,
+    width: 150,
     dataIndex: 'inspCategory',
   },
   {
     title: '检验工具',
     align: 'center',
     sorter: true,
+    width: 150,
     dataIndex: 'inspTool',
   },
   {

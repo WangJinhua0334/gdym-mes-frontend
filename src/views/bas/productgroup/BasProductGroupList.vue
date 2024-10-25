@@ -84,6 +84,7 @@
       title: '物料组',
       columns,
       canResize: false,
+      isTreeTable: true,
       formConfig: {
         //labelWidth: 120,
         schemas: searchFormSchema,
@@ -93,6 +94,7 @@
         fieldMapToTime: [],
       },
       actionColumn: {
+        title: '操作',
         width: 240,
         fixed: 'right',
       },

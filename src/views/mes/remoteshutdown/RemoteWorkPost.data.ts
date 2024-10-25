@@ -2,7 +2,6 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 //列表数据
 export const columns: BasicColumn[] = [
-
   {
     title: '编码',
     align: 'center',

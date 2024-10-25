@@ -9,6 +9,7 @@ export const columns: BasicColumn[] = [
     title: '申请单号',
     align: 'center',
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '描述',
@@ -19,6 +20,7 @@ export const columns: BasicColumn[] = [
     title: '计划入库时间',
     align: 'center',
     dataIndex: 'planInDate',
+    width: 150,
     customRender: ({ text }) => {
       return !text ? '' : text.length > 10 ? text.substr(0, 10) : text;
     },
@@ -26,22 +28,32 @@ export const columns: BasicColumn[] = [
   {
     title: '是否完成',
     align: 'center',
-    dataIndex: 'isComplete_dictText',
+    dataIndex: 'isComplete',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '完成时间',
     align: 'center',
     dataIndex: 'completeDate',
+    width: 150,
   },
   {
     title: '完成操作人',
     align: 'center',
     dataIndex: 'completeBy_dictText',
+    width: 150,
   },
   {
     title: 'ERP单号',
     align: 'center',
     dataIndex: 'erpNo',
+    width: 150,
   },
 ];
 //查询数据
@@ -102,41 +114,49 @@ export const mesProductInDetailColumns: BasicColumn[] = [
     title: '工单',
     align: 'center',
     dataIndex: 'moId_dictText',
+    width: 150,
   },
   {
     title: '产品',
     align: 'center',
-    dataIndex: 'prodId',
+    dataIndex: 'prodId_dictText',
+    width: 150,
   },
   {
     title: '生产批次',
     align: 'center',
     dataIndex: 'batch',
+    width: 150,
   },
   {
     title: '数量',
     align: 'center',
     dataIndex: 'qty',
+    width: 150,
   },
   {
     title: '仓库',
     align: 'center',
     dataIndex: 'whId_dictText',
+    width: 150,
   },
   {
     title: '状态',
     align: 'center',
     dataIndex: 'status',
+    width: 150,
   },
   {
     title: '入库时间',
     align: 'center',
     dataIndex: 'actualInDate',
+    width: 150,
   },
   {
     title: '入库操作人',
     align: 'center',
     dataIndex: 'actualInBy_dictText',
+    width: 150,
   },
   {
     title: 'ERP行号',

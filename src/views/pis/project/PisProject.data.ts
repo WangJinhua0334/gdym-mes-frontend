@@ -8,11 +8,13 @@ export const columns: BasicColumn[] = [
     title: '改善编码',
     align: 'center',
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '改善名称',
     align: 'center',
     dataIndex: 'name',
+    width: 150,
   },
   {
     title: '改善描述',
@@ -23,41 +25,52 @@ export const columns: BasicColumn[] = [
     title: '改善等级',
     align: 'center',
     dataIndex: 'grade_dictText',
+    width: 150,
   },
   {
     title: '部门',
     align: 'center',
     dataIndex: 'deptId_dictText',
+    width: 150,
   },
   {
     title: '计划开始时间',
     align: 'center',
     dataIndex: 'planStartTime',
+    width: 150,
   },
   {
     title: '计划完工时间',
     align: 'center',
     dataIndex: 'planCompleteTime',
+    width: 150,
   },
   {
     title: '责任人',
     align: 'center',
     dataIndex: 'responsiBy_dictText',
+    width: 150,
   },
   {
     title: '项目成员',
     align: 'center',
     dataIndex: 'memberBy_dictText',
+    width: 300,
   },
   {
     title: '状态',
     align: 'center',
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'pis_status', true);
+    },
   },
   {
     title: '改善目标',
     align: 'center',
     dataIndex: 'target',
+    width: 150,
   },
   // {
   //   title: '改善指标',
@@ -68,26 +81,31 @@ export const columns: BasicColumn[] = [
     title: '改善奖金',
     align: 'center',
     dataIndex: 'bonus',
+    width: 150,
   },
   {
     title: '核准方式',
     align: 'center',
     dataIndex: 'approvalMethod_dictText',
+    width: 150,
   },
   {
     title: '核准人',
     align: 'center',
     dataIndex: 'approvalBy_dictText',
+    width: 150,
   },
   {
     title: '审核人',
     align: 'center',
     dataIndex: 'examineBy_dictText',
+    width: 150,
   },
   {
     title: '审核时间',
     align: 'center',
     dataIndex: 'examineTime',
+    width: 150,
   },
   // {
   //   title: '审核记录',
@@ -103,58 +121,79 @@ export const columns: BasicColumn[] = [
     title: '实际开始时间',
     align: 'center',
     dataIndex: 'acStartTime',
+    width: 150,
   },
   {
     title: '实际完工时间',
     align: 'center',
     dataIndex: 'acCompleteTime',
+    width: 150,
   },
   {
     title: '对比方式',
     align: 'center',
     dataIndex: 'contrastMethod_dictText',
+    width: 150,
   },
   {
     title: '效果确认',
     align: 'center',
     dataIndex: 'effectConfirm',
+    width: 150,
   },
   {
     title: '项目总结',
     align: 'center',
     dataIndex: 'projectSummary',
+    width: 150,
   },
   {
     title: '项目金额测算',
     align: 'center',
     dataIndex: 'calculationMoney',
+    width: 150,
   },
   {
     title: '改善成本',
     align: 'center',
     dataIndex: 'cost',
+    width: 150,
   },
   {
     title: '跟踪月份',
     align: 'center',
     dataIndex: 'trackMonth',
+    width: 150,
   },
   {
     title: '版本',
     align: 'center',
     dataIndex: 'version',
+    width: 150,
   },
   {
     title: '是否完成',
     align: 'center',
     dataIndex: 'isComplete',
-    slots: { customRender: 'switchSlot' },
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '是否继续',
     align: 'center',
     dataIndex: 'isContinue',
-    slots: { customRender: 'switchSlot' },
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
 ];
 //查询数据
@@ -798,21 +837,25 @@ export const pisProjectAnalysisColumns: BasicColumn[] = [
     title: '分析方法',
     align: 'center',
     dataIndex: 'analysisMethod_dictText',
+    width: 200,
   },
   {
     title: '分析工具',
     align: 'center',
     dataIndex: 'analysisTool',
+    width: 150,
   },
   {
     title: '计划完工时间',
     align: 'center',
     dataIndex: 'planCompleteTime',
+    width: 150,
   },
   {
     title: '责任人',
     align: 'center',
     dataIndex: 'responsiBy_dictText',
+    width: 150,
   },
   {
     title: '分析详细内容',
@@ -823,42 +866,50 @@ export const pisProjectAnalysisColumns: BasicColumn[] = [
     title: '分析文件',
     align: 'center',
     dataIndex: 'analysisFile',
+    width: 200,
     slots: { customRender: 'fileSlot' },
   },
   {
     title: '分析人',
     align: 'center',
     dataIndex: 'analysisBy_dictText',
+    width: 150,
   },
   {
     title: '备注',
     align: 'center',
     dataIndex: 'remark',
+    width: 150,
   },
   {
     title: '实施对策',
     align: 'center',
     dataIndex: 'implement',
+    width: 200,
   },
   {
     title: '实际完工时间',
     align: 'center',
     dataIndex: 'acCompleteTime',
+    width: 150,
   },
   {
     title: '完成总结',
     align: 'center',
     dataIndex: 'completeContent',
+    width: 250,
   },
   {
     title: '完成附件',
     align: 'center',
     dataIndex: 'completeFile',
+    width: 150,
     slots: { customRender: 'fileSlot' },
   },
   {
     title: '完成人',
     align: 'center',
+    width: 150,
     dataIndex: 'completeBy_dictText',
   },
 ];

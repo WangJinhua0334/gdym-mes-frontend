@@ -8,21 +8,25 @@ export const columns: BasicColumn[] = [
     title: '流转卡号',
     align: 'center',
     dataIndex: 'sn',
+    width: 150,
   },
   {
     title: '工单',
     align: 'center',
     dataIndex: 'moId_dictText',
+    width: 150,
   },
   {
     title: '派工单',
     align: 'center',
     dataIndex: 'moPlanId_dictText',
+    width: 150,
   },
   {
     title: '产品',
     align: 'center',
     dataIndex: 'prodId_dictText',
+    width: 150,
   },
   {
     title: '产品名称',
@@ -33,22 +37,31 @@ export const columns: BasicColumn[] = [
     title: '下发数量',
     align: 'center',
     dataIndex: 'qty',
+    width: 150,
   },
   {
     title: '工序',
     align: 'center',
     dataIndex: 'wfsId_dictText',
+    width: 150,
   },
   {
     title: '下发产线工位',
     align: 'center',
     dataIndex: 'wkpId_dictText',
+    width: 150,
   },
   {
     title: '结果',
     align: 'center',
     dataIndex: 'result',
-    slots: { customRender: 'switchSlot' },
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '成功', value: 'Y', isChecked: true },
+        { text: '失败', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '消息提示',
@@ -59,6 +72,7 @@ export const columns: BasicColumn[] = [
     title: '操作时间',
     align: 'center',
     dataIndex: 'createTime',
+    width: 150,
   },
 ];
 //查询数据

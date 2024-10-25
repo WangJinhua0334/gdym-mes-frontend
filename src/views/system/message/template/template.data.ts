@@ -1,6 +1,7 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { rules } from '/@/utils/helper/validator';
 import { filterDictTextByCache } from '/@/utils/dict/JDictSelectUtil';
+import { render } from '/@/utils/common/renderUtils';
 
 export const columns: BasicColumn[] = [
   {
@@ -28,12 +29,11 @@ export const columns: BasicColumn[] = [
     title: '是否应用',
     dataIndex: 'useStatus',
     width: 90,
-    customRender: function ({ text }) {
-      if (text == '1') {
-        return '是';
-      } else {
-        return '否';
-      }
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: '1', isChecked: true },
+        { text: '否', value: '0', isChecked: false },
+      ]);
     },
   },
 ];

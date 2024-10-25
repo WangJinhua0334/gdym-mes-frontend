@@ -81,7 +81,6 @@
         return basWorkflowStationList(parameters);
       },
       columns: basWorkflowStationColumns,
-      canResize: true,
       size: 'small',
       rowSelection: { type: 'radio' },
       formConfig: {

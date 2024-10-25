@@ -31,12 +31,10 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { formSchemaMesLwmsNoCodePutStockModal, noCodePutStockTableJVxeColumns } from '../MesLwmsStock.data';
-  import {
-    putNoCodeStock,queryStockByMoCodeNoStock,
-  } from '../MesLwmsStock.api';
+  import { putNoCodeStock, queryStockByMoCodeNoStock } from '../MesLwmsStock.api';
   import { JVxeTable } from '/@/components/jeecg/JVxeTable';
   import { lwmsLotGenerateJVxeColumns } from '/@/views/mes/lwmslot/MesLwmsLot.data';
-  import {message} from "ant-design-vue";
+  import { message } from 'ant-design-vue';
   // Emits声明
   const emit = defineEmits(['register', 'success']);
   const isUpdate = ref(true);
@@ -47,24 +45,23 @@
     loading: boolean;
     dataSource: any[];
     columns: any[];
-    editConfig:any;
+    editConfig: any;
   }>({
     loading: false,
     dataSource: [],
     columns: noCodePutStockTableJVxeColumns,
-    editConfig:{
-      trigger:'click',
-      mode:'cell',
-      activeMethod:({row,column}) =>{
-        if (column.property === 'whBinId'){
-          if (row.hasWhBinId){
+    editConfig: {
+      trigger: 'click',
+      mode: 'cell',
+      beforeEditMethod: ({ row, column }) => {
+        if (column.property === 'whBinId') {
+          if (row.hasWhBinId) {
             return false;
           }
         }
         return true;
-
-      }
-    }
+      },
+    },
   });
   //表单配置
   const [registerForm, { setProps, resetFields, setFieldsValue, validate }] = useForm({
@@ -101,23 +98,23 @@
   };
 
   const basicFormSubmit = async (values) => {
-    noCodePutStockBinding?.value?.removeRowsById(noCodePutStockBinding?.value?.getTableData()?.map(row=>row.lwmsSn));
+    noCodePutStockBinding?.value?.removeRowsById(noCodePutStockBinding?.value?.getTableData()?.map((row) => row.lwmsSn));
 
     let res = await queryStockByMoCodeNoStock(values.moCode);
-    if (!res ||res.length == 0){
-      message.error("此工单下未查询到绑定的条码信息")
+    if (!res || res.length == 0) {
+      message.error('此工单下未查询到绑定的条码信息');
     }
     const v = res.map((_) => ({
       id: _.lwmsSn,
-      moId:_.moId,
-      prodId:_.prodId,
+      moId: _.moId,
+      prodId: _.prodId,
       prodCode: _.prodIdCode_dictText,
       prodName: _.prodId_dictText,
       lwmsSn: _.lwmsSn,
-      whBinId:_.whBinId,
-      hasWhBinId:!!_.whBinId,
-      whBinId_dictText:_.whBinId_dictText,
-      qty:_.qty
+      whBinId: _.whBinId,
+      hasWhBinId: !!_.whBinId,
+      whBinId_dictText: _.whBinId_dictText,
+      qty: _.qty,
     }));
     noCodePutStockBinding?.value?.addRows(v);
   };
@@ -128,13 +125,13 @@
       let formValues = await validate();
       setModalProps({ confirmLoading: true });
       let validateTable = await noCodePutStockBinding?.value?.validateTable();
-      if (validateTable != null){
+      if (validateTable != null) {
         setModalProps({ confirmLoading: false });
         return;
       }
       const values = noCodePutStockBinding?.value?.getTableData();
       //提交表单
-      await putNoCodeStock({ warehousingBy:formValues.warehousingBy, mesLwmsStocks:values });
+      await putNoCodeStock({ warehousingBy: formValues.warehousingBy, mesLwmsStocks: values });
       //关闭弹窗
       closeModal();
       //刷新列表

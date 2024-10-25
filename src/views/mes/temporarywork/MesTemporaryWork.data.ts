@@ -27,9 +27,12 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '状态',
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
     sorter: true,
     width: 100,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'temporary_work_status', true);
+    },
   },
   {
     title: '工单',
@@ -400,8 +403,11 @@ export const recordColumns: BasicColumn[] = [
   },
   {
     title: '状态',
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
     width: 100,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'temporary_work_status', true);
+    },
   },
   {
     title: '描述',

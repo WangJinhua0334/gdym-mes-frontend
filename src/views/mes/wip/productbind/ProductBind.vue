@@ -96,7 +96,7 @@
     /*editConfig: {
       trigger: 'click',
       mode: 'cell',
-      activeMethod: ({ row, column }) => {
+      beforeEditMethod: ({ row, column }) => {
         if (
           column.property === 'minOperators' ||
           column.property === 'limitMin' ||

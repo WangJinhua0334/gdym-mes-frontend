@@ -16,6 +16,7 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'name',
+    width: 200,
   },
   {
     title: '描述',
@@ -27,11 +28,13 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'responsibleDeptName_dictText',
+    width: 150,
   },
   {
     title: '负责人',
     align: 'center',
     dataIndex: 'responsibleByName_dictText',
+    width: 150,
   },
   {
     title: '响应时长',

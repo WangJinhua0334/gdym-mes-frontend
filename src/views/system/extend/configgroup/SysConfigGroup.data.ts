@@ -64,6 +64,7 @@ export const sysConfigColumns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'code',
+    width: 200,
   },
   {
     title: '描述',
@@ -76,33 +77,49 @@ export const sysConfigColumns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'value',
+    width: 200,
   },
   {
     title: '是否启用',
     align: 'center',
     dataIndex: 'isEnabled',
-    slots: { customRender: 'switchSlot' },
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '是否保存日志',
     align: 'center',
     dataIndex: 'isLog',
-    slots: { customRender: 'switchSlot' },
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '扩展1',
     align: 'center',
     dataIndex: 'extend1',
+    width: 150,
   },
   {
     title: '扩展2',
     align: 'center',
     dataIndex: 'extend2',
+    width: 150,
   },
   {
     title: '扩展3',
     align: 'center',
     dataIndex: 'extend3',
+    width: 150,
   },
 ];
 //子表表格配置

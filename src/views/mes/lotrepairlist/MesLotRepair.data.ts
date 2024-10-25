@@ -46,7 +46,10 @@ export const columns: BasicColumn[] = [
   {
     title: '状态',
     align: 'center',
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'repair_status', true);
+    },
   },
   {
     title: '维修人',

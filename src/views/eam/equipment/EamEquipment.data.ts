@@ -1,66 +1,88 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
+import { render } from '/@/utils/common/renderUtils';
 //列表数据
 export const columns: BasicColumn[] = [
   {
     title: '编码',
     align: 'center',
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '名称',
     align: 'center',
     dataIndex: 'name',
+    width: 150,
   },
   {
     title: '规格',
     align: 'center',
     dataIndex: 'specification',
+    width: 150,
   },
   {
     title: '类型',
     align: 'center',
     dataIndex: 'category',
+    width: 150,
   },
   {
     title: '状态',
     align: 'center',
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'equipment_status', true);
+    },
   },
   {
     title: '特种设备',
     align: 'center',
-    dataIndex: 'isSpecial_dictText',
+    dataIndex: 'isSpecial',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '设备分类',
     align: 'center',
     dataIndex: 'equipTypeId_dictText',
+    width: 150,
   },
   {
     title: '供应商',
     align: 'center',
     dataIndex: 'suppId_dictText',
+    width: 150,
   },
   {
     title: '出厂时间',
     align: 'center',
     dataIndex: 'purchaseTime',
+    width: 150,
   },
   {
     title: '领用时间',
     align: 'center',
     dataIndex: 'useTime',
+    width: 150,
   },
   {
     title: '车间',
     align: 'center',
     dataIndex: 'workShopId_dictText',
+    width: 150,
   },
   {
     title: '领用人',
     align: 'center',
     dataIndex: 'useBy_dictText',
+    width: 150,
   },
 ];
 //查询数据
@@ -126,46 +148,58 @@ export const checkRecordColumns: BasicColumn[] = [
     title: '点检单号',
     align: 'center',
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '车间',
     align: 'center',
     dataIndex: 'workShopId_dictText',
+    width: 150,
   },
   {
     title: '设备编码',
     align: 'center',
     dataIndex: 'equipCode_dictText',
+    width: 150,
   },
   {
     title: '设备',
     align: 'center',
     dataIndex: 'equipId_dictText',
+    width: 150,
   },
   {
     title: '计划点检人',
     align: 'center',
     dataIndex: 'planOperateBy_dictText',
+    width: 150,
   },
   {
     title: '计划点检日期',
     align: 'center',
     dataIndex: 'planOperateTime',
+    width: 150,
   },
   {
     title: '实际点检人',
     align: 'center',
     dataIndex: 'acOperateBy_dictText',
+    width: 150,
   },
   {
     title: '实际点检日期',
     align: 'center',
     dataIndex: 'acOperateTime',
+    width: 150,
   },
   {
     title: '状态',
     align: 'center',
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'equip_spot_check_plan_status', true);
+    },
   },
 ];
 //列表数据
@@ -174,36 +208,42 @@ export const maintainRecordColumns: BasicColumn[] = [
     title: '保养单号',
     align: 'center',
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '设备编码',
     align: 'center',
     dataIndex: 'equipCode_dictText',
+    width: 150,
   },
   {
     title: '设备',
     align: 'center',
     dataIndex: 'equipId_dictText',
+    width: 150,
   },
   {
     title: '计划保养人',
     align: 'center',
     dataIndex: 'planOperateBy_dictText',
+    width: 150,
   },
   {
     title: '计划保养日期',
     align: 'center',
     dataIndex: 'planOperateTime',
+    width: 150,
   },
   {
     title: '逾期天数',
     align: 'center',
     dataIndex: 'planOperateTime',
+    width: 150,
     customRender: ({ record }) => {
       // @ts-ignore
       try {
         // @ts-ignore
-        let acOperateTime = record?.acOperateTime;
+        const acOperateTime = record?.acOperateTime;
         let acOperateTimeDate;
         if (!acOperateTime) {
           acOperateTimeDate = new Date();
@@ -211,7 +251,7 @@ export const maintainRecordColumns: BasicColumn[] = [
           acOperateTimeDate = acOperateTime;
         }
         // @ts-ignore
-        let planOperateTimeDate = record?.planOperateTime ? new Date(record?.planOperateTime) : new Date();
+        const planOperateTimeDate = record?.planOperateTime ? new Date(record?.planOperateTime) : new Date();
         if (acOperateTimeDate.getTime() > planOperateTimeDate.getTime()) {
           // 计算日期差异的毫秒数
           const timeDifference = acOperateTimeDate.getTime() - planOperateTimeDate.getTime();
@@ -230,17 +270,23 @@ export const maintainRecordColumns: BasicColumn[] = [
     title: '实际保养人',
     align: 'center',
     dataIndex: 'acOperateBy_dictText',
+    width: 150,
   },
 
   {
     title: '实际保养日期',
     align: 'center',
     dataIndex: 'acOperateTime',
+    width: 150,
   },
   {
     title: '状态',
     align: 'center',
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'equip_maintain_plan_status', true);
+    },
   },
 ];
 //列表数据
@@ -249,34 +295,30 @@ export const checkRecordDetailsColumns: BasicColumn[] = [
     title: '名称',
     align: 'center',
     dataIndex: 'name',
+    width: 150,
   },
   {
     title: '点检方式',
     align: 'center',
     dataIndex: 'method',
+    width: 150,
   },
   {
     title: '点检标准',
     align: 'center',
     dataIndex: 'standard',
+    width: 150,
   },
   {
     title: '是否异常',
     align: 'center',
     dataIndex: 'result',
+    width: 150,
     customRender: ({ text }) => {
-      let v;
-      switch (text) {
-        case 'Y':
-          v = '是';
-          break;
-        case 'N':
-          v = '否';
-          break;
-        default:
-          v = '未知';
-      }
-      return v;
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
     },
   },
   {
@@ -288,6 +330,7 @@ export const checkRecordDetailsColumns: BasicColumn[] = [
     title: '附件',
     align: 'center',
     dataIndex: 'attachments',
+    width: 150,
     slots: { customRender: 'fileSlot' },
   },
 ];
@@ -297,39 +340,36 @@ export const maintainRecordDetailsColumns: BasicColumn[] = [
     title: '名称',
     align: 'center',
     dataIndex: 'name',
+    width: 150,
   },
   {
     title: '保养位置',
     align: 'center',
     dataIndex: 'location',
+    width: 150,
   },
   {
     title: '保养方式',
     align: 'center',
     dataIndex: 'method',
+    width: 150,
   },
   {
     title: '保养标准',
     align: 'center',
     dataIndex: 'standard',
+    width: 150,
   },
   {
     title: '是否异常',
     align: 'center',
     dataIndex: 'result',
+    width: 150,
     customRender: ({ text }) => {
-      let v;
-      switch (text) {
-        case 'Y':
-          v = '是';
-          break;
-        case 'N':
-          v = '否';
-          break;
-        default:
-          v = '未知';
-      }
-      return v;
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
     },
   },
   {
@@ -341,6 +381,7 @@ export const maintainRecordDetailsColumns: BasicColumn[] = [
     title: '附件',
     align: 'center',
     dataIndex: 'attachments',
+    width: 150,
     slots: { customRender: 'fileSlot' },
   },
 ];
@@ -579,41 +620,49 @@ export const eamEquipSpotCheckItemColumns: BasicColumn[] = [
     title: '编码',
     align: 'center',
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '名称',
     align: 'center',
     dataIndex: 'name',
+    width: 150,
   },
   {
     title: '点检方式',
     align: 'center',
     dataIndex: 'method',
+    width: 150,
   },
   {
     title: '点检标准',
     align: 'center',
     dataIndex: 'standard',
+    width: 150,
   },
   {
     title: '点检周期（天）',
     align: 'center',
     dataIndex: 'cycle',
+    width: 150,
   },
   {
     title: '提前预警（小时）',
     align: 'center',
     dataIndex: 'alarm',
+    width: 150,
   },
   {
     title: '责任人',
     align: 'center',
     dataIndex: 'responsibleBy_dictText',
+    width: 150,
   },
   {
     title: '上一次点检时间',
     align: 'center',
     dataIndex: 'lastSpotCheckTime',
+    width: 150,
   },
 ];
 //子表表单数据
@@ -690,46 +739,55 @@ export const eamEquipMaintainItemColumns: BasicColumn[] = [
     title: '编码',
     align: 'center',
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '名称',
     align: 'center',
     dataIndex: 'name',
+    width: 150,
   },
   {
     title: '保养位置',
     align: 'center',
     dataIndex: 'location',
+    width: 150,
   },
   {
     title: '保养方式',
     align: 'center',
     dataIndex: 'method',
+    width: 150,
   },
   {
     title: '保养标准',
     align: 'center',
     dataIndex: 'standard',
+    width: 150,
   },
   {
     title: '保养周期（天）',
     align: 'center',
     dataIndex: 'cycle',
+    width: 150,
   },
   {
     title: '提前预警（小时）',
     align: 'center',
     dataIndex: 'alarm',
+    width: 150,
   },
   {
     title: '责任人',
     align: 'center',
     dataIndex: 'responsibleBy_dictText',
+    width: 150,
   },
   {
     title: '上一次保养时间',
     align: 'center',
     dataIndex: 'lastMaintainTime',
+    width: 150,
   },
 ];
 //子表表单数据

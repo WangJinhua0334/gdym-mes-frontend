@@ -6,11 +6,13 @@ export const columns: BasicColumn[] = [
     title: '分类代码',
     align: 'left',
     dataIndex: 'code',
+    width: 200,
   },
   {
     title: '分类名称',
     align: 'left',
     dataIndex: 'name',
+    width: 200,
   },
   {
     title: '分类描述',
@@ -24,11 +26,13 @@ export const defectCategoryListItemColumns: BasicColumn[] = [
     title: '小类代码',
     align: 'left',
     dataIndex: 'code',
+    width: 200,
   },
   {
     title: '小类名称',
     align: 'left',
     dataIndex: 'name',
+    width: 200,
   },
   {
     title: '小类描述',

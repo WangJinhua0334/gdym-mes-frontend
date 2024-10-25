@@ -38,9 +38,12 @@ export const columns: BasicColumn[] = [
   {
     title: '状态',
     align: 'center',
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
     sorter: true,
     width: 120,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'product_pick_status', true);
+    },
   },
   {
     title: '提交时间',
@@ -363,7 +366,10 @@ export const detailBasicColumns: BasicColumn[] = [
     title: '状态',
     align: 'center',
     sorter: true,
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'product_pick_detail_status', true);
+    },
   },
   {
     title: '领料时间',

@@ -10,18 +10,21 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '名称',
     align: 'center',
     sorter: true,
     dataIndex: 'name',
+    width: 150,
   },
   {
     title: '类型',
     align: 'center',
     sorter: true,
     dataIndex: 'type_dictText',
+    width: 150,
   },
   {
     title: '描述',
@@ -31,12 +34,20 @@ export const columns: BasicColumn[] = [
   {
     title: '固定工时',
     align: 'center',
-    dataIndex: 'fixedHours_dictText',
+    dataIndex: 'fixedHours',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '标准工时',
     align: 'center',
     dataIndex: 'standardHours',
+    width: 150,
   },
 ];
 //查询数据
@@ -127,11 +138,13 @@ export const basStationActionColumns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'sequence',
+    width: 200,
   },
   {
     title: '动作',
     align: 'center',
     dataIndex: 'actionName_dictText',
+    width: 200,
   },
 ];
 //子表列表数据
@@ -141,22 +154,26 @@ export const basStationSkillColumns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'skillId_dictText',
+    width: 150,
   },
   {
     title: '技能名称',
     align: 'center',
     dataIndex: 'skillName_dictText',
+    width: 200,
   },
   {
     title: '等级',
     align: 'center',
     sorter: true,
     dataIndex: 'skillLevelId_dictText',
+    width: 200,
   },
   {
     title: '等级名称',
     align: 'center',
     dataIndex: 'skillLevelName_dictText',
+    width: 200,
   },
 ];
 //子表列表数据
@@ -165,12 +182,14 @@ export const basChildStationColumns: BasicColumn[] = [
     title: '子工序',
     align: 'center',
     dataIndex: 'childStationName_dictText',
+    width: 200,
   },
   {
     title: '顺序',
     align: 'center',
     sorter: true,
     dataIndex: 'sequence',
+    width: 200,
   },
 ];
 //子表表格配置

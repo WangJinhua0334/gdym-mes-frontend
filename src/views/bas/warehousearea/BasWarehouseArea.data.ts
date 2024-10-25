@@ -10,18 +10,21 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'whId_dictText',
+    width: 150,
   },
   {
     title: '区域编码',
     align: 'center',
     sorter: true,
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '区域名称',
     align: 'center',
     sorter: true,
     dataIndex: 'name',
+    width: 200,
   },
   {
     title: '区域描述',
@@ -33,11 +36,19 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'location',
+    width: 200,
   },
   {
     title: '区域是否锁定',
     align: 'center',
-    dataIndex: 'isLock_dictText',
+    dataIndex: 'isLock',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
 ];
 //查询数据
@@ -217,12 +228,14 @@ export const basWarehouseBinColumns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'code',
+    width: 150,
   },
   {
     title: '名称',
     align: 'center',
     sorter: true,
     dataIndex: 'name',
+    width: 150,
   },
   {
     title: '描述',
@@ -234,11 +247,19 @@ export const basWarehouseBinColumns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'location',
+    width: 150,
   },
   {
     title: '是否锁定',
     align: 'center',
-    dataIndex: 'isLock_dictText',
+    dataIndex: 'isLock',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
 ];
 //子表表格配置

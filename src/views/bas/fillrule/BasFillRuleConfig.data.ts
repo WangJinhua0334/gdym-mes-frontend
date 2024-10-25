@@ -3,6 +3,7 @@ import { FormSchema } from '/@/components/Table';
 import { rules } from '/@/utils/helper/validator';
 import { JVxeTypes, JVxeColumn } from '/@/components/jeecg/JVxeTable/types';
 import { ref, unref, computed } from 'vue';
+import { render } from '/@/utils/common/renderUtils';
 
 export const selectSysFillRuleId = ref();
 
@@ -12,28 +13,43 @@ export const columns: BasicColumn[] = [
     title: '编码',
     align: 'center',
     dataIndex: 'code',
+    width: 200,
   },
   {
     title: '名称',
     align: 'center',
     dataIndex: 'name',
+    width: 200,
   },
   {
     title: '系统编码业务',
     align: 'center',
     dataIndex: 'sysFillRuleId_dictText',
+    width: 200,
   },
   {
     title: '是否默认',
     align: 'center',
     dataIndex: 'isDefault',
-    slots: { customRender: 'switchSlot' },
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '是否启用',
     align: 'center',
     dataIndex: 'isEnable',
-    slots: { customRender: 'switchSlot' },
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '描述',
@@ -172,42 +188,55 @@ export const basFillRuleConfigDetailColumns: BasicColumn[] = [
     title: '规则类型',
     align: 'center',
     dataIndex: 'fillRuleType_dictText',
+    width: 150,
   },
   {
     title: '值',
     align: 'center',
     dataIndex: 'fillRuleValue',
+    width: 150,
   },
   {
     title: '业务参数',
     align: 'center',
     dataIndex: 'fillRuleParam',
+    width: 200,
   },
   {
     title: '长度',
     align: 'center',
     dataIndex: 'fillRuleLength',
+    width: 100,
   },
   {
     title: '进制位',
     align: 'center',
     dataIndex: 'fillRuleHex',
+    width: 100,
   },
   {
     title: '进制字符',
     align: 'center',
     dataIndex: 'fillRuleHexStr',
+    width: 100,
   },
   {
     title: '起始号',
     align: 'center',
     dataIndex: 'fillRuleStart',
+    width: 100,
   },
   {
     title: '是否反转',
     align: 'center',
     dataIndex: 'isReverse',
-    slots: { customRender: 'switchSlot' },
+    width: 100,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
 ];
 //子表表格配置
@@ -216,7 +245,6 @@ export const basFillRuleConfigDetailJVxeColumns: JVxeColumn[] = [
     title: '规则类型',
     key: 'fillRuleType',
     type: JVxeTypes.select,
-    width: 150,
     dictCode: 'fill_rule_type',
     placeholder: '请选择${title}',
     validateRules: [{ required: true, message: '${title}不能为空' }],
@@ -225,17 +253,15 @@ export const basFillRuleConfigDetailJVxeColumns: JVxeColumn[] = [
     title: '值',
     key: 'fillRuleValue',
     type: JVxeTypes.input,
-    width: 120,
     placeholder: '请输入${title}',
   },
   {
     title: '参数',
     key: 'fillRuleParam',
     type: JVxeTypes.select,
-    width: 120,
     placeholder: '请输入${title}',
     titleHelp: { message: '选取系统编码业务支持的业务参数！' },
-    tipsContent: { message: '选取系统编码业务支持的业务参数！' },
+    tipsContent: '选取系统编码业务支持的业务参数！',
     validateRules: [
       {
         handler({ cellValue, row }, callback) {
@@ -252,7 +278,6 @@ export const basFillRuleConfigDetailJVxeColumns: JVxeColumn[] = [
     title: '长度',
     key: 'fillRuleLength',
     type: JVxeTypes.inputNumber,
-    width: 150,
     placeholder: '请输入${title}',
     defaultValue: '',
     validateRules: [
@@ -278,7 +303,6 @@ export const basFillRuleConfigDetailJVxeColumns: JVxeColumn[] = [
     title: '进制',
     key: 'fillRuleHex',
     type: JVxeTypes.inputNumber,
-    width: 100,
     placeholder: '请输入${title}',
     validateRules: [
       {
@@ -291,7 +315,6 @@ export const basFillRuleConfigDetailJVxeColumns: JVxeColumn[] = [
     title: '进制字符',
     key: 'fillRuleHexStr',
     type: JVxeTypes.input,
-    width: 100,
     placeholder: '请输入${title}',
     validateRules: [
       {
@@ -310,7 +333,6 @@ export const basFillRuleConfigDetailJVxeColumns: JVxeColumn[] = [
     title: '起始值',
     key: 'fillRuleStart',
     type: JVxeTypes.inputNumber,
-    width: 100,
     placeholder: '请输入${title}',
     defaultValue: '',
     validateRules: [
@@ -337,7 +359,6 @@ export const basFillRuleConfigDetailJVxeColumns: JVxeColumn[] = [
     align: 'center',
     defaultValue: 'N',
     customValue: ['Y', 'N'],
-    width: 100,
     slotName: 'mustSwitch',
   },
 ];

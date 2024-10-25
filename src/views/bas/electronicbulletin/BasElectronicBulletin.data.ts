@@ -26,8 +26,8 @@ export const columns: BasicColumn[] = [
     dataIndex: 'isEnable',
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
-        { text: '是', value: 'Y' },
-        { text: '否', value: 'N' },
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
       ]);
     },
   },
