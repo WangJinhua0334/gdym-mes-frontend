@@ -141,7 +141,6 @@
       const { getShowLocalePicker } = useLocale();
       // gettileTheme.value为自定义的主题颜色取亮色暗色主题，如不设置则取自带的主题色
       const themeColor = computed(() => {
-        console.log(getDarkMode);
         return getDarkMode.value ? getDarkMode.value : 'light';
       });
       const getHeaderClass = computed(() => {
@@ -173,9 +172,7 @@
             params: {},
           })
           .then((res) => {
-            console.log(res);
             menuList.value = transformRouteToMenu(res.menu);
-            console.log(menuList);
             menuList.value.forEach((item, index) => {
               item.isclick = false;
               item.ismouse = false;
@@ -190,7 +187,6 @@
                 });
               }
             });
-            console.log(menuList);
             menuList.value.splice(tanIndex.value, 1);
             newMenuList.value = split_array(menuList.value, 4);
           });
@@ -251,35 +247,25 @@
           item.ismouse = false;
           tabIndex.value = -1;
         }
-        // goHome && ( router.replace(PageEnum.BASE_HOME));
-        // console.log(item.children[0].path)
         sessionStorage.setItem('routerName', item.name);
 
         // 菜单跳转，最多支持三级菜单跳转
         let path: string = PageEnum.BASE_HOME;
         if (item.redirect) {
-          for (const val of menuChildren.value) {
-            if (item.redirect == val.path) {
-              path = item.redirect;
-            } else {
-              if (val.children && val.children.length > 0) {
-                if (path == PageEnum.BASE_HOME) {
-                  path = val.children[0].path;
-                }
-
-                if (val.children.findIndex((child) => child.path == item.redirect) > -1) {
-                  path = item.redirect;
-                  break;
-                }
-              } else {
-                path = item.children[0].path;
-              }
-            }
-          }
+          path = item.redirect;
         } else {
-          const tabList = tabStore.getTabList.filter((item) => item.path != PageEnum.CUSTOM_HOME);
-          if (tabList.length > 0) {
-            path = tabList[tabList.length - 1].path;
+          for (const val of menuChildren.value) {
+            if (val.children && val.children.length > 0) {
+              if (path == PageEnum.BASE_HOME) {
+                path = val.children[0].path;
+              }
+              if (val.children.findIndex((child) => child.path == item.redirect) > -1) {
+                path = item.redirect;
+                break;
+              }
+            } else {
+              path = item.children[0].path;
+            }
           }
         }
         go(path, true);
