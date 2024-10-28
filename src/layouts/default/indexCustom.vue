@@ -173,6 +173,9 @@
           })
           .then((res) => {
             menuList.value = transformRouteToMenu(res.menu);
+            //隐藏的菜单就不进行站位处理，过滤掉隐藏的菜单
+            menuList.value = menuList.value.filter((item) => !item.hideMenu);
+
             menuList.value.forEach((item, index) => {
               item.isclick = false;
               item.ismouse = false;
