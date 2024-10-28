@@ -145,8 +145,10 @@
         () => props.code,
         (val) => {
           selectIds.value = [];
-          for (let i = 0; i < val.length; i++) {
-            selectIds.value.push(val[i]);
+          if (val) {
+            for (let i = 0; i < val.length; i++) {
+              selectIds.value.push(val[i]);
+            }
           }
         }
       );
@@ -466,7 +468,7 @@
        * 查询
        */
       function searchQuery() {
-        pagination.current = 1
+        pagination.current = 1;
         loadData();
       }
       /**
