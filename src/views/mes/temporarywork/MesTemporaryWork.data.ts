@@ -33,6 +33,7 @@ export const columns: BasicColumn[] = [
     customRender: ({ text }) => {
       return render.renderDict(text, 'temporary_work_status', true);
     },
+
   },
   {
     title: '工单',
@@ -52,14 +53,44 @@ export const columns: BasicColumn[] = [
     width: 160,
   },
   {
+    title: '作业员',
+    dataIndex: 'operateBy_dictText',
+    sorter: true,
+    width: 100,
+  },
+  {
+    title: '流转卡号',
+    dataIndex: 'sn',
+    width: 100,
+  },
+  {
+    title: '工艺工序',
+    dataIndex: 'wfsId_dictText',
+    width: 100,
+  },
+  {
+    title: '工序',
+    dataIndex: 'stationId_dictText',
+    width: 100,
+  },
+  {
     title: '工时',
     dataIndex: 'workHours',
     width: 100,
   },
   {
-    title: '作业员',
-    dataIndex: 'operateBy_dictText',
-    sorter: true,
+    title: '工作日加班',
+    dataIndex: 'workHoursOvertime',
+    width: 100,
+  },
+  {
+    title: '休息日加班',
+    dataIndex: 'restHours',
+    width: 100,
+  },
+  {
+    title: '节假日加班',
+    dataIndex: 'holidaysHours',
     width: 100,
   },
   {
@@ -112,6 +143,12 @@ export const searchFormSchema: FormSchema[] = [
       dictCode: 'temporary_work_status',
     },
     labelWidth: 120,
+    colProps: { span: 6 },
+  },
+  {
+    label: '流转卡号',
+    field: 'sn',
+    component: 'JInput',
     colProps: { span: 6 },
   },
 ];
@@ -203,12 +240,148 @@ export const formSchema: FormSchema[] = [
         labelKey: ['code'],
         placeholder: '请选择',
         multi: false,
+        linkmap: [{ wkfId: 'wkfId' }],
         getPopupContainer: (node) => node.parentNode,
       };
     },
     dynamicRules: ({ model, schema }) => {
       return [{ required: true, message: '请选择工单!' }];
     },
+  },
+  {
+    label: '',
+    field: 'wkfId',
+    component: 'Input',
+    show: false,
+  },
+  {
+    label: '流转卡号',
+    field: 'sn',
+    component: 'JPopupCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/mo/mesMoSn/list',
+        params: {},
+        columns: [
+          {
+            title: '流转卡号',
+            align: 'center',
+            dataIndex: 'sn',
+          },
+          {
+            title: '流转卡类型',
+            align: 'center',
+            dataIndex: 'snType_dictText',
+          },
+          {
+            title: '任务单号',
+            align: 'center',
+            dataIndex: 'moPlanId_dictText',
+          },
+          {
+            title: '产品编码',
+            align: 'center',
+            dataIndex: 'prodId_dictText',
+          },
+          {
+            title: '产品名称',
+            align: 'center',
+            dataIndex: 'prodName_dictText',
+          },
+        ],
+        queryInfo: [
+          {
+            field: 'sn',
+            label: '流转卡号',
+            mode: 'single',
+            view: 'string',
+          },
+          {
+            field: 'prodQuery',
+            label: '产品编码',
+            mode: 'single',
+            view: 'string',
+          },
+        ],
+        isShowNum: true,
+        rowKey: 'sn',
+        labelKey: ['sn'],
+        placeholder: '请选择',
+        multi: false,
+        getPopupContainer: (node) => node.parentNode,
+        queryBefore: function (params) {
+          if (getFieldsValue().moId && getFieldsValue().moId.length > 0) {
+            params.moId = getFieldsValue().moId;
+          } else {
+            params.moId = -1;
+          }
+          return params;
+        },
+      };
+    },
+  },
+  {
+    label: '工艺工序',
+    field: 'wfsId',
+    component: 'JPopupCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/workflow/basWorkflow/listBasWorkflowStationByMainId',
+        params: {},
+        columns: [
+          {
+            title: '工艺工序',
+            align: 'center',
+            dataIndex: 'title',
+          },
+          {
+            title: '工序',
+            align: 'center',
+            dataIndex: 'stationId_dictText',
+          },
+        ],
+        queryInfo: [
+          {
+            field: 'title',
+            label: '流转卡号',
+            mode: 'single',
+            view: 'string',
+          },
+        ],
+        isShowNum: true,
+        rowKey: 'id',
+        isPage: false,
+        labelKey: ['title'],
+        placeholder: '请选择',
+        multi: false,
+        linkmap: [{ stationId: 'stationId' }],
+        getPopupContainer: (node) => node.parentNode,
+        queryBefore: function (params) {
+          if (getFieldsValue().wkfId) {
+            params.workflowId = getFieldsValue().wkfId;
+          } else {
+            params.workflowId = -1;
+          }
+          return params;
+        },
+      };
+    },
+  },
+  {
+    label: '',
+    field: 'stationId',
+    component: 'Input',
+    show: false,
   },
   {
     label: '开始时间',
@@ -240,9 +413,25 @@ export const formSchema: FormSchema[] = [
     label: '工时',
     field: 'workHours',
     component: 'InputNumber',
-    dynamicRules: ({ model, schema }) => {
-      return [{ required: true, message: '请输入工时!' }];
-    },
+    defaultValue: 0,
+  },
+  {
+    label: '工作日加班',
+    field: 'workHoursOvertime',
+    component: 'InputNumber',
+    defaultValue: 0,
+  },
+  {
+    label: '休息日加班',
+    field: 'restHours',
+    component: 'InputNumber',
+    defaultValue: 0,
+  },
+  {
+    label: '节假日加班',
+    field: 'holidaysHours',
+    component: 'InputNumber',
+    defaultValue: 0,
   },
   {
     label: '作业员',
@@ -392,22 +581,34 @@ export const recordColumns: BasicColumn[] = [
     width: 120,
   },
   {
-    title: '工时',
-    dataIndex: 'workHours',
-    width: 100,
-  },
-  {
     title: '作业员',
     dataIndex: 'operateBy_dictText',
     width: 100,
   },
   {
-    title: '状态',
-    dataIndex: 'status',
+    title: '工时',
+    dataIndex: 'workHours',
     width: 100,
-    customRender: ({ text }) => {
-      return render.renderDict(text, 'temporary_work_status', true);
-    },
+  },
+  {
+    title: '工作日加班',
+    dataIndex: 'workHoursOvertime',
+    width: 100,
+  },
+  {
+    title: '休息日加班',
+    dataIndex: 'restHours',
+    width: 100,
+  },
+  {
+    title: '节假日加班',
+    dataIndex: 'holidaysHours',
+    width: 100,
+  },
+  {
+    title: '状态',
+    dataIndex: 'status_dictText',
+    width: 100,
   },
   {
     title: '描述',

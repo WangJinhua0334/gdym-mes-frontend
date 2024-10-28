@@ -54,12 +54,19 @@
           ...unref(props.componentData.record),
         });
       } else {
-        setFieldsValue({ operateBy: unref(operateBy) });
+        setFieldsValue({
+          operateBy: unref(operateBy),
+          moId: unref(props.componentData).record?.scanInfo?.moId,
+          sn: unref(props.componentData).record?.scanInfo?.sn,
+          wfsId: unref(props.componentData).record?.scanInfo?.wfsId,
+          wkfId: unref(props.componentData).record?.scanInfo?.mesMo?.wkfId,
+          stationId: unref(props.componentData).record?.scanInfo?.stationId,
+        });
       }
 
       // 隐藏底部时禁用整个表单
       setProps({ disabled: !!props.componentData.showFooter ? !props.componentData.showFooter : false });
-    }, 500);
+    }, 300);
   });
 
   function doClose() {
