@@ -1,6 +1,5 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
-import { render } from '/@/utils/common/renderUtils';
 
 //调试记录列表配置
 export const listColumns: BasicColumn[] = [
@@ -31,14 +30,17 @@ export const listColumns: BasicColumn[] = [
     dataIndex: 'wfsId_dictText',
     width: 120,
   },
+  // {
+  //   title: '动作',
+  //   align: 'center',
+  //   dataIndex: 'actionId_dictText',
+  //   width: 100,
+  // },
   {
     title: '状态',
     align: 'center',
-    dataIndex: 'status',
+    dataIndex: 'status_dictText',
     width: 100,
-    customRender: ({ text }) => {
-      return render.renderDict(text, 'mes_woke_hour_status', true);
-    },
   },
   {
     title: '作业员',
@@ -53,6 +55,27 @@ export const listColumns: BasicColumn[] = [
     sorter: true,
     dataIndex: 'standardHours',
     width: 100,
+  },
+  {
+    title: '工作日加班工时',
+    align: 'center',
+    sorter: true,
+    dataIndex: 'workHours',
+    width: 150,
+  },
+  {
+    title: '休息日加班工时',
+    align: 'center',
+    sorter: true,
+    dataIndex: 'restHours',
+    width: 150,
+  },
+  {
+    title: '节假日加班工时',
+    align: 'center',
+    sorter: true,
+    dataIndex: 'holidaysHours',
+    width: 150,
   },
   {
     title: '实际工时',
@@ -164,17 +187,36 @@ export const formSchema: FormSchema[] = [
     colProps: { span: 12 },
   },
   {
+    label: '工作日加班',
+    field: 'workHours',
+    component: 'InputNumber',
+    defaultValue: 0,
+    colProps: { span: 12 },
+  },
+  {
+    label: '休息日加班',
+    field: 'restHours',
+    component: 'InputNumber',
+    defaultValue: 0,
+    colProps: { span: 12 },
+  },
+  {
+    label: '节假日加班',
+    field: 'holidaysHours',
+    component: 'InputNumber',
+    defaultValue: 0,
+    colProps: { span: 12 },
+  },
+  {
     label: '提交人',
     field: 'createBy_dictText',
     component: 'Input',
-    dynamicDisabled: true,
     colProps: { span: 12 },
   },
   {
     label: '提交时间',
     field: 'createTime',
     component: 'Input',
-    dynamicDisabled: true,
     colProps: { span: 12 },
   },
 ];
