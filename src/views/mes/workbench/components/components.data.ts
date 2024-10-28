@@ -15,6 +15,7 @@ import ProductTestModal from '/@/views/mes/wip/producttest/ProductTest.vue';
 import ProductInspectModal from '/@/views/mes/wip/productinspect/ProductInspect.vue';
 import ProductOutInspectModal from '/@/views/mes/wip/productoutinspect/ProductOutInspect.vue';
 import DefectiveHandleModal from '/@/views/mes/lotdefective/components/complete/MesLotDefectiveComplete.vue';
+import ProductWokeHourModal from '/@/views/mes/wip/productwokehour/ProductWokeHour.vue';
 
 import RepairModal from '/@/views/mes/lotrepair/RepairModal.vue';
 import RepairList from '/@/views/mes/lotrepairlist/MesLotRepairList.vue';
@@ -26,6 +27,7 @@ import ProductTestList from '/@/views/mes/lottestlist/MesLotTestList.vue';
 
 import ProductInspectList from '/@/views/mes/lotinspectlist/MesLotInspectList.vue';
 import ProductOutInspectList from '/@/views/mes/lotoutinspectlist/MesLotOutInspectList.vue';
+import ProductwokeHourList from '/@/views/mes/lotwokehourlist/MesLotWokeHourList.vue';
 
 import BindSnModal from '/@/views/mes/mo/components/MesMoPlanBindSn.vue';
 import SplitModal from '/@/views/mes/lotsplit/Split.vue';
@@ -55,12 +57,14 @@ const componentList = reactive([
   { name: 'ProductInspect', com: markRaw(ProductInspectModal) },
   { name: 'ProductOutInspect', com: markRaw(ProductOutInspectModal) },
   { name: 'DefectiveHandle', com: markRaw(DefectiveHandleModal) },
+  { name: 'ProductWokeHour', com: markRaw(ProductWokeHourModal) },
 
   { name: 'ProductBindList', com: markRaw(ProductBindList) },
   { name: 'ProductUnbindList', com: markRaw(ProductUnbindList) },
   { name: 'ProductTestList', com: markRaw(ProductTestList) },
   { name: 'ProductInspectList', com: markRaw(ProductInspectList) },
   { name: 'ProductOutInspectList', com: markRaw(ProductOutInspectList) },
+  { name: 'ProductwokeHourList', com: markRaw(ProductwokeHourList) },
 
   { name: 'BindSn', com: markRaw(BindSnModal) },
   { name: 'Split', com: markRaw(SplitModal) },
