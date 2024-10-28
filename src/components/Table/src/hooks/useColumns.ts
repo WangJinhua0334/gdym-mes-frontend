@@ -200,7 +200,7 @@ export function useColumns(
         }
 
         //增加默认配置可拖拽列
-        column.width = column.width == undefined ? 300 : column.width;
+        column.width = column.width == undefined ? 150 : column.width;
         column.resizable = column.resizable == undefined ? true : column.resizable;
         return reactive(column);
       });
