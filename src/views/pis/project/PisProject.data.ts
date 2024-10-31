@@ -333,7 +333,7 @@ export const formSchema: FormSchema[] = [
         getFieldsValue: getFieldsValue,
         method: 'get',
         url: '/sys/user/list',
-        params: { column: 'sorts', order: 'asc', searchFields: 'username,realname,workNo' },
+        params: { order: 'asc', searchFields: 'username,realname,workNo' },
         columns: [
           {
             name: '账号',
@@ -376,7 +376,7 @@ export const formSchema: FormSchema[] = [
         getFieldsValue: getFieldsValue,
         method: 'get',
         url: '/sys/user/list',
-        params: { column: 'sorts', order: 'asc', searchFields: 'username,realname,workNo' },
+        params: { order: 'asc', searchFields: 'username,realname,workNo' },
         columns: [
           {
             name: '账号',
@@ -454,7 +454,7 @@ export const formSchema: FormSchema[] = [
         getFieldsValue: getFieldsValue,
         method: 'get',
         url: '/sys/user/list',
-        params: { column: 'sorts', order: 'asc', searchFields: 'username,realname,workNo' },
+        params: { order: 'asc', searchFields: 'username,realname,workNo' },
         columns: [
           {
             name: '账号',

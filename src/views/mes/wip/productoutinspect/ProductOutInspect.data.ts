@@ -210,7 +210,7 @@ export const formSchema: FormSchema[] = [
         setFieldsValue: setFieldsValue,
         getFieldsValue: getFieldsValue,
         method: 'get',
-        url: '/sys/user/userRoleList',
+        url: '/sys/user/list',
         params: { column: 'createTime', order: 'asc', searchFields: 'username,realname' },
         columns: [
           {
@@ -227,10 +227,6 @@ export const formSchema: FormSchema[] = [
         labelKey: ['realname'],
         multi: false,
         placeholder: '请选择',
-        queryBefore: (params) => {
-          params.roleId = '1734150049809428482';
-          return params;
-        },
       };
     },
     colProps: { span: 8 },
