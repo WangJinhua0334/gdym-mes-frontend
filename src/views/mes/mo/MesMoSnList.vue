@@ -5,6 +5,9 @@
       <!-- 内嵌table区域 begin -->
       <template #expandedRowRender="{ record }">
         <a-tabs tabPosition="top">
+          <a-tab-pane tab="工序信息" key="mesMoSnStation" forceRender>
+            <MesMoSnStationList :id="expandedRowKeys[0]" />
+          </a-tab-pane>
           <a-tab-pane tab="唯一码" key="mesMoSnSeq" forceRender>
             <MesMoSnSeqSubTable :id="expandedRowKeys[0]" />
           </a-tab-pane>
@@ -61,6 +64,7 @@
   import { BasicModal, useModal } from '/@/components/Modal';
   import MesMoSnSeqSubTable from './subTables/MesMoSnSeqSubTable.vue';
   import MesMoSnPrintRecordSubTable from './subTables/MesMoSnPrintRecordSubTable.vue';
+  import MesMoSnStationList from './MesMoSnStationList.vue';
   import { columns, getSearchFormSchema, printFormSchema } from './MesMoSn.data';
   import { list, getExportUrl, queryMoSnPrintMapByIds, createSeq } from './MesMoSn.api';
   import { downloadFile } from '/@/utils/common/renderUtils';

@@ -590,6 +590,24 @@ export const mesMoPlanTaskColumns: BasicColumn[] = [
     width: 100,
   },
   {
+    title: '报废数量',
+    align: 'center',
+    dataIndex: 'scrapQty',
+    width: 100,
+  },
+  {
+    title: '不良数量',
+    align: 'center',
+    dataIndex: 'ngQty',
+    width: 100,
+  },
+  {
+    title: '不良次数',
+    align: 'center',
+    dataIndex: 'ngCout',
+    width: 100,
+  },
+  {
     title: '操作工位',
     align: 'center',
     dataIndex: 'wkpIds_dictText',
