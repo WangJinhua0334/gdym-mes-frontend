@@ -264,7 +264,7 @@
     openAddModal(true, {
       isWorkBench: true,
       record: {
-        typeCode:item.code,
+        typeCode: item.code,
         typeId: item.id,
         wksId: unref(wksId),
         wkcId: unref(wkcId),

@@ -15,7 +15,7 @@
   const emit = defineEmits(['register', 'success']);
 
   //表单配置
-  const [registerForm, { setProps, resetFields, setFieldsValue, validate,updateSchema }] = useForm({
+  const [registerForm, { setProps, resetFields, setFieldsValue, validate, updateSchema }] = useForm({
     //labelWidth: 150,
     schemas: addFormSchema,
     showActionButtonGroup: false,
@@ -24,7 +24,7 @@
 
   //表单赋值
   const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
-    updateSchema({field:'equipmentId',show:true});
+    updateSchema({ field: 'equipmentId', show: true });
     //重置表单
     await resetFields();
 
@@ -35,9 +35,9 @@
       //表单赋值
       console.log(data.record);
       await setFieldsValue({ ...data.record });
-      setFieldsValue({responsibleBy:data.record.responsibleBy})
-      if(data.record.typeCode!='03'){
-        updateSchema({field:'equipmentId',show:false});
+      setFieldsValue({ responsibleBy: data.record.responsibleBy });
+      if (data.record.typeCode != '03') {
+        updateSchema({ field: 'equipmentId', show: false });
       }
     }
 
