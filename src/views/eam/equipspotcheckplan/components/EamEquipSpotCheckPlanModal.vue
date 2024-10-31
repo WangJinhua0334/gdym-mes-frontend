@@ -130,8 +130,8 @@
     { immediate: false, deep: true }
   );
   const handleDelete = (row) => {
-    console.log('row', row);
-    eamEquipSpotCheckRecItem?.value?.removeRowsById(row.rowId);
+    //console.log('row', row);
+    eamEquipSpotCheckRecItem?.value?.removeRows(row.row);
   };
   // async function basicFormSubmit(values) {
   //   const tableDataValues = eamEquipSpotCheckRecItem?.value?.getTableData();

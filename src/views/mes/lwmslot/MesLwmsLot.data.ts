@@ -51,6 +51,12 @@ export const columns: BasicColumn[] = [
     dataIndex: 'supplierId_dictText',
     width: 200,
   },
+  {
+    title: '物料成本',
+    align: 'center',
+    dataIndex: 'materialCost',
+    width: 150,
+  },
   // {
   //   title: '出库数量',
   //   align: 'center',
@@ -148,7 +154,7 @@ export const formSchema: FormSchema[] = [
         isShowNum: true,
         rowKey: 'id',
         labelKey: ['code'],
-        linkmap: [{ name: 'prodName', specification: 'specification', code: 'prodCode' }],
+        linkmap: [{ name: 'prodName', specification: 'specification', code: 'prodCode', materialCost: 'materialCost' }],
         placeholder: '请选择',
         //multi: true,
         //maxTagCount: 2,
@@ -310,6 +316,11 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
+    label: '物料成本',
+    field: 'materialCost',
+    component: 'InputNumber',
+  },
+  {
     label: '供应商',
     field: 'supplierName',
     component: 'Input',
@@ -325,7 +336,6 @@ export const formSchema: FormSchema[] = [
     label: '备注',
     field: 'remark',
     component: 'Input',
-    colProps: { span: 12 },
   },
   {
     label: '物料条码',
@@ -350,7 +360,7 @@ export const formSchema: FormSchema[] = [
         },
       };
     },
-    colProps: { span: 12 },
+    colProps: { span: 24 },
   },
   // TODO 主键隐藏字段，目前写死为ID
   {
@@ -429,6 +439,28 @@ export const lwmsLotBindingJVxeColumns = [
         handler({ cellValue }, callback) {
           if (cellValue <= 0) {
             callback(false, '${title}不能小于等于0'); // false = 未通过校验
+          } else {
+            callback(true); // true = 通过验证
+          }
+        },
+        message: '${title}不能为空',
+      },
+    ],
+  },
+  {
+    title: '物料成本',
+    align: 'center',
+    type: JVxeTypes.inputNumber,
+    dataIndex: 'materialCost',
+    key: 'materialCost',
+    defaultValue: 0,
+    width: 120,
+    validateRules: [
+      { required: true, message: '${title}不能为空' },
+      {
+        handler({ cellValue }, callback) {
+          if (cellValue < 0) {
+            callback(false, '${title}不能小于0'); // false = 未通过校验
           } else {
             callback(true); // true = 通过验证
           }
@@ -610,6 +642,14 @@ export const lwmsLotGenerateJVxeColumns = [
         message: '${title}不能为空',
       },
     ],
+  },
+  {
+    title: '物料成本',
+    align: 'center',
+    type: JVxeTypes.inputNumber,
+    dataIndex: 'materialCost',
+    key: 'materialCost',
+    width: 120,
   },
   {
     title: '供应商',
@@ -864,6 +904,14 @@ export const lwmsLotGenerateJVxeColumnsByMo = [
         message: '${title}不能为空',
       },
     ],
+  },
+  {
+    title: '物料成本',
+    align: 'center',
+    type: JVxeTypes.inputNumber,
+    dataIndex: 'materialCost',
+    key: 'materialCost',
+    width: 120,
   },
   {
     title: '供应商',

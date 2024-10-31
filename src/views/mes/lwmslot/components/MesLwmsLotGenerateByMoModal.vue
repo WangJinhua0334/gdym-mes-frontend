@@ -1,5 +1,5 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="registerModal" destroyOnClose :title="title" :width="1600">
+  <BasicModal v-bind="$attrs" @register="registerModal" destroyOnClose :title="title" :width="1700">
     <template #footer>
       <a-button @click="closeModal" type="ghost">取消</a-button>
       <a-button @click="handlePrint" type="primary" :loading="loading">打印</a-button>
@@ -187,7 +187,7 @@
       }
       let res = await generateLwmsSn({ mesLwmsLots: values });
       let ids = res.ids;
-      console.log('ids', ids);
+      //console.log('ids', ids);
       defHttp.get({ url: '/template/basTemplate/getReportIdByCode', params: { code: 'SystemDefaultTemplate', type: 'lwms_lot_sn' } }).then((res) => {
         printJimuReport(res, { printAll: true, id: `${unref(ids).join(',')}` }, getToken(), false, () => {
           loading.value = false;
@@ -251,6 +251,7 @@
         batchNo: batchNo.value,
         qtyValue: row.requireQty,
         isProduct: row.isProduct,
+        materialCost: row.materialCost,
       };
       lwmsLotBinding?.value?.addRows(v);
       i++;
@@ -262,8 +263,9 @@
   }
 
   const handleDelete = (row) => {
-    //console.log('row', row);
-    lwmsLotBinding?.value?.removeRowsById(row.rowId);
+    // console.log('row', row);
+    // console.log('lwmsLotBinding', lwmsLotBinding);
+    lwmsLotBinding?.value?.removeRows(row.row);
   };
 </script>
 

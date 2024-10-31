@@ -80,8 +80,8 @@
   //设置标题
   const title = computed(() => '工单批量出库');
   const handleDelete = (row) => {
-    console.log("row.rowId",row.rowId)
-    noCodeOutStockBinding?.value?.removeRowsById(row.rowId);
+    //console.log("row.rowId",row.rowId)
+    noCodeOutStockBinding?.value?.removeRows(row.row);
   };
 
   const basicFormSubmit = async (values) => {

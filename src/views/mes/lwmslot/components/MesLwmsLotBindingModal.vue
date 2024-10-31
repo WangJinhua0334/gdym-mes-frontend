@@ -135,8 +135,8 @@
   };
 
   const handleDelete = (row) => {
-    console.log('row', row);
-    lwmsLotBinding?.value?.removeRowsById(row.rowId);
+    //console.log('row', row);
+    lwmsLotBinding?.value?.removeRows(row.row);
   };
 </script>
 

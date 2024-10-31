@@ -93,8 +93,8 @@
   const title = computed(() => '工单批量入库');
 
   const handleDelete = (row) => {
-    console.log('row', row);
-    noCodePutStockBinding?.value?.removeRowsById(row.rowId);
+    //console.log('row', row);
+    noCodePutStockBinding?.value?.removeRows(row.row);
   };
 
   const basicFormSubmit = async (values) => {

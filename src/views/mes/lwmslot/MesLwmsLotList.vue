@@ -24,9 +24,9 @@
       </template>
     </BasicTable>
     <!-- 表单区域 -->
-    <MesLwmsLotBindingModal @register="bindingModal" @success="handleSuccess"></MesLwmsLotBindingModal>
-    <MesLwmsLotGenerateModal @register="generateModal" @success="handleSuccess"></MesLwmsLotGenerateModal>
-    <MesLwmsLotGenerateByMoModal @register="generateByMoModal" @success="handleSuccess"></MesLwmsLotGenerateByMoModal>
+    <MesLwmsLotBindingModal @register="bindingModal" @success="handleSuccess" />
+    <MesLwmsLotGenerateModal @register="generateModal" @success="handleSuccess" />
+    <MesLwmsLotGenerateByMoModal @register="generateByMoModal" @success="handleSuccess" />
   </div>
 </template>
 
