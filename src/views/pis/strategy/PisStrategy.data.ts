@@ -8,13 +8,13 @@ export const columns: BasicColumn[] = [
     title: '策略编码',
     align: 'center',
     dataIndex: 'code',
-    width: 150,
+    width: 120,
   },
   {
     title: '策略名称',
     align: 'center',
     dataIndex: 'name',
-    width: 200,
+    width: 150,
   },
   {
     title: '部门',
@@ -23,27 +23,66 @@ export const columns: BasicColumn[] = [
     width: 150,
   },
   {
-    title: '策略内容',
+    title: '指标',
     align: 'center',
-    dataIndex: 'content',
+    dataIndex: 'indexes_dictText',
     width: 150,
   },
   {
-    title: '策略周期(月/次)',
+    title: '周期类型',
     align: 'center',
-    dataIndex: 'cycleTimes',
+    dataIndex: 'cycleType',
+    width: 100,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'pis_cycle_type', true);
+    },
+  },
+  {
+    title: '周期范围',
+    align: 'center',
+    dataIndex: 'cycleDate',
+    width: 100,
+  },
+  {
+    title: '设定值',
+    align: 'center',
+    dataIndex: 'standardValue',
+    width: 100,
+    format(text, record, index) {
+      return text ? text.toString() + record.suffix : '0' + record.suffix;
+    },
+  },
+  {
+    title: '当前值',
+    align: 'center',
+    dataIndex: 'nowValue',
+    width: 100,
+    format(text, record, index) {
+      return text ? text.toString() + record.suffix : '0' + record.suffix;
+    },
+  },
+  {
+    title: '通知人',
+    align: 'center',
+    dataIndex: 'noticeBy_dictText',
     width: 150,
   },
   {
-    title: '策略方式',
-    align: 'center',
-    dataIndex: 'strategyMethod_dictText',
-    width: 150,
-  },
-  {
-    title: '是否启用',
+    title: '是否启用', 
     align: 'center',
     dataIndex: 'isEnable',
+    width: 120,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
+  },
+  {
+    title: '是否首页展示',
+    align: 'center',
+    dataIndex: 'isHome',
     width: 120,
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
@@ -84,14 +123,6 @@ export const searchFormSchema: FormSchema[] = [
       };
     },
   },
-  {
-    label: '策略方式',
-    field: 'strategyMethod',
-    component: 'JSelectMultiple',
-    componentProps: {
-      dictCode: 'pis_strategy_method',
-    },
-  },
 ];
 //表单数据
 export const formSchema: FormSchema[] = [
@@ -102,6 +133,7 @@ export const formSchema: FormSchema[] = [
     dynamicRules: ({ model, schema }) => {
       return [{ required: true, message: '请输入策略编码!' }];
     },
+    colProps: { span: 12 },
   },
   {
     label: '策略名称',
@@ -110,6 +142,7 @@ export const formSchema: FormSchema[] = [
     dynamicRules: ({ model, schema }) => {
       return [{ required: true, message: '请输入策略名称!' }];
     },
+    colProps: { span: 12 },
   },
   {
     label: '责任部门',
@@ -125,33 +158,110 @@ export const formSchema: FormSchema[] = [
     dynamicRules: ({ model, schema }) => {
       return [{ required: true, message: '请选择部门!' }];
     },
+    colProps: { span: 12 },
   },
   {
-    label: '策略内容',
-    field: 'content',
-    component: 'InputTextArea',
-    dynamicRules: ({ model, schema }) => {
-      return [{ required: true, message: '请输入策略内容!' }];
-    },
-  },
-  {
-    label: '策略周期(月/次)',
-    field: 'cycleTimes',
-    component: 'InputNumber',
-    defaultValue: 1,
-    dynamicRules: ({ model, schema }) => {
-      return [{ required: true, message: '请输入策略周期(月/次)!' }];
-    },
-  },
-  {
-    label: '策略方式',
-    field: 'strategyMethod',
+    label: '指标',
+    field: 'indexes',
     component: 'JDictSelectTag',
     componentProps: {
-      dictCode: 'pis_strategy_method',
+      dictCode: 'pis_indexes',
     },
     dynamicRules: ({ model, schema }) => {
-      return [{ required: true, message: '请选择策略方式!' }];
+      return [{ required: true, message: '请选择指标!' }];
+    },
+    colProps: { span: 12 },
+  },
+  {
+    label: '周期类型',
+    field: 'cycleType',
+    component: 'JDictSelectTag',
+    componentProps: {
+      dictCode: 'pis_cycle_type',
+    },
+    dynamicRules: ({ model, schema }) => {
+      return [{ required: true, message: '请选择周期类型' }];
+    },
+    colProps: { span: 12 },
+  },
+  {
+    label: '周期范围',
+    field: 'cycleDate',
+    component: 'RangePicker',
+    componentProps: {
+      //是否显示时间
+      showTime: false,
+      //日期格式化
+      format: 'YYYY-MM-DD',
+      //范围文本描述用集合
+      placeholder: ['请选择开始日期', '请选择结束日期'],
+      getPopupContainer: (node) => document.body,
+    },
+    colProps: { span: 12 },
+    dynamicDisabled: ({ model, schema }) => {
+      return model.cycleType != 'other';
+    },
+  },
+  {
+    label: '设定值',
+    field: 'standardValue',
+    defaultValue: 1,
+    component: 'InputNumber',
+    dynamicRules: ({ model, schema }) => {
+      return [{ required: true, message: '请输入设定值!' }];
+    },
+    colProps: { span: 12 },
+  },
+  {
+    label: '后缀',
+    field: 'suffix',
+    component: 'Input',
+    dynamicRules: ({ model, schema }) => {
+      return [{ required: true, message: '请输入后缀!' }];
+    },
+    colProps: { span: 12 },
+  },
+  {
+    label: '通知人',
+    field: 'noticeBy',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/sys/user/list',
+        params: { order: 'asc', searchFields: 'username,realname,workNo' },
+        columns: [
+          {
+            name: '账号',
+            code: 'username',
+          },
+          {
+            name: '姓名',
+            code: 'realname',
+          },
+          {
+            name: '工号',
+            code: 'workNo',
+          },
+        ],
+        isShowNum: false,
+        rowKey: 'username',
+        labelKey: ['realname'],
+        placeholder: '请输入',
+        multi: true,
+        queryBefore: (params) => {
+          return params;
+        },
+        getPopupContainer: (node) => document.body,
+      };
+    },
+    colProps: { span: 12 },
+    dynamicRules: ({ model, schema }) => {
+      return [{ required: true, message: '通知人不能为空' }];
     },
   },
   {
@@ -160,6 +270,15 @@ export const formSchema: FormSchema[] = [
     defaultValue: 'N',
     component: 'JSwitch',
     componentProps: { dictCode: 'is_open' },
+    colProps: { span: 12 },
+  },
+  {
+    label: '是否首页展示',
+    field: 'isHome',
+    defaultValue: 'N',
+    component: 'JSwitch',
+    componentProps: { dictCode: 'is_open' },
+    colProps: { span: 12 },
   },
   {
     label: '备注',

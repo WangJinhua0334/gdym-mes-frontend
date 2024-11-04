@@ -1,5 +1,5 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="registerModal" destroyOnClose :title="title" :width="800" @ok="handleSubmit">
+  <BasicModal v-bind="$attrs" @register="registerModal" destroyOnClose :title="title" :width="1000" @ok="handleSubmit">
     <BasicForm @register="registerForm" />
   </BasicModal>
 </template>
@@ -15,7 +15,7 @@
   const isUpdate = ref(true);
   //表单配置
   const [registerForm, { setProps, resetFields, setFieldsValue, validate }] = useForm({
-    //labelWidth: 150,
+    labelWidth: 130,
     schemas: formSchema,
     showActionButtonGroup: false,
     baseColProps: { span: 24 },
