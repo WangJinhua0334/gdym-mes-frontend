@@ -60,6 +60,12 @@ export const columns: BasicColumn[] = [
     width: 120,
   },
   {
+    title: '物料成本',
+    align: 'center',
+    dataIndex: 'materialCost',
+    width: 120,
+  },
+  {
     title: '是否投产',
     align: 'center',
     dataIndex: 'isInput',

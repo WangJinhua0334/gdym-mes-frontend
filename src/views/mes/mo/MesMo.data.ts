@@ -341,7 +341,7 @@ export function getFormSchema(): FormSchema[] {
           isShowNum: true,
           rowKey: 'id',
           labelKey: ['code', 'version'],
-          linkmap: [{ name: 'prodName_dictText', templateId: 'templateId', packRuleId: 'packRuleId' }],
+          linkmap: [{ name: 'prodName_dictText', templateId: 'templateId', packRuleId: 'packRuleId', materialCost: 'materialCost' }],
           placeholder: '请选择',
           onChange: function (v) {
             if (v) {
@@ -475,6 +475,17 @@ export function getFormSchema(): FormSchema[] {
           labelKey: ['name'],
           placeholder: '请输入',
         };
+      },
+    },
+    {
+      label: '物料成本',
+      field: 'materialCost',
+      component: 'InputNumber',
+      dynamicRules: ({ model, schema }) => {
+        return [
+          { required: true, message: '请输入物料成本!' },
+          { pattern: /^-?\d+\.?\d*$/, message: '请输入数字!' },
+        ];
       },
     },
     {
