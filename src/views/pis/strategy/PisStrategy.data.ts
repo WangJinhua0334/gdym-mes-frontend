@@ -5,13 +5,13 @@ import { render } from '/@/utils/common/renderUtils';
 //列表数据
 export const columns: BasicColumn[] = [
   {
-    title: '策略编码',
+    title: '指标编码',
     align: 'center',
     dataIndex: 'code',
     width: 120,
   },
   {
-    title: '策略名称',
+    title: '指标名称',
     align: 'center',
     dataIndex: 'name',
     width: 150,
@@ -68,7 +68,7 @@ export const columns: BasicColumn[] = [
     width: 150,
   },
   {
-    title: '是否启用', 
+    title: '是否启用',
     align: 'center',
     dataIndex: 'isEnable',
     width: 120,
@@ -100,13 +100,13 @@ export const columns: BasicColumn[] = [
 //查询数据
 export const searchFormSchema: FormSchema[] = [
   {
-    label: '策略编码',
+    label: '指标编码',
     field: 'code',
     component: 'JInput',
     colProps: { span: 6 },
   },
   {
-    label: '策略名称',
+    label: '指标名称',
     field: 'name',
     component: 'JInput',
     colProps: { span: 6 },
@@ -127,7 +127,7 @@ export const searchFormSchema: FormSchema[] = [
 //表单数据
 export const formSchema: FormSchema[] = [
   {
-    label: '策略编码',
+    label: '指标编码',
     field: 'code',
     component: 'Input',
     dynamicRules: ({ model, schema }) => {
@@ -136,7 +136,7 @@ export const formSchema: FormSchema[] = [
     colProps: { span: 12 },
   },
   {
-    label: '策略名称',
+    label: '指标名称',
     field: 'name',
     component: 'Input',
     dynamicRules: ({ model, schema }) => {
