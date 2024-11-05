@@ -187,7 +187,7 @@ export const formSchema: FormSchema[] = [
   {
     label: '周期范围',
     field: 'cycleDate',
-    component: 'RangePicker',
+    component: 'RangeDate',
     componentProps: {
       //是否显示时间
       showTime: false,
