@@ -34,7 +34,7 @@ export const columns: BasicColumn[] = [
     dataIndex: 'cycleType',
     width: 100,
     customRender: ({ text }) => {
-      return render.renderDict(text, 'pis_cycle_type', true);
+      return render.renderDict(text, 'mes_cycle_type', true);
     },
   },
   {
@@ -165,7 +165,7 @@ export const formSchema: FormSchema[] = [
     field: 'indexes',
     component: 'JDictSelectTag',
     componentProps: {
-      dictCode: 'pis_indexes',
+      dictCode: 'mes_indexes',
     },
     dynamicRules: ({ model, schema }) => {
       return [{ required: true, message: '请选择指标!' }];
@@ -177,7 +177,7 @@ export const formSchema: FormSchema[] = [
     field: 'cycleType',
     component: 'JDictSelectTag',
     componentProps: {
-      dictCode: 'pis_cycle_type',
+      dictCode: 'mes_cycle_type',
     },
     dynamicRules: ({ model, schema }) => {
       return [{ required: true, message: '请选择周期类型' }];

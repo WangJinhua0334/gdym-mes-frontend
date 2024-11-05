@@ -4,13 +4,15 @@
     <BasicTable @register="registerTable" :rowSelection="rowSelection">
       <!--插槽:table标题-->
       <template #tableTitle>
-        <a-button type="primary" @click="handleAdd" preIcon="ant-design:plus-outlined"> 新增</a-button>
-        <a-button type="primary" preIcon="ant-design:export-outlined" @click="onExportXls"> 导出</a-button>
-        <j-upload-button type="primary" preIcon="ant-design:import-outlined" @click="onImportXls">导入</j-upload-button>
+        <a-button type="primary" @click="handleAdd" preIcon="ant-design:plus-outlined" v-auth="'mes:mes_strategy:add'"> 新增</a-button>
+        <a-button type="primary" preIcon="ant-design:export-outlined" @click="onExportXls" v-auth="'mes:mes_strategy:exportXls'"> 导出</a-button>
+        <j-upload-button type="primary" preIcon="ant-design:import-outlined" @click="onImportXls" v-auth="'mes:mes_strategy:importExcel'"
+          >导入</j-upload-button
+        >
         <a-dropdown v-if="selectedRowKeys.length > 0">
           <template #overlay>
             <a-menu>
-              <a-menu-item key="1" @click="batchHandleDelete">
+              <a-menu-item key="1" @click="batchHandleDelete" v-if="hasPermission('mes:mes_strategy:deleteBatch')">
                 <Icon icon="ant-design:delete-outlined" />
                 删除
               </a-menu-item>
@@ -53,13 +55,16 @@
   import { columns, searchFormSchema } from './PisStrategy.data';
   import { list, deleteOne, batchDelete, getImportUrl, getExportUrl } from './PisStrategy.api';
   import { downloadFile } from '/@/utils/common/renderUtils';
+  import { usePermission } from '/@/hooks/web/usePermission';
+  const { hasPermission } = usePermission();
+
   const checkedKeys = ref<Array<string | number>>([]);
   //注册model
   const [registerModal, { openModal }] = useModal();
   //注册table数据
   const { prefixCls, tableContext, onExportXls, onImportXls } = useListPage({
     tableProps: {
-      title: '改善策略',
+      title: '管理标准',
       api: list,
       columns,
       canResize: false,
@@ -77,7 +82,7 @@
       },
     },
     exportConfig: {
-      name: '改善策略',
+      name: '管理标准',
       url: getExportUrl,
     },
     importConfig: {
@@ -143,6 +148,7 @@
       {
         label: '编辑',
         onClick: handleEdit.bind(null, record),
+        auth: 'mes:mes_strategy:edit',
       },
     ];
   }
@@ -161,6 +167,7 @@
           title: '是否确认删除',
           confirm: handleDelete.bind(null, record),
         },
+        auth: 'mes:mes_strategy:delete',
       },
     ];
   }
