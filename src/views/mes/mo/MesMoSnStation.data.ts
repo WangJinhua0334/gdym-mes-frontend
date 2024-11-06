@@ -83,6 +83,18 @@ export const columns: BasicColumn[] = [
     width: 100,
   },
   {
+    title: '维修数量',
+    align: 'center',
+    dataIndex: 'repairQty',
+    width: 100,
+  },
+  {
+    title: '维修次数',
+    align: 'center',
+    dataIndex: 'repairCout',
+    width: 100,
+  },
+  {
     title: '状态',
     align: 'center',
     dataIndex: 'status',
@@ -215,6 +227,16 @@ export const formSchema: FormSchema[] = [
   {
     label: '不良次数',
     field: 'ngCout',
+    component: 'InputNumber',
+  },
+  {
+    label: '维修数量',
+    field: 'repairQty',
+    component: 'InputNumber',
+  },
+  {
+    label: '维修次数',
+    field: 'repairCout',
     component: 'InputNumber',
   },
   {
