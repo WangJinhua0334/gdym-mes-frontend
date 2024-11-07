@@ -8,8 +8,8 @@
   import { ref, computed, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { formSchema } from '../PisStrategy.data';
-  import { saveOrUpdate } from '../PisStrategy.api';
+  import { formSchema } from '../MesStrategy.data';
+  import { saveOrUpdate } from '../MesStrategy.api';
   // Emits声明
   const emit = defineEmits(['register', 'success']);
   const isUpdate = ref(true);

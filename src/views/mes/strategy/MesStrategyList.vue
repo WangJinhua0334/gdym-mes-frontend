@@ -51,9 +51,9 @@
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { useModal } from '/@/components/Modal';
   import { useListPage } from '/@/hooks/system/useListPage';
-  import PisStrategyModal from './components/PisStrategyModal.vue';
-  import { columns, searchFormSchema } from './PisStrategy.data';
-  import { list, deleteOne, batchDelete, getImportUrl, getExportUrl } from './PisStrategy.api';
+  import PisStrategyModal from './components/MesStrategyModal.vue';
+  import { columns, searchFormSchema } from './MesStrategy.data';
+  import { list, deleteOne, batchDelete, getImportUrl, getExportUrl } from './MesStrategy.api';
   import { downloadFile } from '/@/utils/common/renderUtils';
   import { usePermission } from '/@/hooks/web/usePermission';
   const { hasPermission } = usePermission();

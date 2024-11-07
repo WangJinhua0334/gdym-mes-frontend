@@ -62,6 +62,15 @@ export const columns: BasicColumn[] = [
     },
   },
   {
+    title: '提醒规则',
+    align: 'center',
+    dataIndex: 'rules',
+    width: 100,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'mes_indexs_rules', true);
+    },
+  },
+  {
     title: '通知人',
     align: 'center',
     dataIndex: 'noticeBy_dictText',
@@ -218,6 +227,18 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
     dynamicRules: ({ model, schema }) => {
       return [{ required: true, message: '请输入后缀!' }];
+    },
+    colProps: { span: 12 },
+  },
+  {
+    label: '提醒规则',
+    field: 'rules',
+    component: 'JDictSelectTag',
+    componentProps: {
+      dictCode: 'mes_indexs_rules',
+    },
+    dynamicRules: ({ model, schema }) => {
+      return [{ required: true, message: '请选择提醒规则!' }];
     },
     colProps: { span: 12 },
   },
