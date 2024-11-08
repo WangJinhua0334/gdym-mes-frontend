@@ -14,12 +14,24 @@ export const columns: BasicColumn[] = [
     title: '指标名称',
     align: 'center',
     dataIndex: 'name',
-    width: 150,
+    width: 250,
   },
   {
     title: '部门',
     align: 'center',
     dataIndex: 'deptId_dictText',
+    width: 150,
+  },
+  {
+    title: '产品',
+    align: 'center',
+    dataIndex: 'prodId_dictText',
+    width: 150,
+  },
+  {
+    title: '产品名称',
+    align: 'center',
+    dataIndex: 'prodName_dictText',
     width: 150,
   },
   {
@@ -121,6 +133,12 @@ export const searchFormSchema: FormSchema[] = [
     colProps: { span: 6 },
   },
   {
+    label: '产品',
+    field: 'prodQuery',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
     label: '责任部门',
     field: 'deptId',
     component: 'JSelectDept',
@@ -167,6 +185,76 @@ export const formSchema: FormSchema[] = [
     dynamicRules: ({ model, schema }) => {
       return [{ required: true, message: '请选择部门!' }];
     },
+    colProps: { span: 12 },
+  },
+  {
+    label: '产品编码',
+    field: 'prodId',
+    component: 'JPopupCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/product/basProduct/list',
+        params: {
+          status: 'enable',
+        },
+        columns: [
+          {
+            title: '编码',
+            align: 'center',
+            dataIndex: 'code',
+          },
+          {
+            title: '名称',
+            align: 'center',
+            dataIndex: 'name',
+          },
+          {
+            title: '版本',
+            align: 'center',
+            dataIndex: 'version',
+          },
+          {
+            title: '规格',
+            align: 'center',
+            dataIndex: 'specification',
+          },
+        ],
+        queryInfo: [
+          {
+            field: 'code',
+            label: '编码',
+            mode: 'single',
+            view: 'string',
+          },
+          {
+            field: 'name',
+            label: '名称',
+            mode: 'single',
+            view: 'string',
+          },
+        ],
+        isShowNum: true,
+        rowKey: 'id',
+        labelKey: ['code', 'version'],
+        linkmap: [{ name: 'prodName_dictText' }],
+        placeholder: '请选择',
+      };
+    },
+    colProps: { span: 12 },
+    dynamicRules: ({ model, schema }) => {
+      return [{ required: true, message: '请选择产品!' }];
+    },
+  },
+  {
+    label: '产品名称',
+    field: 'prodName_dictText',
+    component: 'Input',
+    dynamicDisabled: true,
     colProps: { span: 12 },
   },
   {
