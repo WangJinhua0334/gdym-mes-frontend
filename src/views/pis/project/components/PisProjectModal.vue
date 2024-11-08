@@ -8,7 +8,7 @@
   import { ref, computed, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { formSchema, detailSchema } from '../PisProject.data';
+  import { formSchema, detailSchema, addFormSchema } from '../PisProject.data';
   import { saveOrUpdate } from '../PisProject.api';
   // Emits声明
   const emit = defineEmits(['register', 'success']);
@@ -24,6 +24,9 @@
   const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
     if (!data?.showFooter) {
       await resetSchema(detailSchema);
+    }
+    if (!data?.isUpdate) {
+      await resetSchema(addFormSchema);
     }
     //重置表单
     await resetFields();

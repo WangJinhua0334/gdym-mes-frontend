@@ -513,6 +513,64 @@ export const formSchema: FormSchema[] = [
     show: false,
   },
 ];
+/**
+ * 新增表单-添加异常选择带出信息
+ */
+export const addFormSchema: FormSchema[] = [
+  {
+    label: '选择异常',
+    field: 'abnormalId',
+    component: 'JPopupCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/abnormal/mesAbnormal/listByIndexs',
+        params: { order: 'asc', searchFields: 'content' },
+        columns: [
+          {
+            title: '异常内容',
+            align: 'center',
+            dataIndex: 'content',
+          },
+          {
+            title: '责任部门',
+            align: 'center',
+            dataIndex: 'responsibleDeptId_dictText',
+          },
+          {
+            title: '提交人',
+            align: 'center',
+            dataIndex: 'createBy_dictText',
+          },
+          {
+            title: '责任人',
+            align: 'center',
+            dataIndex: 'responsibleBy_dictText',
+          },
+        ],
+        queryInfo: [
+          {
+            field: 'content',
+            label: '异常内容',
+            mode: 'single',
+            view: 'string',
+          },
+        ],
+        isShowNum: true,
+        rowKey: 'id',
+        labelKey: ['content'],
+        linkmap: [{ content: 'name', responsibleDeptId: 'deptId', createBy: 'responsiBy' }],
+        placeholder: '请选择',
+      };
+    },
+    colProps: { span: 24 },
+  },
+  ...formSchema,
+];
 //效果确认表单
 export const confirmFormSchema: FormSchema[] = [
   {
