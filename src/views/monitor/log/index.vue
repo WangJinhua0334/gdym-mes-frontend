@@ -118,7 +118,7 @@
     arr.push({
       label: '再次请求',
       onClick: handleAgain.bind(null, record),
-      auth: 'org.jeecg.modules:mes_mo:edit',
+      auth: 'system:log:again',
     });
     return arr;
   }
