@@ -51,7 +51,49 @@ export const operationLogColumn: BasicColumn[] = [
     width: 40,
   },
 ];
-
+/**
+ * 接口日志需要有标题和结果
+ */
+export const apiLogColumn: BasicColumn[] = [
+  {
+    title: '标题',
+    dataIndex: 'title',
+    width: 100,
+    align: 'left',
+  },
+  {
+    title: '结果',
+    dataIndex: 'result',
+    width: 100,
+    align: 'left',
+  },
+  ...columns,
+];
+export const apiSearchFormSchema: FormSchema[] = [
+  {
+    label: '标题',
+    field: 'title',
+    component: 'JInput',
+    colProps: { span: 6 },
+  },
+  {
+    label: '结果',
+    field: 'result',
+    component: 'JInput',
+    colProps: { span: 6 },
+  },
+  {
+    field: 'fieldTime',
+    component: 'RangePicker',
+    label: '创建时间',
+    componentProps: {
+      valueType: 'Date',
+    },
+    colProps: {
+      span: 6,
+    },
+  },
+];
 export const exceptionColumns: BasicColumn[] = [
   {
     title: '异常标题',
@@ -76,10 +118,10 @@ export const exceptionColumns: BasicColumn[] = [
     customRender: ({ record }) => {
       let pname = record.username;
       let pid = record.userid;
-      if(!pname && !pid){
-        return "";
+      if (!pname && !pid) {
+        return '';
       }
-      return pname + " (账号: "+ pid + " )";
+      return pname + ' (账号: ' + pid + ' )';
     },
   },
   {
