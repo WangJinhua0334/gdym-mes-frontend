@@ -196,6 +196,100 @@ export const columns: BasicColumn[] = [
     },
   },
 ];
+export const effectColumns: BasicColumn[] = [
+  {
+    title: '改善编码',
+    align: 'center',
+    dataIndex: 'code',
+    width: 150,
+  },
+  {
+    title: '改善名称',
+    align: 'center',
+    dataIndex: 'name',
+    width: 150,
+  },
+  {
+    title: '改善等级',
+    align: 'center',
+    dataIndex: 'grade_dictText',
+    width: 150,
+  },
+  {
+    title: '状态',
+    align: 'center',
+    dataIndex: 'status',
+    width: 150,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'pis_status', true);
+    },
+  },
+  {
+    title: '改善目标',
+    align: 'center',
+    dataIndex: 'target',
+    width: 150,
+  },
+  {
+    title: '备注',
+    align: 'center',
+    dataIndex: 'remark',
+  },
+  {
+    title: '对比方式',
+    align: 'center',
+    dataIndex: 'contrastMethod_dictText',
+    width: 150,
+  },
+  {
+    title: '效果确认',
+    align: 'center',
+    dataIndex: 'effectConfirm',
+    width: 150,
+  },
+  {
+    title: '项目总结',
+    align: 'center',
+    dataIndex: 'projectSummary',
+    width: 150,
+  },
+  {
+    title: '项目金额测算',
+    align: 'center',
+    dataIndex: 'calculationMoney',
+    width: 130,
+  },
+  {
+    title: '改善成本',
+    align: 'center',
+    dataIndex: 'cost',
+    width: 120,
+  },
+  {
+    title: '是否完成',
+    align: 'center',
+    dataIndex: 'isComplete',
+    width: 120,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
+  },
+  {
+    title: '是否继续',
+    align: 'center',
+    dataIndex: 'isContinue',
+    width: 120,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
+  },
+];
 //查询数据
 export const searchFormSchema: FormSchema[] = [
   {
