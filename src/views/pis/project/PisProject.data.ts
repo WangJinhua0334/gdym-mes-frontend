@@ -142,7 +142,7 @@ export const columns: BasicColumn[] = [
     width: 150,
   },
   {
-    title: '项目总结',
+    title: '效果对比',
     align: 'center',
     dataIndex: 'projectSummary',
     width: 150,
@@ -207,7 +207,7 @@ export const effectColumns: BasicColumn[] = [
     title: '改善编码',
     align: 'center',
     dataIndex: 'code',
-    width: 150,
+    width: 100,
   },
   {
     title: '改善名称',
@@ -219,13 +219,13 @@ export const effectColumns: BasicColumn[] = [
     title: '改善等级',
     align: 'center',
     dataIndex: 'grade_dictText',
-    width: 150,
+    width: 100,
   },
   {
     title: '状态',
     align: 'center',
     dataIndex: 'status',
-    width: 150,
+    width: 120,
     customRender: ({ text }) => {
       return render.renderDict(text, 'pis_status', true);
     },
@@ -234,12 +234,36 @@ export const effectColumns: BasicColumn[] = [
     title: '改善目标',
     align: 'center',
     dataIndex: 'target',
-    width: 150,
+    width: 130,
   },
   {
     title: '备注',
     align: 'center',
     dataIndex: 'remark',
+  },
+  {
+    title: '效果确认',
+    align: 'center',
+    dataIndex: 'effectConfirm',
+    width: 150,
+  },
+  {
+    title: '效果对比',
+    align: 'center',
+    dataIndex: 'projectSummary',
+    width: 150,
+  },
+  {
+    title: '金额测算',
+    align: 'center',
+    dataIndex: 'calculationMoney',
+    width: 130,
+  },
+  {
+    title: '改善成本',
+    align: 'center',
+    dataIndex: 'cost',
+    width: 120,
   },
   {
     title: '是否推广',
@@ -258,30 +282,6 @@ export const effectColumns: BasicColumn[] = [
     align: 'center',
     dataIndex: 'promotionDesc',
     width: 150,
-  },
-  {
-    title: '效果确认',
-    align: 'center',
-    dataIndex: 'effectConfirm',
-    width: 150,
-  },
-  {
-    title: '项目总结',
-    align: 'center',
-    dataIndex: 'projectSummary',
-    width: 150,
-  },
-  {
-    title: '项目金额测算',
-    align: 'center',
-    dataIndex: 'calculationMoney',
-    width: 130,
-  },
-  {
-    title: '改善成本',
-    align: 'center',
-    dataIndex: 'cost',
-    width: 120,
   },
   {
     title: '是否完成',
@@ -708,11 +708,11 @@ export const confirmFormSchema: FormSchema[] = [
     colProps: { span: 24 },
   },
   {
-    label: '项目总结',
+    label: '效果对比',
     field: 'projectSummary',
     component: 'InputTextArea',
     dynamicRules: ({ model, schema }) => {
-      return [{ required: true, message: '请输入项目总结!' }];
+      return [{ required: true, message: '请输入效果对比!' }];
     },
     colProps: { span: 24 },
   },
@@ -944,7 +944,7 @@ export const detailSchema: FormSchema[] = [
     colProps: { span: 24 },
   },
   {
-    label: '项目总结',
+    label: '效果对比',
     field: 'projectSummary',
     component: 'InputTextArea',
     colProps: { span: 24 },

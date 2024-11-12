@@ -34,8 +34,8 @@
       </template>
     </BasicTable>
     <!--子表表格tab-->
-    <a-tabs defaultActiveKey="1" :stlye="{ 'padding-left': '10px' }">
-      <a-tab-pane tab="改善分析" key="1">
+    <a-tabs defaultActiveKey="1" style="padding-left: 10px">
+      <a-tab-pane tab="项目进度" key="1">
         <PisProjectAnalysisList />
       </a-tab-pane>
     </a-tabs>
