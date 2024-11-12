@@ -16,6 +16,7 @@ enum Api {
   editAudit = '/project/pisProject/editAudit',
   editFinish = '/project/pisProject/editFinish',
   editSubmit = '/project/pisProject/editSubmit',
+  editPromotion = '/project/pisProject/editPromotion',
 }
 /**
  * 导出api
@@ -96,6 +97,15 @@ export const editSubmit = (params, handleSuccess) => {
     handleSuccess();
   });
 };
+
+/**
+ * 效果确认
+ * @param params
+ */
+export const editPromotion = (params, isUpdate) => {
+  return defHttp.post({ url: Api.editPromotion, params });
+};
+
 /**
  * 列表接口
  * @param params

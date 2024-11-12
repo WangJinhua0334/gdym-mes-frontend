@@ -184,9 +184,9 @@ export const columns: BasicColumn[] = [
     },
   },
   {
-    title: '是否继续',
+    title: '是否推广',
     align: 'center',
-    dataIndex: 'isContinue',
+    dataIndex: 'isPromotion',
     width: 150,
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
@@ -194,6 +194,12 @@ export const columns: BasicColumn[] = [
         { text: '否', value: 'N', isChecked: false },
       ]);
     },
+  },
+  {
+    title: '推广描述',
+    align: 'center',
+    dataIndex: 'promotionDesc',
+    width: 150,
   },
 ];
 export const effectColumns: BasicColumn[] = [
@@ -236,9 +242,21 @@ export const effectColumns: BasicColumn[] = [
     dataIndex: 'remark',
   },
   {
-    title: '对比方式',
+    title: '是否推广',
     align: 'center',
-    dataIndex: 'contrastMethod_dictText',
+    dataIndex: 'isContinue',
+    width: 120,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
+  },
+  {
+    title: '推广描述',
+    align: 'center',
+    dataIndex: 'promotionDesc',
     width: 150,
   },
   {
@@ -269,18 +287,6 @@ export const effectColumns: BasicColumn[] = [
     title: '是否完成',
     align: 'center',
     dataIndex: 'isComplete',
-    width: 120,
-    customRender: ({ text }) => {
-      return render.renderSwitch(text, [
-        { text: '是', value: 'Y', isChecked: true },
-        { text: '否', value: 'N', isChecked: false },
-      ]);
-    },
-  },
-  {
-    title: '是否继续',
-    align: 'center',
-    dataIndex: 'isContinue',
     width: 120,
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
@@ -675,13 +681,6 @@ export const confirmFormSchema: FormSchema[] = [
     colProps: { span: 12 },
   },
   {
-    label: '是否继续',
-    field: 'isContinue',
-    component: 'JSwitch',
-    componentProps: { dictCode: 'is_open' },
-    colProps: { span: 12 },
-  },
-  {
     label: '对比方式',
     field: 'contrastMethod',
     component: 'JDictSelectTag',
@@ -737,6 +736,32 @@ export const confirmFormSchema: FormSchema[] = [
     component: 'InputNumber',
     defaultValue: 1.0,
     componentProps: { addonBefore: 'V', precision: 1 },
+  },
+  // TODO 主键隐藏字段，目前写死为ID
+  {
+    label: '',
+    field: 'id',
+    component: 'Input',
+    show: false,
+  },
+];
+//效果确认表单
+export const promotionFormSchema: FormSchema[] = [
+  {
+    label: '是否推广',
+    field: 'isContinue',
+    component: 'JSwitch',
+    componentProps: { dictCode: 'is_open' },
+    colProps: { span: 24 },
+  },
+  {
+    label: '推广描述',
+    field: 'promotionDesc',
+    component: 'InputTextArea',
+    dynamicRules: ({ model, schema }) => {
+      return [{ required: true, message: '请输入推广描述!' }];
+    },
+    colProps: { span: 24 },
   },
   // TODO 主键隐藏字段，目前写死为ID
   {
@@ -893,13 +918,6 @@ export const detailSchema: FormSchema[] = [
   {
     label: '是否完成',
     field: 'isComplete',
-    component: 'JSwitch',
-    componentProps: { dictCode: 'is_open' },
-    colProps: { span: 12 },
-  },
-  {
-    label: '是否继续',
-    field: 'isContinue',
     component: 'JSwitch',
     componentProps: { dictCode: 'is_open' },
     colProps: { span: 12 },

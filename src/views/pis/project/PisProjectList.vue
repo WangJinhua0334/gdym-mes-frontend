@@ -200,6 +200,7 @@
         popConfirm: {
           title: '提交之后会推送审核，是否确认提交？',
           confirm: handleSubmit.bind(null, record),
+          getPopupContainer: (node) => document.body,
         },
         auth: 'pis:pis_project:editSubmit',
       });
@@ -217,6 +218,7 @@
         popConfirm: {
           title: '完成确认之后不能再进行项目分析，是否完成？',
           confirm: handleFinish.bind(null, record),
+          getPopupContainer: (node) => document.body,
         },
         auth: 'pis:pis_project:editFinish',
       });
@@ -242,6 +244,7 @@
         popConfirm: {
           title: '是否确认删除',
           confirm: handleDelete.bind(null, record),
+          getPopupContainer: (node) => document.body,
         },
         auth: 'pis:pis_project:delete',
       });
