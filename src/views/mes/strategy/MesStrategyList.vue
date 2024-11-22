@@ -76,7 +76,12 @@
         fieldMapToNumber: [],
         fieldMapToTime: [],
       },
+      defSort: {
+        column: 'code',
+        order: 'asc',
+      },
       actionColumn: {
+        title: '操作',
         width: 120,
         fixed: 'right',
       },
