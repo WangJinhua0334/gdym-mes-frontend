@@ -287,6 +287,11 @@
 
       /**工单BOM子列表赋值 */
       requestSubTableData(queryMesMoBom, { mainId: unref(moId) }, mesMoBomTable, (res) => {
+        if (isUpdate.value) {
+          res.result.forEach((item) => {
+            item.prodName = item.prodName_dictText;
+          });
+        }
         moBomList.value = res.result;
       });
       /**工单工序子列表赋值 */
