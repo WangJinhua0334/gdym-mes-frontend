@@ -183,7 +183,7 @@ export const searchFormSchema: FormSchema[] = [
   {
     label: '车间',
     field: 'workShopId',
-    component: 'JSearchSelectCustom',
+    component: 'JSearchSelect',
     componentProps: ({ formActionType }) => {
       const { setFieldsValue, getFieldsValue } = formActionType;
       return {
