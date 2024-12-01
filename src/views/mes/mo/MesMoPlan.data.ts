@@ -200,7 +200,7 @@ export const searchFormSchema: FormSchema[] = [
         rowKey: 'id',
         labelKey: ['code', 'name'],
         placeholder: '请输入',
-        multi: true,
+        multi: false,
         maxTagCount: 2,
         pageSize: 10,
       };
