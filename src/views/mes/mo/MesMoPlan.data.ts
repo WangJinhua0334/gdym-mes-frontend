@@ -183,7 +183,7 @@ export const searchFormSchema: FormSchema[] = [
   {
     label: '车间',
     field: 'workShopId',
-    component: 'JSearchSelect',
+    component: 'JSearchSelectCustom',
     componentProps: ({ formActionType }) => {
       const { setFieldsValue, getFieldsValue } = formActionType;
       return {
@@ -200,7 +200,7 @@ export const searchFormSchema: FormSchema[] = [
         rowKey: 'id',
         labelKey: ['code', 'name'],
         placeholder: '请输入',
-        multi: false,
+        multi: true,
         maxTagCount: 2,
         pageSize: 10,
       };
@@ -374,7 +374,6 @@ export function getFormSchema(moCompleteKitCheck): FormSchema[] {
           rowKey: 'id',
           labelKey: ['name'],
           placeholder: '请选择',
-          selectAll: true,
           multi: true,
           maxTagCount: 2,
           onChange: (v) => {

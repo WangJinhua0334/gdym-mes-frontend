@@ -279,8 +279,7 @@ export function getFormSchema(): FormSchema[] {
           rowKey: 'id',
           labelKey: ['name'],
           placeholder: '请输入',
-          selectAll: true,
-          multi: true,
+          multi: false,
         };
       },
       dynamicRules: ({ model, schema }) => {
