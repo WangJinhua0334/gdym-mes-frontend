@@ -88,7 +88,16 @@
           :rowNumber="true"
           :rowSelection="true"
           :toolbar="true"
-        />
+          ><template #writeSwitch="record">
+            <a-switch
+              v-model:checkedValue="record.column.customValue[0]"
+              checked-children="是"
+              v-model:unCheckedValue="record.column.customValue[1]"
+              un-checked-children="否"
+              v-model:checked="record.value"
+              @change="record.triggerChange"
+            /> </template
+        ></JVxeTable>
       </a-tab-pane>
     </a-tabs>
   </BasicModal>
@@ -466,6 +475,12 @@
           delete row.updateBy;
           delete row.updateTime;
           delete row.sysOrgCode;
+
+          //获取BOM的物料关键料信息
+          const itemBom = moBomList.value.filter((item) => item.prodId == row.prodId);
+          if (itemBom && itemBom.length > 0) {
+            row.isKeypart = itemBom[0].isKeypart;
+          }
         });
 
         mesMoStationBomTable.dataSource = filterRows;

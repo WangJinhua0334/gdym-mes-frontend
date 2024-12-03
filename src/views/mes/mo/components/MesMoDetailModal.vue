@@ -69,7 +69,18 @@
           :rowNumber="true"
           :rowSelection="false"
           :toolbar="false"
-        />
+        >
+          <template #mustSwitch="record">
+            <a-switch
+              v-model:checkedValue="record.column.customValue[0]"
+              checked-children="是"
+              v-model:unCheckedValue="record.column.customValue[1]"
+              un-checked-children="否"
+              v-model:checked="record.value"
+              @change="record.triggerChange"
+              disabled
+            /> </template
+        ></JVxeTable>
       </a-tab-pane>
     </a-tabs>
   </BasicModal>

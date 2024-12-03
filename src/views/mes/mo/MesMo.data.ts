@@ -480,12 +480,7 @@ export function getFormSchema(): FormSchema[] {
       label: '物料成本',
       field: 'materialCost',
       component: 'InputNumber',
-      dynamicRules: ({ model, schema }) => {
-        return [
-          { required: true, message: '请输入物料成本!' },
-          { pattern: /^-?\d+\.?\d*$/, message: '请输入数字!' },
-        ];
-      },
+      defaultValue: 0,
     },
     {
       label: '包装规则',
@@ -792,6 +787,16 @@ export const mesMoStationBomJVxeColumns: JVxeColumn[] = [
     key: 'prodName_dictText',
     type: JVxeTypes.input,
     disabled: true,
+  },
+  {
+    title: '是否关键料',
+    key: 'isKeypart',
+    type: JVxeTypes.slot,
+    align: 'center',
+    defaultValue: 'N',
+    customValue: ['Y', 'N'],
+    width: 120,
+    slotName: 'writeSwitch',
   },
   {
     title: '用量',

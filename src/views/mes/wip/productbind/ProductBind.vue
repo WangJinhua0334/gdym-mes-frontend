@@ -15,6 +15,17 @@
           :rowSelection="false"
           :toolbar="false"
         >
+          <template #mustSwitch="record">
+            <a-switch
+              v-model:checkedValue="record.column.customValue[0]"
+              checked-children="是"
+              v-model:unCheckedValue="record.column.customValue[1]"
+              un-checked-children="否"
+              v-model:checked="record.value"
+              @change="record.triggerChange"
+              disabled
+            />
+          </template>
           <!--字段回显插槽-->
           <!-- <template #action="record">
             <TableAction :actions="getTableAction(record)" :dropDownActions="getDropDownAction(record)" />

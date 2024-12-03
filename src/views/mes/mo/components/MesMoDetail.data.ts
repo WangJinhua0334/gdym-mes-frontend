@@ -114,6 +114,11 @@ export const formSchema: FormSchema[] = [
     component: 'DatePicker',
   },
   {
+    label: '物料成本',
+    field: 'materialCost',
+    component: 'InputNumber',
+  },
+  {
     label: '模板方案',
     field: 'templateId_dictText',
     component: 'Input',
@@ -296,6 +301,16 @@ export const mesMoStationBomJVxeColumns: JVxeColumn[] = [
     title: '物料名称',
     key: 'prodName_dictText',
     type: JVxeTypes.input,
+  },
+  {
+    title: '是否关键料',
+    key: 'isKeypart',
+    type: JVxeTypes.slot,
+    align: 'center',
+    defaultValue: 'N',
+    customValue: ['Y', 'N'],
+    width: 120,
+    slotName: 'mustSwitch',
   },
   {
     title: '用量',

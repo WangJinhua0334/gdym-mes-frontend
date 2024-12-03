@@ -154,6 +154,16 @@ export const tableColums: JVxeColumn[] = [
     width: 400,
   },
   {
+    title: '是否关键料',
+    key: 'isKeypart',
+    type: JVxeTypes.slot,
+    align: 'center',
+    defaultValue: 'N',
+    customValue: ['Y', 'N'],
+    width: 120,
+    slotName: 'mustSwitch',
+  },
+  {
     title: '绑定数量',
     key: 'qty',
     type: JVxeTypes.inputNumber,
