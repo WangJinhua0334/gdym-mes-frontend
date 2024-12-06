@@ -120,7 +120,7 @@
     }
     const selectRows = getSelectRows();
     const record = selectRows[0];
-    if (record.status != 'pending_confirmation'){
+    if (record.status != 'wait_confirm'){
       message.error("当前状态非待确认状态");
       return;
     }
@@ -140,7 +140,7 @@
      }
      const selectRows = getSelectRows();
      const record = selectRows[0];
-     if (record.status != 'pending_repair'){
+     if (record.status != 'wait_repair'){
        message.error("当前状态非待维修状态");
        return;
      }
@@ -160,7 +160,7 @@
      }
      const selectRows = getSelectRows();
      const record = selectRows[0];
-     if (record.status != 'pending_evaluate'){
+     if (record.status != 'wait_evaluate'){
        message.error("当前状态非待评价状态");
        return;
      }
@@ -173,7 +173,7 @@
     * 编辑事件
     */
   function handleEdit(record: Recordable) {
-     if (record.status != 'pending_confirmation'){
+     if (record.status != 'wait_confirm'){
        message.error("当前状态非待确认状态");
        return;
      }
