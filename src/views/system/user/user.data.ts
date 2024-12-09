@@ -159,10 +159,10 @@ export const formSchema: FormSchema[] = [
         required: true,
         message: '请输入登录密码',
       },
-      {
-        pattern: /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,./]).{8,}$/,
-        message: '密码由8位数字、大小写字母和特殊符号组成!',
-      },
+      // {
+      //   pattern: /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,./]).{8,}$/,
+      //   message: '密码由8位数字、大小写字母和特殊符号组成!',
+      // },
     ],
   },
   {
@@ -302,11 +302,11 @@ export const formSchema: FormSchema[] = [
     label: '邮箱',
     field: 'email',
     component: 'Input',
-    required: true,
+    // required: true,
     dynamicRules: ({ model, schema }) => {
       return [
-        { ...rules.duplicateCheckRule('sys_user', 'email', model, schema, true)[0], trigger: 'blur' },
-        { ...rules.rule('email', false)[0], trigger: 'blur' },
+        { ...rules.duplicateCheckRule('sys_user', 'email', model, schema, false)[0], trigger: 'blur', required: false },
+        { ...rules.rule('email', false)[0], trigger: 'blur', required: false },
       ];
     },
   },
@@ -314,11 +314,11 @@ export const formSchema: FormSchema[] = [
     label: '手机号码',
     field: 'phone',
     component: 'Input',
-    required: true,
+    // required: true,
     dynamicRules: ({ model, schema }) => {
       return [
-        { ...rules.duplicateCheckRule('sys_user', 'phone', model, schema, true)[0], trigger: 'blur' },
-        { pattern: /^1[3456789]\d{9}$/, message: '手机号码格式有误', trigger: 'blur' },
+        { ...rules.duplicateCheckRule('sys_user', 'phone', model, schema, false)[0], trigger: 'blur', required: false },
+        { pattern: /^1[3456789]\d{9}$/, message: '手机号码格式有误', trigger: 'blur', required: false },
       ];
     },
   },
