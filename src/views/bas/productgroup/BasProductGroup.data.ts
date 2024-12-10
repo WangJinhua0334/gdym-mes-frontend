@@ -50,7 +50,6 @@ export const formSchema: FormSchema[] = [
       pidField: 'pid',
       pidValue: '0',
       hasChildField: 'has_child',
-      condition: '{ "sys_org_code": "#{sys_org_code}%" }',
     },
   },
   {
