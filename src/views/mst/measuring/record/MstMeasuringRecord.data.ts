@@ -35,6 +35,12 @@ export const columns: BasicColumn[] = [
       return !text ? '' : text.length > 10 ? text.substr(0, 10) : text;
     },
   },
+  {
+    title: '备注',
+    align: 'center',
+    dataIndex: 'remark',
+    width: 300,
+  },
 ];
 //查询数据
 export const searchFormSchema: FormSchema[] = [
@@ -43,6 +49,11 @@ export const searchFormSchema: FormSchema[] = [
     field: 'queryMeasuringName',
     component: 'Input',
     colProps: { span: 6 },
+  },
+  {
+    label: '备注',
+    field: 'remark',
+    component: 'JInput',
   },
 ];
 //表单数据

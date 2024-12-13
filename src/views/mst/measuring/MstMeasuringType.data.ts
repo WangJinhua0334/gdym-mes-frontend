@@ -394,7 +394,7 @@ export const mstMeasuringFormSchema: FormSchema[] = [
   {
     label: '供应商',
     field: 'suppId',
-    component: 'JPopupCustom',
+    component: 'JSearchSelectCustom',
     componentProps: ({ formActionType }) => {
       const { setFieldsValue, getFieldsValue } = formActionType;
 
@@ -403,21 +403,24 @@ export const mstMeasuringFormSchema: FormSchema[] = [
         getFieldsValue: getFieldsValue,
         method: 'get',
         url: '/supplier/basSupplier/list',
-        params: {
-          status: 'enable',
-        },
+        params: { column: 'code', order: 'asc', searchFields: 'code,name' /*, code: '${code}'*/ },
         columns: [
           {
-            title: '名称',
-            align: 'center',
-            dataIndex: 'name',
+            name: '编码',
+            code: 'code',
+          },
+          {
+            name: '名称',
+            code: 'name',
           },
         ],
-        isShowNum: true,
-        // rowKey: 'id',
+        isShowNum: false,
+        rowKey: 'id',
         labelKey: ['name'],
-        linkmap: [{ name: 'suppName_dictText' }],
-        placeholder: '请选择',
+        //pageSize: 10,
+        multi: true,
+        maxTagCount: 2,
+        placeholder: '请输入',
       };
     },
   },

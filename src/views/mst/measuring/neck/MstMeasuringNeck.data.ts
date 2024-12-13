@@ -8,6 +8,7 @@ export const formSchema: FormSchema[] = [
     component: 'JSelectUser',
     componentProps: {
       maxTagCount: 1,
+      isRadioSelection: true,
     },
     dynamicRules: ({ model, schema, values }) => {
       return [{ required: true, message: '请选择领用人!' }];
