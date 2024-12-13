@@ -39,6 +39,12 @@ export const columns: BasicColumn[] = [
     width: 150,
     sorter: true,
   },
+  {
+    title: '备注',
+    align: 'center',
+    dataIndex: 'remark',
+    width: 300,
+  },
 ];
 //查询数据
 export const searchFormSchema: FormSchema[] = [
@@ -47,6 +53,11 @@ export const searchFormSchema: FormSchema[] = [
     field: 'queryFixtureName',
     component: 'Input',
     colProps: { span: 6 },
+  },
+  {
+    label: '备注',
+    field: 'remark',
+    component: 'JInput',
   },
 ];
 //表单数据
