@@ -12,7 +12,7 @@ export const columns: BasicColumn[] = [
     dataIndex: 'prodId_dictText',
   },
   {
-    title: '物料',
+    title: '物料名称',
     align: 'center',
     dataIndex: 'prodName_dictText',
   },
@@ -93,7 +93,7 @@ export const searchFormSchema: FormSchema[] = [
 //表单数据
 export const formSchema: FormSchema[] = [
   {
-    label: '产品编码',
+    label: '物料编码',
     field: 'prodId',
     component: 'JPopupCustom',
     componentProps: ({ formActionType }) => {
@@ -155,7 +155,7 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
-    label: '产品名称',
+    label: '物料名称',
     field: 'prodName_dictText',
     component: 'Input',
     dynamicDisabled: true,
