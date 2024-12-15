@@ -79,12 +79,18 @@ export const formSchema: FormSchema[] = [
     field: 'cycle',
     component: 'InputNumber',
     defaultValue: 10,
+    dynamicRules: ({ model, schema }) => {
+      return [{ required: true, message: '请输入点检周期(天)!' }];
+    },
   },
   {
     label: '提前预警(时)',
     field: 'alarm',
     component: 'InputNumber',
     defaultValue: 24,
+    dynamicRules: ({ model, schema }) => {
+      return [{ required: true, message: '请输入提前预警(时)!' }];
+    },
   },
   {
     label: '责任人',
