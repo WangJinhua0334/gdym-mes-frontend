@@ -20,6 +20,12 @@ export const columns: BasicColumn[] = [
     title: '是否启用',
     align: 'center',
     dataIndex: 'isEnable',
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
   },
   {
     title: '保养周期(天)',

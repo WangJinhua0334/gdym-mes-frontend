@@ -4,8 +4,8 @@
     <BasicTable @register="registerTable" :rowSelection="rowSelection">
       <!--插槽:table标题-->
       <template #tableTitle>
-        <a-button type="primary" v-auth="'mod:mod_mould_used_record:add'" @click="handleAdd" preIcon="ant-design:plus-outlined"> 上机</a-button>
-        <a-button type="primary" v-auth="'mod:mod_mould_used_record:edit'" @click="handleEdit" preIcon="ant-design:plus-outlined"> 下机</a-button>
+        <a-button type="primary" v-auth="'mod:mod_mould_used_record:up'" @click="handleAdd" preIcon="ant-design:plus-outlined"> 上模</a-button>
+        <a-button type="primary" v-auth="'mod:mod_mould_used_record:down'" @click="handleEdit" preIcon="ant-design:plus-outlined"> 下模</a-button>
         <a-button type="primary" v-auth="'mod:mod_mould_used_record:exportXls'" preIcon="ant-design:export-outlined" @click="onExportXls">
           导出</a-button
         >
@@ -21,6 +21,8 @@
     </BasicTable>
     <!-- 表单区域 -->
     <ModMouldUsedRecordModal @register="registerModal" @success="handleSuccess" />
+    <UpMouldModal @register="registerUpModal" @success="handleSuccess" />
+    <DownMouldModal @register="registerDownModal" @success="handleSuccess" />
   </div>
 </template>
 
@@ -30,6 +32,8 @@
   import { useModal } from '/@/components/Modal';
   import { useListPage } from '/@/hooks/system/useListPage';
   import ModMouldUsedRecordModal from './components/ModMouldUsedRecordModal.vue';
+  import UpMouldModal from '../operatemould/UpMouldModal.vue';
+  import DownMouldModal from '../operatemould/DownMouldModal.vue';
   import { columns, searchFormSchema, superQuerySchema } from './ModMouldUsedRecord.data';
   import { list, deleteOne, batchDelete, getImportUrl, getExportUrl } from './ModMouldUsedRecord.api';
   import { downloadFile } from '/@/utils/common/renderUtils';
@@ -39,6 +43,8 @@
   const userStore = useUserStore();
   //注册model
   const [registerModal, { openModal }] = useModal();
+  const [registerUpModal, { openModal: openUpModal }] = useModal();
+  const [registerDownModal, { openModal: openDownModal }] = useModal();
   //注册table数据
   const { prefixCls, tableContext, onExportXls, onImportXls } = useListPage({
     tableProps: {
@@ -92,7 +98,7 @@
    * 新增事件
    */
   function handleAdd() {
-    openModal(true, {
+    openUpModal(true, {
       isUpdate: false,
       showFooter: true,
     });
@@ -100,10 +106,9 @@
   /**
    * 编辑事件
    */
-  function handleEdit(record: Recordable) {
-    openModal(true, {
-      record,
-      isUpdate: true,
+  function handleEdit() {
+    openDownModal(true, {
+      isUpdate: false,
       showFooter: true,
     });
   }

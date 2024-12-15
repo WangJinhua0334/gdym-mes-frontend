@@ -1,8 +1,6 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
-import { rules } from '/@/utils/helper/validator';
 import { render } from '/@/utils/common/renderUtils';
-import { getWeekMonthQuarterYear } from '/@/utils';
 //列表数据
 export const columns: BasicColumn[] = [
   {
@@ -154,55 +152,18 @@ export const searchFormSchema: FormSchema[] = [
 export const formSchema: FormSchema[] = [
   {
     label: '模具',
-    field: 'mouldId',
+    field: 'mouldId_dictText',
     component: 'Input',
-    ifShow: false,
-  },
-  {
-    label: '模具',
-    field: 'mouldCode',
-    component: 'Input',
-    dynamicRules: ({ model, schema }) => {
-      return [{ required: true, message: '请扫描模具!' }];
-    },
-  },
-  {
-    label: '模具',
-    field: 'mouldName',
-    component: 'Input',
-    dynamicDisabled: true,
   },
   {
     label: '设备',
-    field: 'equipId',
+    field: 'equipId_dictText',
     component: 'Input',
-    ifShow: false,
-  },
-  {
-    label: '设备',
-    field: 'equipCode',
-    component: 'Input',
-    dynamicRules: ({ model, schema }) => {
-      return [{ required: true, message: '请扫描设备!' }];
-    },
-  },
-  {
-    label: '设备',
-    field: 'equipName',
-    component: 'Input',
-    dynamicDisabled: true,
   },
   {
     label: '工位',
-    field: 'wkpId',
+    field: 'wkpId_dictText',
     component: 'Input',
-    ifShow: false,
-  },
-  {
-    label: '工位',
-    field: 'wkpIdName',
-    component: 'Input',
-    dynamicDisabled: true,
   },
   {
     label: '可用模穴数',
