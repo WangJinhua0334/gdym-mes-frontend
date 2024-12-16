@@ -5,7 +5,7 @@
       <div class="app-loading-dots">
         <span class="dot dot-spin"><i></i><i></i><i></i><i></i></span>
       </div>
-      <div class="app-loading-title">AiMom生产运营管理平台</div>
+      <div class="app-loading-title">LOMS精益运营管理系统</div>
     </div>
   </div>
 </template>

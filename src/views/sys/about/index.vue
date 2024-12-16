@@ -2,9 +2,7 @@
   <PageWrapper title="关于">
     <template #headerContent>
       <div class="flex justify-between items-center">
-        <span class="flex-1">
-          AiMom 是一款基于JeecgBoot V3.7.1开源框架开发的生产运营管理平台！覆盖生产、质量、设备、人员等内容的制造运营管理一体化平台。
-        </span>
+        <span class="flex-1"> LOMS 是一款基于JeecgBoot V3.7.1开源框架开发的精益运营管理系统！，涵盖了精益管理，MES，WMS，QMS，企业大模型。 </span>
       </div>
     </template>
     <Description @register="infoRegister" class="enter-y" />
