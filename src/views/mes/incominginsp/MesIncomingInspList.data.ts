@@ -13,7 +13,7 @@ export const columns: BasicColumn[] = [
   {
     title: '来料单号',
     align: 'center',
-    dataIndex: 'receiveCode',
+    dataIndex: 'incomingCode',
   },
   {
     title: '采购单号',
@@ -44,7 +44,7 @@ export const columns: BasicColumn[] = [
   {
     title: '数量',
     align: 'center',
-    dataIndex: 'trackQty_dictText',
+    dataIndex: 'qty',
     width: 150,
   },
   {
@@ -105,7 +105,7 @@ export const searchFormSchema: FormSchema[] = [
   },
   {
     label: '来料单号',
-    field: 'receiveCode',
+    field: 'incomingCode',
     component: 'Input',
   },
   {

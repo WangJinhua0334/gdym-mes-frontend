@@ -204,7 +204,8 @@
         const data = unref(inspectData);
 
         setFieldsValue({ prodId_dictText: data.prodId_dictText });
-        setFieldsValue({ receiveCode: data.receiveCode });
+        setFieldsValue({ code: data.code });
+        setFieldsValue({ incomingCode: data.incomingCode });
         setFieldsValue({ purchaseCode: data.purchaseCode });
         setFieldsValue({ prodName: data.prodName });
         setFieldsValue({ supplierId_dictText: data.supplierId_dictText });
