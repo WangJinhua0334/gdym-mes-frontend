@@ -12,7 +12,7 @@
   import { computed, defineComponent } from 'vue';
   import { defHttp } from '/@/utils/http/axios';
   import { propTypes } from '/@/utils/propTypes';
-  import { getBpmFormSchema } from '../MesReceive.data';
+  import { getBpmFormSchema } from '../MesIncoming.data';
   import { saveOrUpdate } from '../MesIncoming.api';
 
   export default defineComponent({
