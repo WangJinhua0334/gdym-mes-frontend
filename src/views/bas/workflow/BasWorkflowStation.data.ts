@@ -94,6 +94,18 @@ export const basWorkflowStationColumns: BasicColumn[] = [
     dataIndex: 'standardHours',
     width: 100,
   },
+  {
+    title: '按工单首检',
+    align: 'center',
+    dataIndex: 'isMoFirst',
+    width: 100,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
+  },
 ];
 //表单数据
 export const formSchema: FormSchema[] = [
@@ -199,6 +211,17 @@ export const formSchema: FormSchema[] = [
     label: '工时',
     field: 'standardHours',
     component: 'Input',
+    ifShow: ({ values }) => {
+      return values.stationType != 'station_group';
+    },
+  },
+  {
+    label: '按工单首检',
+    field: 'isMoFirst',
+    component: 'JSwitch',
+    componentProps: {
+      dictCode: 'is_open',
+    },
     ifShow: ({ values }) => {
       return values.stationType != 'station_group';
     },
@@ -501,6 +524,17 @@ export const formSchemaDrawer: FormSchema[] = [
     label: '工时',
     field: 'standardHours',
     component: 'Input',
+    ifShow: ({ values }) => {
+      return values.stationType != 'station_group';
+    },
+  },
+  {
+    label: '按工单首检',
+    field: 'isMoFirst',
+    component: 'JSwitch',
+    componentProps: {
+      dictCode: 'is_open',
+    },
     ifShow: ({ values }) => {
       return values.stationType != 'station_group';
     },
