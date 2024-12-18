@@ -129,6 +129,11 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
   },
   {
+    label: '入库模式',
+    field: 'inStockMode_dictText',
+    component: 'Input',
+  },
+  {
     label: '备注',
     field: 'remark',
     component: 'InputTextArea',

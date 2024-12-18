@@ -146,6 +146,15 @@ export function getColumns(moCompleteKitCheck): BasicColumn[] {
         return !text ? '' : text.length > 16 ? text.substr(0, 16) : text;
       },
     },
+    {
+      title: '入库模式',
+      align: 'center',
+      dataIndex: 'inStockMode',
+      width: 120,
+      customRender: ({ text }) => {
+        return render.renderDict(text, 'mo_in_stock_mode', true);
+      },
+    },
   ];
 }
 
@@ -503,6 +512,18 @@ export function getFormSchema(): FormSchema[] {
           labelKey: ['name'],
           placeholder: '请输入',
         };
+      },
+    },
+    {
+      label: '入库模式',
+      field: 'inStockMode',
+      defaultValue: 'mo',
+      component: 'JDictSelectTag',
+      componentProps: {
+        dictCode: 'mo_in_stock_mode',
+      },
+      dynamicRules: ({ model, schema }) => {
+        return [{ required: true, message: '请选择入库模式!' }];
       },
     },
     {
