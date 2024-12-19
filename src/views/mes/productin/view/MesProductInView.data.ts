@@ -10,7 +10,21 @@ export const formSchema: FormSchema[] = [
     field: 'code',
     component: 'Input',
   },
-
+  {
+    label: '工单',
+    field: 'moId_dictText',
+    component: 'Input',
+  },
+  {
+    label: '产品',
+    field: 'prodId_dictText',
+    component: 'Input',
+  },
+  {
+    label: '产品名称',
+    field: 'prodName_dictTextprodName_dictText',
+    component: 'Input',
+  },
   {
     label: '描述',
     field: 'description',
@@ -64,6 +78,12 @@ export const columns: BasicColumn[] = [
     align: 'center',
     width: 300,
     dataIndex: 'prodName_dictText',
+  },
+  {
+    title: '条码',
+    align: 'center',
+    width: 80,
+    dataIndex: 'lotSn',
   },
   {
     title: '生产批次',

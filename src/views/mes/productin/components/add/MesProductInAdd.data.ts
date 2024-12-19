@@ -1,13 +1,86 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
-import { rules } from '/@/utils/helper/validator';
-import { render } from '/@/utils/common/renderUtils';
-import { JVxeTypes, JVxeColumn } from '/@/components/jeecg/JVxeTable/types';
 import { ref, computed, unref, reactive } from 'vue';
 export const doEnterPress = ref();
 
 //表单数据
 export const formSchema: FormSchema[] = [
+  {
+    label: '工单',
+    field: 'moId',
+    component: 'JPopupCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/mo/mesMo/list',
+        params: {},
+        columns: [
+          {
+            title: '工单号',
+            align: 'center',
+            dataIndex: 'code',
+          },
+          {
+            title: '类型',
+            align: 'center',
+            dataIndex: 'type_dictText',
+          },
+          {
+            title: '产品编码',
+            align: 'center',
+            dataIndex: 'prodId_dictText',
+          },
+          {
+            title: '产品名称',
+            align: 'center',
+            dataIndex: 'prodName_dictText',
+          },
+          {
+            title: '状态',
+            align: 'center',
+            dataIndex: 'status_dictText',
+          },
+        ],
+        queryInfo: [
+          {
+            field: 'code',
+            label: '工单号',
+            mode: 'single',
+            view: 'string',
+          },
+          {
+            field: 'prodQuery',
+            label: '产品编码',
+            mode: 'single',
+            view: 'string',
+          },
+        ],
+        isShowNum: true,
+        rowKey: 'id',
+        labelKey: ['code'],
+        linkmap: [{ prodId: 'prodId', prodId_dictText: 'prodId_dictText', prodName_dictText: 'prodName_dictText' }],
+        placeholder: '请选择',
+        multi: false,
+        getPopupContainer: (node) => node.parentNode,
+      };
+    },
+  },
+  {
+    label: '产品编码',
+    field: 'prodId_dictText',
+    component: 'Input',
+    dynamicDisabled: true,
+  },
+  {
+    label: '产品名称',
+    field: 'prodName_dictText',
+    component: 'Input',
+    dynamicDisabled: true,
+  },
   {
     label: '描述',
     field: 'description',
@@ -39,7 +112,12 @@ export const formSchema: FormSchema[] = [
       },
     },
   },
-
+  {
+    label: '',
+    field: 'prodId',
+    component: 'Input',
+    show: false,
+  },
   // TODO 主键隐藏字段，目前写死为ID
   {
     label: '',

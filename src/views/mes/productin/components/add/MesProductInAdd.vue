@@ -107,6 +107,7 @@
       showActionColumn: true,
       pagination: false,
       actionColumn: {
+        title: '操作',
         width: 80,
         fixed: 'right',
       },

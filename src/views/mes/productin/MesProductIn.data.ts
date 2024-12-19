@@ -12,6 +12,22 @@ export const columns: BasicColumn[] = [
     width: 150,
   },
   {
+    title: '工单',
+    align: 'center',
+    dataIndex: 'moId_dictText',
+  },
+  {
+    title: '产品',
+    align: 'center',
+    dataIndex: 'prodId_dictText',
+  },
+  {
+    title: '产品名称',
+    align: 'center',
+    width: 300,
+    dataIndex: 'prodName_dictText',
+  },
+  {
     title: '描述',
     align: 'center',
     dataIndex: 'description',
@@ -65,6 +81,18 @@ export const searchFormSchema: FormSchema[] = [
     colProps: { span: 6 },
   },
   {
+    label: '工单',
+    field: 'moQuery',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: '产品',
+    field: 'prodQuery',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
     label: '是否完成',
     field: 'isComplete',
     component: 'JDictSelectTag',
@@ -76,6 +104,21 @@ export const searchFormSchema: FormSchema[] = [
 ];
 //表单数据
 export const formSchema: FormSchema[] = [
+  {
+    label: '工单',
+    field: 'moId_dictText',
+    component: 'Input',
+  },
+  {
+    label: '产品编码',
+    field: 'prodId_dictText',
+    component: 'Input',
+  },
+  {
+    label: '产品名称',
+    field: 'prodName_dictText',
+    component: 'Input',
+  },
   {
     label: '描述',
     field: 'description',
@@ -123,6 +166,12 @@ export const mesProductInDetailColumns: BasicColumn[] = [
     width: 150,
   },
   {
+    title: '条码',
+    align: 'center',
+    width: 150,
+    dataIndex: 'lotSn',
+  },
+  {
     title: '生产批次',
     align: 'center',
     dataIndex: 'batch',
@@ -162,43 +211,5 @@ export const mesProductInDetailColumns: BasicColumn[] = [
     title: 'ERP行号',
     align: 'center',
     dataIndex: 'erpLineNo',
-  },
-];
-//子表表格配置
-export const mesProductInDetailJVxeColumns: JVxeColumn[] = [
-  {
-    title: '工单',
-    key: 'moId',
-    type: JVxeTypes.input,
-    width: '200px',
-    placeholder: '请输入${title}',
-    defaultValue: '',
-    validateRules: [{ required: true, message: '${title}不能为空' }],
-  },
-  {
-    title: '产品',
-    key: 'prodId',
-    type: JVxeTypes.input,
-    width: '200px',
-    placeholder: '请输入${title}',
-    defaultValue: '',
-    validateRules: [{ required: true, message: '${title}不能为空' }],
-  },
-  {
-    title: '生产批次',
-    key: 'batch',
-    type: JVxeTypes.input,
-    width: '200px',
-    placeholder: '请输入${title}',
-    defaultValue: '',
-  },
-  {
-    title: '数量',
-    key: 'qty',
-    type: JVxeTypes.inputNumber,
-    width: '200px',
-    placeholder: '请输入${title}',
-    defaultValue: '',
-    validateRules: [{ required: true, message: '${title}不能为空' }],
   },
 ];

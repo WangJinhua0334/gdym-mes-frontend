@@ -1,12 +1,11 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="registerModal" destroyOnClose :title="'入库申请'" :width="1024">
+  <BasicModal v-bind="$attrs" @register="registerModal" destroyOnClose :title="'入库申请'" :width="1200">
     <MesProductInAdd @close="close" />
   </BasicModal>
 </template>
 
 <script lang="ts" setup>
   import { BasicModal, useModalInner } from '/@/components/Modal';
-  import { JVxeTable } from '/@/components/jeecg/JVxeTable';
   import MesProductInAdd from './add/MesProductInAdd.vue';
 
   // Emits声明

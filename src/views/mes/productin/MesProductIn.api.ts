@@ -1,12 +1,12 @@
-import {defHttp} from '/@/utils/http/axios';
-import { useMessage } from "/@/hooks/web/useMessage";
+import { defHttp } from '/@/utils/http/axios';
+import { useMessage } from '/@/hooks/web/useMessage';
 
 const { createConfirm } = useMessage();
 
 enum Api {
   list = '/productin/mesProductIn/list',
-  save='/productin/mesProductIn/add',
-  edit='/productin/mesProductIn/edit',
+  save = '/productin/mesProductIn/add',
+  edit = '/productin/mesProductIn/edit',
   deleteOne = '/productin/mesProductIn/delete',
   deleteBatch = '/productin/mesProductIn/deleteBatch',
   importExcel = '/productin/mesProductIn/importExcel',
@@ -27,22 +27,21 @@ export const getImportUrl = Api.importExcel;
  * 子表单查询接口
  * @param params
  */
-export const queryMesProductInDetail = Api.mesProductInDetailList
+export const queryMesProductInDetail = Api.mesProductInDetailList;
 /**
  * 列表接口
  * @param params
  */
-export const list = (params) =>
-  defHttp.get({url: Api.list, params});
+export const list = (params) => defHttp.get({ url: Api.list, params });
 
 /**
  * 删除单个
  */
-export const deleteOne = (params,handleSuccess) => {
-  return defHttp.delete({url: Api.deleteOne, params}, {joinParamsToUrl: true}).then(() => {
+export const deleteOne = (params, handleSuccess) => {
+  return defHttp.delete({ url: Api.deleteOne, params }, { joinParamsToUrl: true }).then(() => {
     handleSuccess();
   });
-}
+};
 /**
  * 批量删除
  * @param params
@@ -55,23 +54,22 @@ export const batchDelete = (params, handleSuccess) => {
     okText: '确认',
     cancelText: '取消',
     onOk: () => {
-      return defHttp.delete({url: Api.deleteBatch, data: params}, {joinParamsToUrl: true}).then(() => {
+      return defHttp.delete({ url: Api.deleteBatch, data: params }, { joinParamsToUrl: true }).then(() => {
         handleSuccess();
       });
-    }
+    },
   });
-}
+};
 /**
  * 保存或者更新
  * @param params
  */
 export const saveOrUpdate = (params, isUpdate) => {
   let url = isUpdate ? Api.edit : Api.save;
-  return defHttp.post({url: url, params});
-}
+  return defHttp.post({ url: url, params });
+};
 /**
  * 子表列表接口
  * @param params
  */
-export const mesProductInDetailList = (params) =>
-  defHttp.get({url: Api.mesProductInDetailList, params},{isTransformResponse:false});
+export const mesProductInDetailList = (params) => defHttp.get({ url: Api.mesProductInDetailList, params }, { isTransformResponse: false });
