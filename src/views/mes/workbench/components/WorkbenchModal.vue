@@ -117,8 +117,8 @@
       position: relative;
       z-index: 2;
     }
-    .ant-modal-body::after{
-      content: "";
+    .ant-modal-body::after {
+      content: '';
       position: absolute;
       width: 100%;
       height: 100%;
