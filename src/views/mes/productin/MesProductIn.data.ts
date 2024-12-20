@@ -28,9 +28,22 @@ export const columns: BasicColumn[] = [
     dataIndex: 'prodName_dictText',
   },
   {
+    title: '数量',
+    align: 'center',
+    dataIndex: 'qty',
+  },
+  {
     title: '描述',
     align: 'center',
     dataIndex: 'description',
+  },
+  {
+    title: '状态',
+    align: 'center',
+    dataIndex: 'status',
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'mes_prod_in_status', true);
+    },
   },
   {
     title: '计划入库时间',
@@ -40,6 +53,11 @@ export const columns: BasicColumn[] = [
     customRender: ({ text }) => {
       return !text ? '' : text.length > 10 ? text.substr(0, 10) : text;
     },
+  },
+  {
+    title: '库位',
+    align: 'center',
+    dataIndex: 'whBinId_dictText',
   },
   {
     title: '是否完成',
@@ -117,6 +135,11 @@ export const formSchema: FormSchema[] = [
   {
     label: '产品名称',
     field: 'prodName_dictText',
+    component: 'Input',
+  },
+  {
+    label: '总计数量',
+    field: 'qty',
     component: 'Input',
   },
   {
@@ -211,5 +234,56 @@ export const mesProductInDetailColumns: BasicColumn[] = [
     title: 'ERP行号',
     align: 'center',
     dataIndex: 'erpLineNo',
+  },
+];
+//入库
+export const stockFormSchema: FormSchema[] = [
+  {
+    label: '库位',
+    field: 'whBinId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/warehousearea/basWarehouseBin/list',
+        params: { column: 'code', order: 'asc', searchFields: 'code,name,whQuery' /*, code: '${code}'*/ },
+        columns: [
+          {
+            name: '编码',
+            code: 'code',
+          },
+          {
+            name: '名称',
+            code: 'name',
+          },
+        ],
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        //pageSize: 10,
+        multi: false,
+        maxTagCount: 2,
+        placeholder: '请输入',
+        queryBefore: function (currentParams) {
+          //currentParams.whQuery = 'waitInsp';
+          return currentParams;
+        },
+        getPopupContainer: (node) => document.body,
+      };
+    },
+    dynamicRules: ({ model, schema }) => {
+      return [{ required: true, message: '请选择库位!' }];
+    },
+  },
+  // TODO 主键隐藏字段，目前写死为ID
+  {
+    label: '',
+    field: 'id',
+    component: 'Input',
+    show: false,
   },
 ];

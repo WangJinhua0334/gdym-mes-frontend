@@ -12,6 +12,8 @@ enum Api {
   importExcel = '/productin/mesProductIn/importExcel',
   exportXls = '/productin/mesProductIn/exportXls',
   mesProductInDetailList = '/productin/mesProductIn/queryMesProductInDetailByMainId',
+  stock = '/productin/mesProductIn/stock',
+  confirm = '/productin/mesProductIn/confirm',
 }
 /**
  * 导出api
@@ -73,3 +75,29 @@ export const saveOrUpdate = (params, isUpdate) => {
  * @param params
  */
 export const mesProductInDetailList = (params) => defHttp.get({ url: Api.mesProductInDetailList, params }, { isTransformResponse: false });
+/**
+ * 入库
+ * @param params
+ */
+export const stock = (params) => {
+  return defHttp.post({ url: Api.stock, params });
+};
+
+/**
+ * 推送
+ * @param params
+ */
+export const confirm = (params, handleSuccess) => {
+  createConfirm({
+    iconType: 'warning',
+    title: '是否确认',
+    content: '是否确认选中数据',
+    okText: '确认',
+    cancelText: '取消',
+    onOk: () => {
+      return defHttp.put({ url: Api.confirm, data: params }, { joinParamsToUrl: true }).then(() => {
+        handleSuccess();
+      });
+    },
+  });
+};
