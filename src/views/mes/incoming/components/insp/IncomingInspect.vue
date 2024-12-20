@@ -70,8 +70,8 @@
       <slot>
         <div class="footer">
           <a-button @click="doClose">关闭</a-button>
-          <a-button type="primary" @click="doSave">保存</a-button>
-          <a-button type="primary" @click="doSubmit">提交</a-button>
+          <a-button type="primary" @click="doSave" v-if="!isDetail">保存</a-button>
+          <a-button type="primary" @click="doSubmit" v-if="!isDetail">提交</a-button>
         </div>
       </slot>
     </div>
