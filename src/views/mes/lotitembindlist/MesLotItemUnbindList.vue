@@ -4,7 +4,9 @@
     <BasicTable @register="registerTable" :rowSelection="rowSelection">
       <!--插槽:table标题-->
       <template #tableTitle>
-        <a-button type="primary" preIcon="ant-design:export-outlined" @click="onExportXls"> 导出</a-button>
+        <a-button type="primary" preIcon="ant-design:export-outlined" @click="onExportXls" v-auth="'mes:mes_lot_item_unbind:exportXls'">
+          导出</a-button
+        >
       </template>
       <!--操作栏-->
       <!-- <template #action="{ record }">

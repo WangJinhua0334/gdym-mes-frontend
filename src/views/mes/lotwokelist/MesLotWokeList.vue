@@ -4,13 +4,7 @@
     <BasicTable @register="registerTable" :rowSelection="rowSelection">
       <!--插槽:table标题-->
       <template #tableTitle>
-        <a-button type="primary" preIcon="ant-design:export-outlined" @click="onExportXls"> 导出</a-button>
-      </template>
-      <template #fileSlot="{ record, text }">
-        <span v-if="!text" style="font-size: 12px; font-style: italic">无文件</span>
-        <a-button v-else :ghost="true" type="primary" preIcon="ant-design:download-outlined" size="small" @click="handleDetail(record)"
-          >查看</a-button
-        >
+        <a-button type="primary" preIcon="ant-design:export-outlined" @click="onExportXls" v-auth="'mes:mes_lot_woke:exportXls'"> 导出</a-button>
       </template>
     </BasicTable>
   </div>
@@ -39,10 +33,6 @@
         fieldMapToTime: [],
       },
       showActionColumn: false,
-      actionColumn: {
-        width: 120,
-        fixed: 'right',
-      },
     },
     exportConfig: {
       name: '报工记录',

@@ -13,7 +13,7 @@
       <!-- 内嵌table区域 end -->
       <!--插槽:table标题-->
       <template #tableTitle>
-        <a-button type="primary" preIcon="ant-design:export-outlined" @click="onExportXls"> 导出</a-button>
+        <a-button type="primary" preIcon="ant-design:export-outlined" @click="onExportXls" v-auth="'mes:mes_lot_test:exportXls'"> 导出</a-button>
       </template>
       <!--字段回显插槽-->
       <template #htmlSlot="{ text }">
@@ -85,10 +85,6 @@
         fieldMapToTime: [],
       },
       showActionColumn: false,
-      actionColumn: {
-        width: 120,
-        fixed: 'right',
-      },
     },
     exportConfig: {
       name: '调试记录',
@@ -115,21 +111,6 @@
       record: record,
     });
   }
-
-  /**
-   * 操作栏
-   */
-  /*function getTableAction(record) {
-    if (record.attachments) {
-      return [
-        {
-          label: '附件',
-          onClick: handleDetail.bind(null, record),
-        },
-      ];
-    }
-    return [{ label: '无附件' }];
-  }*/
 </script>
 
 <style scoped></style>
