@@ -1,0 +1,32 @@
+import { defHttp } from '/@/utils/http/axios';
+
+enum Api {
+  scranUpMat = '/wip/productwkp/scranUpMat',
+  scranDownMat = '/wip/productwkp/scranDownMat',
+  upMat = '/wip/productwkp/upMat',
+  downMat = '/wip/productwkp/downMat',
+}
+/**
+ *
+ * @param params 上料查询
+ * @returns
+ */
+export const scranUpMat = (params) => defHttp.get({ url: Api.scranUpMat, params });
+/**
+ *
+ * @param params 下料查询
+ * @returns
+ */
+export const scranDownMat = (params) => defHttp.get({ url: Api.scranDownMat, params });
+/**
+ *
+ * @param params 上料
+ * @returns
+ */
+export const upMat = (params) => defHttp.post({ url: Api.upMat, params });
+/**
+ *
+ * @param params 下料
+ * @returns
+ */
+export const downMat = (params) => defHttp.post({ url: Api.downMat, params });

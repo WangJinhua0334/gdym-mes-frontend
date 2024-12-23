@@ -50,6 +50,11 @@ import RemoteWorkPostList from '/@/views/mes/remoteshutdown/RemoteWorkPostList.v
 import SplitList from '/@/views/mes/lotsplitlist/SplitList.vue';
 import ScarnSn from '/@/views/mes/wip/scarn/ScarnSn.vue';
 
+import WkpStockDeduct from '/@/views/mes/wip/prodwkpstock/WkpStockDeduct.vue';
+import WkpStockUp from '/@/views/mes/wip/prodwkpstock/WkpStockUp.vue';
+import WkpStockDown from '/@/views/mes/wip/prodwkpstock/WkpStockDown.vue';
+import MesWkpStockList from '../../wkpstocklist/MesWkpStockList.vue';
+
 const componentList = reactive([
   { name: 'StartWork', com: markRaw(StartWorkModal) },
   { name: 'ProductWoke', com: markRaw(ProductWokeModal) },
@@ -91,6 +96,10 @@ const componentList = reactive([
   { name: 'RemoteWorkPostList', com: markRaw(RemoteWorkPostList) },
   { name: 'SplitList', com: markRaw(SplitList) },
   { name: 'ScarnSn', com: markRaw(ScarnSn) },
+  { name: 'WkpStockDeduct', com: markRaw(WkpStockDeduct) },
+  { name: 'WkpStockUp', com: markRaw(WkpStockUp) },
+  { name: 'WkpStockDown', com: markRaw(WkpStockDown) },
+  { name: 'MesWkpStockList', com: markRaw(MesWkpStockList) },
 ]);
 
 /**
