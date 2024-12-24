@@ -5,6 +5,8 @@ enum Api {
   scranDownMat = '/wip/productwkp/scranDownMat',
   upMat = '/wip/productwkp/upMat',
   downMat = '/wip/productwkp/downMat',
+  deductList = '/wip/productwkp/deductList',
+  deduct = '/wip/productwkp/deduct',
 }
 /**
  *
@@ -30,3 +32,15 @@ export const upMat = (params) => defHttp.post({ url: Api.upMat, params });
  * @returns
  */
 export const downMat = (params) => defHttp.post({ url: Api.downMat, params });
+/**
+ *
+ * @param params 扣料检验
+ * @returns
+ */
+export const deductList = (params) => defHttp.get({ url: Api.deductList, params });
+/**
+ *
+ * @param params 扣料
+ * @returns
+ */
+export const deduct = (params) => defHttp.post({ url: Api.deduct, params });

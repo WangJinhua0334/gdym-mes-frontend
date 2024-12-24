@@ -1,5 +1,6 @@
 import { ref } from 'vue';
-import { FormSchema } from '/@/components/Table';
+import { BasicColumn, FormSchema } from '/@/components/Table';
+import { render } from '/@/utils/common/renderUtils';
 
 export const doUpEnterPress = ref();
 export const doDownEnterPress = ref();
@@ -250,5 +251,89 @@ export const downFormSchema: FormSchema[] = [
     field: 'prodId',
     component: 'Input',
     show: false,
+  },
+];
+export const deductColumns: BasicColumn[] = [
+  {
+    title: '顺序',
+    align: 'center',
+    dataIndex: 'sequence',
+    width: 100,
+  },
+  {
+    title: '工序',
+    align: 'center',
+    dataIndex: 'wfsId_dictText',
+    width: 160,
+  },
+  {
+    title: '物料编码',
+    align: 'center',
+    dataIndex: 'prodCode',
+    width: 160,
+  },
+  {
+    title: '物料名称',
+    align: 'center',
+    dataIndex: 'prodName',
+    width: 160,
+  },
+  {
+    title: '是否关键料',
+    align: 'center',
+    dataIndex: 'isKeypart',
+    width: 100,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
+  },
+  {
+    title: '用量',
+    align: 'center',
+    dataIndex: 'qty',
+    width: 80,
+  },
+  {
+    title: '绑定数量',
+    align: 'center',
+    dataIndex: 'bindQty',
+    width: 120,
+  },
+  {
+    title: '工位数量',
+    align: 'center',
+    dataIndex: 'wkpQty',
+    width: 80,
+    customRender: ({ text, record }) => {
+      if (text < record.qty - record.bindQty) {
+        return render.renderTag(text, 'red');
+      } else {
+        return render.renderTag(text, 'green');
+      }
+    },
+  },
+  {
+    title: '单位',
+    align: 'center',
+    dataIndex: 'unitId_dictText',
+    width: 100,
+  },
+];
+//工位物料记录查询配置
+export const deductSearchFormSchema: FormSchema[] = [
+  {
+    label: '物料编码',
+    field: 'prodCode',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: '物料名称',
+    field: 'prodName',
+    component: 'Input',
+    colProps: { span: 6 },
   },
 ];

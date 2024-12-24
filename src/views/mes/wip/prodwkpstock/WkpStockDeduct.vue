@@ -1,5 +1,13 @@
 <template>
-  <BasicForm @register="registerForm" />
+  <div>
+    <!--引用表格-->
+    <BasicTable @register="registerTable" :rowSelection="rowSelection">
+      <!--字段回显插槽-->
+      <template #htmlSlot="{ text }">
+        <div v-html="text"></div>
+      </template>
+    </BasicTable>
+  </div>
   <!--页脚-->
   <slot>
     <div class="footer">
@@ -9,119 +17,101 @@
   </slot>
 </template>
 
-<script lang="ts" setup>
-  import { onMounted, ref, unref, watch } from 'vue';
-  import { BasicForm, useForm } from '/@/components/Form/index';
-  import { upFormSchema, doUpEnterPress } from './WkpStock.data';
-  import { scranDownMat } from './WkpStock.api';
+<script lang="ts" name="MesWkpStockList" setup>
+  import { unref, onMounted, ref } from 'vue';
+  import { BasicTable } from '/@/components/Table';
+  import { useListPage } from '/@/hooks/system/useListPage';
+  import { deductColumns, deductSearchFormSchema } from './WkpStock.data';
+  import { deductList, deduct } from './WkpStock.api';
+  import { useMessage } from '/@/hooks/web/useMessage';
+  import { useUserStore } from '/@/store/modules/user';
 
+  const $message = useMessage();
+  const userStore = useUserStore();
   // Emits声明
   const emit = defineEmits(['setModalProps', 'success', 'close']);
-  /**
-   * 监听SN回车事件
-   */
-  watch(
-    () => doUpEnterPress.value,
-    () => {
-      if (doUpEnterPress.value) {
-        scanSN(unref(getFieldsValue()).sn);
-      }
+  const props = defineProps({
+    componentData: {
+      type: Object,
+      default: () => {},
     },
-    { immediate: false, deep: true }
-  );
-
-  //表单配置
-  const [registerForm, { setFieldsValue, getFieldsValue, validate }] = useForm({
-    labelWidth: 150,
-    schemas: upFormSchema,
-    showActionButtonGroup: false,
-    baseColProps: { span: 24 },
   });
+  const workBenchData = ref<any>();
+  const operateBy = ref<string>('');
+
+  const sn = ref();
+  const wkpId = ref();
+
   onMounted(() => {
     setTimeout(() => {
-      document.getElementById('form_item_sn')?.focus();
-    }, 100);
-  });
-  // 过站校验
-  async function scanSN(sn) {
-    emit('setModalProps', { confirmLoading: true });
-    scranDownMat({
-      sn: sn,
-    })
-      .then((res) => {
-        console.log(res);
-        if (res.sn) {
-          setFieldsValue({
-            snCode: res.sn,
-            sn: '',
-          });
+      workBenchData.value = props.componentData.record;
+      operateBy.value = unref(workBenchData).operateBy ?? userStore.getUserInfo.username;
+      if (unref(workBenchData).workPostId) {
+        wkpId.value = unref(workBenchData).workPostId;
+        if (unref(workBenchData).scanInfo) {
+          sn.value = unref(workBenchData).scanInfo.sn;
+          reload();
+        } else {
+          $message.createMessage.warning('请先扫描流转卡！');
+          emit('close');
         }
-        if (res.mesMo) {
-          setFieldsValue({
-            moCode: res.mesMo.code,
-          });
-        }
-        if (res.mesMoPlan) {
-          setFieldsValue({
-            moPlanCode: res.mesMoPlan.code,
-          });
-        }
-        if (res.mesMoSn) {
-          setFieldsValue({
-            qty: res.mesMoSn.qty,
-            prodCode: res.basProduct.code + '[' + res.basProduct.version + ']',
-            prodName: res.basProduct.name,
-          });
-        }
-        if (res.basWorkflowStation) {
-          setFieldsValue({
-            title: res.basWorkflowStation.title,
-          });
-        }
-        if (res.mesLwmsLot) {
-          setFieldsValue({
-            lwmsQty: res.mesLwmsLot.qty,
-            lwmsBatch: res.mesLwmsLot.batchNo,
-            lwmsCode: res.lwmsProduct.code + '[' + res.lwmsProduct.version + ']',
-            lwmsName: res.lwmsProduct.name,
-          });
-        }
-        document.getElementById('form_item_sn')?.focus();
-        emit('setModalProps', { confirmLoading: false });
-      })
-      .catch((err) => {
+      } else {
+        $message.createMessage.warning('请先选择工位！');
         emit('close');
-      });
-  }
+      }
+    }, 500);
+  });
+  //注册table数据
+  const { tableContext } = useListPage({
+    tableProps: {
+      title: '扣料检验',
+      api: () =>
+        deductList({
+          wkpId: unref(wkpId),
+          sn: unref(sn),
+          stationId: unref(workBenchData).stationId,
+          actionCode: unref(workBenchData).actionId_dictText,
+        }),
+      columns: deductColumns,
+      canResize: true,
+      pagination: true,
+      formConfig: {
+        //labelWidth: 120,
+        schemas: deductSearchFormSchema,
+        autoSubmitOnEnter: true,
+        showAdvancedButton: true,
+        fieldMapToNumber: [],
+        fieldMapToTime: [],
+      },
+      showActionColumn: false,
+    },
+  });
+
+  const [registerTable, { reload, getForm }, { rowSelection }] = tableContext;
 
   function close() {
     emit('close');
   }
-  // 过站
+  // 下料
   async function doWoke() {
-    emit('setModalProps', { confirmLoading: true });
-    // await woke({
-    //   sn: unref(sn),
-    //   stationId: unref(workBenchData).scanInfo.stationId,
-    //   actionCode: unref(workBenchData).actionId_dictText,
-    //   wkpId: unref(workBenchData).workPostId,
-    //   equipmentId: getFieldsValue().equipmentId,
-    //   qty: getFieldsValue().wokeQty,
-    //   scrapedQty: getFieldsValue().scrapedQty,
-    //   startTime: getFieldsValue().startTime,
-    //   completeTime: getFieldsValue().completeTime,
-    //   operateBy: getFieldsValue().operator,
-    // })
-    //   .then((res) => {
-    //     emit('success');
-    //   })
-    //   .catch((err) => {
-    //     emit('setModalProps', { confirmLoading: false });
-    //   });
-  }
+    try {
+      let values = {};
+      values['sn'] = sn.value;
+      values['wkpId'] = wkpId.value;
+      values['operateBy'] = operateBy.value;
+      values['stationId'] = unref(workBenchData).stationId;
+      values['actionCode'] = unref(workBenchData).actionId_dictText;
 
+      emit('setModalProps', { confirmLoading: true });
+      //提交表单
+      await deduct(values);
+      //刷新列表
+      emit('success');
+    } finally {
+      emit('setModalProps', { confirmLoading: false });
+    }
+  }
   async function submit() {
-    await validate();
     try {
       emit('setModalProps', { confirmLoading: true });
       await doWoke();
