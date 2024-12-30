@@ -451,6 +451,12 @@ export const formSchema: FormSchema[] = [
     field: 'remark',
     component: 'Input',
   },
+  {
+    label: '',
+    field: 'mouldId',
+    component: 'Input',
+    show: false,
+  },
   // TODO 主键隐藏字段，目前写死为ID
   {
     label: '',
