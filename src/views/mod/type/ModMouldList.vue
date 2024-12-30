@@ -65,6 +65,7 @@
     modMouldImportUrl,
     refund,
     warehousing,
+    change,
   } from './ModMouldType.api';
   import { isEmpty } from '/@/utils/is';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -91,7 +92,7 @@
       useSearchForm: false,
       actionColumn: {
         title: '操作',
-        width: 180,
+        width: 200,
         fixed: 'right',
       },
       pagination: {
@@ -189,8 +190,14 @@
   /**
    * 归还事件
    */
-  async function handrefund(record) {
+  async function handleRefund(record) {
     await refund(record, handleSuccess);
+  }
+  /**
+   * 改模
+   */
+  async function handleChange(record) {
+    await change(record, handleSuccess);
   }
   /**
    * 成功回调
@@ -230,7 +237,7 @@
         label: '归还',
         popConfirm: {
           title: '确定归还吗？',
-          confirm: handrefund.bind(null, record),
+          confirm: handleRefund.bind(null, record),
           getPopupContainer: () => document.body,
         },
         auth: 'mod:mod_mould:refund',
@@ -240,6 +247,15 @@
       label: '编辑',
       onClick: handleEdit.bind(null, record),
       auth: 'mod:mod_mould:edit',
+    });
+    actionArr.push({
+      label: '改模',
+      popConfirm: {
+        title: '确定要记录改模次数吗？',
+        confirm: handleChange.bind(null, record),
+        getPopupContainer: () => document.body,
+      },
+      auth: 'mod:mod_mould:change',
     });
     if (record.status == 'Created') {
       actionArr.push({

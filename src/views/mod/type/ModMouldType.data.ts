@@ -277,6 +277,11 @@ export const modMouldColumns: BasicColumn[] = [
     dataIndex: 'remainingLife',
   },
   {
+    title: '改模次数',
+    align: 'center',
+    dataIndex: 'changeCount',
+  },
+  {
     title: '领用人',
     align: 'center',
     dataIndex: 'useBy_dictText',
@@ -687,6 +692,11 @@ export const modMouldDetailSchema: FormSchema[] = [
   {
     label: '剩余寿命',
     field: 'remainingLife',
+    component: 'InputNumber',
+  },
+  {
+    label: '改模次数',
+    field: 'changeCount',
     component: 'InputNumber',
   },
   {

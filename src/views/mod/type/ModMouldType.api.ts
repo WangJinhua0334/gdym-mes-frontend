@@ -19,6 +19,7 @@ enum Api {
   warehousing = '/mod/type/warehousing',
   neck = '/mod/type/neck',
   refund = '/mod/type/refund',
+  change = '/mod/type/change',
 }
 /**
  * 导出api
@@ -147,6 +148,16 @@ export const neck = (params) => {
  */
 export const refund = (params, handleSuccess) => {
   return defHttp.post({ url: Api.refund, params }).then(() => {
+    handleSuccess();
+  });
+};
+
+/**
+ * 改模
+ * @param params
+ */
+export const change = (params, handleSuccess) => {
+  return defHttp.post({ url: Api.change, params }).then(() => {
     handleSuccess();
   });
 };
