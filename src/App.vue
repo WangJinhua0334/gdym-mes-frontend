@@ -94,7 +94,6 @@
     appStore.getProjectConfig?.themeColor && changeTheme(appStore.getProjectConfig.themeColor);
   }, 300);
   // update-end--author:liaozhiyang---date:20231218---for：【QQYUN-6366】升级到antd4.x
-
 </script>
 <style lang="less">
   // update-begin--author:liaozhiyang---date:20230803---for：【QQYUN-5839】windi会影响到html2canvas绘制的图片样式
@@ -102,4 +101,8 @@
     display: inline-block;
   }
   // update-end--author:liaozhiyang---date:20230803---for：【QQYUN-5839】windi会影响到html2canvas绘制的图片样式
+  //禁用弹出层的自动生成辅助div元素，会导致浏览器报焦点错误之类的问题
+  .ant-modal div[aria-hidden='true'] {
+    display: none !important;
+  }
 </style>
