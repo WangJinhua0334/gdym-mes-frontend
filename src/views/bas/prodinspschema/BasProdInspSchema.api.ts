@@ -12,8 +12,10 @@ export enum Api {
   importExcel = '/prodinspschema/basProdInspSchema/importExcel',
   exportXls = '/prodinspschema/basProdInspSchema/exportXls',
   checkHasEnableProd = '/prodinspschema/basProdInspSchema/checkHasEnableProd',
-
   queryProductId = '/product/basProduct/queryById',
+  deleteBatchSchema = '/product/basProdSchema/deleteBatch',
+  connect = '/prodinspschema/basProdInspSchema/connect',
+  listProduct = '/product/basProdSchema/list',
 }
 /**
  * 导出api
@@ -68,4 +70,37 @@ export const batchDelete = (params, handleSuccess) => {
 export const saveOrUpdate = (params, isUpdate) => {
   let url = isUpdate ? Api.edit : Api.save;
   return defHttp.post({ url: url, params });
+};
+/**
+ * 列表接口
+ * @param params
+ */
+export const listProduct = (params) => defHttp.get({ url: Api.listProduct, params });
+/**
+ * 批量删除关联产品
+ * @param params
+ */
+export const deleteBatchSchema = (params, handleSuccess) => {
+  createConfirm({
+    iconType: 'warning',
+    title: '确认删除',
+    content: '是否删除选中数据',
+    okText: '确认',
+    cancelText: '取消',
+    onOk: () => {
+      return defHttp.delete({ url: Api.deleteBatchSchema, data: params }, { joinParamsToUrl: true }).then(() => {
+        handleSuccess();
+      });
+    },
+  });
+};
+
+/**
+ * 关联产品
+ * @param params
+ */
+export const connect = (params, handleSuccess) => {
+  return defHttp.put({ url: Api.connect, data: params }, { joinParamsToUrl: true }).then(() => {
+    handleSuccess();
+  });
 };

@@ -41,7 +41,7 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'isKey',
-    width: 120,
+    width: 80,
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
         { text: '是', value: 'Y', isChecked: true },
@@ -54,7 +54,7 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'status',
-    width: 100,
+    width: 80,
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
         { text: '启用', value: 'enable', isChecked: true },
@@ -80,6 +80,13 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'specification',
+  },
+  {
+    title: '检验方案列表',
+    align: 'center',
+    dataIndex: 'listSlot',
+    slots: { customRender: 'listSlot' },
+    width: 180,
   },
 ];
 //查询数据
@@ -553,6 +560,30 @@ export const basProductPropertyColumns: JVxeColumn[] = [
   },
 ];
 
+//列表数据
+export const prodSchemaColumns: BasicColumn[] = [
+  {
+    title: '检验方案',
+    align: 'center',
+    sorter: true,
+    dataIndex: 'schemaId_dictText',
+  },
+  {
+    title: '检验方案描述',
+    align: 'center',
+    sorter: true,
+    dataIndex: 'schemaName_dictText',
+  },
+];
+//查询数据
+export const prodSchemaFormSchema: FormSchema[] = [
+  {
+    label: '检验方案',
+    field: 'schemaQuery',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+];
 /**
  * 流程表单调用这个方法获取formSchema
  * @param param

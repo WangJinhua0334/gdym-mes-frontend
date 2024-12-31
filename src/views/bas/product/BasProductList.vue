@@ -36,6 +36,11 @@
       <template #pcaSlot="{ text }">
         {{ getAreaTextByCode(text) }}
       </template>
+      <template #listSlot="{ record }">
+        <a @click="handleSubList(record)">
+          <span style="font-size: 12px; font-style: italic">{{ '[' + record.code + ']关联的检验方案' }}</span>
+        </a>
+      </template>
       <template #fileSlot="{ text }">
         <span v-if="!text" style="font-size: 12px; font-style: italic">无文件</span>
         <a-button v-else :ghost="true" type="primary" preIcon="ant-design:download-outlined" size="small" @click="downloadFile(text)">下载</a-button>
@@ -43,6 +48,18 @@
     </BasicTable>
     <!-- 表单区域 -->
     <BasProductModal @register="registerModal" @success="handleSuccess" />
+    <!-- 工序列表 -->
+    <BasicModal
+      @register="registerSubModal"
+      :defaultFullscreen="true"
+      :title="subTitle"
+      :showOkBtn="false"
+      :showCancelBtn="true"
+      :cancelText="'关闭'"
+      destroyOnClose
+    >
+      <BasProdSchemaList :prodId="prodId" />
+    </BasicModal>
   </div>
 </template>
 
@@ -50,8 +67,9 @@
   import { ref, computed, unref } from 'vue';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { useListPage } from '/@/hooks/system/useListPage';
-  import { useModal } from '/@/components/Modal';
+  import { BasicModal, useModal } from '/@/components/Modal';
   import BasProductModal from './components/BasProductModal.vue';
+  import BasProdSchemaList from './components/BasProdSchemaList.vue';
   import { columns, searchFormSchema } from './BasProduct.data';
   import { list, deleteOne, batchDelete, getImportUrl, getExportUrl } from './BasProduct.api';
   import { downloadFile } from '/@/utils/common/renderUtils';
@@ -61,6 +79,8 @@
   const checkedKeys = ref<Array<string | number>>([]);
   //注册model
   const [registerModal, { openModal }] = useModal();
+  //注册model
+  const [registerSubModal, { openModal: openSubModal }] = useModal();
   //注册table数据
   const { prefixCls, tableContext, onExportXls, onImportXls } = useListPage({
     tableProps: {
@@ -77,6 +97,7 @@
         fieldMapToTime: [],
       },
       actionColumn: {
+        title: '操作',
         width: 120,
         fixed: 'right',
       },
@@ -92,7 +113,24 @@
   });
 
   const [registerTable, { reload }, { rowSelection, selectedRowKeys }] = tableContext;
+  // 当前选中行
+  const currentRow = ref<any>(null);
+  // 当前行ID
+  const prodId = computed(() => (unref(currentRow) ? unref(currentRow).id : ''));
+  // 当前行工艺标题
+  const subTitle = computed(() => {
+    return '检验方案：' + (unref(currentRow) ? unref(currentRow).code + '  ' + unref(currentRow).version : '') + ' 的关联产品列表';
+  });
 
+  /**
+   * 关联检验方案列表
+   */
+  function handleSubList(record: Recordable) {
+    currentRow.value = record;
+    openSubModal(true, {
+      record,
+    });
+  }
   /**
    * 新增事件
    */

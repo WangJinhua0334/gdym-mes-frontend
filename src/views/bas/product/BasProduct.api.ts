@@ -1,17 +1,19 @@
-import {defHttp} from '/@/utils/http/axios';
-import { useMessage } from "/@/hooks/web/useMessage";
+import { defHttp } from '/@/utils/http/axios';
+import { useMessage } from '/@/hooks/web/useMessage';
 
 const { createConfirm } = useMessage();
 
 enum Api {
   list = '/product/basProduct/list',
-  save='/product/basProduct/add',
-  edit='/product/basProduct/edit',
+  save = '/product/basProduct/add',
+  edit = '/product/basProduct/edit',
   deleteOne = '/product/basProduct/delete',
   deleteBatch = '/product/basProduct/deleteBatch',
   importExcel = '/product/basProduct/importExcel',
   exportXls = '/product/basProduct/exportXls',
   basProductPropertyList = '/product/basProduct/queryBasProductPropertyByMainId',
+  deleteBatchSchema = '/product/basProdSchema/deleteBatch',
+  listProduct = '/product/basProdSchema/list',
 }
 /**
  * 导出api
@@ -32,17 +34,16 @@ export const basProductPropertyList = Api.basProductPropertyList;
  * 列表接口
  * @param params
  */
-export const list = (params) =>
-  defHttp.get({url: Api.list, params});
+export const list = (params) => defHttp.get({ url: Api.list, params });
 
 /**
  * 删除单个
  */
-export const deleteOne = (params,handleSuccess) => {
-  return defHttp.delete({url: Api.deleteOne, params}, {joinParamsToUrl: true}).then(() => {
+export const deleteOne = (params, handleSuccess) => {
+  return defHttp.delete({ url: Api.deleteOne, params }, { joinParamsToUrl: true }).then(() => {
     handleSuccess();
   });
-}
+};
 /**
  * 批量删除
  * @param params
@@ -55,17 +56,40 @@ export const batchDelete = (params, handleSuccess) => {
     okText: '确认',
     cancelText: '取消',
     onOk: () => {
-      return defHttp.delete({url: Api.deleteBatch, data: params}, {joinParamsToUrl: true}).then(() => {
+      return defHttp.delete({ url: Api.deleteBatch, data: params }, { joinParamsToUrl: true }).then(() => {
         handleSuccess();
       });
-    }
+    },
   });
-}
+};
 /**
  * 保存或者更新
  * @param params
  */
 export const saveOrUpdate = (params, isUpdate) => {
   let url = isUpdate ? Api.edit : Api.save;
-  return defHttp.post({url: url, params});
-}
+  return defHttp.post({ url: url, params });
+};
+/**
+ * 列表接口
+ * @param params
+ */
+export const listProduct = (params) => defHttp.get({ url: Api.listProduct, params });
+/**
+ * 批量删除关联产品
+ * @param params
+ */
+export const deleteBatchSchema = (params, handleSuccess) => {
+  createConfirm({
+    iconType: 'warning',
+    title: '确认删除',
+    content: '是否删除选中数据',
+    okText: '确认',
+    cancelText: '取消',
+    onOk: () => {
+      return defHttp.delete({ url: Api.deleteBatchSchema, data: params }, { joinParamsToUrl: true }).then(() => {
+        handleSuccess();
+      });
+    },
+  });
+};

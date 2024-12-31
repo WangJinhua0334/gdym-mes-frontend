@@ -9,17 +9,11 @@ import { checkHasEnableProd } from './BasProdInspSchema.api';
 //列表数据
 export const columns: BasicColumn[] = [
   {
-    title: '物料编码',
+    title: '编码',
     align: 'center',
     sorter: true,
-    dataIndex: 'prodId_dictText',
+    dataIndex: 'code',
     width: 160,
-  },
-  {
-    title: '物料名称',
-    align: 'center',
-    dataIndex: 'prodName_dictText',
-    width: 200,
   },
   {
     title: '版本',
@@ -47,13 +41,20 @@ export const columns: BasicColumn[] = [
     sorter: true,
     dataIndex: 'description',
   },
+  {
+    title: '关联产品列表',
+    align: 'center',
+    dataIndex: 'listSlot',
+    slots: { customRender: 'listSlot' },
+    width: 180,
+  },
 ];
 //查询数据
 export const searchFormSchema: FormSchema[] = [
   {
-    label: '物料编码',
-    field: 'prodSearch',
-    component: 'Input',
+    label: '编码',
+    field: 'code',
+    component: 'JInput',
     colProps: { span: 6 },
   },
   {
@@ -81,74 +82,12 @@ export const searchFormSchema: FormSchema[] = [
 //表单数据
 export const formSchema: FormSchema[] = [
   {
-    label: '物料编码',
-    field: 'prodId',
-    component: 'JPopupCustom',
-    componentProps: ({ formActionType }) => {
-      const { setFieldsValue, getFieldsValue } = formActionType;
-
-      return {
-        setFieldsValue: setFieldsValue,
-        getFieldsValue: getFieldsValue,
-        method: 'get',
-        url: '/product/basProduct/list',
-        params: {
-          status: 'enable',
-        },
-        columns: [
-          {
-            title: '编码',
-            align: 'center',
-            dataIndex: 'code',
-          },
-          {
-            title: '版本',
-            align: 'center',
-            dataIndex: 'version',
-          },
-          {
-            title: '名称',
-            align: 'center',
-            dataIndex: 'name',
-          },
-          {
-            title: '规格',
-            align: 'center',
-            dataIndex: 'specification',
-          },
-        ],
-        queryInfo: [
-          {
-            field: 'code',
-            label: '编码',
-            mode: 'single',
-            view: 'string',
-          },
-          {
-            field: 'name',
-            label: '名称',
-            mode: 'single',
-            view: 'string',
-          },
-        ],
-        isShowNum: true,
-        rowKey: 'id',
-        labelKey: ['code', 'version'],
-        linkmap: [{ name: 'prodName_dictText' }],
-        placeholder: '请选择',
-        //multi: true,
-        //maxTagCount: 2,
-      };
-    },
-    dynamicRules: ({ model, schema }) => {
-      return [{ required: true, message: '请选择物料编码！' }];
-    },
-  },
-  {
-    label: '物料名称',
-    field: 'prodName_dictText',
+    label: '编码',
+    field: 'code',
     component: 'Input',
-    dynamicDisabled: true,
+    dynamicRules: ({ model, schema }) => {
+      return [{ required: true, message: '请输入编码!' }];
+    },
   },
   {
     label: '版本',
@@ -180,9 +119,9 @@ export const formSchema: FormSchema[] = [
         {
           required: false,
           validator: (_, value) => {
-            if (model.prodId && value == 'Y') {
-              let params = {};
-              params['prodId'] = model.prodId;
+            if (model.code && value == 'Y') {
+              const params = {};
+              params['code'] = model.code;
               params['neid'] = model.id;
               params['isEnable'] = value;
 
@@ -228,6 +167,31 @@ export const formSchema: FormSchema[] = [
     field: 'id',
     component: 'Input',
     show: false,
+  },
+];
+
+//列表数据
+export const prodSchemaColumns: BasicColumn[] = [
+  {
+    title: '产品',
+    align: 'center',
+    sorter: true,
+    dataIndex: 'prodId_dictText',
+  },
+  {
+    title: '产品名称',
+    align: 'center',
+    sorter: true,
+    dataIndex: 'prodName_dictText',
+  },
+];
+//查询数据
+export const prodSchemaFormSchema: FormSchema[] = [
+  {
+    label: '产品',
+    field: 'prodQuery',
+    component: 'Input',
+    colProps: { span: 6 },
   },
 ];
 
