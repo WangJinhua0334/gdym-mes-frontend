@@ -43,7 +43,7 @@
       </template>
       <template #bomDetailSlot="{ record }">
         <a @click="handleBomDetailList(record)">
-          <Icon icon="ant-design:ellipsis-outlined" />
+          <span style="font-size: 12px; font-style: italic">{{ '' + record.prodId_dictText + '的BOM信息' }}</span>
         </a>
       </template>
     </BasicTable>

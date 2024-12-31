@@ -47,12 +47,12 @@
 
       <template #designerSlot="{ record }">
         <a v-if="record.isRelease != 'Y'" @click="handleDesigner(record)">
-          <Icon icon="ant-design:edit-outlined" />
+          <span style="font-size: 12px; font-style: italic">{{ '设计' + record.prodId_dictText + '的工艺路线' }}</span>
         </a>
       </template>
       <template #wfsListSlot="{ record }">
         <a @click="handleStationList(record)">
-          <Icon icon="ant-design:ellipsis-outlined" />
+          <span style="font-size: 12px; font-style: italic">{{ '' + record.prodId_dictText + '的工序信息' }}</span>
         </a>
       </template>
     </BasicTable>

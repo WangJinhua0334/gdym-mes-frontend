@@ -44,7 +44,7 @@
       </template>
       <template #listSlot="{ record }">
         <a @click="handleFileList(record)">
-          <Icon icon="ant-design:ellipsis-outlined" />
+          <span style="font-size: 12px; font-style: italic">{{ '[' + record.code + ']的下发列表' }}</span>
         </a>
       </template>
       <template #fileSlot="{ text }">

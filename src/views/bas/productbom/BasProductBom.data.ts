@@ -22,14 +22,14 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'version',
-    width: 150,
+    width: 100,
   },
   {
     title: '是否默认',
     align: 'center',
     sorter: true,
     dataIndex: 'isDefault',
-    width: 150,
+    width: 100,
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
         { text: '是', value: 'Y', isChecked: true },
@@ -42,7 +42,7 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'isEnable',
-    width: 150,
+    width: 100,
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
         { text: '启用', value: 'Y', isChecked: true },
@@ -60,7 +60,7 @@ export const columns: BasicColumn[] = [
     align: 'center',
     dataIndex: 'bomDetailLsit',
     slots: { customRender: 'bomDetailSlot' },
-    width: 120,
+    width: 180,
   },
 ];
 //查询数据

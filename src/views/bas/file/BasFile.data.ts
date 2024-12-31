@@ -10,11 +10,12 @@ export const fileName = ref('');
 export const clickTime = ref(new Date().getTime());
 //列表数据
 export const columns: BasicColumn[] = [
-  // {
-  //   title: '文件编码',
-  //   align: 'center',
-  //   dataIndex: 'code',
-  // },
+  {
+    title: '文件编码',
+    align: 'center',
+    dataIndex: 'code',
+    width: 120,
+  },
   {
     title: '文件名称',
     align: 'center',
@@ -25,6 +26,7 @@ export const columns: BasicColumn[] = [
     title: '文件版本',
     align: 'center',
     dataIndex: 'version',
+    width: 80,
   },
   {
     title: '文件分类',
@@ -41,6 +43,7 @@ export const columns: BasicColumn[] = [
         { text: '无效/审核中', value: 'N', isChecked: false },
       ]);
     },
+    width: 80,
   },
   // {
   //   title: '受控时间',
@@ -81,6 +84,7 @@ export const columns: BasicColumn[] = [
     dataIndex: 'fileList',
     slots: { customRender: 'listSlot' },
     fixed: 'right',
+    width: 180,
   },
 ];
 //查询数据

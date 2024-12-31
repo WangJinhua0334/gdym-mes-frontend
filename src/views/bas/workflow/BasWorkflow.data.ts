@@ -22,14 +22,14 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'version',
-    width: 120,
+    width: 80,
   },
   {
     title: '是否默认',
     align: 'center',
     sorter: true,
     dataIndex: 'isDefault',
-    width: 120,
+    width: 80,
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
         { text: '是', value: 'Y', isChecked: true },
@@ -41,7 +41,7 @@ export const columns: BasicColumn[] = [
     title: '是否发布',
     align: 'center',
     dataIndex: 'isRelease',
-    width: 120,
+    width: 80,
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
         { text: '是', value: 'Y', isChecked: true },
@@ -59,14 +59,14 @@ export const columns: BasicColumn[] = [
     align: 'center',
     dataIndex: 'designer',
     slots: { customRender: 'designerSlot' },
-    width: 120,
+    width: 180,
   },
   {
     title: '工序列表',
     align: 'center',
     dataIndex: 'wfsList',
     slots: { customRender: 'wfsListSlot' },
-    width: 120,
+    width: 180,
   },
 ];
 //查询数据
