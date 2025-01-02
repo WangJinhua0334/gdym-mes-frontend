@@ -54,6 +54,7 @@ import WkpStockDeduct from '/@/views/mes/wip/prodwkpstock/WkpStockDeduct.vue';
 import WkpStockUp from '/@/views/mes/wip/prodwkpstock/WkpStockUp.vue';
 import WkpStockDown from '/@/views/mes/wip/prodwkpstock/WkpStockDown.vue';
 import MesWkpStockList from '../../wkpstocklist/MesWkpStockList.vue';
+import WkpMoChange from '/@/views/mes/wkpmolist/components/WkpMoChange.vue';
 
 const componentList = reactive([
   { name: 'StartWork', com: markRaw(StartWorkModal) },
@@ -66,6 +67,7 @@ const componentList = reactive([
   { name: 'ProductOutInspect', com: markRaw(ProductOutInspectModal) },
   { name: 'DefectiveHandle', com: markRaw(DefectiveHandleModal) },
   { name: 'ProductWokeHour', com: markRaw(ProductWokeHourModal) },
+  { name: 'WkpMoChange', com: markRaw(WkpMoChange) },
 
   { name: 'ProductBindList', com: markRaw(ProductBindList) },
   { name: 'ProductUnbindList', com: markRaw(ProductUnbindList) },

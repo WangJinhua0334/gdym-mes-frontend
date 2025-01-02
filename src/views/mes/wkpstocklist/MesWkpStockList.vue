@@ -38,9 +38,9 @@
   });
   onMounted(() => {
     setTimeout(() => {
-      if (unref(props.componentData) && unref(props.componentData).record.scanInfo.sn) {
+      if (unref(props.componentData) && unref(props.componentData).record.workPostCode) {
         getForm().setFieldsValue({
-          lotSn: unref(props.componentData).record.scanInfo.sn,
+          code: unref(props.componentData).record.workPostCode,
         });
         reload();
       }

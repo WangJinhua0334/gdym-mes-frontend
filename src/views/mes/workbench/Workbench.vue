@@ -296,6 +296,7 @@
     wksId: '',
     workCenter: '',
     wkcId: '',
+    wkpCode: '',
     workPost: '',
     wkpId: '',
     operator: '',
@@ -341,6 +342,7 @@
             infoData.value.workCenter = res.wkcId_dictText;
             infoData.value.wkcId = res.wkcId;
             infoData.value.workPost = res.name;
+            infoData.value.wkpCode = res.code;
             infoData.value.wkpId = res.id;
             infoData.value.operator = userinfo.value.realname;
             infoData.value.operateBy = userinfo.value.username;
@@ -730,6 +732,8 @@
   const clickCommand = (record) => {
     record.scanInfo = scanInfo.value;
     record.workPostId = infoData.value.wkpId;
+    record.workPostCode = infoData.value.wkpCode;
+    record.workPostName = infoData.value.workPost;
     record.operateBy = userinfo.value.username;
     record.moPlan = moPlan.value;
     if (record.location == 'right') {
@@ -815,6 +819,7 @@
           if (res && res.records.length > 0) {
             infoData.value.workCenter = res.records[0].wkcId_dictText;
             infoData.value.workPost = res.records[0].name;
+            infoData.value.wkpCode = res.records[0].code;
             infoData.value.wkcId = res.records[0].wkcId;
             infoData.value.wkpId = res.records[0].id;
             defHttp
