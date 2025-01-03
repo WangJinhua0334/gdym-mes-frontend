@@ -131,20 +131,7 @@
   import MesMoBomSubTable from './subTables/MesMoBomSubTable.vue';
 
   import { getColumns, searchFormSchema } from './MesMo.data';
-  import {
-    list,
-    deleteOne,
-    batchDelete,
-    getImportUrl,
-    getExportUrl,
-    audit,
-    cancelAudit,
-    stop,
-    resume,
-    open,
-    moCompleteKitCheck,
-    editIsRequired,
-  } from './MesMo.api';
+  import { list, deleteOne, batchDelete, getImportUrl, getExportUrl, audit, cancelAudit, stop, resume, open, moCompleteKitCheck } from './MesMo.api';
 
   import { downloadFile } from '/@/utils/common/renderUtils';
   import { useMessage } from '/@/hooks/web/useMessage';

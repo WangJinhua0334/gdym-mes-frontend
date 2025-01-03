@@ -33,9 +33,6 @@ enum Api {
   /**开启 */
   open = '/mo/mesMo/open',
 
-  /**出厂检验是否必填修改 */
-  editIsRequired = '/mo/mesMo/editIsRequired',
-
   /**是否开启工单齐套检查 */
   moCompleteKitCheck = '/mo/mesMo/queryIsCompleteKitCheck',
 
@@ -185,14 +182,6 @@ export const workFlowStationProductListByMainIds = (params) => defHttp.get({ url
  */
 export const deleteOne = (params, handleSuccess) => {
   return defHttp.delete({ url: Api.deleteOne, params }, { joinParamsToUrl: true }).then(() => {
-    handleSuccess();
-  });
-};
-/**
- * 出厂检验是否必填修改
- */
-export const editIsRequired = (params, handleSuccess) => {
-  return defHttp.put({ url: Api.editIsRequired, params }, { joinParamsToUrl: true }).then(() => {
     handleSuccess();
   });
 };
