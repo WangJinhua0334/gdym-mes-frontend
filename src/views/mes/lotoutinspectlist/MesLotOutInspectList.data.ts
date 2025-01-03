@@ -11,7 +11,7 @@ export const columns: BasicColumn[] = [
     ifShow: false,
   },
   {
-    title: '出厂检验编号',
+    title: '末检编号',
     align: 'center',
     dataIndex: 'code',
     width: 150,
@@ -92,7 +92,7 @@ export const columns: BasicColumn[] = [
 //查询数据
 export const searchFormSchema: FormSchema[] = [
   {
-    label: '出厂检验编号',
+    label: '末检编号',
     field: 'code',
     component: 'JInput',
     colProps: { span: 6 },

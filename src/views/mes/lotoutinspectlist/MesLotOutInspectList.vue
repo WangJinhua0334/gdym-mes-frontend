@@ -68,7 +68,7 @@
       },
     },
     exportConfig: {
-      name: '出厂检验记录导出',
+      name: '末检记录导出',
       url: getExportUrl,
     },
   });
