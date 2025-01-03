@@ -34,6 +34,11 @@ export const columns: BasicColumn[] = [
     dataIndex: 'qty',
   },
   {
+    title: '已入库数量',
+    align: 'center',
+    dataIndex: 'inQty',
+  },
+  {
     title: '供应商',
     align: 'center',
     dataIndex: 'supplierId_dictText',
@@ -420,6 +425,22 @@ export const returnFormSchema: FormSchema[] = [
 ];
 //入库
 export const stockFormSchema: FormSchema[] = [
+  {
+    label: '条码',
+    field: 'code',
+    component: 'Input',
+    dynamicRules: ({ model, schema }) => {
+      return [{ required: true, message: '请输入或扫描条码信息!' }];
+    },
+  },
+  {
+    label: '入库数量',
+    field: 'inQty',
+    component: 'InputNumber',
+    dynamicRules: ({ model, schema }) => {
+      return [{ required: true, message: '请输入数量!' }];
+    },
+  },
   {
     label: '库位',
     field: 'whBinId',

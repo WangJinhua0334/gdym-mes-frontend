@@ -31,7 +31,10 @@
     if (unref(isUpdate)) {
       //表单赋值
       await setFieldsValue({
-        ...data.record,
+        whBinId: data?.record?.whBinId,
+        id: data?.record?.id,
+        code: '',
+        inQty: data?.record?.qty - data?.record?.inQty,
       });
     }
     // 隐藏底部时禁用整个表单
