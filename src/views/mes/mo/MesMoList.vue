@@ -12,16 +12,12 @@
 
       <!--插槽:table标题-->
       <template #tableTitle>
-        <a-button type="primary" v-auth="'org.jeecg.modules:mes_mo:add'" @click="handleAdd" preIcon="ant-design:plus-outlined"> 新增</a-button>
-        <a-button type="primary" @click="batchHandleAudit" v-auth="'org.jeecg.modules:mes_mo:audit'" preIcon="ant-design:check-circle-outlined">
-          审核</a-button
-        >
-        <j-upload-button type="primary" v-auth="'org.jeecg.modules:mes_mo:importExcel'" preIcon="ant-design:import-outlined" @click="onImportXls">
+        <a-button type="primary" v-auth="'mes:mes_mo:add'" @click="handleAdd" preIcon="ant-design:plus-outlined"> 新增</a-button>
+        <a-button type="primary" @click="batchHandleAudit" v-auth="'mes:mes_mo:audit'" preIcon="ant-design:check-circle-outlined"> 审核</a-button>
+        <j-upload-button type="primary" v-auth="'mes:mes_mo:importExcel'" preIcon="ant-design:import-outlined" @click="onImportXls">
           导入</j-upload-button
         >
-        <a-button type="primary" v-auth="'org.jeecg.modules:mes_mo:exportXls'" preIcon="ant-design:export-outlined" @click="onExportXls">
-          导出</a-button
-        >
+        <a-button type="primary" v-auth="'mes:mes_mo:exportXls'" preIcon="ant-design:export-outlined" @click="onExportXls"> 导出</a-button>
         <a-dropdown v-if="selectedRowKeys.length > 0">
           <template #overlay>
             <a-menu>
@@ -29,15 +25,15 @@
                 <Icon icon="ant-design:check-circle-outlined" />
                 审核
               </a-menu-item> -->
-              <a-menu-item v-if="hasPermission('org.jeecg.modules:mes_mo:stop')" key="2" @click="batchHandleStop">
+              <a-menu-item v-if="hasPermission('mes:mes_mo:stop')" key="2" @click="batchHandleStop">
                 <Icon icon="ant-design:stop-outlined" />
                 暂停
               </a-menu-item>
-              <a-menu-item v-if="hasPermission('org.jeecg.modules:mes_mo:close')" key="2" @click="batchHandleClose">
+              <a-menu-item v-if="hasPermission('mes:mes_mo:close')" key="2" @click="batchHandleClose">
                 <Icon icon="ant-design:close-circle-outlined" />
                 关闭
               </a-menu-item>
-              <a-menu-item v-if="hasPermission('org.jeecg.modules:mes_mo:deleteBatch')" key="3" @click="batchHandleDelete">
+              <a-menu-item v-if="hasPermission('mes:mes_mo:deleteBatch')" key="3" @click="batchHandleDelete">
                 <Icon icon="ant-design:delete-outlined" />
                 删除
               </a-menu-item>
@@ -199,6 +195,7 @@
         fieldMapToTime: [],
       },
       actionColumn: {
+        title: '操作',
         width: 200,
         align: 'center',
         fixed: 'right',
@@ -473,12 +470,12 @@
         {
           label: '编辑',
           onClick: handleEdit.bind(null, record),
-          auth: 'org.jeecg.modules:mes_mo:edit',
+          auth: 'mes:mes_mo:edit',
         },
         {
           label: '删除',
           onClick: handleDelete.bind(null, record),
-          auth: 'org.jeecg.modules:mes_mo:delete',
+          auth: 'mes:mes_mo:delete',
         }
       );
     } else if (
@@ -492,14 +489,14 @@
         arr.push({
           label: '齐套',
           onClick: handleCompleteKitCheck.bind(null, record),
-          auth: 'org.jeecg.modules:mes_mo:completeKitCheck',
+          auth: 'mes:mes_mo:completeKitCheck',
         });
       }
 
       arr.push({
         label: '下发',
         onClick: handleDispatch.bind(null, record),
-        auth: 'org.jeecg.modules:mes_mo:dispatch',
+        auth: 'mes:mes_mo:dispatch',
       });
     }
 
@@ -507,13 +504,13 @@
       arr.push({
         label: '恢复',
         onClick: handleResume.bind(null, record),
-        auth: 'org.jeecg.modules:mes_mo:resume',
+        auth: 'mes:mes_mo:resume',
       });
     } else if (record.status == 'ClosedInAdvance' || record.status == 'Closed') {
       arr.push({
         label: '开启',
         onClick: handleOpen.bind(null, record),
-        auth: 'org.jeecg.modules:mes_mo:open',
+        auth: 'mes:mes_mo:open',
       });
     }
 
@@ -528,21 +525,21 @@
         arr.push({
           label: '分配流转卡',
           onClick: handleCreateSn.bind(null, record),
-          auth: 'org.jeecg.modules:mes_mo:createSn',
+          auth: 'mes:mes_mo:createSn',
         });
       }
 
       arr.push({
         label: '弃审',
         onClick: handleCancelAudit.bind(null, record),
-        auth: 'org.jeecg.modules:mes_mo:cancelAudit',
+        auth: 'mes:mes_mo:cancelAudit',
       });
     } else if (record.status == 'Producting') {
       if (record.moSnQty < record.qty) {
         arr.push({
           label: '分配流转卡',
           onClick: handleCreateSn.bind(null, record),
-          auth: 'org.jeecg.modules:mes_mo:createSn',
+          auth: 'mes:mes_mo:createSn',
         });
       }
     }
