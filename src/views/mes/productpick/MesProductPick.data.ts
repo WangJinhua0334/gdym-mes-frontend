@@ -55,7 +55,7 @@ export const columns: BasicColumn[] = [
   {
     title: '提交操作人',
     align: 'center',
-    dataIndex: 'submitBy',
+    dataIndex: 'submitBy_dictText',
     sorter: true,
     width: 120,
   },
@@ -69,7 +69,7 @@ export const columns: BasicColumn[] = [
   {
     title: '完成操作人',
     align: 'center',
-    dataIndex: 'completeBy',
+    dataIndex: 'completeBy_dictText',
     sorter: true,
     width: 120,
   },
