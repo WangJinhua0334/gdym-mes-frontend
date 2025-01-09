@@ -517,7 +517,7 @@ export function getFormSchema(): FormSchema[] {
     {
       label: '入库模式',
       field: 'inStockMode',
-      defaultValue: 'mo',
+      defaultValue: 'create',
       component: 'JDictSelectTag',
       componentProps: {
         dictCode: 'mo_in_stock_mode',
