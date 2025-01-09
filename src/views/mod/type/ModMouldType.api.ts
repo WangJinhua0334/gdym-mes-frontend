@@ -156,8 +156,6 @@ export const refund = (params, handleSuccess) => {
  * 改模
  * @param params
  */
-export const change = (params, handleSuccess) => {
-  return defHttp.post({ url: Api.change, params }).then(() => {
-    handleSuccess();
-  });
+export const change = (params) => {
+  return defHttp.post({ url: Api.change, params });
 };

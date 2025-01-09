@@ -45,6 +45,8 @@
     <ModMouldModalView @register="registerViewModal" />
     <!-- 领用区域-->
     <ModMouldNeckModal @register="registerNeckModal" @success="handleSuccess" />
+    <!-- 改模区域-->
+    <ModMouldChangeModal @register="registerChangeModal" @success="handleSuccess" />
   </div>
 </template>
 
@@ -56,6 +58,7 @@
   import ModMouldModal from './components/ModMouldModal.vue';
   import ModMouldNeckModal from './components/ModMouldNeckModal.vue';
   import ModMouldModalView from './components/ModMouldModalView.vue';
+  import ModMouldChangeModal from './components/ModMouldChangeModal.vue';
   import { modMouldColumns } from './ModMouldType.data';
   import {
     modMouldList,
@@ -65,7 +68,6 @@
     modMouldImportUrl,
     refund,
     warehousing,
-    change,
   } from './ModMouldType.api';
   import { isEmpty } from '/@/utils/is';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -81,6 +83,8 @@
   const [registerViewModal, { openModal: openViewModal }] = useModal();
   //领用弹出
   const [registerNeckModal, { openModal: openNeckModal }] = useModal();
+  //改模弹出
+  const [registerChangeModal, { openModal: openChangeModal }] = useModal();
 
   const searchInfo = {};
   // 列表页面公共参数、方法
@@ -197,7 +201,11 @@
    * 改模
    */
   async function handleChange(record) {
-    await change(record, handleSuccess);
+    openChangeModal(true, {
+      record,
+      isUpdate: true,
+      showFooter: true,
+    });
   }
   /**
    * 成功回调
@@ -250,11 +258,7 @@
     });
     actionArr.push({
       label: '改模',
-      popConfirm: {
-        title: '确定要记录改模次数吗？',
-        confirm: handleChange.bind(null, record),
-        getPopupContainer: () => document.body,
-      },
+      onClick: handleChange.bind(null, record),
       auth: 'mod:mod_mould:change',
     });
     if (record.status == 'Created') {

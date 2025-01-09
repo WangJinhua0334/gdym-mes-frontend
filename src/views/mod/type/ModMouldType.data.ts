@@ -623,6 +623,30 @@ export const neckFormSchema: FormSchema[] = [
     show: false,
   },
 ];
+//改模表单详情
+export const changeFormSchema: FormSchema[] = [
+  {
+    label: '备注',
+    field: 'remark',
+    component: 'InputTextArea',
+    dynamicRules: ({ model, schema, values }) => {
+      return [{ required: true, message: '请输入备注!' }];
+    },
+  },
+  {
+    label: '类型Id',
+    field: 'typeId',
+    component: 'Input',
+    show: false,
+  },
+  // TODO 主键隐藏字段，目前写死为ID
+  {
+    label: '',
+    field: 'id',
+    component: 'Input',
+    show: false,
+  },
+];
 //子表详情数据
 export const modMouldDetailSchema: FormSchema[] = [
   // TODO 子表隐藏字段，目前写死为ID
