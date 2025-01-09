@@ -7,6 +7,9 @@
         <a-button type="primary" v-auth="'org.jeecg.modules:mes_lwms_lot:binding'" @click="handleBinding">物料条码绑定 </a-button>
         <a-button type="primary" v-auth="'org.jeecg.modules:mes_lwms_lot:generate'" @click="handleGenerate">物料条码生成</a-button>
         <a-button type="primary" v-auth="'org.jeecg.modules:mes_lwms_lot:generatebymo'" @click="handleGenerateByMo">物料条码生成(按工单)</a-button>
+        <a-button type="primary" v-auth="'org.jeecg.modules:mes_lwms_lot:generatebyPick'" @click="handleGenerateByPick"
+          >物料条码生成(按领料单)</a-button
+        >
         <a-button type="primary" v-auth="'org.jeecg.modules:mes_lwms_lot:patchwork'" @click="handlePatchwork">补打</a-button>
         <a-button type="primary" v-auth="'org.jeecg.modules:mes_lwms_lot:exportXls'" @click="onExportXls"> 导出 </a-button>
       </template>
@@ -27,6 +30,7 @@
     <MesLwmsLotBindingModal @register="bindingModal" @success="handleSuccess" />
     <MesLwmsLotGenerateModal @register="generateModal" @success="handleSuccess" />
     <MesLwmsLotGenerateByMoModal @register="generateByMoModal" @success="handleSuccess" />
+    <MesLwmsLotGenerateByPickModal @register="generateByPickModal" @success="handleSuccess" />
   </div>
 </template>
 
@@ -38,6 +42,7 @@
   import MesLwmsLotBindingModal from './components/MesLwmsLotBindingModal.vue';
   import MesLwmsLotGenerateModal from './components/MesLwmsLotGenerateModal.vue';
   import MesLwmsLotGenerateByMoModal from './components/MesLwmsLotGenerateByMoModal.vue';
+  import MesLwmsLotGenerateByPickModal from './components/MesLwmsLotGenerateByPickModal.vue';
   import { columns, searchFormSchema } from './MesLwmsLot.data';
   import { list, deleteOne, batchDelete, getImportUrl, getExportUrl } from './MesLwmsLot.api';
   import { downloadFile } from '/@/utils/common/renderUtils';
@@ -52,6 +57,7 @@
   const [bindingModal, { openModal: openBindingModal }] = useModal();
   const [generateModal, { openModal: openGenerateModal }] = useModal();
   const [generateByMoModal, { openModal: openGenerateByMoModal }] = useModal();
+  const [generateByPickModal, { openModal: openGenerateByPickModal }] = useModal();
   //注册table数据
   const { prefixCls, tableContext, onExportXls, onImportXls } = useListPage({
     tableProps: {
@@ -106,6 +112,16 @@
    */
   function handleGenerateByMo() {
     openGenerateByMoModal(true, {
+      isUpdate: false,
+      showFooter: true,
+    });
+  }
+
+  /**
+   * 生成条码事件事件(按工单)
+   */
+  function handleGenerateByPick() {
+    openGenerateByPickModal(true, {
       isUpdate: false,
       showFooter: true,
     });

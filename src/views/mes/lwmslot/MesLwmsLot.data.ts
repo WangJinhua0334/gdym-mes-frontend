@@ -982,6 +982,239 @@ export const lwmsLotGenerateJVxeColumnsByMo = [
     slotName: 'action',
   },
 ];
+export const lwmsLotGenerateJVxeColumnsByPick = [
+  {
+    title: '物料编码',
+    width: 200,
+    key: 'prodCode',
+    type: JVxeTypes.popupCustom,
+    method: 'get',
+    url: '/product/basProduct/list',
+    params: {
+      /*code: '${code}',*/
+    },
+    columns: [
+      {
+        title: '编码',
+        align: 'center',
+        dataIndex: 'code',
+      },
+      {
+        title: '名称',
+        align: 'center',
+        dataIndex: 'name',
+      },
+      {
+        title: '版本',
+        align: 'center',
+        dataIndex: 'version',
+      },
+      {
+        title: '规格',
+        align: 'center',
+        dataIndex: 'specification',
+      },
+    ],
+    queryInfo: [
+      {
+        field: 'code',
+        label: '编码',
+        mode: 'single',
+        view: 'string',
+      },
+      {
+        field: 'name',
+        label: '名称',
+        mode: 'single',
+        view: 'string',
+      },
+    ],
+    rowKey: 'code',
+    labelKey: ['code'],
+    linkmap: [{ id: 'prodId', name: 'prodName', specification: 'specification' }],
+    placeholder: '请输入${title}',
+    validateRules: [{ required: true, message: '${title}不能为空' }],
+    disabled: true,
+  },
+  {
+    title: '物料名称',
+    width: 250,
+    align: 'center',
+    type: JVxeTypes.input,
+    dataIndex: 'prodName',
+    key: 'prodName',
+    disabled: true,
+  },
+  {
+    title: '工单',
+    width: 150,
+    key: 'moCode',
+    type: JVxeTypes.popupCustom,
+    method: 'get',
+    url: '/mo/mesMo/list',
+    params: {
+      /*code: '${code}',*/
+    },
+    columns: [
+      {
+        title: '工单号',
+        align: 'center',
+        dataIndex: 'code',
+      },
+      {
+        title: '类型',
+        align: 'center',
+        dataIndex: 'type_dictText',
+      },
+      {
+        title: '产品编码',
+        align: 'center',
+        dataIndex: 'prodId_dictText',
+      },
+      {
+        title: '产品名称',
+        align: 'center',
+        dataIndex: 'prodName_dictText',
+      },
+      {
+        title: '状态',
+        align: 'center',
+        dataIndex: 'status_dictText',
+      },
+    ],
+    queryInfo: [
+      {
+        field: 'code',
+        label: '工单号',
+        mode: 'single',
+        view: 'string',
+      },
+      {
+        field: 'prodQuery',
+        label: '产品编码',
+        mode: 'single',
+        view: 'string',
+      },
+    ],
+    rowKey: 'code',
+    labelKey: ['code'],
+    placeholder: '请输入${title}',
+    linkmap: [{ id: 'moId' }],
+    disabled: true,
+  },
+  {
+    title: '批次号',
+    align: 'center',
+    type: JVxeTypes.input,
+    dataIndex: 'batchNo',
+    key: 'batchNo',
+  },
+  {
+    title: '数量',
+    align: 'center',
+    type: JVxeTypes.inputNumber,
+    dataIndex: 'qtyValue',
+    key: 'qtyValue',
+    disabled: true,
+    validateRules: [{ required: true, message: '${title}不能为空' }],
+  },
+  {
+    title: '最小包装数',
+    align: 'center',
+    type: JVxeTypes.inputNumber,
+    dataIndex: 'minQty',
+    key: 'minQty',
+    validateRules: [
+      { required: true, message: '${title}不能为空' },
+      {
+        handler({ cellValue, row }, callback) {
+          if (cellValue > row.qtyValue) {
+            callback(false, '${title}不能小于数量'); // false = 未通过校验
+          } else {
+            callback(true); // true = 通过验证
+          }
+        },
+        message: '${title}不能为空',
+      },
+    ],
+  },
+  {
+    title: '物料成本',
+    align: 'center',
+    type: JVxeTypes.inputNumber,
+    dataIndex: 'materialCost',
+    key: 'materialCost',
+    width: 120,
+  },
+  {
+    title: '供应商',
+    width: 200,
+    key: 'supplierCode',
+    type: JVxeTypes.popupCustom,
+    method: 'get',
+    url: '/supplier/basSupplier/list',
+    params: {
+      /*code: '${code}',*/
+    },
+    columns: [
+      {
+        title: '供应商编码',
+        align: 'center',
+        dataIndex: 'code',
+      },
+      {
+        title: '供应商名称',
+        align: 'center',
+        dataIndex: 'name',
+      },
+    ],
+    queryInfo: [
+      {
+        field: 'code',
+        label: '供应商编码',
+        mode: 'single',
+        view: 'string',
+      },
+      {
+        field: 'name',
+        label: '供应商名称',
+        mode: 'single',
+        view: 'string',
+      },
+    ],
+    rowKey: 'name',
+    labelKey: ['name'],
+    placeholder: '请输入${title}',
+    linkmap: [{ id: 'supplierId' }],
+  },
+  {
+    title: '供应商ID',
+    align: 'center',
+    type: JVxeTypes.hidden,
+    dataIndex: 'supplierId',
+    key: 'supplierId',
+  },
+  {
+    title: '备注',
+    align: 'center',
+    type: JVxeTypes.input,
+    dataIndex: 'remark',
+    key: 'remark',
+  },
+  {
+    title: '操作',
+    key: 'action',
+    width: '100px',
+    // 固定在右侧
+    fixed: 'right',
+    // 对齐方式为居中
+    align: 'center',
+    // 组件类型定义为【插槽】
+    type: JVxeTypes.slot,
+    // slot 的名称，对应 v-slot 冒号后面和等号前面的内容
+    slotName: 'action',
+  },
+];
 
 /**
  * 流程表单调用这个方法获取formSchema
