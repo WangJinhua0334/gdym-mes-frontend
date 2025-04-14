@@ -19,6 +19,7 @@ enum Api {
   saveCopy = '/workflow/basWorkflow/saveCopy',
   releaseVersion = '/workflow/basWorkflow/releaseVersion',
   releaseBom = '/workflow/basWorkflow/releaseBom',
+  settingDefault = '/workflow/basWorkflow/settingDefault',
 }
 /**
  * 导出api
@@ -64,6 +65,15 @@ export const releaseBom = (params, handleSuccess) => {
  */
 export const releaseVersion = (params, handleSuccess) => {
   return defHttp.post({ url: Api.releaseVersion, params }).then(() => {
+    handleSuccess();
+  });
+};
+/**
+ * 设置默认工艺路线
+ * @param params
+ */
+export const settingDefault = (params, handleSuccess) => {
+  return defHttp.post({ url: Api.settingDefault, params }).then(() => {
     handleSuccess();
   });
 };

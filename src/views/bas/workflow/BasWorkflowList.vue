@@ -92,7 +92,17 @@
   import BasWorkflowStationList from './BasWorkflowStationList.vue';
   import BasWorkflowCopyModal from './components/BasWorkflowCopyModal.vue';
   import { columns, searchFormSchema } from './BasWorkflow.data';
-  import { list, deleteOne, batchDelete, getImportUrl, getExportUrl, getExportTemplateXlsUrl, releaseVersion, releaseBom } from './BasWorkflow.api';
+  import {
+    list,
+    deleteOne,
+    batchDelete,
+    getImportUrl,
+    getExportUrl,
+    getExportTemplateXlsUrl,
+    releaseVersion,
+    releaseBom,
+    settingDefault,
+  } from './BasWorkflow.api';
 
   import { downloadFile } from '/@/utils/common/renderUtils';
   import { useMethods } from '/@/hooks/system/useMethods';
@@ -128,7 +138,8 @@
         fieldMapToTime: [],
       },
       actionColumn: {
-        width: 180,
+        title: '操作',
+        width: 240,
         fixed: 'right',
       },
       pagination: {
@@ -262,6 +273,19 @@
     });
   }
   /**
+   * 设置默认
+   */
+  async function handleSettingDefault(record) {
+    createConfirm({
+      iconType: 'warning',
+      title: '设置默认工艺路线',
+      content: '设置默认工艺路线，会导致此产品下其他工艺路线改为非默认状态，确认要设置吗？',
+      onOk: async () => {
+        await settingDefault({ id: record.id }, handleSuccess);
+      },
+    });
+  }
+  /**
    * 批量删除事件
    */
   async function batchHandleDelete() {
@@ -295,6 +319,11 @@
       );
     } else {
       arr.push(
+        {
+          label: '设置默认',
+          onClick: handleSettingDefault.bind(null, record),
+          auth: 'bas:bas_workflow:settingDefault',
+        },
         {
           label: '更新BOM',
           onClick: handleReleaseBom.bind(null, record),

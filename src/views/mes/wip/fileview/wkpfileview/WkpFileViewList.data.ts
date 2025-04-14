@@ -15,7 +15,7 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'name',
-    width: 300,
+    width: 400,
   },
   {
     title: '文件版本',

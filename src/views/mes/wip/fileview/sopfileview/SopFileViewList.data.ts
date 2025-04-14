@@ -9,6 +9,7 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'fileName',
+    width: 400,
   },
   {
     title: '描述',

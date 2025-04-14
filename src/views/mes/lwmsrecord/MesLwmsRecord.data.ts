@@ -82,6 +82,11 @@ export const columns: BasicColumn[] = [
     dataIndex: 'createTime',
     width: 150,
   },
+  {
+    title: '备注',
+    align: 'center',
+    dataIndex: 'remark',
+  },
 ];
 //查询数据
 export const searchFormSchema: FormSchema[] = [
