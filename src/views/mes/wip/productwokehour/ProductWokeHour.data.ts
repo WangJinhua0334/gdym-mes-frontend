@@ -106,27 +106,25 @@ export const formSchema: FormSchema[] = [
         setFieldsValue: setFieldsValue,
         getFieldsValue: getFieldsValue,
         method: 'get',
-        url: '/workpost/basWorkPost/queryBasWorkPostEquipPageByMainId',
-        params: { column: 'createTime', order: 'asc' /*, code: '${code}'*/ },
+        url: '/equipment/basEquipment/list',
+        params: { column: 'createTime', order: 'asc', searchFields: 'code,name' },
         columns: [
           {
-            name: '设备编码',
-            code: 'equipId_dictText',
+            name: '编码',
+            code: 'code',
           },
           {
-            name: '设备名称',
-            code: 'equipName_dictText',
+            name: '名称',
+            code: 'name',
           },
         ],
         isShowNum: true,
-        rowKey: 'equipId',
-        labelKey: ['equipName_dictText'],
-        multi: true,
+        rowKey: 'id',
+        labelKey: ['name'],
         placeholder: '请输入',
-        //pageSize: 10,
-        //maxTagCount: 2,
+        multi: true,
         queryBefore: (params) => {
-          params.id = wkpId.value ?? -1;
+          params.notStatus = 'discard';
           return params;
         },
       };
