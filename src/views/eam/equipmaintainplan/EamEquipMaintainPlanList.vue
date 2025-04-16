@@ -182,7 +182,7 @@
    * 详情
    */
   function handleDetail(record: Recordable) {
-    openModal(true, {
+    openMaintainModal(true, {
       record,
       isDetail: true,
       showFooter: false,

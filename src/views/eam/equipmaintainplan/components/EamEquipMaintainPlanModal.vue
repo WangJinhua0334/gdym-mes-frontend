@@ -15,7 +15,7 @@
           :disabled="formDisabled"
           :rowNumber="true"
           :rowSelection="true"
-          :toolbar="false"
+          :toolbar="true"
         />
       </a-tab-pane>
     </a-tabs>
@@ -28,19 +28,13 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { JVxeTable } from '/@/components/jeecg/JVxeTable';
   import { useJvxeMethod } from '/@/hooks/system/useJvxeMethods.ts';
-  import {
-    formSchema,
-    eamEquipMaintainRecItemJVxeColumns,
-    eamEquipId, eamMaintainRecItemJVxeColumns
-  } from '../EamEquipMaintainPlan.data';
+  import { formSchema, eamEquipMaintainRecItemJVxeColumns, eamEquipId, eamMaintainRecItemJVxeColumns } from '../EamEquipMaintainPlan.data';
   import {
     saveOrUpdate,
     queryEamEquipMaintainRecItem,
     getEamEquipMaintainItemByCode,
-    listEamEquipMaintainItemByMainIdAll
+    listEamEquipMaintainItemByMainIdAll,
   } from '../EamEquipMaintainPlan.api';
-  import { VALIDATE_FAILED } from '/@/utils/common/vxeUtils';
-  import { getSpotCheckRecItemByCode, listEamEquipSpotCheckItemByMainIdAll } from '/@/views/eam/equipspotcheckplan/EamEquipSpotCheckPlan.api';
   // Emits声明
   const emit = defineEmits(['register', 'success']);
   const isUpdate = ref(true);
@@ -71,7 +65,7 @@
     formDisabled.value = !data?.showFooter;
     isDetail.value = !!data?.isDetail;
 
-    if (unref(isUpdate)||unref(isDetail)) {
+    if (unref(isUpdate) || unref(isDetail)) {
       //表单赋值
       await setFieldsValue({
         ...data.record,
@@ -91,7 +85,7 @@
   );
 
   //设置标题
-  const title = computed(() => (unref(isDetail)?'详情':!unref(isUpdate) ? '新增' : '编辑'));
+  const title = computed(() => (unref(isDetail) ? '详情' : !unref(isUpdate) ? '新增' : '编辑'));
 
   async function reset() {
     await resetFields();

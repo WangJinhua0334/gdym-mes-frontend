@@ -446,12 +446,20 @@ export const formSchemaSpotCheck: FormSchema[] = [
 //子表表格配置
 export const eamEquipSpotCheckRecItemColumns: JVxeColumn[] = [
   {
+    title: '编码',
+    key: 'code',
+    type: JVxeTypes.input,
+    placeholder: '请输入${title}',
+    defaultValue: '',
+    validateRules: [{ required: true, message: '${title}不能为空' }],
+  },
+  {
     title: '名称',
     key: 'name',
     type: JVxeTypes.input,
     placeholder: '请输入${title}',
     defaultValue: '',
-    disabled: true,
+    validateRules: [{ required: true, message: '${title}不能为空' }],
   },
   {
     title: '点检方式',
@@ -459,7 +467,6 @@ export const eamEquipSpotCheckRecItemColumns: JVxeColumn[] = [
     type: JVxeTypes.input,
     placeholder: '请输入${title}',
     defaultValue: '',
-    disabled: true,
   },
   {
     title: '点检标准',
@@ -467,20 +474,6 @@ export const eamEquipSpotCheckRecItemColumns: JVxeColumn[] = [
     type: JVxeTypes.input,
     placeholder: '请输入${title}',
     defaultValue: '',
-    disabled: true,
-  },
-  {
-    title: '操作',
-    key: 'action',
-    width: '100px',
-    // 固定在右侧
-    fixed: 'right',
-    // 对齐方式为居中
-    align: 'center',
-    // 组件类型定义为【插槽】
-    type: JVxeTypes.slot,
-    // slot 的名称，对应 v-slot 冒号后面和等号前面的内容
-    slotName: 'action',
   },
 ];
 
@@ -488,6 +481,14 @@ export const eamEquipSpotCheckRecItemColumns: JVxeColumn[] = [
 //子表表格配置
 export const eamEquipSpotCheckItemColumns: JVxeColumn[] = [
   {
+    title: '编码',
+    key: 'code',
+    type: JVxeTypes.input,
+    placeholder: '请输入${title}',
+    defaultValue: '',
+    disabled: true,
+  },
+  {
     title: '名称',
     key: 'name',
     type: JVxeTypes.input,
@@ -512,7 +513,7 @@ export const eamEquipSpotCheckItemColumns: JVxeColumn[] = [
     disabled: true,
   },
   {
-    title: '是否异常',
+    title: '结果',
     key: 'result',
     type: JVxeTypes.slot,
     align: 'center',
@@ -521,7 +522,6 @@ export const eamEquipSpotCheckItemColumns: JVxeColumn[] = [
     slotName: 'mustSwitch',
     width: '200px',
     placeholder: '请输入${title}',
-    validateRules: [{ required: true, message: '${title}不能为空' }],
   },
   {
     title: '备注',
@@ -539,7 +539,6 @@ export const eamEquipSpotCheckItemColumns: JVxeColumn[] = [
     defaultValue: '',
   },
 ];
-
 /**
  * 流程表单调用这个方法获取formSchema
  * @param param

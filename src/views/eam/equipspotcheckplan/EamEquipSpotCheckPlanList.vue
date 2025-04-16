@@ -147,7 +147,7 @@
    * 详情
    */
   function handleDetail(record: Recordable) {
-    openModal(true, {
+    openSpotCheckModal(true, {
       record,
       isDetail: true,
       showFooter: false,

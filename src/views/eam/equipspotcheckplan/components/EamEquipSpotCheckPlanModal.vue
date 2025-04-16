@@ -13,18 +13,10 @@
           :dataSource="eamEquipSpotCheckRecItemTable.dataSource"
           :height="340"
           :rowNumber="true"
-          :rowSelection="false"
+          :rowSelection="true"
           :disabled="formDisabled"
-          :toolbar="false"
-        >
-          <!-- 定义插槽 -->
-          <template #action="props">
-            <a-divider type="vertical" />
-            <a-popconfirm title="确定删除吗？" @confirm="handleDelete(props)">
-              <a>删除</a>
-            </a-popconfirm>
-          </template>
-        </JVxeTable>
+          :toolbar="true"
+        />
       </a-tab-pane>
     </a-tabs>
   </BasicModal>
@@ -43,7 +35,6 @@
     getSpotCheckRecItemByCode,
     listEamEquipSpotCheckItemByMainIdAll,
   } from '../EamEquipSpotCheckPlan.api';
-  import { VALIDATE_FAILED } from '/@/utils/common/vxeUtils';
   import { message } from 'ant-design-vue';
   // Emits声明
   const emit = defineEmits(['register', 'success']);
@@ -78,7 +69,7 @@
     isUpdate.value = !!data?.isUpdate;
     isDetail.value = !!data?.isDetail;
     formDisabled.value = !data?.showFooter;
-    if (unref(isUpdate)||unref(isDetail)) {
+    if (unref(isUpdate) || unref(isDetail)) {
       //表单赋值
       await setFieldsValue({
         ...data.record,
@@ -98,7 +89,7 @@
   );
 
   //设置标题
-  const title = computed(() => (unref(isDetail)?'详情':!unref(isUpdate) ? '新增' : '编辑'));
+  const title = computed(() => (unref(isDetail) ? '详情' : !unref(isUpdate) ? '新增' : '编辑'));
 
   async function reset() {
     await resetFields();
@@ -124,7 +115,7 @@
       //重新为表格赋值
       let res = await listEamEquipSpotCheckItemByMainIdAll({ equipId: unref(eamEquipId) });
       res.forEach((v) => {
-        eamEquipSpotCheckRecItem?.value?.addRows({ rowId:v.id,...v });
+        eamEquipSpotCheckRecItem?.value?.addRows({ rowId: v.id, ...v });
       });
     },
     { immediate: false, deep: true }

@@ -476,6 +476,17 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
+    label: '是否更新子表',
+    field: 'isUpdate',
+    component: 'JSwitch',
+    defaultValue: 'N',
+    componentProps: {
+      dictCode: 'is_open',
+      checkedChildren: '是',
+      unCheckedChildren: '否',
+    },
+  },
+  {
     label: '出厂编码',
     field: 'fixedAssetsCode',
     component: 'Input',

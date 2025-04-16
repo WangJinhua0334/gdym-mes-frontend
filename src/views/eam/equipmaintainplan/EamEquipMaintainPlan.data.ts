@@ -469,12 +469,20 @@ export const formSchemaMaintain: FormSchema[] = [
 //子表表格配置
 export const eamEquipMaintainRecItemJVxeColumns: JVxeColumn[] = [
   {
+    title: '编码',
+    key: 'code',
+    type: JVxeTypes.input,
+    placeholder: '请输入${title}',
+    defaultValue: '',
+    validateRules: [{ required: true, message: '${title}不能为空' }],
+  },
+  {
     title: '名称',
     key: 'name',
     type: JVxeTypes.input,
     placeholder: '请输入${title}',
     defaultValue: '',
-    disabled: true,
+    validateRules: [{ required: true, message: '${title}不能为空' }],
   },
   {
     title: '保养位置',
@@ -482,7 +490,6 @@ export const eamEquipMaintainRecItemJVxeColumns: JVxeColumn[] = [
     type: JVxeTypes.input,
     placeholder: '请输入${title}',
     defaultValue: '',
-    disabled: true,
   },
   {
     title: '保养方式',
@@ -490,7 +497,6 @@ export const eamEquipMaintainRecItemJVxeColumns: JVxeColumn[] = [
     type: JVxeTypes.input,
     placeholder: '请输入${title}',
     defaultValue: '',
-    disabled: true,
   },
   {
     title: '保养标准',
@@ -498,12 +504,19 @@ export const eamEquipMaintainRecItemJVxeColumns: JVxeColumn[] = [
     type: JVxeTypes.input,
     placeholder: '请输入${title}',
     defaultValue: '',
-    disabled: true,
   },
 ];
 //子表表格配置
 export const eamMaintainRecItemJVxeColumns: JVxeColumn[] = [
   {
+    title: '编码',
+    key: 'code',
+    type: JVxeTypes.input,
+    placeholder: '请输入${title}',
+    defaultValue: '',
+    disabled: true,
+  },
+  {
     title: '名称',
     key: 'name',
     type: JVxeTypes.input,
@@ -536,7 +549,7 @@ export const eamMaintainRecItemJVxeColumns: JVxeColumn[] = [
     disabled: true,
   },
   {
-    title: '是否异常',
+    title: '结果',
     key: 'result',
     type: JVxeTypes.slot,
     align: 'center',
@@ -545,7 +558,6 @@ export const eamMaintainRecItemJVxeColumns: JVxeColumn[] = [
     slotName: 'mustSwitch',
     width: '200px',
     placeholder: '请输入${title}',
-    validateRules: [{ required: true, message: '${title}不能为空' }],
   },
   {
     title: '备注',
