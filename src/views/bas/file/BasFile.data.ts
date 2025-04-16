@@ -79,6 +79,11 @@ export const columns: BasicColumn[] = [
     slots: { customRender: 'fileSlot' },
   },
   {
+    title: '备注',
+    dataIndex: 'remark',
+    align: 'center',
+  },
+  {
     title: '下发列表',
     align: 'center',
     dataIndex: 'fileList',
@@ -208,6 +213,11 @@ export const formSchema: FormSchema[] = [
     dynamicRules: ({ model, schema }) => {
       return [{ required: true, message: '请选择受控时间!' }];
     },
+  },
+  {
+    label: '备注',
+    field: 'remark',
+    component: 'InputTextArea',
   },
   // TODO 主键隐藏字段，目前写死为ID
   {

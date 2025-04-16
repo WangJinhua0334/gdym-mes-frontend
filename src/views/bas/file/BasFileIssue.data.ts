@@ -43,6 +43,16 @@ export const columns: BasicColumn[] = [
     align: 'center',
     dataIndex: 'wkcName_dictText',
   },
+  {
+    title: '下发人',
+    align: 'center',
+    dataIndex: 'createBy_dictText',
+  },
+  {
+    title: '下发时间',
+    align: 'center',
+    dataIndex: 'createTime',
+  },
 ];
 //查询数据
 export const searchFormSchema: FormSchema[] = [
