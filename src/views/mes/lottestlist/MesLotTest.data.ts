@@ -148,6 +148,10 @@ export const testListSearchFormSchema: FormSchema[] = [
         placeholder: '请输入',
         multi: true,
         maxTagCount: 1,
+        queryBefore: (params) => {
+          params.notStatus = 'discard';
+          return params;
+        },
       };
     },
     colProps: { span: 6 },

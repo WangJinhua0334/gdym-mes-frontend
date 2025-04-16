@@ -595,6 +595,10 @@ export const addFormSchema: FormSchema[] = [
         labelKey: ['name'],
         placeholder: '请输入',
         multi: false,
+        queryBefore: (params) => {
+          params.notStatus = 'discard';
+          return params;
+        },
       };
     },
     colProps: { span: 24 },
