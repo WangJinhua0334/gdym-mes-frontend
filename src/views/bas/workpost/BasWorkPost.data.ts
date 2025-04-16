@@ -270,6 +270,10 @@ export const basWorkPostEquipJVxeColumns: JVxeColumn[] = [
     formatter: ({ cellValue, row, column }) => {
       return row[column.params.key + '_dictText'] || cellValue;
     },
+    queryBefore: (params) => {
+      params.notStatus = 'discard';
+      return params;
+    },
   },
   {
     title: '设备名称',
