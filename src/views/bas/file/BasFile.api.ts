@@ -28,6 +28,7 @@ enum Api {
 
   issue = '/file/basFile/issue',
   getFileVersion = '/file/basFile/getFileVersion',
+  checkFileRecord = '/file/basFile/checkFileRecord', //进行文件检验，是否存在其他版本
 }
 /**
  * 导出api
@@ -50,6 +51,12 @@ export const list = (params) => defHttp.get({ url: Api.list, params });
  * @param params
  */
 export const getFileVersion = (params) => defHttp.get({ url: Api.getFileVersion, params });
+
+/**
+ * 检验是否存在此文件的其他版本已经关联或者下发
+ * @param params
+ */
+export const checkFileRecord = (params) => defHttp.get({ url: Api.checkFileRecord, params });
 
 /**
  * 删除单个

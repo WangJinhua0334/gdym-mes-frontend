@@ -100,7 +100,18 @@
   import BasProductGroupFileSubTable from './subTables/BasProductGroupFileSubTable.vue';
   import BasFileIssueList from './BasFileIssueList.vue';
   import { columns, searchFormSchema } from './BasFile.data';
-  import { list, deleteOne, batchDelete, getImportUrl, getExportUrl, audit, cancelAudit, issue, getOnlinePreviewUrl } from './BasFile.api';
+  import {
+    list,
+    deleteOne,
+    batchDelete,
+    getImportUrl,
+    getExportUrl,
+    audit,
+    cancelAudit,
+    issue,
+    getOnlinePreviewUrl,
+    checkFileRecord,
+  } from './BasFile.api';
   import { downloadFile } from '/@/utils/common/renderUtils';
   import { buildUUID } from '/@/utils/uuid';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -192,6 +203,7 @@
         fieldMapToTime: [],
       },
       actionColumn: {
+        title: '操作',
         width: 250,
         fixed: 'right',
       },
@@ -349,10 +361,32 @@
       for (let row of rows) {
         wkpIds.push(row.id);
       }
-
       try {
-        await issue({ fileId: unref(fileId), wkpId: wkpIds.join(',') }).then(() => {
-          handleSuccess();
+        await checkFileRecord({ id: unref(fileId), category: 'issue', wkpIds: wkpIds.join(',') }).then((data) => {
+          if (data == true) {
+            //存在其他文件
+            $message.createConfirm({
+              iconType: 'warning',
+              title: '新版本文件下发确认',
+              content: '该文件存在其他版本的文件已经下发工位，是否替换？',
+              okText: '是',
+              cancelText: '否',
+              onOk: () => {
+                issue({ fileId: unref(fileId), wkpId: wkpIds.join(','), isDeleteOldStr: 'Y' }).then(() => {
+                  handleSuccess();
+                });
+              },
+              onCancel: () => {
+                issue({ fileId: unref(fileId), wkpId: wkpIds.join(','), isDeleteOldStr: 'N' }).then(() => {
+                  handleSuccess();
+                });
+              },
+            });
+          } else {
+            issue({ fileId: unref(fileId), wkpId: wkpIds.join(','), isDeleteOldStr: 'N' }).then(() => {
+              handleSuccess();
+            });
+          }
         });
       } catch (error) {
         console.log(error.message);

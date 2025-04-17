@@ -72,6 +72,7 @@
     basProductFileExportXlsUrl,
     basProductFileImportUrl,
     basProductFileSaveOrUpdate,
+    checkFileRecord,
   } from '../BasFile.api';
   import { isEmpty } from '/@/utils/is';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -160,6 +161,7 @@
       canResize: true,
       useSearchForm: false,
       actionColumn: {
+        title: '操作',
         width: 180,
       },
       pagination: {
@@ -238,10 +240,32 @@
       for (let row of rows) {
         prodIds.push(row.id);
       }
-
       try {
-        await basProductFileSaveOrUpdate({ fileId: unref(mainId), prodId: prodIds.join(',') }, false).then(() => {
-          handleSuccess();
+        await checkFileRecord({ id: unref(mainId), category: 'prod', prodIds: prodIds.join(',') }).then((data) => {
+          if (data == true) {
+            //存在其他文件
+            $message.createConfirm({
+              iconType: 'warning',
+              title: '新版本文件关联确认',
+              content: '该文件存在其他版本的文件已经关联产品信息，是否替换？',
+              okText: '是',
+              cancelText: '否',
+              onOk: () => {
+                basProductFileSaveOrUpdate({ fileId: unref(mainId), prodId: prodIds.join(','), isDeleteOldStr: 'Y' }, false).then(() => {
+                  handleSuccess();
+                });
+              },
+              onCancel: () => {
+                basProductFileSaveOrUpdate({ fileId: unref(mainId), prodId: prodIds.join(','), isDeleteOldStr: 'N' }, false).then(() => {
+                  handleSuccess();
+                });
+              },
+            });
+          } else {
+            basProductFileSaveOrUpdate({ fileId: unref(mainId), prodId: prodIds.join(','), isDeleteOldStr: 'N' }, false).then(() => {
+              handleSuccess();
+            });
+          }
         });
       } catch (error) {
         console.log(error.message);
