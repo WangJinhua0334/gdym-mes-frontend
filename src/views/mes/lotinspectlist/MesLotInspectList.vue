@@ -3,7 +3,7 @@
   <BasicTable @register="registerInspectListTable" :rowSelection="rowSelection">
     <!--插槽:table标题-->
     <template #tableTitle>
-      <a-button type="primary" preIcon="ant-design:export-outlined" v-auth="'mes:mes_lot_insp:exportXls'" @click="onExportXls"> 按工单导出</a-button>
+      <a-button type="primary" preIcon="ant-design:export-outlined" v-auth="'mes:mes_lot_insp:exportXls'" @click="onExportXls"> 导出</a-button>
     </template>
     <!--操作栏-->
     <template #action="{ record }">
