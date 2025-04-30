@@ -328,49 +328,44 @@
   });
 
   //根据IP查询车间,工作中心,工位信息，找不到时打开工位选择框
-  function getInfoData(ip) {
-    if (ip != null) {
-      defHttp
-        .get({
-          url: '/workpost/basWorkPost/getByIpAddress',
-          params: {
-            ipAddress: ip,
-          },
-        })
-        .then((res) => {
-          if (res) {
-            infoData.value.workCenter = res.wkcId_dictText;
-            infoData.value.wkcId = res.wkcId;
-            infoData.value.workPost = res.name;
-            infoData.value.wkpCode = res.code;
-            infoData.value.wkpId = res.id;
-            infoData.value.operator = userinfo.value.realname;
-            infoData.value.operateBy = userinfo.value.username;
-            defHttp
-              .get({
-                url: '/workcenter/basWorkCenter/list',
-                params: {
-                  id: infoData.value.wkcId,
-                },
-              })
-              .then((res) => {
-                if (res && res.records.length > 0) {
-                  infoData.value.workShop = res.records[0].workShopId_dictText;
-                  infoData.value.wksId = res.records[0].workShopId;
-                }
-              });
-            getMoTaskList();
-            /**关闭选择工位弹出层 */
-            switchWorkPostCallBack(infoData.value.wkpId);
-            /**增加工位自动选择之后，焦点自动获取到扫描流转卡输入框 */
-            searchSN.value && searchSN.value.focus();
-          } else {
-            // openSwitchWorkPostModal(true, {});
-          }
-        });
-    } else {
-      // openSwitchWorkPostModal(true, {});
-    }
+  function getInfoData() {
+    //if (ip != null) {
+    defHttp
+      .get({
+        url: '/workpost/basWorkPost/getByIpAddress',
+      })
+      .then((res) => {
+        if (res) {
+          infoData.value.workCenter = res.wkcId_dictText;
+          infoData.value.wkcId = res.wkcId;
+          infoData.value.workPost = res.name;
+          infoData.value.wkpCode = res.code;
+          infoData.value.wkpId = res.id;
+          infoData.value.operator = userinfo.value.realname;
+          infoData.value.operateBy = userinfo.value.username;
+          defHttp
+            .get({
+              url: '/workcenter/basWorkCenter/list',
+              params: {
+                id: infoData.value.wkcId,
+              },
+            })
+            .then((res) => {
+              if (res && res.records.length > 0) {
+                infoData.value.workShop = res.records[0].workShopId_dictText;
+                infoData.value.wksId = res.records[0].workShopId;
+              }
+            });
+          getMoTaskList();
+          /**关闭选择工位弹出层 */
+          switchWorkPostCallBack(infoData.value.wkpId);
+          /**增加工位自动选择之后，焦点自动获取到扫描流转卡输入框 */
+          searchSN.value && searchSN.value.focus();
+        } else {
+          // openSwitchWorkPostModal(true, {});
+        }
+      });
+    //
   }
 
   //获取用户本地IP的方法
@@ -403,7 +398,7 @@
   };
 
   //根据IP查询车间,工作中心,工位信息，找不到时打开工位选择框
-  getUserIP((ip) => getInfoData(ip));
+  getInfoData();
 
   // 获取任务列表
   function getMoTaskList(type = 0) {
