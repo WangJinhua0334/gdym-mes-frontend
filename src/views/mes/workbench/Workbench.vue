@@ -21,7 +21,7 @@
             </ul>
           </div>
           <div class="footer-downLine-rt">
-            <div @click="switchWorkPost">
+            <div @click="isClickable ? switchWorkPost() : null">
               切换工位
               <p class="change-icon"></p>
             </div>
@@ -288,6 +288,7 @@
   let commandListArr = [];
   const showFlowCard = ref(false); //控制流转卡下拉的显示隐藏
   const showSearch = ref(false); //控制任务列表的输入框显示隐藏
+  const isClickable = ref(true);
   const seacrchInput = ref(''); //任务列表查询
   let searchSN = ref<HTMLInputElement | null>(null); //扫描流传卡输入框
   // 车间工作中心信息
@@ -329,7 +330,6 @@
 
   //根据IP查询车间,工作中心,工位信息，找不到时打开工位选择框
   function getInfoData() {
-    //if (ip != null) {
     defHttp
       .get({
         url: '/workpost/basWorkPost/getByIpAddress',
@@ -343,6 +343,7 @@
           infoData.value.wkpId = res.id;
           infoData.value.operator = userinfo.value.realname;
           infoData.value.operateBy = userinfo.value.username;
+          isClickable.value = res.isAdjust == 'Y';
           defHttp
             .get({
               url: '/workcenter/basWorkCenter/list',
@@ -365,37 +366,7 @@
           // openSwitchWorkPostModal(true, {});
         }
       });
-    //
   }
-
-  //获取用户本地IP的方法
-  const getUserIP = (onNewIP) => {
-    let MyPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
-    let pc = new MyPeerConnection({
-      iceServers: [],
-    });
-    let noop = () => {};
-    let localIPs = {};
-    let ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g;
-    let iterateIP = (ip) => {
-      if (!localIPs[ip]) onNewIP(ip);
-      localIPs[ip] = true;
-    };
-    pc.createDataChannel('');
-    pc.createOffer()
-      .then((sdp) => {
-        sdp.sdp.split('\n').forEach(function (line) {
-          if (line.indexOf('candidate') < 0) return;
-          line.match(ipRegex).forEach(iterateIP);
-        });
-        pc.setLocalDescription(sdp, noop, noop);
-      })
-      .catch((reason) => {});
-    pc.onicecandidate = (ice) => {
-      if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return;
-      ice.candidate.candidate.match(ipRegex).forEach(iterateIP);
-    };
-  };
 
   //根据IP查询车间,工作中心,工位信息，找不到时打开工位选择框
   getInfoData();

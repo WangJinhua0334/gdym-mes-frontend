@@ -42,6 +42,18 @@ export const columns: BasicColumn[] = [
     sorter: true,
     dataIndex: 'wkcId_dictText',
   },
+  {
+    title: '是否允许调整工位',
+    align: 'center',
+    sorter: true,
+    dataIndex: 'isAdjust',
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
+  },
 ];
 //查询数据
 export const searchFormSchema: FormSchema[] = [
@@ -165,6 +177,15 @@ export const formSchema: FormSchema[] = [
     },
     dynamicRules: ({ model, schema }) => {
       return [{ required: true, message: '请选择工作中心!' }];
+    },
+  },
+  {
+    label: '是否允许调整工位',
+    field: 'isAdjust',
+    defaultValue: 'Y',
+    component: 'JSwitch',
+    componentProps: {
+      dictCode: 'is_open',
     },
   },
   // TODO 主键隐藏字段，目前写死为ID
