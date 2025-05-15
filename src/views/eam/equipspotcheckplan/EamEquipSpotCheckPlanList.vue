@@ -23,6 +23,9 @@
         >
           取消
         </a-button>
+        <a-button type="primary" preIcon="ant-design:export-outlined" v-auth="'eam:eam_equip_spot_check_plan:exportXls'" @click="onExportXls">
+          导出</a-button
+        >
       </template>
       <!--操作栏-->
       <template #action="{ record }">
@@ -42,8 +45,8 @@
       </template>
     </BasicTable>
     <!-- 表单区域 -->
-    <EamEquipSpotCheckPlanModal @register="registerModal" @success="handleSuccess"></EamEquipSpotCheckPlanModal>
-    <EamEquipSpotCheckModal @register="registerSpotCheckModal" @success="handleSuccess"></EamEquipSpotCheckModal>
+    <EamEquipSpotCheckPlanModal @register="registerModal" @success="handleSuccess" />
+    <EamEquipSpotCheckModal @register="registerSpotCheckModal" @success="handleSuccess" />
   </div>
 </template>
 
@@ -71,7 +74,7 @@
   const [registerModal, { openModal }] = useModal();
   const [registerSpotCheckModal, { openModal: openSpotCheckModal }] = useModal();
   //注册table数据
-  const { prefixCls, tableContext } = useListPage({
+  const { prefixCls, tableContext, onExportXls } = useListPage({
     tableProps: {
       title: '设备点检计划',
       api: list,
@@ -87,9 +90,14 @@
         fieldMapToTime: [],
       },
       actionColumn: {
+        title: '操作',
         width: 155,
         fixed: 'right',
       },
+    },
+    exportConfig: {
+      name: '设备点检计划',
+      url: getExportUrl,
     },
   });
 

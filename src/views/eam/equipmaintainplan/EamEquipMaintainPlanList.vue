@@ -18,6 +18,9 @@
         <a-button type="primary" @click="handleCancel" v-auth="'org.jeecg.modules:eam_equip_maintain_plan:cancel'" preIcon="ant-design:plus-outlined">
           取消
         </a-button>
+        <a-button type="primary" preIcon="ant-design:export-outlined" v-auth="'eam:eam_equip_maintain_plan:exportXls'" @click="onExportXls">
+          导出</a-button
+        >
       </template>
       <!--操作栏-->
       <template #action="{ record }">
@@ -29,8 +32,8 @@
       </template>
     </BasicTable>
     <!-- 表单区域 -->
-    <EamEquipMaintainPlanModal @register="registerModal" @success="handleSuccess"></EamEquipMaintainPlanModal>
-    <EamEquipMaintainModal @register="registerMaintainModal" @success="handleSuccess"></EamEquipMaintainModal>
+    <EamEquipMaintainPlanModal @register="registerModal" @success="handleSuccess" />
+    <EamEquipMaintainModal @register="registerMaintainModal" @success="handleSuccess" />
   </div>
 </template>
 
@@ -73,6 +76,7 @@
         fieldMapToTime: [],
       },
       actionColumn: {
+        title: '操作',
         width: 155,
         fixed: 'right',
       },
