@@ -12,7 +12,6 @@
             <span v-if="item.status === 'created' || item.status === 'processing'" @click="handleRevoke(item)">撤回</span>
             <span v-if="item.status === 'processed'" @click="handleComplete(item)">确认完成</span>
             <span v-if="item.status === 'processed'" @click="handleReSend(item)">未处理成功</span>
-
           </template>
           <a-card-meta>
             <template #description>
@@ -117,7 +116,7 @@
   import { useModal } from '/@/components/Modal';
   import { useDrawer } from '/@/components/Drawer';
   import { useListPage } from '/@/hooks/system/useListPage';
-  import { listCall, getExportUrl, listByWkpId, listAllType, revoke, complete,reSend } from './MesAbnormal.api';
+  import { listCall, getExportUrl, listByWkpId, listAllType, revoke, complete, reSend } from './MesAbnormal.api';
   import { listColumns, searchFormSchema } from './MesAbnormal.data';
   import MesAbnormalAddModal from './components/MesAbnormalAddModal.vue';
   import MesAbnormalDetailModal from './components/MesAbnormalDetaillModal.vue';
@@ -125,6 +124,13 @@
   import MesAbnormalRejectModal from './components/MesAbnormalRejectModal.vue';
 
   import { useMessage } from '/@/hooks/web/useMessage';
+
+  const props = defineProps({
+    componentData: {
+      type: Object,
+      default: () => {},
+    },
+  });
 
   const $message = useMessage();
 
@@ -158,6 +164,7 @@
         fieldMapToTime: [],
       },
       actionColumn: {
+        title: '操作',
         width: 120,
         fixed: 'right',
       },
@@ -178,10 +185,27 @@
   const wkcId = ref<string>();
   const wkpId = ref<string>();
 
+  const moId = ref<string>();
+  const moPlanId = ref<string>();
+  const moSnId = ref<string>();
+  const prodId = ref<string>();
+  const sn = ref<string>();
+  const workflowId = ref<string>();
+  const wfsId = ref<string>();
+
   const recordList = ref<any[]>();
   const typeList = ref<any[]>();
 
   onMounted(() => {
+    if (unref(props.componentData) && unref(props.componentData).record.scanInfo) {
+      moId.value = unref(unref(props.componentData).record).scanInfo.moId;
+      moPlanId.value = unref(unref(props.componentData).record).scanInfo.moPlanId;
+      moSnId.value = unref(unref(props.componentData).record).scanInfo.moSnId;
+      prodId.value = unref(unref(props.componentData).record).scanInfo.prodId;
+      sn.value = unref(unref(props.componentData).record).scanInfo.sn;
+      wfsId.value = unref(unref(props.componentData).record).scanInfo.wfsId;
+      workflowId.value = unref(unref(props.componentData).record).scanInfo.basWorkflowStation.workflowId;
+    }
     if (unref(workInfoData) && unref(workInfoData).wkpId) {
       activeKey.value = 'callingTab';
       wksId.value = unref(workInfoData).wksId;
@@ -269,6 +293,13 @@
         wksId: unref(wksId),
         wkcId: unref(wkcId),
         wkpId: unref(wkpId),
+        moId: unref(moId),
+        moPlanId: unref(wkpId),
+        moSnId: unref(moSnId),
+        prodId: unref(prodId),
+        sn: unref(sn),
+        wfsId: unref(wfsId),
+        wkfId: unref(workflowId),
         responsibleDeptId: item.responsibleDeptId,
         responsibleBy: item.responsibleBy,
       },
@@ -291,8 +322,8 @@
     });
   }
   /**未处理完成 */
-  function handleReSend(item){
-    openRejectModal(true,{record:item});
+  function handleReSend(item) {
+    openRejectModal(true, { record: item });
   }
   /**完成 */
   function handleComplete(item) {

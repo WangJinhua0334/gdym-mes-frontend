@@ -137,6 +137,48 @@ export const listColumns: BasicColumn[] = [
     width: 150,
   },
   {
+    title: '工单',
+    sorter: true,
+    align: 'center',
+    dataIndex: 'moId_dictText',
+    width: 150,
+  },
+  {
+    title: '派工单',
+    sorter: true,
+    align: 'center',
+    dataIndex: 'moPlanId_dictText',
+    width: 150,
+  },
+  {
+    title: '产品编码',
+    sorter: true,
+    align: 'center',
+    dataIndex: 'prodId_dictText',
+    width: 150,
+  },
+  {
+    title: '产品名称',
+    sorter: true,
+    align: 'center',
+    dataIndex: 'prodName_dictText',
+    width: 150,
+  },
+  {
+    title: '条码',
+    sorter: true,
+    align: 'center',
+    dataIndex: 'sn',
+    width: 150,
+  },
+  {
+    title: '工艺工序',
+    sorter: true,
+    align: 'center',
+    dataIndex: 'wfsId_dictText',
+    width: 150,
+  },
+  {
     title: '驳回原因',
     sorter: true,
     align: 'center',
@@ -218,6 +260,33 @@ export const searchFormSchema: FormSchema[] = [
         getPopupContainer: (node) => document.body,
       };
     },
+  },
+  {
+    label: '工单号',
+    field: 'moCode',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: '生产任务单号',
+    field: 'moPlanCode',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: '产品',
+    field: 'prodQuery',
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入产品编码或名称',
+    },
+    colProps: { span: 6 },
+  },
+  {
+    label: '流转卡',
+    field: 'sn',
+    component: 'JInput',
+    colProps: { span: 6 },
   },
 ];
 
@@ -521,6 +590,217 @@ export const addFormSchema: FormSchema[] = [
     },
   },
   {
+    label: '工单',
+    field: 'moId',
+    component: 'JPopupCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/mo/mesMo/list',
+        params: {},
+        columns: [
+          {
+            title: '工单号',
+            align: 'center',
+            dataIndex: 'code',
+          },
+          {
+            title: '类型',
+            align: 'center',
+            dataIndex: 'type_dictText',
+          },
+          {
+            title: '产品编码',
+            align: 'center',
+            dataIndex: 'prodId_dictText',
+          },
+          {
+            title: '产品名称',
+            align: 'center',
+            dataIndex: 'prodName_dictText',
+          },
+          {
+            title: '状态',
+            align: 'center',
+            dataIndex: 'status_dictText',
+          },
+        ],
+        queryInfo: [
+          {
+            field: 'code',
+            label: '工单号',
+            mode: 'single',
+            view: 'string',
+          },
+          {
+            field: 'prodQuery',
+            label: '产品编码',
+            mode: 'single',
+            view: 'string',
+          },
+        ],
+        isShowNum: true,
+        rowKey: 'id',
+        labelKey: ['code'],
+        placeholder: '请选择',
+        multi: false,
+        linkmap: [{ wkfId: 'wkfId' }],
+        getPopupContainer: (node) => node.parentNode,
+      };
+    },
+  },
+  {
+    label: '',
+    field: 'wkfId',
+    component: 'Input',
+    show: false,
+  },
+  {
+    label: '',
+    field: 'prodId',
+    component: 'Input',
+    show: false,
+  },
+  {
+    label: '',
+    field: 'moPlanId',
+    component: 'Input',
+    show: false,
+  },
+  {
+    label: '',
+    field: 'moSnId',
+    component: 'Input',
+    show: false,
+  },
+  {
+    label: '流转卡号',
+    field: 'sn',
+    component: 'JPopupCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/mo/mesMoSn/list',
+        params: {},
+        columns: [
+          {
+            title: '流转卡号',
+            align: 'center',
+            dataIndex: 'sn',
+          },
+          {
+            title: '流转卡类型',
+            align: 'center',
+            dataIndex: 'snType_dictText',
+          },
+          {
+            title: '任务单号',
+            align: 'center',
+            dataIndex: 'moPlanId_dictText',
+          },
+          {
+            title: '产品编码',
+            align: 'center',
+            dataIndex: 'prodId_dictText',
+          },
+          {
+            title: '产品名称',
+            align: 'center',
+            dataIndex: 'prodName_dictText',
+          },
+        ],
+        queryInfo: [
+          {
+            field: 'sn',
+            label: '流转卡号',
+            mode: 'single',
+            view: 'string',
+          },
+          {
+            field: 'prodQuery',
+            label: '产品编码',
+            mode: 'single',
+            view: 'string',
+          },
+        ],
+        isShowNum: true,
+        rowKey: 'sn',
+        labelKey: ['sn'],
+        placeholder: '请选择',
+        multi: false,
+        linkmap: [{ moPlanId: 'moPlanId', id: 'moSnId', prodId: 'prodId' }],
+        getPopupContainer: (node) => node.parentNode,
+        queryBefore: function (params) {
+          if (getFieldsValue().moId && getFieldsValue().moId.length > 0) {
+            params.moId = getFieldsValue().moId;
+          } else {
+            params.moId = -1;
+          }
+          return params;
+        },
+      };
+    },
+  },
+  {
+    label: '工艺工序',
+    field: 'wfsId',
+    component: 'JPopupCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/workflow/basWorkflow/listBasWorkflowStationByMainId',
+        params: {},
+        columns: [
+          {
+            title: '工艺工序',
+            align: 'center',
+            dataIndex: 'title',
+          },
+          {
+            title: '工序',
+            align: 'center',
+            dataIndex: 'stationId_dictText',
+          },
+        ],
+        queryInfo: [
+          {
+            field: 'title',
+            label: '流转卡号',
+            mode: 'single',
+            view: 'string',
+          },
+        ],
+        isShowNum: true,
+        rowKey: 'id',
+        isPage: false,
+        labelKey: ['title'],
+        placeholder: '请选择',
+        multi: false,
+        getPopupContainer: (node) => node.parentNode,
+        queryBefore: function (params) {
+          if (getFieldsValue().wkfId) {
+            params.workflowId = getFieldsValue().wkfId;
+          } else {
+            params.workflowId = -1;
+          }
+          return params;
+        },
+      };
+    },
+  },
+  {
     label: '异常类型',
     field: 'typeId',
     component: 'JSearchSelectCustom',
@@ -725,6 +1005,24 @@ export const detailFormSchema: FormSchema[] = [
   {
     label: '工位',
     field: 'wkpId_dictText',
+    component: 'Input',
+    colProps: { span: 12 },
+  },
+  {
+    label: '工单',
+    field: 'moId_dictText',
+    component: 'Input',
+    colProps: { span: 12 },
+  },
+  {
+    label: '流转卡号',
+    field: 'sn',
+    component: 'Input',
+    colProps: { span: 12 },
+  },
+  {
+    label: '工艺工序',
+    field: 'wfsId_dictText',
     component: 'Input',
     colProps: { span: 12 },
   },
