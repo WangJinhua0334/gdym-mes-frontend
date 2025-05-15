@@ -25,6 +25,7 @@
     "@ant-design/icons-vue": "^7.0.1",
     "@iconify/iconify": "^3.1.1",
     "@jeecg/online": "3.7.1-RC",
+    "@kjgl77/datav-vue3": "^1.7.4",
     "@logicflow/core": "^1.1.13",
     "@logicflow/extension": "^1.1.13",
     "@tinymce/tinymce-vue": "4.0.7",

@@ -18,6 +18,7 @@ import { registerThirdComp } from '/@/settings/registerThirdComp';
 import { useSso } from '/@/hooks/web/useSso';
 // 注册online模块lib
 import { registerPackages } from '/@/utils/monorepo/registerPackages';
+import DataVVue3 from '@kjgl77/datav-vue3';
 //注册自己的图标
 import '/public/resource/js/momIconfont.js';
 
@@ -62,10 +63,12 @@ async function bootstrap() {
   // 当路由准备好时再执行挂载( https://next.router.vuejs.org/api/#isready)
   await router.isReady();
 
+  // 大屏组件库
+  app.use(DataVVue3);
   // 挂载应用
   app.mount('#app', true);
 
-  console.log(" vue3 app 加载完成！")
+  console.log(' vue3 app 加载完成！');
 }
 
 bootstrap();
