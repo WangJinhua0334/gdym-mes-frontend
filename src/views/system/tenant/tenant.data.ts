@@ -299,19 +299,19 @@ export const packMenuFormSchema: FormSchema[] = [
     label: '产品包名称',
     component: 'Input',
   },
-  {
-    field: 'permissionIds',
-    label: '菜单列表',
-    component: 'JTreeSelect',
-    componentProps: {
-      dict: 'sys_permission,name,id',
-      pidField: 'parent_id',
-      multiple: true,
-      treeCheckAble: true,
-      treeCheckStrictly: true,
-      getPopupContainer: () => document.body,
-    },
-  },
+  // {
+  //   field: 'permissionIds',
+  //   label: '菜单列表',
+  //   component: 'JTreeSelect',
+  //   componentProps: {
+  //     dict: 'sys_permission,name,id',
+  //     pidField: 'parent_id',
+  //     multiple: true,
+  //     treeCheckAble: true,
+  //     treeCheckStrictly: false,
+  //     getPopupContainer: () => document.body,
+  //   },
+  // },
   {
     field: 'remarks',
     label: '描述',

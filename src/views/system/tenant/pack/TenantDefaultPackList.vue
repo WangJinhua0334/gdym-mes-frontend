@@ -9,7 +9,7 @@
           type="primary"
           @click="handlePackBatch"
           style="margin-right: 5px"
-        >批量删除
+          >批量删除
         </a-button>
       </template>
       <template #action="{ record }">
@@ -17,11 +17,13 @@
       </template>
     </BasicTable>
     <!--  产品包  -->
-    <TenantPackMenuModal @register="registerPackMenuModal" @success="handleSuccess"/>
+    <TenantPackMenuModal @register="registerPackMenuModal" @success="handleSuccess" />
+    <RolePermissionDrawer @register="rolePermissionDrawer" />
   </div>
 </template>
 <script lang="ts" name="tenant-default-pack" setup>
   import { ref, unref } from 'vue';
+  import { useDrawer } from '/@/components/Drawer';
   import { BasicTable, TableAction } from '/@/components/Table';
   import { useModal } from '/@/components/Modal';
   import { deleteTenantPack, packList } from '../tenant.api';
@@ -30,11 +32,13 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useListPage } from '/@/hooks/system/useListPage';
   import { useUserStore } from '/@/store/modules/user';
-  import {Modal} from "ant-design-vue";
+  import { Modal } from 'ant-design-vue';
+  import RolePermissionDrawer from './RolePermissionDrawer.vue';
 
   const { createMessage } = useMessage();
   const [registerModal, { openModal }] = useModal();
   const [registerPackMenuModal, { openModal: packModal }] = useModal();
+  const [rolePermissionDrawer, { openDrawer: openRolePermissionDrawer }] = useDrawer();
   const userStore = useUserStore();
 
   // 列表页面公共参数、方法
@@ -54,6 +58,12 @@
   const [registerTable, { reload }, { rowSelection, selectedRowKeys, selectedRows }] = tableContext;
 
   /**
+   * 授权弹窗
+   */
+  function handlePerssion(record) {
+    openRolePermissionDrawer(true, { id: record.id });
+  }
+  /**
    * 操作列定义
    * @param record
    */
@@ -62,6 +72,10 @@
       {
         label: '编辑',
         onClick: handleEdit.bind(null, record),
+      },
+      {
+        label: '授权',
+        onClick: handlePerssion.bind(null, record),
       },
       {
         label: '删除',
@@ -75,19 +89,18 @@
 
   /**
    * 编辑产品包
-   */ 
+   */
   function handleAdd() {
     packModal(true, {
       isUpdate: false,
-      packType:'default',
-      showFooter: true
+      packType: 'default',
+      showFooter: true,
     });
   }
-  
-  
+
   /**
    * 删除默认产品包
-   */ 
+   */
   async function handleDelete(id) {
     await deleteTenantPack({ ids: id }, handleSuccess);
   }
@@ -95,11 +108,11 @@
    * 编辑
    */
   function handleEdit(record) {
-    packModal(true, {     
+    packModal(true, {
       isUpdate: true,
       record: record,
-      packType:'default',
-      showFooter: true
+      packType: 'default',
+      showFooter: true,
     });
   }
 
@@ -133,8 +146,8 @@
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        await deleteTenantPack({ ids: selectedRowKeys.value.join(',')}, handleSuccess);
-      }
-    })
+        await deleteTenantPack({ ids: selectedRowKeys.value.join(',') }, handleSuccess);
+      },
+    });
   }
 </script>

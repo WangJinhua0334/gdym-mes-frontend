@@ -47,7 +47,7 @@
   //表单提交事件
   async function handleSubmit(v) {
     const values = await validate();
-    
+
     setModalProps({ confirmLoading: true });
     values.packType = unref(packType);
     if(values.packType === 'custom'){
