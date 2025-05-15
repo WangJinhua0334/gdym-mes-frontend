@@ -1,9 +1,12 @@
 <template>
-  <dv-scroll-board :config="config" style="width: 100%; height: 200px" />
+  <div v-if="isShow" :style="{ height: containerHeight }" style="margin: 20px 0px" ref="scrollBoardContainer">
+    <p>报工记录：</p>
+    <dv-scroll-board :config="config" style="width: 100%" />
+  </div>
 </template>
 
 <script lang="ts" setup>
-  import { Ref, ref, onMounted, getCurrentInstance, nextTick, watch } from 'vue';
+  import { ref, onMounted, watch } from 'vue';
   import { actionsWokeList } from '../ProducttionRecordModal.api';
   const props = defineProps({
     id: {
@@ -33,6 +36,7 @@
     oddRowBGC: 'transparent',
     evenRowBGC: 'transparent',
     index: false,
+    rowNum: 5,
     columnWidth: [
       localStorage.remScale * 200,
       localStorage.remScale * 200,
@@ -45,6 +49,19 @@
     ],
     align: ['center', 'center', 'center', 'center', 'center', 'center', 'center', 'center'],
   });
+
+  const isShow = ref(false);
+  let containerHeight = ref('auto'); // 默认值
+  watch(
+    () => config.value.data,
+    (newData) => {
+      if (newData && newData.length > 0) {
+        isShow.value = true;
+      }
+      // 计算新高度
+      containerHeight.value = `${35 * newData.length + 70}px`;
+    }
+  );
 
   function loadInspList() {
     const params = {};
@@ -65,6 +82,7 @@
         ]);
       });
       config.value.data = newData;
+      config.value.rowNum = newData.length;
       config.value = { ...config.value };
     });
   }

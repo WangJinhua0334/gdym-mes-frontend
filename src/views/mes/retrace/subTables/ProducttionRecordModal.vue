@@ -7,87 +7,93 @@
         :header="item.stationName"
         style="border: 1px solid #0095ff; background-color: #0077b312"
       >
-        <div class="ant-row">
-          <div class="ant-col ant-col-4 ant-col-xs-24 ant-col-sm-12 ant-col-md-12 ant-col-lg-4 ant-col-xl-4 ant-col-xxl-4">
-            <p>工序信息：</p>
+        <a-row :gutter="16">
+          <a-col :span="4" :xs="24" :sm="12" :md="12" :lg="4" :xl="4" :xxl="4">
             <p
               >状态：<span>{{ ReturnValue(item.status_dictText) }}</span></p
             >
             <p
-              >数量：<span>{{ ReturnValue(item.qty) }}</span></p
-            >
-            <p
-              >合格：<span>{{ ReturnValue(item.okQty) }}</span></p
-            >
-            <p
-              >不合格：<span>{{ ReturnValue(item.ngQty) }}</span></p
-            >
-            <p
-              >报废：<span>{{ ReturnValue(item.scrapedQty) }}</span></p
-            >
-            <p
-              >工时：<span>{{ ReturnValue(item.workHour) }}</span></p
-            >
-          </div>
-          <div class="ant-col ant-col-4 ant-col-xs-24 ant-col-sm-12 ant-col-md-12 ant-col-lg-4 ant-col-xl-4 ant-col-xxl-4">
-            <p>开工(完工)信息：</p>
-            <p
-              >工作中心：<span>{{ ReturnValue(item.wkcName) }}</span></p
-            >
-            <p
               >开工人：<span>{{ ReturnValue(item.startUser) }}</span></p
+            >
+          </a-col>
+          <a-col :span="4" :xs="24" :sm="12" :md="12" :lg="4" :xl="4" :xxl="4">
+            <p
+              >数量：<span>{{ ReturnValue(item.qty) }}</span></p
             >
             <p
               >开工时间：<span>{{ ReturnValue(item.startTime) }}</span></p
             >
+          </a-col>
+          <a-col :span="4" :xs="24" :sm="12" :md="12" :lg="4" :xl="4" :xxl="4">
+            <p
+              >合格：<span>{{ ReturnValue(item.okQty) }}</span></p
+            >
             <p
               >开工工位：<span>{{ ReturnValue(item.startWorkStation) }}</span></p
+            >
+          </a-col>
+          <a-col :span="4" :xs="24" :sm="12" :md="12" :lg="4" :xl="4" :xxl="4">
+            <p
+              >不合格：<span>{{ ReturnValue(item.ngQty) }}</span></p
             >
             <p
               >完工人：<span>{{ ReturnValue(item.endUser) }}</span></p
             >
+          </a-col>
+          <a-col :span="4" :xs="24" :sm="12" :md="12" :lg="4" :xl="4" :xxl="4">
+            <p
+              >报废：<span>{{ ReturnValue(item.scrapedQty) }}</span></p
+            >
             <p
               >完工时间：<span>{{ ReturnValue(item.endTime) }}</span></p
+            >
+          </a-col>
+          <a-col :span="4" :xs="24" :sm="12" :md="12" :lg="4" :xl="4" :xxl="4">
+            <p
+              >工作中心：<span>{{ ReturnValue(item.wkcName) }}</span></p
             >
             <p
               >完工工位：<span>{{ ReturnValue(item.endWorkStation) }}</span></p
             >
-          </div>
-          <div class="ant-col ant-col-16 ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-16 ant-col-xl-16 ant-col-xxl-16">
-            <p>检验信息：</p>
-            <StationInspList :id="item.lotId" :stationId="item.stationId" :destroy-on-close="true" />
-          </div>
-        </div>
-        <div class="ant-row">
-          <div class="ant-col ant-col-24 ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-24 ant-col-xl-24 ant-col-xxl-24">
-            <p>生产调试记录：</p>
-            <StationProductTestList :id="item.lotId" :stationId="item.stationId" :destroy-on-close="true" />
-          </div>
-        </div>
-        <div class="ant-row">
-          <div class="ant-col ant-col-24 ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-24 ant-col-xl-24 ant-col-xxl-24">
-            <p>物料绑定记录：</p>
-            <StationProductBindList :id="item.lotId" :stationId="item.stationId" :destroy-on-close="true" />
-          </div>
-        </div>
-        <div class="ant-row">
-          <div class="ant-col ant-col-24 ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-24 ant-col-xl-24 ant-col-xxl-24">
-            <p>物料解绑记录：</p>
-            <StationProductUnBindList :id="item.lotId" :stationId="item.stationId" :destroy-on-close="true" />
-          </div>
-        </div>
-        <div class="ant-row">
-          <div class="ant-col ant-col-24 ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-24 ant-col-xl-24 ant-col-xxl-24">
-            <p>报工记录：</p>
+          </a-col>
+        </a-row>
+
+        <!-- 其他子组件 -->
+        <a-row>
+          <a-col :span="24">
             <StationWokeList :id="item.lotId" :stationId="item.stationId" :destroy-on-close="true" />
-          </div>
-        </div>
-        <div class="ant-row">
-          <div class="ant-col ant-col-24 ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-24 ant-col-xl-24 ant-col-xxl-24">
-            <p>工时记录：</p>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="24">
             <StationWorkHourList :id="item.lotId" :stationId="item.stationId" :destroy-on-close="true" />
-          </div>
-        </div>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="24">
+            <StationOutInspList :id="item.lotId" :stationId="item.stationId" :destroy-on-close="true" />
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="24">
+            <StationProductTestList :id="item.lotId" :stationId="item.stationId" :destroy-on-close="true" />
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="24">
+            <StationProductBindList :id="item.lotId" :stationId="item.stationId" :destroy-on-close="true" />
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="24">
+            <StationProductUnBindList :id="item.lotId" :stationId="item.stationId" :destroy-on-close="true" />
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="24">
+            <StationAbnormalList :id="item.lotId" :stationId="item.stationId" :destroy-on-close="true" />
+          </a-col>
+        </a-row>
       </a-collapse-panel>
     </a-collapse>
   </BasicModal>
@@ -102,6 +108,8 @@
   import StationProductBindList from './components/StationProductBindList.vue';
   import StationProductUnBindList from './components/StationProductUnBindList.vue';
   import StationWorkHourList from './components/StationWorkHourList.vue';
+  import StationOutInspList from './components/StationOutInspList.vue';
+  import StationAbnormalList from './components/StationAbnormalList.vue';
   import '/@/utils/flexible.js';
   import { computed, ref, unref } from 'vue';
 

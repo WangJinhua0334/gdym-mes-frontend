@@ -5,11 +5,13 @@ enum Api {
   listTestItemById = '/wip/producttest/listTestItemById',
   actionsList = '/retrace/retraceReport/lotProducedRecordListByLotId',
   actionsInspList = '/retrace/retraceReport/selectInspListByLotId',
+  actionsOutInspList = '/retrace/retraceReport/selectOutInspListByLotId',
   actionsWokeList = '/retrace/retraceReport/selectWokeListByLotId',
   actionsWorkHourList = '/retrace/retraceReport/selectWorkHourListByLotId',
   actionsProductTestList = '/retrace/retraceReport/selectProductTestListByLotId',
   actionsProductBindList = '/retrace/retraceReport/selectProductBindListByLotId',
   actionsProductUnBindList = '/retrace/retraceReport/selectProductUnBindListByLotId',
+  actionsAbnormalList = '/retrace/retraceReport/selectactionsAbnormalList',
 }
 
 /**
@@ -41,6 +43,13 @@ export const actionsInspList = (params) => defHttp.get({ url: Api.actionsInspLis
 
 /**
  *
+ * @param params 查询出厂检验列表
+ * @returns
+ */
+export const actionsOutInspList = (params) => defHttp.get({ url: Api.actionsOutInspList, params });
+
+/**
+ *
  * @param params 查询报工列表
  * @returns
  */
@@ -59,6 +68,13 @@ export const actionsWorkHourList = (params) => defHttp.get({ url: Api.actionsWor
  * @returns
  */
 export const actionsProductTestList = (params) => defHttp.get({ url: Api.actionsProductTestList, params });
+
+/**
+ *
+ * @param params 查询工序异常记录
+ * @returns
+ */
+export const actionsAbnormalList = (params) => defHttp.get({ url: Api.actionsAbnormalList, params });
 
 /**
  *

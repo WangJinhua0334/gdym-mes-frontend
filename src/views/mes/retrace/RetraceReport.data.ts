@@ -1,6 +1,5 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
-import { render } from '/@/utils/common/renderUtils';
 
 //SN列表信息列表配置
 export const retraceListColumns: BasicColumn[] = [
@@ -56,11 +55,8 @@ export const retraceListColumns: BasicColumn[] = [
     title: '状态',
     align: 'center',
     sorter: true,
-    dataIndex: 'status',
+    dataIndex: 'status_dictText',
     width: 100,
-    customRender: ({ text }) => {
-      return render.renderDict(text, 'lot_status', true);
-    },
   },
   {
     title: '生产批次',
@@ -188,10 +184,7 @@ export const retraceItemColumns: BasicColumn[] = [
   {
     title: '状态',
     align: 'center',
-    dataIndex: 'status',
-    customRender: ({ text }) => {
-      return render.renderDict(text, 'lot_status', true);
-    },
+    dataIndex: 'status_dictText',
   },
   {
     title: '数量',

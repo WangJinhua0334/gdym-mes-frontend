@@ -1,5 +1,4 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
-import { render } from '/@/utils/common/renderUtils';
 
 //子表列表数据
 export const testItemColumns: BasicColumn[] = [
@@ -55,12 +54,7 @@ export const testItemColumns: BasicColumn[] = [
     title: '测试结果',
     align: 'center',
     dataIndex: 'result',
-    customRender: ({ text }) => {
-      return render.renderSwitch(text, [
-        { text: '是', value: 'Y', isChecked: true },
-        { text: '否', value: 'N', isChecked: false },
-      ]);
-    },
+    slots: { customRender: 'switchSlot' },
     width: 120,
   },
   {

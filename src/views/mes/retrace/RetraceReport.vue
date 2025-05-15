@@ -21,6 +21,9 @@
       <template #htmlSlot="{ text }">
         <div v-html="text"></div>
       </template>
+      <template #switchSlot="{ text }">
+        <a-switch disabled checkedValue="Y" checked-children="OK" unCheckedValue="N" un-checked-children="NG" :checked="text" />
+      </template>
     </BasicTable>
 
     <!-- 生产记录 -->

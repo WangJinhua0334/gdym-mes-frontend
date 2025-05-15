@@ -1,9 +1,12 @@
 <template>
-  <dv-scroll-board :config="config" style="width: 100%; height: 200px" />
+  <div v-if="isShow" :style="{ height: containerHeight }" style="margin: 20px 0px" ref="scrollBoardContainer">
+    <p>物料解绑记录：</p>
+    <dv-scroll-board :config="config" style="width: 100%" />
+  </div>
 </template>
 
 <script lang="ts" setup>
-  import { Ref, ref, onMounted, getCurrentInstance, nextTick, watch } from 'vue';
+  import { ref, onMounted, watch } from 'vue';
   import { actionsProductUnBindList } from '../ProducttionRecordModal.api';
   const props = defineProps({
     id: {
@@ -36,21 +39,35 @@
     oddRowBGC: 'transparent',
     evenRowBGC: 'transparent',
     index: false,
+    rowNum: 5,
     columnWidth: [
       localStorage.remScale * 200,
       localStorage.remScale * 200,
       localStorage.remScale * 200,
+      localStorage.remScale * 400,
       localStorage.remScale * 200,
       localStorage.remScale * 200,
       localStorage.remScale * 200,
       localStorage.remScale * 200,
-      localStorage.remScale * 200,
-      localStorage.remScale * 200,
-      localStorage.remScale * 200,
-      localStorage.remScale * 200,
+      localStorage.remScale * 300,
+      localStorage.remScale * 150,
+      localStorage.remScale * 150,
     ],
     align: ['center', 'center', 'center', 'center', 'center', 'center', 'center', 'center', 'center', 'center', 'center'],
   });
+
+  const isShow = ref(false);
+  let containerHeight = ref('auto'); // 默认值
+  watch(
+    () => config.value.data,
+    (newData) => {
+      if (newData && newData.length > 0) {
+        isShow.value = true;
+      }
+      // 计算新高度
+      containerHeight.value = `${35 * newData.length + 70}px`;
+    }
+  );
 
   function loadProductUnBindList() {
     const params = {};
@@ -63,17 +80,18 @@
           '<span style="color:#000;font-size: 12px;height:20px">' + ReturnValue(item.moId_dictText) + '</span>',
           '<span style="color:#000;font-size: 12px;height:20px">' + ReturnValue(item.moPlanId_dictText) + '</span>',
           '<span style="color:#000;font-size: 12px;height:20px">' + ReturnValue(item.prodId_dictText) + '</span>',
-          '<span style="color:#000;font-size: 12px;height:20px">' + ReturnValue(item.prodName_dictText) + '</span>',
+          '<span style="color:#000;font-size: 12px;height:20px;overflow:hidden;" title="'+ReturnValue(item.prodName_dictText)+'">' + ReturnValue(item.prodName_dictText) + '</span>',
           '<span style="color:#000;font-size: 12px;height:20px">' + ReturnValue(item.qty) + '</span>',
           '<span style="color:#000;font-size: 12px;height:20px">' + ReturnValue(item.materialSn) + '</span>',
           '<span style="color:#000;font-size: 12px;height:20px">' + ReturnValue(item.materialBatch) + '</span>',
           '<span style="color:#000;font-size: 12px;height:20px">' + ReturnValue(item.materialSnType_dictText) + '</span>',
-          '<span style="color:#000;font-size: 12px;height:20px">' + ReturnValue(item.unbindReason) + '</span>',
+          '<span style="color:#000;font-size: 12px;height:20px;overflow:hidden;" title="'+ReturnValue(item.unbindReason)+'">' + ReturnValue(item.unbindReason) + '</span>',
           '<span style="color:#000;font-size: 12px;height:20px">' + ReturnValue(item.unbindBy_dictText) + '</span>',
           '<span style="color:#000;font-size: 12px;height:20px">' + ReturnValue(item.unbindTime) + '</span>',
         ]);
       });
       config.value.data = newData;
+      config.value.rowNum = newData.length;
       config.value = { ...config.value };
     });
   }
