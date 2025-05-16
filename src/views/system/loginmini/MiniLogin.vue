@@ -46,7 +46,8 @@
                           <a-input class="fix-auto-fill" type="password" :placeholder="t('sys.login.password')" v-model:value="formData.password" />
                         </a-form-item>
                       </div>
-                      <div class="aui-inputClear">
+                      <!-- 禁用验证码 -->
+                      <!-- <div class="aui-inputClear">
                         <i class="icon icon-code"></i>
                         <a-form-item>
                           <a-input class="fix-auto-fill" type="text" :placeholder="t('sys.login.inputCode')" v-model:value="formData.inputCode" />
@@ -55,7 +56,7 @@
                           <img v-if="randCodeData.requestCodeSuccess" :src="randCodeData.randCodeImage" @click="handleChangeCheckCode" />
                           <img v-else style="margin-top: 2px; max-width: initial" :src="codeImg" @click="handleChangeCheckCode" />
                         </div>
-                      </div>
+                      </div> -->
                       <div class="aui-flex" style="margin-top: 20px">
                         <div class="aui-flex-box">
                           <div class="aui-choice">
