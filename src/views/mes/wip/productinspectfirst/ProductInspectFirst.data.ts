@@ -98,7 +98,6 @@ export const formSchema: FormSchema[] = [
         samplingQty.value = e.target.value;
       },
     },
-    dynamicDisabled: true,
   },
   {
     label: '结果',
