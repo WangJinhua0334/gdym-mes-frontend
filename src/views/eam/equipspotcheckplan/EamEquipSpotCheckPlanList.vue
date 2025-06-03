@@ -80,7 +80,6 @@
       api: list,
       columns,
       canResize: false,
-      rowSelection: { type: 'radio' },
       formConfig: {
         //labelWidth: 120,
         schemas: searchFormSchema,

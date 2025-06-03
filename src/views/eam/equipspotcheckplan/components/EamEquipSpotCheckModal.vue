@@ -20,9 +20,9 @@
           <template #mustSwitch="record">
             <a-switch
               v-model:checkedValue="record.column.customValue[0]"
-              checked-children="是"
+              checked-children="正常"
               v-model:unCheckedValue="record.column.customValue[1]"
-              un-checked-children="否"
+              un-checked-children="不正常"
               v-model:checked="record.value"
               @change="record.triggerChange"
               :disabled="formDisabled"
