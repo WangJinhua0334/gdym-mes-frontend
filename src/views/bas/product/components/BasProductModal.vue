@@ -62,7 +62,7 @@
       //表单赋值
       await setFieldsValue({
         ...data.record,
-        version: data.record.version.replace('V', '').replace('v', '') * 1,
+        //version: data.record.version.replace('V', '').replace('v', '') * 1,
       });
       requestSubTableData(basProductPropertyList, { id: data?.record?.id }, basProductPropertyTable);
     }
@@ -97,7 +97,7 @@
   async function requestAddOrEdit(values) {
     try {
       setModalProps({ confirmLoading: true });
-      values.version = 'V' + ((values.version + '').includes('.') ? values.version : values.version + '.0');
+      //values.version = 'V' + ((values.version + '').includes('.') ? values.version : values.version + '.0');
       //提交表单
       await saveOrUpdate(values, isUpdate.value);
       //关闭弹窗

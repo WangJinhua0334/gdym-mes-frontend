@@ -207,12 +207,21 @@ export const formSchema: FormSchema[] = [
       return [{ required: true, message: '请输入料号!' }];
     },
   },
+  // {
+  //   label: '版本',
+  //   field: 'version',
+  //   defaultValue: '1.0',
+  //   component: 'InputNumber',
+  //   componentProps: { addonBefore: 'V', precision: 1 },
+  //   dynamicRules: ({ model, schema }) => {
+  //     return [{ required: true, message: '请输入版本!' }];
+  //   },
+  // },
   {
     label: '版本',
     field: 'version',
-    defaultValue: '1.0',
-    component: 'InputNumber',
-    componentProps: { addonBefore: 'V', precision: 1 },
+    defaultValue: 'A0',
+    component: 'Input',
     dynamicRules: ({ model, schema }) => {
       return [{ required: true, message: '请输入版本!' }];
     },
@@ -491,6 +500,35 @@ export const formSchema: FormSchema[] = [
         //pageSize: 10,
         //multi: true,
         //maxTagCount: 2,
+      };
+    },
+  },
+  {
+    label: '流转卡生成规则',
+    field: 'fillRuleCode',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/sys/fillRule/listFillRule',
+        params: { column: 'createTime', order: 'desc', searchFields: 'ruleName' },
+        columns: [
+          { name: '编码', code: 'ruleCode' },
+          { name: '名称', code: 'ruleName' },
+        ],
+        isShowNum: true,
+        rowKey: 'ruleCode',
+        labelKey: ['ruleName'],
+        placeholder: '请选择',
+        multi: false,
+        pageSize: 10,
+        queryBefore: (params) => {
+          params.ruleCode = '*mo_sn*';
+          return params;
+        },
       };
     },
   },
