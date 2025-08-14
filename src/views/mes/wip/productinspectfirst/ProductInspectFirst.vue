@@ -12,7 +12,8 @@
           :dataSource="judgemengItemTable.dataSource"
           :rowNumber="true"
           :rowSelection="true"
-          @edit-closed="tableValueChange"
+          @value-change="editClosedJud"
+          :keyboardEdit="true"
         >
           <!--字段回显插槽-->
           <template #resultSwitch="record">
@@ -49,6 +50,7 @@
           :dataSource="measurementItemTable.dataSource"
           :rowNumber="true"
           :rowSelection="true"
+          :keyboardEdit="true"
           @edit-closed="editClosed"
         >
           <!--字段回显插槽-->
@@ -99,6 +101,7 @@
   import { JVxeColumn, JVxeTypes } from '/@/components/jeecg/JVxeTable/src/types';
   import { usePermission } from '/@/hooks/web/usePermission';
   const { hasPermission } = usePermission();
+  const { createConfirm } = useMessage();
 
   // Emits声明
   const emit = defineEmits(['setModalProps', 'success', 'close']);
@@ -139,38 +142,64 @@
     edit: true,
     scrollX: true,
   });
-  //编辑关闭后触发事件
+  //定量编辑关闭后触发事件
   function editClosed(data) {
-    if (unref(data.column).key.includes('value')) {
-      let itemData = measurementItemPanel.value.getXTable().getTableData().fullData[data.rowIndex];
-      if (itemData.limitMin && itemData.minOperators && itemData.limitMin != null && itemData.minOperators != null) {
-        if (!compareValues(itemData[unref(data.column).key], itemData.minOperators, itemData.limitMin)) {
-          measurementItemPanel.value.getXTable().getTableData().fullData[data.rowIndex].result = 'N';
-          $message.createMessage.warning('输入的值不符合下限要求范围内');
-        } else {
-          measurementItemPanel.value.getXTable().getTableData().fullData[data.rowIndex].result = 'Y';
+    // 提前缓存常用变量
+    const columnKey = unref(data.column).key;
+    const isTargetColumn = columnKey.includes('value') && !columnKey.includes('Sn');
+    const tableData = measurementItemPanel.value.getXTable().getTableData().fullData;
+    const itemData = tableData[data.rowIndex];
+
+    if (!isTargetColumn) return;
+
+    // 提取公共变量
+    const { limitMin, minOperators, limitMax, maxOperators } = itemData;
+    // 判断是否需要设置结果为 'N'
+    let shouldSetN = false;
+    const formData = getFieldsValue();
+    for (let i = 0; i < formData.samplingQty; i++) {
+      const value = itemData['value' + (i + 1)];
+      if (value == undefined) {
+        shouldSetN = true;
+        continue;
+      }
+      // 下限判断
+      if (limitMin != null && minOperators && value != null) {
+        if (!compareValues(value, minOperators, limitMin)) {
+          shouldSetN = true;
         }
       }
-      if (itemData.limitMax && itemData.maxOperators && itemData.limitMax != null && itemData.maxOperators != null) {
-        if (!compareValues(itemData[unref(data.column).key], itemData.maxOperators, itemData.limitMax)) {
-          $message.createMessage.warning('输入的值不符合上限要求范围内');
-          measurementItemPanel.value.getXTable().getTableData().fullData[data.rowIndex].result = 'N';
-        } else {
-          measurementItemPanel.value.getXTable().getTableData().fullData[data.rowIndex].result = 'Y';
+      // 上限判断
+      if (!shouldSetN && limitMax != null && maxOperators && value != null) {
+        if (!compareValues(value, maxOperators, limitMax)) {
+          shouldSetN = true;
         }
       }
     }
+    // 设置最终结果
+    itemData.result = shouldSetN ? 'N' : 'Y';
     autoCalculateResult();
   }
-  // 检验项值变更事件
-  function tableValueChange() {
+  //定性编辑关闭后触发事件
+  function editClosedJud(data) {
+    if (unref(data.column).key.includes('result')) {
+      let itemResult = 'Y';
+      let itemData = judgemengItemPanel.value.getXTable().getTableData().fullData[data.rowIndex];
+      const formData = getFieldsValue();
+      for (let i = 0; i < formData.samplingQty; i++) {
+        if (!itemData['result' + (i + 1)] || itemData['result' + (i + 1)] == 'N') {
+          itemResult = 'N';
+        }
+      }
+      judgemengItemPanel.value.getXTable().getTableData().fullData[data.rowIndex].result = itemResult;
+    }
     autoCalculateResult();
   }
   /**
    * 通过传入比较符，判断是否满足
    **/
   function compareValues(value1: number, operator: string, value2: number): boolean {
-    console.log(value1, operator, value2);
+    //console.log(value1, operator, value2);
     switch (operator) {
       case 'lower_limit_gt': //>
         return value1 > value2;
@@ -228,6 +257,13 @@
           placeholder: '请输入${title}',
           width: 120,
           minWidth: 120,
+          formatter: ({ cellValue }) => {
+            // 显示时格式化为两位小数
+            if (typeof cellValue === 'number') {
+              return Number(cellValue).toFixed(2);
+            }
+            return cellValue;
+          },
         },
         {
           title: 'V' + (i + 1) + 'SN',
@@ -239,6 +275,19 @@
         }
       );
     }
+    //添加结果栏
+    newJudTableColums.value.push({
+      title: '结果',
+      key: 'result',
+      disabled: true,
+      defaultValue: 'N',
+      customValue: ['Y', 'N'],
+      type: JVxeTypes.slot,
+      align: 'center',
+      slotName: 'mustSwitch',
+      width: 120,
+      minWidth: 120,
+    });
     //在最后面添加备注和附件列--定性
     newJudTableColums.value.push({
       title: '备注',
@@ -256,13 +305,18 @@
       width: 200,
       minWidth: 200,
     });
+    //添加结果栏
     newMeaTableColums.value.push({
-      title: '附件',
-      key: 'attachments',
+      title: '结果',
+      key: 'result',
+      disabled: true,
+      defaultValue: 'N',
+      customValue: ['Y', 'N'],
+      type: JVxeTypes.slot,
       align: 'center',
-      type: JVxeTypes.file,
-      width: 200,
-      minWidth: 200,
+      slotName: 'mustSwitch',
+      width: 120,
+      minWidth: 120,
     });
     //在最后面添加备注和附件列--定量
     newMeaTableColums.value.push({
@@ -270,6 +324,14 @@
       key: 'remark',
       type: JVxeTypes.textarea,
       placeholder: '请输入${title}',
+      width: 200,
+      minWidth: 200,
+    });
+    newMeaTableColums.value.push({
+      title: '附件',
+      key: 'attachments',
+      align: 'center',
+      type: JVxeTypes.file,
       width: 200,
       minWidth: 200,
     });
@@ -281,19 +343,18 @@
     let result = 'Y';
     const rowJudData = judgemengItemPanel.value.getTableData();
     rowJudData.forEach((data) => {
-      if (data.result === 'N') {
+      if (!data.result || data.result === 'N') {
         result = 'N';
       }
     });
     const rowMeaData = measurementItemPanel.value.getTableData();
     rowMeaData.forEach((data) => {
-      if (data.result === 'N') {
+      if (!data.result || data.result === 'N') {
         result = 'N';
       }
     });
     setFieldsValue({ result: result });
   }
-
   //表单配置
   const [registerForm, { setFieldsValue, getFieldsValue, validate }] = useForm({
     showActionButtonGroup: false,
@@ -327,7 +388,6 @@
   watch(
     () => samplingQty.value,
     () => {
-      console.log(unref(samplingQty));
       createColumn(unref(samplingQty));
     },
     { immediate: false, deep: true }
@@ -385,6 +445,7 @@
             inspTool: item.inspTool,
             inspBasis: item.inspBasis,
             techRequirements: item.techRequirements,
+            result: item.result,
           };
           //添加值
           if (unref(item.valueList) && unref(item.valueList).length > 0) {
@@ -415,6 +476,7 @@
             inspTool: item.inspTool,
             inspBasis: item.inspBasis,
             techRequirements: item.techRequirements,
+            result: item.result,
           };
           //添加值
           if (unref(item.valueList) && unref(item.valueList).length > 0) {
@@ -466,12 +528,17 @@
     //如果为不良的话，不良消息接收人为必填
     if (isSubmit) {
       if (formData.result == 'N' && (formData.ngUserBy == null || formData.ngUserBy == '')) {
-        $message.createMessage.warning('请选择不良消息接收人');
+        $message.createMessage.warning('请选择消息接收人');
         return;
       }
     }
+    if (formData.isPush == 'Y' && (formData.ngUserBy == null || formData.ngUserBy == '')) {
+      $message.createMessage.warning('请选择消息接收人');
+      return;
+    }
     //组合检验项数据
     const inspectItemList = ref<any>([]);
+    let message = '';
     //循环定性数据
     for (let judItem of judgemengItemPanel.value.getTableData()) {
       let judSubItem = ref<any>([]);
@@ -495,6 +562,9 @@
         remark: judItem.remark,
         valueList: judSubItem.value,
       });
+      if ('N' == judItem.result || !judItem.result) {
+        message += judItem.description + '未通过;<br/>';
+      }
     }
     //循环定量数据
     for (let meaItem of measurementItemPanel.value.getTableData()) {
@@ -523,7 +593,27 @@
         remark: meaItem.remark,
         valueList: meaSubItem.value,
       });
+
+      if ('N' == meaItem.result || !meaItem.result) {
+        message += meaItem.description + '  未通过;<br/>';
+      }
     }
+    //增加提示
+    if (message != '') {
+      const flg = await new Promise((resolve) => {
+        createConfirm({
+          iconType: 'warning',
+          title: '确认保存吗？',
+          content: message,
+          onOk: () => resolve(true),
+          onCancel: () => resolve(false),
+        });
+      });
+      if (!flg) {
+        return;
+      }
+    }
+
     emit('setModalProps', { loading: true });
     //组合传值参数
     let parameters = {
@@ -539,15 +629,17 @@
       attachments: formData.attachments,
       samplingQty: formData.samplingQty,
       ngQty: formData.ngQty,
+      isPush: formData.isPush,
       ngUserBy: formData.ngUserBy,
-
       // 检验项数据
       inspectItemList: inspectItemList.value,
     };
 
     await saveInspect(parameters)
       .then((res) => {
-        emit('success');
+        if (!!isSubmit) {
+          emit('success');
+        }
       })
       .catch((err) => {
         emit('setModalProps', { loading: false });

@@ -12,9 +12,16 @@
 <script lang="ts" setup>
   import { onMounted, ref, unref, watch } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { formSchema } from '../MesWkpMo.data';
-  import { queryByWkpId, changeMo } from '../MesWkpMo.api';
+  import { formSchema, scanSn } from '../MesWkpMo.data';
+  import { queryByWkpId, changeMo, getScan } from '../MesWkpMo.api';
+  import { useMessage } from '/@/hooks/web/useMessage';
 
+  //提示弹窗
+  const $message = useMessage();
+  //调用ts页面的方法
+  scanSn.value = (sn) => {
+    scranLotSn(sn);
+  };
   // Emits声明
   const emit = defineEmits(['setModalProps', 'success', 'close']);
   const props = defineProps({
@@ -28,7 +35,7 @@
     },
   });
   //表单配置
-  const [registerForm, { setFieldsValue, getFieldsValue, validate }] = useForm({
+  const [registerForm, { setFieldsValue, updateSchema, validate }] = useForm({
     labelWidth: 150,
     schemas: formSchema,
     showActionButtonGroup: false,
@@ -40,6 +47,9 @@
         scan(props.componentData?.record?.workPostId);
       } else {
         scan(props.wkpId);
+      }
+      if (props.componentData && unref(props.componentData.record.scanInfo).sn) {
+        scranLotSn(unref(props.componentData.record.scanInfo).sn);
       }
     }, 100);
   });
@@ -68,7 +78,23 @@
         emit('setModalProps', { confirmLoading: false });
       });
   }
-
+  //扫描流转卡事件
+  async function scranLotSn(sn: any) {
+    try {
+      emit('setModalProps', { confirmLoading: true });
+      //查询表单
+      await getScan({ sn: sn }).then((data) => {
+        if (data) {
+          setFieldsValue({
+            snId: data?.moSnId,
+            moId: data?.moId,
+          });
+        }
+      });
+    } finally {
+      emit('setModalProps', { confirmLoading: false });
+    }
+  }
   function close() {
     emit('close');
   }

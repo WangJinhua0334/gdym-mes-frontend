@@ -1,5 +1,5 @@
 <template>
-  <BasicForm @register="registerRepairDefectForm" ref="formRef"/>
+  <BasicForm @register="registerRepairDefectForm" ref="formRef" />
 </template>
 
 <script lang="ts" setup>
@@ -23,16 +23,12 @@
   });
 
   //表单配置
-  const [registerRepairDefectForm, { setProps, resetFields, setFieldsValue, validate, updateSchema }] = useForm({
+  const [registerRepairDefectForm, { setFieldsValue }] = useForm({
     labelWidth: 150,
     schemas: formSchema,
     showActionButtonGroup: false,
     baseColProps: { span: 12 },
   });
-  function getFormValue() {
-    console.log(666);
-    console.log(formRef);
-  }
 </script>
 
 <style lang="less" scoped>

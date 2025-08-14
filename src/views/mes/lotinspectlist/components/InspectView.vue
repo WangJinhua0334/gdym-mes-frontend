@@ -164,24 +164,48 @@
         }
       );
     }
+    //添加结果栏
+    newJudTableColums.value.push({
+      title: '结果',
+      key: 'result',
+      disabled: true,
+      defaultValue: 'N',
+      customValue: ['Y', 'N'],
+      type: JVxeTypes.slot,
+      align: 'center',
+      slotName: 'resultSwitch',
+      width: 120,
+      minWidth: 120,
+    });
     //在最后面添加备注和附件列--定性
     newJudTableColums.value.push({
       title: '备注',
       key: 'remark',
       disabled: true,
       type: JVxeTypes.textarea,
+      width: 120,
+      minWidth: 120,
     });
     newJudTableColums.value.push({
       title: '附件',
       key: 'attachments',
       disabled: true,
       type: JVxeTypes.file,
+      width: 120,
+      minWidth: 120,
     });
+    //添加结果栏
     newMeaTableColums.value.push({
-      title: '附件',
-      key: 'attachments',
+      title: '结果',
+      key: 'result',
       disabled: true,
-      type: JVxeTypes.file,
+      defaultValue: 'N',
+      customValue: ['Y', 'N'],
+      type: JVxeTypes.slot,
+      align: 'center',
+      slotName: 'resultSwitch',
+      width: 120,
+      minWidth: 120,
     });
     //在最后面添加备注和附件列--定量
     newMeaTableColums.value.push({
@@ -190,6 +214,16 @@
       disabled: true,
       type: JVxeTypes.textarea,
       placeholder: '请输入${title}',
+      width: 120,
+      minWidth: 120,
+    });
+    newMeaTableColums.value.push({
+      title: '附件',
+      key: 'attachments',
+      disabled: true,
+      type: JVxeTypes.file,
+      width: 120,
+      minWidth: 120,
     });
     judgemengItemPanel.value.getXTable().reloadColumn(newJudTableColums);
     measurementItemPanel.value.getXTable().reloadColumn(newMeaTableColums);
@@ -244,6 +278,7 @@
             inspTool: item.inspTool,
             inspBasis: item.inspBasis,
             techRequirements: item.techRequirements,
+            result: item.result,
           };
           //添加值
           if (unref(item.inspValueList) && unref(item.inspValueList).length > 0) {
@@ -274,6 +309,7 @@
             inspBasis: item.inspBasis,
             techRequirements: item.techRequirements,
             unitId: item.unitId,
+            result: item.result,
           };
           //添加值
           if (unref(item.inspValueList) && unref(item.inspValueList).length > 0) {

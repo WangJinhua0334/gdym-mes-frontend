@@ -80,7 +80,7 @@ export const columns: BasicColumn[] = [
     dataIndex: 'prodName_dictText',
   },
   {
-    title: '条码',
+    title: '流转卡号',
     align: 'center',
     width: 80,
     dataIndex: 'lotSn',

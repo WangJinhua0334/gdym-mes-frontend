@@ -19,6 +19,20 @@ export const columns: BasicColumn[] = [
     dataIndex: 'moId_dictText',
   },
   {
+    title: '产品编码',
+    dataIndex: 'prodId_dictText',
+    width: 200,
+    sorter: true,
+    align: 'center',
+  },
+  {
+    title: '产品名称',
+    dataIndex: 'prodName_dictText',
+    width: 200,
+    sorter: true,
+    align: 'center',
+  },
+  {
     title: '流转卡/序列号',
     dataIndex: 'lotSn',
     width: 200,
@@ -91,6 +105,13 @@ export const columns: BasicColumn[] = [
       return render.renderDict(text, 'defective_status', true);
     },
   },
+  {
+    title: '生产任务',
+    align: 'center',
+    width: 200,
+    sorter: true,
+    dataIndex: 'moPlanId_dictText',
+  },
 ];
 //查询数据
 export const searchFormSchema: FormSchema[] = [
@@ -104,6 +125,15 @@ export const searchFormSchema: FormSchema[] = [
     label: '工单号',
     field: 'moCodeQuery',
     component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: '产品',
+    field: 'prodQuery',
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入产品编码或名称',
+    },
     colProps: { span: 6 },
   },
   {

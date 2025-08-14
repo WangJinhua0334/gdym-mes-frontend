@@ -493,7 +493,7 @@
         onClick: handleResume.bind(null, record),
         auth: 'mes:mes_mo:resume',
       });
-    } else if (record.status == 'ClosedInAdvance' || record.status == 'Closed') {
+    } else if (record.status == 'ClosedInAdvance') {
       arr.push({
         label: '开启',
         onClick: handleOpen.bind(null, record),

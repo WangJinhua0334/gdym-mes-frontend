@@ -6,7 +6,7 @@ import { JVxeTypes, JVxeColumn } from '/@/components/jeecg/JVxeTable/types';
 //列表数据
 export const columns: BasicColumn[] = [
   {
-    title: '维修单号',
+    title: '返工单号',
     align: 'center',
     dataIndex: 'code',
   },
@@ -21,12 +21,12 @@ export const columns: BasicColumn[] = [
     dataIndex: 'moPlanId_dictText',
   },
   {
-    title: '条码',
+    title: '流转卡号',
     align: 'center',
     dataIndex: 'lotSn',
   },
   {
-    title: '条码数量',
+    title: '数量',
     align: 'center',
     dataIndex: 'lotQty',
   },
@@ -52,12 +52,12 @@ export const columns: BasicColumn[] = [
     },
   },
   {
-    title: '维修人',
+    title: '返工人',
     align: 'center',
     dataIndex: 'repairBy_dictText',
   },
   {
-    title: '维修时间',
+    title: '返工时间',
     align: 'center',
     dataIndex: 'repairTime',
   },
@@ -65,7 +65,7 @@ export const columns: BasicColumn[] = [
 //查询数据
 export const searchFormSchema: FormSchema[] = [
   {
-    label: '维修单号',
+    label: '返工单号',
     field: 'code',
     component: 'JInput',
     colProps: { span: 6 },
@@ -90,7 +90,7 @@ export const searchFormSchema: FormSchema[] = [
   },
 
   {
-    label: '维修人',
+    label: '返工人',
     field: 'repairBy',
     component: 'JSelectUser',
     colProps: { span: 6 },
@@ -108,17 +108,17 @@ export const searchFormSchema: FormSchema[] = [
 //表单数据
 export const formSchema: FormSchema[] = [
   {
-    label: '在制条码',
+    label: '流转卡号',
     field: 'lotId',
     component: 'Input',
   },
   {
-    label: '条码',
+    label: '流转卡号',
     field: 'lotSn',
     component: 'Input',
   },
   {
-    label: '条码数量',
+    label: '数量',
     field: 'lotQty',
     component: 'InputNumber',
   },
@@ -148,7 +148,7 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
   },
   {
-    label: '维修单号',
+    label: '返工单号',
     field: 'code',
     component: 'Input',
   },
@@ -158,12 +158,12 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
   },
   {
-    label: '维修人',
+    label: '返工人',
     field: 'repairBy',
     component: 'Input',
   },
   {
-    label: '维修时间',
+    label: '返工时间',
     field: 'repairTime',
     component: 'DatePicker',
     componentProps: {

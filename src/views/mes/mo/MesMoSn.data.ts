@@ -14,8 +14,11 @@ export const columns: BasicColumn[] = [
   {
     title: '流转卡类型',
     align: 'center',
-    dataIndex: 'snType_dictText',
+    dataIndex: 'snType',
     width: 140,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'mo_sn_type', true);
+    },
   },
   {
     title: '工单号',
@@ -42,17 +45,23 @@ export const columns: BasicColumn[] = [
     width: 160,
   },
   {
-    title: '记录批次唯一码',
+    title: '开始框/托(号)',
     align: 'center',
-    dataIndex: 'isUniqSn',
+    dataIndex: 'num',
     width: 120,
-    customRender: ({ text }) => {
-      return render.renderSwitch(text, [
-        { text: '是', value: 'Y', isChecked: true },
-        { text: '否', value: 'N', isChecked: false },
-      ]);
-    },
   },
+  // {
+  //   title: '记录批次唯一码',
+  //   align: 'center',
+  //   dataIndex: 'isUniqSn',
+  //   width: 120,
+  //   customRender: ({ text }) => {
+  //     return render.renderSwitch(text, [
+  //       { text: '是', value: 'Y', isChecked: true },
+  //       { text: '否', value: 'N', isChecked: false },
+  //     ]);
+  //   },
+  // },
   {
     title: '数量',
     align: 'center',
@@ -60,10 +69,24 @@ export const columns: BasicColumn[] = [
     width: 120,
   },
   {
-    title: '物料成本',
+    title: '计划开始日期',
     align: 'center',
-    dataIndex: 'materialCost',
-    width: 120,
+    sorter: true,
+    dataIndex: 'planStartTime',
+    width: 150,
+    format: (text) => {
+      return !text ? '' : text.length > 16 ? text.substr(0, 16) : text;
+    },
+  },
+  {
+    title: '计划完工日期',
+    align: 'center',
+    sorter: true,
+    dataIndex: 'planCompleteTime',
+    width: 150,
+    format: (text) => {
+      return !text ? '' : text.length > 16 ? text.substr(0, 16) : text;
+    },
   },
   {
     title: '是否投产',
@@ -149,11 +172,23 @@ export const columns: BasicColumn[] = [
     dataIndex: 'scrapTime',
     width: 150,
   },
+  {
+    title: '物料成本',
+    align: 'center',
+    dataIndex: 'materialCost',
+    width: 120,
+  },
 ];
 
 /**查询表单配置 */
 export function getSearchFormSchema(moId, moPlanId): FormSchema[] {
   const retValue = [];
+  retValue.push({
+    label: '流转卡',
+    field: 'sn',
+    component: 'JInput',
+    colProps: { span: 6 },
+  });
   if ((!moId || moId == '') && (!moPlanId || moPlanId == '')) {
     retValue.push({
       label: '工单号',
@@ -162,16 +197,6 @@ export function getSearchFormSchema(moId, moPlanId): FormSchema[] {
       colProps: { span: 6 },
     });
   }
-
-  if (!moPlanId || moPlanId == '') {
-    retValue.push({
-      label: '生产任务单号',
-      field: 'moPlanCode',
-      component: 'Input',
-      colProps: { span: 6 },
-    });
-  }
-
   retValue.push({
     label: '产品',
     field: 'prodQuery',
@@ -181,13 +206,14 @@ export function getSearchFormSchema(moId, moPlanId): FormSchema[] {
     },
     colProps: { span: 6 },
   });
-
-  retValue.push({
-    label: '流转卡',
-    field: 'sn',
-    component: 'JInput',
-    colProps: { span: 6 },
-  });
+  if (!moPlanId || moPlanId == '') {
+    retValue.push({
+      label: '生产任务单号',
+      field: 'moPlanCode',
+      component: 'Input',
+      colProps: { span: 6 },
+    });
+  }
 
   return retValue;
 }

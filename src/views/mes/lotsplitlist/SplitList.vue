@@ -29,7 +29,7 @@
   //注册table数据
   const { tableContext } = useListPage({
     tableProps: {
-      title: '拆分条码记录',
+      title: '拆分流转卡记录',
       api: list,
       columns,
       canResize: true,
@@ -57,7 +57,7 @@
         defHttp
           .get({
             url: '/template/basTemplate/getReportIdByIds',
-            params: { ids: ids.join(','), type: 'mo_sn' },
+            params: { ids: ids.join(','), type: 'split_sn' },
           })
           .then(async (reportRs) => {
             // 打印数据集 { reportId, parameters }

@@ -33,8 +33,11 @@ export function getColumns(moCompleteKitCheck): BasicColumn[] {
       title: '类型',
       align: 'center',
       sorter: true,
-      dataIndex: 'type_dictText',
+      dataIndex: 'type',
       width: 120,
+      customRender: ({ text }) => {
+        return render.renderDict(text, 'mo_type', true);
+      },
     },
     {
       title: '车间',
@@ -145,6 +148,22 @@ export function getColumns(moCompleteKitCheck): BasicColumn[] {
       format: (text) => {
         return !text ? '' : text.length > 16 ? text.substr(0, 16) : text;
       },
+    },
+    {
+      title: '创建时间',
+      align: 'center',
+      sorter: true,
+      dataIndex: 'createTime',
+      width: 150,
+      format: (text) => {
+        return !text ? '' : text.length > 16 ? text.substr(0, 16) : text;
+      },
+    },
+    {
+      title: '备注',
+      align: 'center',
+      dataIndex: 'remark',
+      width: 150,
     },
     {
       title: '入库模式',
@@ -259,7 +278,7 @@ export function getFormSchema(): FormSchema[] {
     {
       label: '生产类型',
       field: 'produceType',
-      defaultValue: 'sn',
+      defaultValue: 'batch',
       component: 'JDictSelectTag',
       componentProps: {
         dictCode: 'mo_produce_type',
@@ -349,8 +368,26 @@ export function getFormSchema(): FormSchema[] {
           isShowNum: true,
           rowKey: 'id',
           labelKey: ['code', 'version'],
-          linkmap: [{ name: 'prodName_dictText', templateId: 'templateId', packRuleId: 'packRuleId', materialCost: 'materialCost' }],
+          linkmap: [
+            {
+              name: 'prodName_dictText',
+              templateId: 'templateId',
+              packRuleId: 'packRuleId',
+              materialCost: 'materialCost',
+              fillRuleCode: 'fillRuleCode',
+            },
+          ],
           placeholder: '请选择',
+          queryBefore: (params) => {
+            if (getFieldsValue().type && getFieldsValue().type.length > 0) {
+              if (getFieldsValue().type == 'Standard') {
+                params.category = 'PRODUCT';
+              } else if (getFieldsValue().type == 'HalfProduct') {
+                params.category = 'SEMI';
+              }
+            }
+            return params;
+          },
           onChange: function (v) {
             if (v) {
               moProdId.value = v.join(',');
@@ -444,22 +481,22 @@ export function getFormSchema(): FormSchema[] {
       label: '计划开始日期',
       field: 'planStartTime',
       component: 'DatePicker',
-      // componentProps: {
-      //   showTime: true,
-      // },
+      componentProps: {
+        getPopupContainer: (node) => document.body,
+      },
       dynamicRules: ({ model, schema, values }) => {
-        return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime)[0] }];
+        return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];
       },
     },
     {
       label: '计划完工日期',
       field: 'planCompleteTime',
       component: 'DatePicker',
-      // componentProps: {
-      //   showTime: true,
-      // },
+      componentProps: {
+        getPopupContainer: (node) => document.body,
+      },
       dynamicRules: ({ model, schema, values }) => {
-        return [{ required: true, message: '请选择计划完工日期!' }, { ...rules.endTime(model.planStartTime)[0] }];
+        return [{ required: true, message: '请选择计划完工日期!' }, { ...rules.endTime(model.planStartTime, true)[0] }];
       },
     },
     {
@@ -511,6 +548,36 @@ export function getFormSchema(): FormSchema[] {
           rowKey: 'id',
           labelKey: ['name'],
           placeholder: '请输入',
+        };
+      },
+    },
+    {
+      label: '流转卡生成规则',
+      field: 'fillRuleCode',
+      component: 'JSearchSelectCustom',
+      defaultValue: 'mo_sn_fill_rule',
+      componentProps: ({ formActionType }) => {
+        const { setFieldsValue, getFieldsValue } = formActionType;
+        return {
+          setFieldsValue: setFieldsValue,
+          getFieldsValue: getFieldsValue,
+          method: 'get',
+          url: '/sys/fillRule/listFillRule',
+          params: { column: 'createTime', order: 'desc', searchFields: 'ruleName' },
+          columns: [
+            { name: '名称', code: 'ruleName' },
+            { name: '编码', code: 'ruleCode' },
+          ],
+          isShowNum: true,
+          rowKey: 'ruleCode',
+          labelKey: ['ruleName'],
+          placeholder: '请选择',
+          multi: false,
+          pageSize: 10,
+          queryBefore: (params) => {
+            params.ruleCode = '*mo_sn*';
+            return params;
+          },
         };
       },
     },
@@ -574,6 +641,14 @@ export const mesMoBomJVxeColumns: JVxeColumn[] = [
     customValue: ['Y', 'N'],
     width: 120,
     slotName: 'mustSwitch',
+  },
+  {
+    title: '产出比例',
+    key: 'prodRate',
+    type: JVxeTypes.inputNumber,
+    width: 100,
+    placeholder: '请输入${title}',
+    defaultValue: 1,
   },
   {
     title: '需求量',

@@ -33,6 +33,15 @@
         >
           打印
         </a-button>
+        <a-button
+          v-if="selectedRowKeys.length > 0"
+          type="primary"
+          v-auth="'mes:mes_mo_sn:delete'"
+          preIcon="ant-design:delete-outlined"
+          @click="handleDelete"
+        >
+          删除
+        </a-button>
       </template>
       <!--操作栏-->
       <template #action="{ record }">
@@ -66,7 +75,7 @@
   import MesMoSnPrintRecordSubTable from './subTables/MesMoSnPrintRecordSubTable.vue';
   import MesMoSnStationList from './MesMoSnStationList.vue';
   import { columns, getSearchFormSchema, printFormSchema } from './MesMoSn.data';
-  import { list, getExportUrl, queryMoSnPrintMapByIds, createSeq } from './MesMoSn.api';
+  import { list, getExportUrl, queryMoSnPrintMapByIds, createSeq, batchDelete } from './MesMoSn.api';
   import { downloadFile } from '/@/utils/common/renderUtils';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { defHttp } from '/@/utils/http/axios';
@@ -124,6 +133,7 @@
       },
       showActionColumn: false,
       actionColumn: {
+        title: '操作',
         width: 160,
         fixed: 'right',
       },
@@ -191,6 +201,25 @@
     }
     openModal(true, {});
   }
+
+  /**
+   * 删除数据
+   */
+  async function handleDelete() {
+    if (!unref(selectedRowKeys) || unref(selectedRowKeys).length <= 0) {
+      $message.createMessage.warning('请选择要删除的数据!');
+      return;
+    }
+    await batchDelete({ ids: selectedRowKeys.value }, handleSuccess);
+  }
+
+  /**
+   * 成功回调
+   */
+  function handleSuccess() {
+    (selectedRowKeys.value = []) && reload();
+  }
+
   /**
    * 创建唯一码
    */

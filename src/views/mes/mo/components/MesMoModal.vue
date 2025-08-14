@@ -356,7 +356,7 @@
         // 工单数量
         // let moQty = Number(getFieldsValue().qty ? getFieldsValue().qty : 0);
         for (const row of tableData) {
-          const requireQty = calculateRequiredQty(unref(moQty), row.qty, row.lossRate); //Number(row.qty) * Number(getFieldsValue().qty ? getFieldsValue().qty : 0);
+          const requireQty = calculateRequiredQty(unref(moQty), row.qty, row.lossRate) * row.prodRate; //Number(row.qty) * Number(getFieldsValue().qty ? getFieldsValue().qty : 0);
           mesMoBom.value.setValues([{ rowKey: row.id, values: { requireQty: requireQty } }]);
         }
 
@@ -402,8 +402,9 @@
         let moQty = Number(getFieldsValue().qty ? getFieldsValue().qty : 0);
         for (const row of res) {
           row.id = buildUUID();
+          row.prodRate = 1;
           row.lossRate = row.lossRate ? row.lossRate : 0;
-          row.requireQty = calculateRequiredQty(moQty, row.qty, row.lossRate); //Number(row.qty) * Number(getFieldsValue().qty ? getFieldsValue().qty : 0);
+          row.requireQty = calculateRequiredQty(moQty, row.qty, row.lossRate) * row.prodRate; //Number(row.qty) * Number(getFieldsValue().qty ? getFieldsValue().qty : 0);
 
           delete row.createBy;
           delete row.createTime;
@@ -541,6 +542,7 @@
           requireQty: calculateRequiredQty(moQty, 1, 0),
           qty: 1,
           lossRate: 0,
+          prodRate: 1,
           unitId: row.unitId,
           unitId_dictText: row.unitId_dictText,
           sequence: moBomRows.length + i,
@@ -576,7 +578,8 @@
         for (const row of res) {
           row.id = buildUUID();
           row.lossRate = row.lossRate ? row.lossRate : 0;
-          row.requireQty = calculateRequiredQty(moQty, row.qty, row.lossRate); //Number(row.qty) * Number(getFieldsValue().qty ? getFieldsValue().qty : 0);
+          row.prodRate = 1;
+          row.requireQty = calculateRequiredQty(moQty, row.qty, row.lossRate) * row.prodRate; //Number(row.qty) * Number(getFieldsValue().qty ? getFieldsValue().qty : 0);
 
           delete row.createBy;
           delete row.createTime;
@@ -600,12 +603,12 @@
   // 测试项值变更事件
   function bomTableValueChange(args) {
     const { oldValue, value, row, column } = args;
-    if (column.property != 'qty' && column.property != 'lossRate') return;
+    if (column.property != 'qty' && column.property != 'lossRate' && column.property != 'prodRate') return;
 
     if (oldValue == value) return;
 
     const moQty = Number(getFieldsValue().qty ? getFieldsValue().qty : 0);
-    row.requireQty = calculateRequiredQty(moQty, row.qty, row.lossRate);
+    row.requireQty = calculateRequiredQty(moQty, row.qty, row.lossRate) * row.prodRate;
   }
 
   /**BOM物料需求量计算

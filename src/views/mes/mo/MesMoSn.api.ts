@@ -1,4 +1,7 @@
 import { defHttp } from '/@/utils/http/axios';
+import { useMessage } from '/@/hooks/web/useMessage';
+
+const { createConfirm } = useMessage();
 
 enum Api {
   /**列表查询 */
@@ -14,6 +17,8 @@ enum Api {
   queryPrintRecordPageList = '/mo/mesMoSn/queryPrintRecordPageList',
   /**流转卡按物料ID查询分组 */
   queryMoSnPrintMapByIds = '/mo/mesMoSn/queryMoSnPrintMapByIds',
+  /**删除接口 */
+  deleteByIds = '/mo/mesMoSn/deleteByIds',
 }
 
 /**
@@ -51,3 +56,22 @@ export const queryPrintRecordPageList = (params) => defHttp.get({ url: Api.query
  * @param params
  */
 export const queryMoSnPrintMapByIds = (params) => defHttp.get({ url: Api.queryMoSnPrintMapByIds, params });
+
+/**
+ * 批量删除
+ * @param params
+ */
+export const batchDelete = (params, handleSuccess) => {
+  createConfirm({
+    iconType: 'warning',
+    title: '确认删除',
+    content: '是否删除选中数据',
+    okText: '确认',
+    cancelText: '取消',
+    onOk: () => {
+      return defHttp.delete({ url: Api.deleteByIds, data: params }, { joinParamsToUrl: true }).then(() => {
+        handleSuccess();
+      });
+    },
+  });
+};

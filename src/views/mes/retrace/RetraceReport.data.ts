@@ -11,7 +11,7 @@ export const retraceListColumns: BasicColumn[] = [
     width: 130,
   },
   {
-    title: '条码',
+    title: '在制条码',
     align: 'center',
     sorter: true,
     dataIndex: 'sn',
@@ -135,7 +135,7 @@ export const retraceListSearchFormSchema: FormSchema[] = [
   //   colProps: { span: 6 },
   // },
   {
-    label: '条码',
+    label: '流转卡号',
     field: 'lotSn',
     component: 'Input',
     colProps: { span: 6 },

@@ -5,6 +5,7 @@ enum Api {
   exportXls = '/wkpmo/mesWkpMo/exportXls',
   queryByWkpId = '/wkpmo/mesWkpMo/queryByWkpId',
   changeMo = '/wkpmo/mesWkpMo/changeMo',
+  scan = '/workbench/scan', //扫描
 }
 
 /**
@@ -30,3 +31,10 @@ export const queryByWkpId = (params) => defHttp.get({ url: Api.queryByWkpId, par
  * @returns
  */
 export const changeMo = (params) => defHttp.post({ url: Api.changeMo, params });
+/**
+ * 扫描
+ * @param params
+ */
+export const getScan = (params) => {
+  return defHttp.get({ url: Api.scan, params });
+};

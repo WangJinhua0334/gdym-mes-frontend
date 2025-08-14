@@ -20,13 +20,6 @@ export const columns: BasicColumn[] = [
     width: 160,
   },
   {
-    title: '工单号',
-    align: 'center',
-    sorter: true,
-    dataIndex: 'moId_dictText',
-    width: 150,
-  },
-  {
     title: '车间',
     align: 'center',
     dataIndex: 'workShopId_dictText',
@@ -105,6 +98,20 @@ export const columns: BasicColumn[] = [
     slots: { customRender: 'progressSlot' },
   },
   {
+    title: '备注',
+    align: 'center',
+    sorter: true,
+    dataIndex: 'remark',
+    width: 150,
+  },
+  {
+    title: '工单号',
+    align: 'center',
+    sorter: true,
+    dataIndex: 'moId_dictText',
+    width: 150,
+  },
+  {
     title: '计划开始日期',
     align: 'center',
     sorter: true,
@@ -124,27 +131,45 @@ export const columns: BasicColumn[] = [
       return !text ? '' : text.length > 16 ? text.substr(0, 16) : text;
     },
   },
+  {
+    title: '创建时间',
+    align: 'center',
+    sorter: true,
+    dataIndex: 'createTime',
+    width: 150,
+    format: (text) => {
+      return !text ? '' : text.length > 16 ? text.substr(0, 16) : text;
+    },
+  },
 ];
 
 //查询数据
 export const searchFormSchema: FormSchema[] = [
   {
-    label: '任务单号',
-    field: 'code',
-    component: 'JInput',
-    colProps: { span: 6 },
-  },
-  {
-    label: '工单号',
-    field: 'moCode',
-    component: 'Input',
-    colProps: { span: 6 },
-  },
-  {
-    label: '产品',
-    field: 'prodQuery',
-    component: 'Input',
-    colProps: { span: 6 },
+    label: '车间',
+    field: 'workShopId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/workshop/basWorkShop/list',
+        params: { column: 'code', order: 'asc', searchFields: 'code,name,description' /*, code: '${code}'*/ },
+        columns: [
+          { name: '编码', code: 'code' },
+          { name: '名称', code: 'name' },
+        ],
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['code', 'name'],
+        placeholder: '请输入',
+        multi: true,
+        maxTagCount: 2,
+        pageSize: 10,
+      };
+    },
   },
   {
     label: '工作中心',
@@ -181,30 +206,31 @@ export const searchFormSchema: FormSchema[] = [
     colProps: { span: 6 },
   },
   {
-    label: '车间',
-    field: 'workShopId',
-    component: 'JSearchSelectCustom',
-    componentProps: ({ formActionType }) => {
-      const { setFieldsValue, getFieldsValue } = formActionType;
-      return {
-        setFieldsValue: setFieldsValue,
-        getFieldsValue: getFieldsValue,
-        method: 'get',
-        url: '/workshop/basWorkShop/list',
-        params: { column: 'code', order: 'asc', searchFields: 'code,name,description' /*, code: '${code}'*/ },
-        columns: [
-          { name: '编码', code: 'code' },
-          { name: '名称', code: 'name' },
-        ],
-        isShowNum: false,
-        rowKey: 'id',
-        labelKey: ['code', 'name'],
-        placeholder: '请输入',
-        multi: true,
-        maxTagCount: 2,
-        pageSize: 10,
-      };
+    label: '状态',
+    field: 'status',
+    component: 'JSelectMultiple',
+    componentProps: {
+      dictCode: 'mo_plan_status',
     },
+    colProps: { span: 6 },
+  },
+  {
+    label: '任务单号',
+    field: 'code',
+    component: 'JInput',
+    colProps: { span: 6 },
+  },
+  {
+    label: '工单号',
+    field: 'moCode',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: '产品',
+    field: 'prodQuery',
+    component: 'Input',
+    colProps: { span: 6 },
   },
 ];
 
@@ -392,6 +418,7 @@ export function getFormSchema(moCompleteKitCheck): FormSchema[] {
       component: 'DatePicker',
       componentProps: {
         showTime: true,
+        getPopupContainer: (node) => document.body,
       },
       dynamicRules: ({ model, schema, values }) => {
         return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];
@@ -403,6 +430,7 @@ export function getFormSchema(moCompleteKitCheck): FormSchema[] {
       component: 'DatePicker',
       componentProps: {
         showTime: true,
+        getPopupContainer: (node) => document.body,
       },
       dynamicRules: ({ model, schema, values }) => {
         return [{ required: true, message: '请选择计划完工日期!' }, { ...rules.endTime(model.planStartTime, true)[0] }];

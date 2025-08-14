@@ -1,5 +1,5 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="registerCompleteModal" destroyOnClose :title="'工位工单调整'" :width="800">
+  <BasicModal v-bind="$attrs" @register="registerCompleteModal" destroyOnClose :title="'绑定工位任务'" :width="800">
     <WkpMoChange @success="emit('success')" :wkpId="wkpId" @close="closeModal" @setModalProps="setModalProps" />
   </BasicModal>
 </template>

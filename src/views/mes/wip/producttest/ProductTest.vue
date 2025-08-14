@@ -14,6 +14,7 @@
           :rowNumber="true"
           :rowSelection="true"
           :toolbar="true"
+          :keyboardEdit="true"
           @valueChange="tableValueChange"
         >
           <!--字段回显插槽-->

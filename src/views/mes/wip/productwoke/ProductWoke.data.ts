@@ -51,7 +51,7 @@ export const formSchema: FormSchema[] = [
     colProps: { span: 12 },
   },
   {
-    label: '条码',
+    label: '流转卡号',
     field: 'sn',
     component: 'Input',
     componentProps: {
@@ -78,8 +78,26 @@ export const formSchema: FormSchema[] = [
     colProps: { span: 12 },
   },
   {
+    label: '已报不良数量',
+    field: 'ngnQty',
+    component: 'Input',
+    componentProps: {
+      disabled: true,
+    },
+    colProps: { span: 12 },
+  },
+  {
     label: '报工数量',
     field: 'wokeQty',
+    component: 'InputNumber',
+    componentProps: {
+      //disabled: true,
+    },
+    colProps: { span: 12 },
+  },
+  {
+    label: '报不良品',
+    field: 'ngQty',
     component: 'InputNumber',
     componentProps: {
       //disabled: true,
@@ -120,7 +138,7 @@ export const formSchema: FormSchema[] = [
         ],
         isShowNum: true,
         rowKey: 'id',
-        labelKey: ['name'],
+        labelKey: ['code'],
         placeholder: '请输入',
         multi: true,
         queryBefore: (params) => {
@@ -128,6 +146,9 @@ export const formSchema: FormSchema[] = [
           return params;
         },
       };
+    },
+    dynamicRules: ({ model, schema }) => {
+      return [{ required: true, message: '请选择设备!' }];
     },
     colProps: { span: 12 },
   },
@@ -170,5 +191,16 @@ export const formSchema: FormSchema[] = [
     // dynamicRules: ({ model, schema }) => {
     //   return [{ required: true, message: '请选择操作员!' }];
     // },
+  },
+  {
+    label: '停机时间(分)',
+    field: 'stopTime',
+    component: 'InputNumber',
+    defaultValue: 0,
+  },
+  {
+    label: '停机原因',
+    field: 'stopCause',
+    component: 'InputTextArea',
   },
 ];

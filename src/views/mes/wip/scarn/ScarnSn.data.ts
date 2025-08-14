@@ -4,7 +4,7 @@ import { FormSchema } from '/@/components/Table';
 export const doEnterPress = ref();
 export const formSchema: FormSchema[] = [
   {
-    label: '条码',
+    label: '物料条码',
     field: 'sn',
     component: 'Input',
     componentProps: {
@@ -16,7 +16,7 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
-    label: '条码',
+    label: '物料条码',
     field: 'snCode',
     component: 'Input',
     componentProps: {

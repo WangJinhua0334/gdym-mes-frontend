@@ -30,6 +30,7 @@ import ProductInspectList from '/@/views/mes/lotinspectlist/MesLotInspectList.vu
 import ProductInspectFirstList from '/@/views/mes/lotinspectfirstlist/MesLotInspFirstList.vue';
 import ProductOutInspectList from '/@/views/mes/lotoutinspectlist/MesLotOutInspectList.vue';
 import ProductwokeHourList from '/@/views/mes/lotwokehourlist/MesLotWokeHourList.vue';
+import ProductwokeList from '/@/views/mes/lotwokelist/MesLotWokeList.vue';
 
 import BindSnModal from '/@/views/mes/mo/components/MesMoPlanBindSn.vue';
 import SplitModal from '/@/views/mes/lotsplit/Split.vue';
@@ -55,6 +56,8 @@ import WkpStockUp from '/@/views/mes/wip/prodwkpstock/WkpStockUp.vue';
 import WkpStockDown from '/@/views/mes/wip/prodwkpstock/WkpStockDown.vue';
 import MesWkpStockList from '../../wkpstocklist/MesWkpStockList.vue';
 import WkpMoChange from '/@/views/mes/wkpmolist/components/WkpMoChange.vue';
+import MesMoPack from '/@/views/mes/mopack/MesMoPack.vue';
+import MesMoPackList from '/@/views/mes/mopack/MesMoPackList.vue';
 
 const componentList = reactive([
   { name: 'StartWork', com: markRaw(StartWorkModal) },
@@ -76,6 +79,7 @@ const componentList = reactive([
   { name: 'ProductInspectFirstList', com: markRaw(ProductInspectFirstList) },
   { name: 'ProductOutInspectList', com: markRaw(ProductOutInspectList) },
   { name: 'ProductwokeHourList', com: markRaw(ProductwokeHourList) },
+  { name: 'ProductwokeList', com: markRaw(ProductwokeList) },
 
   { name: 'BindSn', com: markRaw(BindSnModal) },
   { name: 'Split', com: markRaw(SplitModal) },
@@ -102,6 +106,8 @@ const componentList = reactive([
   { name: 'WkpStockUp', com: markRaw(WkpStockUp) },
   { name: 'WkpStockDown', com: markRaw(WkpStockDown) },
   { name: 'MesWkpStockList', com: markRaw(MesWkpStockList) },
+  { name: 'MesMoPack', com: markRaw(MesMoPack) },
+  { name: 'MesMoPackList', com: markRaw(MesMoPackList) },
 ]);
 
 /**

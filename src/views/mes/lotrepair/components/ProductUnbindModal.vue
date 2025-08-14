@@ -45,8 +45,8 @@
   const title = computed(() => '解绑');
 
   /**解绑 */
-  function handleUnbind(values) {
-    unbind({
+  async function handleUnbind(values) {
+    await unbind({
       bindId: unref(bindId),
       qty: values.qty,
       reason: values.reason,
@@ -60,7 +60,7 @@
       let values = await validate();
       setModalProps({ confirmLoading: true });
 
-      handleUnbind(values);
+      await handleUnbind(values);
 
       //关闭弹窗
       closeModal();

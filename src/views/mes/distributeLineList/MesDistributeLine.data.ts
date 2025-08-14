@@ -99,11 +99,11 @@ export const searchFormSchema: FormSchema[] = [
 //表单数据
 export const formSchema: FormSchema[] = [
   {
-    label: '在制条码',
+    label: '流转卡号',
     field: 'sn',
     component: 'Input',
     dynamicRules: ({ model, schema }) => {
-      return [{ required: true, message: '请输入在制条码!' }];
+      return [{ required: true, message: '请输入在制流转卡号!' }];
     },
   },
   {

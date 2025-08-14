@@ -28,7 +28,7 @@
   <BasicModal @register="registerManualModal" destroyOnClose :title="'关联'" :width="800" @cancel="closeManualModal" @ok="handleManualBindSubmit">
     <BasicForm @register="registerSubForm" />
   </BasicModal>
-  <BasicModal v-bind="$attrs" @register="registerModal" destroyOnClose :title="'选择打印条码'" :centered="true" :width="600" @ok="handleSubmit">
+  <BasicModal v-bind="$attrs" @register="registerModal" destroyOnClose :title="'选择打印流转卡'" :centered="true" :width="600" @ok="handleSubmit">
     <BasicForm @register="registerForm" style="padding: 3%" />
   </BasicModal>
 </template>

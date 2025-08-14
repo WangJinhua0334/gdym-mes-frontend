@@ -38,9 +38,9 @@
   });
   onMounted(() => {
     setTimeout(() => {
-      if (unref(props.componentData) && unref(props.componentData).record.workPostCode) {
+      if (unref(props.componentData) && unref(unref(props.componentData).record).workPostCode) {
         getForm().setFieldsValue({
-          code: unref(props.componentData).record.workPostCode,
+          wkpCode: unref(unref(props.componentData).record).workPostCode,
         });
         reload();
       }

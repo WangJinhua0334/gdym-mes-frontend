@@ -282,7 +282,7 @@ export const getDetailJVxeColumns = function (detailView) {
       rowKey: 'prodId',
       labelKey: 'prodId_dictText',
       multi: false,
-      linkmap: [{ prodName_dictText: 'prodName_dictText' }],
+      linkmap: [{ prodName_dictText: 'prodName_dictText', unitId: 'unitId' }],
       placeholder: '请输入${title}',
       validateRules: [{ required: true, message: '${title}不能为空' }],
       /*queryBefore: (params) => {
@@ -317,6 +317,14 @@ export const getDetailJVxeColumns = function (detailView) {
           },
         },
       ],
+    },
+    {
+      title: '单位',
+      key: 'unitId',
+      type: JVxeTypes.selectSearch,
+      dictCode: 'bas_unit,name,id',
+      width: 200,
+      placeholder: '请输入${title}',
     }
     /*{
       title: '仓库',
@@ -450,6 +458,11 @@ export const detailColumns: BasicColumn[] = [
     align: 'center',
     dataIndex: 'whId_dictText',
   },*/
+  {
+    title: '单位',
+    align: 'center',
+    dataIndex: 'unitId_dictText',
+  },
   {
     title: '状态',
     align: 'center',

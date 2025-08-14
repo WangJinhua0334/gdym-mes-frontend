@@ -49,8 +49,6 @@
       title: '',
       api: list,
       columns,
-      canResize: false,
-      showTableSetting: false,
       formConfig: {
         //labelWidth: 120,
         schemas: searchFormSchema,
@@ -60,6 +58,7 @@
         fieldMapToTime: [],
       },
       actionColumn: {
+        title: '操作',
         width: 120,
         fixed: 'right',
       },

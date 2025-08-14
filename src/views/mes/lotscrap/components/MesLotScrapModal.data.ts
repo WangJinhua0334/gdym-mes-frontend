@@ -57,7 +57,7 @@ export const formSchema: FormSchema[] = [
   },
 
   {
-    label: '条码',
+    label: '流转卡号',
     field: 'lotSn',
     component: 'Input',
   },

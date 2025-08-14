@@ -18,7 +18,7 @@ export const listColumns: BasicColumn[] = [
     width: 120,
   },
   {
-    title: '条码',
+    title: '流转卡号',
     align: 'center',
     sorter: true,
     dataIndex: 'lotSn',
@@ -124,7 +124,7 @@ export const listSearchFormSchema: FormSchema[] = [
     colProps: { span: 6 },
   },
   {
-    label: '条码',
+    label: '流转卡号',
     field: 'lotSn',
     component: 'JInput',
     colProps: { span: 6 },
@@ -132,6 +132,12 @@ export const listSearchFormSchema: FormSchema[] = [
   {
     label: '工序',
     field: 'station',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: '作业员',
+    field: 'operateByQuery',
     component: 'Input',
     colProps: { span: 6 },
   },
@@ -159,7 +165,7 @@ export const formSchema: FormSchema[] = [
     colProps: { span: 12 },
   },
   {
-    label: '条码',
+    label: '流转卡号',
     field: 'lotSn',
     component: 'Input',
     dynamicDisabled: true,

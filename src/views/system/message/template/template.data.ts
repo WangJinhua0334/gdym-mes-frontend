@@ -42,12 +42,12 @@ export const searchFormSchema: FormSchema[] = [
   {
     label: '模板标题',
     field: 'templateName',
-    component: 'Input',
+    component: 'JInput',
   },
   {
     label: '模板编码',
     field: 'templateCode',
-    component: 'Input',
+    component: 'JInput',
   },
   {
     label: '模板类型',

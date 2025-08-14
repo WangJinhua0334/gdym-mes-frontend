@@ -229,6 +229,8 @@
           qty: Number(row.requireQty) - Number(row.issuedQty ?? 0),
           pickedQty: Number(0),
           whId: null,
+          unitId: row.unitId,
+          erpLineNo: '',
         };
 
         addRows.push(addRow);

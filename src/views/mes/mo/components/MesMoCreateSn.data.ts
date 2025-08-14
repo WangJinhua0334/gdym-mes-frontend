@@ -1,4 +1,5 @@
 import { FormSchema } from '/@/components/Table';
+import { rules } from '/@/utils/helper/validator';
 
 //表单数据
 export const formSchema: FormSchema[] = [
@@ -45,6 +46,30 @@ export const formSchema: FormSchema[] = [
     dynamicDisabled: true,
   },
   {
+    label: '计划开始日期',
+    field: 'planStartTime',
+    component: 'DatePicker',
+    componentProps: {
+      showTime: true,
+      getPopupContainer: (node) => document.body,
+    },
+    dynamicRules: ({ model, schema, values }) => {
+      return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];
+    },
+  },
+  {
+    label: '计划完工日期',
+    field: 'planCompleteTime',
+    component: 'DatePicker',
+    componentProps: {
+      showTime: true,
+      getPopupContainer: (node) => document.body,
+    },
+    dynamicRules: ({ model, schema, values }) => {
+      return [{ required: true, message: '请选择计划完工日期!' }, { ...rules.endTime(model.planStartTime, true)[0] }];
+    },
+  },
+  {
     label: '分配数量',
     field: 'qty',
     component: 'InputNumber',
@@ -59,6 +84,15 @@ export const formSchema: FormSchema[] = [
     component: 'InputNumber',
     dynamicRules: ({ model, schema }) => {
       return [{ required: true, message: '请输入批次数量!' }];
+    },
+  },
+  {
+    label: '开始框/托(号)',
+    field: 'num',
+    defaultValue: '1',
+    component: 'InputNumber',
+    dynamicRules: ({ model, schema }) => {
+      return [{ required: true, message: '请输入开始框/托(号)!' }];
     },
   },
   {

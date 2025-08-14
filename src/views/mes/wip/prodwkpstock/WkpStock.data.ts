@@ -8,7 +8,7 @@ export const doDownEnterPress = ref();
 //上料
 export const upFormSchema: FormSchema[] = [
   {
-    label: '条码',
+    label: '物料条码',
     field: 'sn',
     component: 'Input',
     componentProps: {
@@ -20,7 +20,7 @@ export const upFormSchema: FormSchema[] = [
     },
   },
   {
-    label: '条码',
+    label: '物料条码',
     field: 'materialSn',
     component: 'Input',
     componentProps: {
@@ -48,7 +48,7 @@ export const upFormSchema: FormSchema[] = [
   },
   {
     label: '物料名称',
-    field: 'prodName',
+    field: 'prodName_dictText',
     component: 'Input',
     componentProps: {
       disabled: true,
@@ -145,7 +145,7 @@ export const upFormSchema: FormSchema[] = [
 //下料
 export const downFormSchema: FormSchema[] = [
   {
-    label: '条码',
+    label: '物料条码',
     field: 'sn',
     component: 'Input',
     componentProps: {
@@ -157,7 +157,7 @@ export const downFormSchema: FormSchema[] = [
     },
   },
   {
-    label: '条码',
+    label: '物料条码',
     field: 'materialSn',
     component: 'Input',
     componentProps: {
@@ -185,7 +185,7 @@ export const downFormSchema: FormSchema[] = [
   },
   {
     label: '物料名称',
-    field: 'prodName',
+    field: 'prodName_dictText',
     component: 'Input',
     componentProps: {
       disabled: true,

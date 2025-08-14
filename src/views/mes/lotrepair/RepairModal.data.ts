@@ -90,6 +90,10 @@ export const formSchema: FormSchema[] = [
 //子表表格配置
 export const prodBindJVxeColumns: JVxeColumn[] = [
   {
+    key: 'id',
+    type: JVxeTypes.hidden,
+  },
+  {
     title: '条码',
     key: 'materialSn',
     type: JVxeTypes.input,

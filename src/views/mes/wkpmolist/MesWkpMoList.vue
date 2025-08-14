@@ -45,9 +45,9 @@
   });
   onMounted(() => {
     setTimeout(() => {
-      if (unref(props.componentData) && unref(props.componentData).record.workPostCode) {
+      if (unref(props.componentData) && unref(unref(props.componentData).record).workPostCode) {
         getForm().setFieldsValue({
-          code: unref(props.componentData).record.workPostCode,
+          wkpCode: unref(unref(props.componentData).record).workPostCode,
         });
         reload();
       }
@@ -62,7 +62,7 @@
   //注册table数据
   const { prefixCls, tableContext, onExportXls } = useListPage({
     tableProps: {
-      title: '工位工单信息',
+      title: '工位任务信息',
       api: list,
       columns: listColumns,
       canResize: true,
@@ -82,7 +82,7 @@
       },
     },
     exportConfig: {
-      name: '工位工单信息',
+      name: '工位任务信息',
       url: exportXls,
     },
   });
@@ -111,7 +111,7 @@
   function getTableAction(record) {
     let actionArr: ActionItem[] = [];
     actionArr.push({
-      label: '调整工单',
+      label: '调整任务',
       onClick: handleChange.bind(null, record),
       auth: 'mes:mes_wkp_mo:changeMo',
     });

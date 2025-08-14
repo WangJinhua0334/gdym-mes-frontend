@@ -2,6 +2,7 @@ import { ref, unref } from 'vue';
 import { FormSchema } from '/@/components/Table';
 import { JVxeTypes, JVxeColumn } from '/@/components/jeecg/JVxeTable/types';
 import { getSumQtyByIds } from '../MesMoPlan.api';
+import { rules } from '/@/utils/helper/validator';
 
 export const moSnList = ref<any>([]);
 
@@ -68,6 +69,30 @@ export const formSchema: FormSchema[] = [
     field: 'createdQty',
     component: 'Input',
     dynamicDisabled: true,
+  },
+  {
+    label: '计划开始日期',
+    field: 'planStartTime',
+    component: 'DatePicker',
+    componentProps: {
+      showTime: true,
+      getPopupContainer: (node) => document.body,
+    },
+    dynamicRules: ({ model, schema, values }) => {
+      return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];
+    },
+  },
+  {
+    label: '计划完工日期',
+    field: 'planCompleteTime',
+    component: 'DatePicker',
+    componentProps: {
+      showTime: true,
+      getPopupContainer: (node) => document.body,
+    },
+    dynamicRules: ({ model, schema, values }) => {
+      return [{ required: true, message: '请选择计划完工日期!' }, { ...rules.endTime(model.planStartTime, true)[0] }];
+    },
   },
   {
     label: '分配数量',
@@ -154,6 +179,15 @@ export const formSchema: FormSchema[] = [
       }
 
       return true;
+    },
+  },
+  {
+    label: '开始框/托(号)',
+    field: 'num',
+    defaultValue: '1',
+    component: 'InputNumber',
+    dynamicRules: ({ model, schema }) => {
+      return [{ required: true, message: '请输入开始框/托(号)!' }];
     },
   },
   {

@@ -13,7 +13,7 @@
             :dataSource="judgemengItemTable.dataSource"
             :rowNumber="true"
             :rowSelection="true"
-            @edit-closed="tableValueChange"
+            @value-change="editClosedJud"
           >
             <!--字段回显插槽-->
             <template #resultSwitch="record">
@@ -140,34 +140,59 @@
     edit: true,
     scrollX: true,
   });
-  //编辑关闭后触发事件
+  //定量编辑关闭后触发事件
   function editClosed(data) {
-    if (unref(data.column).key.includes('value')) {
-      let itemData = measurementItemPanel.value.getXTable().getTableData().fullData[data.rowIndex];
-      if (itemData.limitMin && itemData.minOperators && itemData.limitMin != null && itemData.minOperators != null) {
-        if (!compareValues(itemData[unref(data.column).key], itemData.minOperators, itemData.limitMin)) {
-          measurementItemPanel.value.getXTable().getTableData().fullData[data.rowIndex].result = 'N';
-          $message.createMessage.warning('输入的值不符合下限要求范围内');
-        } else {
-          measurementItemPanel.value.getXTable().getTableData().fullData[data.rowIndex].result = 'Y';
+    // 提前缓存常用变量
+    const columnKey = unref(data.column).key;
+    const isTargetColumn = columnKey.includes('value') && !columnKey.includes('Sn');
+    const tableData = measurementItemPanel.value.getXTable().getTableData().fullData;
+    const itemData = tableData[data.rowIndex];
+
+    if (!isTargetColumn) return;
+
+    // 提取公共变量
+    const { limitMin, minOperators, limitMax, maxOperators } = itemData;
+    // 判断是否需要设置结果为 'N'
+    let shouldSetN = false;
+    const formData = getFieldsValue();
+    for (let i = 0; i < formData.samplingQty; i++) {
+      const value = itemData['value' + (i + 1)];
+      if (!value) {
+        shouldSetN = true;
+        continue;
+      }
+      // 下限判断
+      if (limitMin != null && minOperators && value != null) {
+        if (!compareValues(value, minOperators, limitMin)) {
+          shouldSetN = true;
         }
       }
-      if (itemData.limitMax && itemData.maxOperators && itemData.limitMax != null && itemData.maxOperators != null) {
-        if (!compareValues(itemData[unref(data.column).key], itemData.maxOperators, itemData.limitMax)) {
-          $message.createMessage.warning('输入的值不符合上限要求范围内');
-          measurementItemPanel.value.getXTable().getTableData().fullData[data.rowIndex].result = 'N';
-        } else {
-          measurementItemPanel.value.getXTable().getTableData().fullData[data.rowIndex].result = 'Y';
+      // 上限判断
+      if (!shouldSetN && limitMax != null && maxOperators && value != null) {
+        if (!compareValues(value, maxOperators, limitMax)) {
+          shouldSetN = true;
         }
       }
     }
+    // 设置最终结果
+    itemData.result = shouldSetN ? 'N' : 'Y';
     autoCalculateResult();
   }
-  // 检验项值变更事件
-  function tableValueChange() {
+  //定性编辑关闭后触发事件
+  function editClosedJud(data) {
+    if (unref(data.column).key.includes('result')) {
+      let itemResult = 'Y';
+      let itemData = judgemengItemPanel.value.getXTable().getTableData().fullData[data.rowIndex];
+      const formData = getFieldsValue();
+      for (let i = 0; i < formData.samplingQty; i++) {
+        if (!itemData['result' + (i + 1)] || itemData['result' + (i + 1)] == 'N') {
+          itemResult = 'N';
+        }
+      }
+      judgemengItemPanel.value.getXTable().getTableData().fullData[data.rowIndex].result = itemResult;
+    }
     autoCalculateResult();
-  }
-  /**
+  } /**
    * 通过传入比较符，判断是否满足
    **/
   function compareValues(value1: number, operator: string, value2: number): boolean {
@@ -238,6 +263,19 @@
         }
       );
     }
+    //添加结果栏
+    newJudTableColums.value.push({
+      title: '结果',
+      key: 'result',
+      disabled: true,
+      defaultValue: 'N',
+      customValue: ['Y', 'N'],
+      type: JVxeTypes.slot,
+      align: 'center',
+      slotName: 'mustSwitch',
+      width: 120,
+      minWidth: 120,
+    });
     //在最后面添加备注和附件列--定性
     newJudTableColums.value.push({
       title: '备注',
@@ -251,11 +289,18 @@
       type: JVxeTypes.file,
       disabled: isDetail.value,
     });
+    //添加结果栏
     newMeaTableColums.value.push({
-      title: '附件',
-      key: 'attachments',
-      type: JVxeTypes.file,
-      disabled: isDetail.value,
+      title: '结果',
+      key: 'result',
+      disabled: true,
+      defaultValue: 'N',
+      customValue: ['Y', 'N'],
+      type: JVxeTypes.slot,
+      align: 'center',
+      slotName: 'mustSwitch',
+      width: 120,
+      minWidth: 120,
     });
     //在最后面添加备注和附件列--定量
     newMeaTableColums.value.push({
@@ -263,6 +308,12 @@
       key: 'remark',
       type: JVxeTypes.textarea,
       placeholder: '请输入${title}',
+      disabled: isDetail.value,
+    });
+    newMeaTableColums.value.push({
+      title: '附件',
+      key: 'attachments',
+      type: JVxeTypes.file,
       disabled: isDetail.value,
     });
     judgemengItemPanel.value.getXTable().reloadColumn(newJudTableColums);
@@ -342,6 +393,7 @@
             inspTool: item.inspTool,
             inspBasis: item.inspBasis,
             techRequirements: item.techRequirements,
+            result: item.result,
           };
           //添加值
           if (unref(item.inspValueList) && unref(item.inspValueList).length > 0) {
@@ -372,6 +424,7 @@
             inspBasis: item.inspBasis,
             techRequirements: item.techRequirements,
             unitId: item.unitId,
+            result: item.result,
           };
           //添加值
           if (unref(item.inspValueList) && unref(item.inspValueList).length > 0) {

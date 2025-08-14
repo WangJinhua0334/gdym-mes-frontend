@@ -51,7 +51,7 @@ export const formSchema: FormSchema[] = [
     colProps: { span: 8 },
   },
   {
-    label: '条码',
+    label: '流转卡号',
     field: 'sn',
     component: 'Input',
     componentProps: {

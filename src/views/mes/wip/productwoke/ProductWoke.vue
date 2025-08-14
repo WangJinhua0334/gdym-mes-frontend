@@ -52,11 +52,14 @@
         setFieldsValue({ sn: unref(wokeData).sn });
         setFieldsValue({ qty: unref(wokeData).qty });
         setFieldsValue({ wokenQty: unref(wokeData).wokenQty });
-        setFieldsValue({ wokeQty: unref(wokeData).qty - unref(wokeData).wokenQty });
+        setFieldsValue({ ngnQty: unref(wokeData).ngnQty });
+        setFieldsValue({ wokeQty: unref(wokeData).qty - unref(wokeData).wokenQty - unref(wokeData).ngnQty });
+        setFieldsValue({ ngQty: 0 });
         setFieldsValue({ scrapedQty: 0 });
-        setFieldsValue({ startTime: new Date()});
+        setFieldsValue({ startTime: new Date() });
         setFieldsValue({ completeTime: new Date() });
         setFieldsValue({ operator: unref(workBenchData).operateBy ?? userStore.getUserInfo.username });
+        setFieldsValue({ equipmentId: unref(wokeData).equipmentId });
       }
     },
     { immediate: false, deep: true }
@@ -117,10 +120,13 @@
       wkpId: unref(workBenchData).workPostId,
       equipmentId: getFieldsValue().equipmentId,
       qty: getFieldsValue().wokeQty,
+      ngQty: getFieldsValue().ngQty,
       scrapedQty: getFieldsValue().scrapedQty,
       startTime: getFieldsValue().startTime,
       completeTime: getFieldsValue().completeTime,
       operateBy: getFieldsValue().operator,
+      stopTime: getFieldsValue().stopTime,
+      stopCause: getFieldsValue().stopCause,
     })
       .then((res) => {
         emit('success');

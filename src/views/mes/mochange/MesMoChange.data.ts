@@ -421,7 +421,6 @@ export const mesMoChangeDetailJVxeColumns: JVxeColumn[] = [
       { required: true, message: '${title}不能为空' },
       { pattern: 'n', message: '${title}格式不正确' },
     ],
-    disabled: true,
   },
   {
     title: '单位用量',
@@ -430,10 +429,7 @@ export const mesMoChangeDetailJVxeColumns: JVxeColumn[] = [
     defaultValue: 0,
     width: 120,
     placeholder: '请输入${title}',
-    validateRules: [
-      { required: true, message: '${title}不能为空' },
-      { pattern: '^[1-9]\\d*$', message: '${title}必须为大于0的整数' }, 
-    ],
+    validateRules: [{ required: true, message: '${title}不能为空' }],
   },
   {
     title: '损耗率',

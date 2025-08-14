@@ -134,6 +134,11 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
   },
   {
+    label: '流转卡生成规则',
+    field: 'fillRuleCode_dictText',
+    component: 'Input',
+  },
+  {
     label: '备注',
     field: 'remark',
     component: 'InputTextArea',

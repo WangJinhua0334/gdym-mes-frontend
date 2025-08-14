@@ -426,11 +426,11 @@ export const returnFormSchema: FormSchema[] = [
 //入库
 export const stockFormSchema: FormSchema[] = [
   {
-    label: '条码',
+    label: '流转卡号',
     field: 'code',
     component: 'Input',
     dynamicRules: ({ model, schema }) => {
-      return [{ required: true, message: '请输入或扫描条码信息!' }];
+      return [{ required: true, message: '请输入或扫描流转卡号信息!' }];
     },
   },
   {

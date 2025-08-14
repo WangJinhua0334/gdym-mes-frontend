@@ -2,6 +2,9 @@
   <div>
     <!--引用表格-->
     <BasicTable @register="registerTable">
+      <template #tableTitle>
+        <a-button type="primary" preIcon="ant-design:export-outlined" @click="onExportXls"> 导出</a-button>
+      </template>
       <!--操作栏-->
       <template #action="{ record }">
         <TableAction :actions="getTableAction(record)" />
@@ -49,9 +52,7 @@
     tableProps: {
       title: '',
       api: list,
-      showTableSetting: false,
       columns,
-      canResize: false,
       formConfig: {
         //labelWidth: 120,
         schemas: searchFormSchema,
@@ -61,6 +62,7 @@
         fieldMapToTime: [],
       },
       actionColumn: {
+        title: '操作',
         width: 120,
         fixed: 'right',
       },

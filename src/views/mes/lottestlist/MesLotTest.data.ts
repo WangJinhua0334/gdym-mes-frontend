@@ -19,7 +19,7 @@ export const testListColumns: BasicColumn[] = [
     width: 160,
   },
   {
-    title: '条码',
+    title: '流转卡号',
     align: 'center',
     sorter: true,
     dataIndex: 'lotSn',
@@ -108,7 +108,7 @@ export const testListSearchFormSchema: FormSchema[] = [
     colProps: { span: 6 },
   },
   {
-    label: '条码',
+    label: '流转卡号',
     field: 'lotSn',
     component: 'JInput',
     colProps: { span: 6 },

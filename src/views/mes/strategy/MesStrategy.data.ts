@@ -2,6 +2,7 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { rules } from '/@/utils/helper/validator';
 import { render } from '/@/utils/common/renderUtils';
+import { h } from 'vue';
 //列表数据
 export const columns: BasicColumn[] = [
   {
@@ -101,6 +102,18 @@ export const columns: BasicColumn[] = [
     },
   },
   {
+    title: '是否提醒',
+    align: 'center',
+    dataIndex: 'isPush',
+    width: 120,
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
+  },
+  {
     title: '是否首页展示',
     align: 'center',
     dataIndex: 'isHome',
@@ -110,6 +123,17 @@ export const columns: BasicColumn[] = [
         { text: '是', value: 'Y', isChecked: true },
         { text: '否', value: 'N', isChecked: false },
       ]);
+    },
+  },
+  {
+    title: '首页展示颜色',
+    dataIndex: 'itemColor',
+    width: 120,
+    align: 'center',
+    customRender: ({ text }) => {
+      return h('div', {
+        style: { background: text, width: '18px', height: '18px', 'border-radius': '50%', margin: '0 auto' },
+      });
     },
   },
   {
@@ -246,9 +270,6 @@ export const formSchema: FormSchema[] = [
       };
     },
     colProps: { span: 12 },
-    dynamicRules: ({ model, schema }) => {
-      return [{ required: true, message: '请选择产品!' }];
-    },
   },
   {
     label: '产品名称',
@@ -382,12 +403,26 @@ export const formSchema: FormSchema[] = [
     colProps: { span: 12 },
   },
   {
+    label: '是否提醒',
+    field: 'isPush',
+    defaultValue: 'N',
+    component: 'JSwitch',
+    componentProps: { dictCode: 'is_open' },
+    colProps: { span: 12 },
+  },
+  {
     label: '是否首页展示',
     field: 'isHome',
     defaultValue: 'N',
     component: 'JSwitch',
     componentProps: { dictCode: 'is_open' },
     colProps: { span: 12 },
+  },
+  {
+    label: '首页展示颜色',
+    field: 'itemColor',
+    component: 'Input',
+    slot: 'itemColor',
   },
   {
     label: '备注',
@@ -411,3 +446,29 @@ export function getBpmFormSchema(_formData): FormSchema[] {
   // 默认和原始表单保持一致 如果流程中配置了权限数据，这里需要单独处理formSchema
   return formSchema;
 }
+const whiteColor = '#ffffff';
+const blackColor = '#666666';
+export const Colors = [
+  // 背景颜色，文字颜色
+  ['#2196F3', whiteColor],
+  ['#08C9C9', whiteColor],
+  ['#00C345', whiteColor],
+  ['#FAD714', whiteColor],
+  ['#FF9300', whiteColor],
+  ['#F52222', whiteColor],
+  ['#EB2F96', whiteColor],
+  ['#7500EA', whiteColor],
+  ['#2D46C4', whiteColor],
+  ['#484848', whiteColor],
+  // --------------------
+  ['#C9E6FC', blackColor],
+  ['#C3F2F2', blackColor],
+  ['#C2F1D2', blackColor],
+  ['#FEF6C6', blackColor],
+  ['#FFE5C2', blackColor],
+  ['#FDCACA', blackColor],
+  ['#FACDE6', blackColor],
+  ['#DEC2FA', blackColor],
+  ['#CCD2F1', blackColor],
+  ['#D3D3D3', blackColor],
+];

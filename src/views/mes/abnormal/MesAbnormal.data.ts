@@ -165,7 +165,7 @@ export const listColumns: BasicColumn[] = [
     width: 150,
   },
   {
-    title: '条码',
+    title: '流转卡号',
     sorter: true,
     align: 'center',
     dataIndex: 'sn',

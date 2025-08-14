@@ -100,7 +100,7 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
-    label: '条码',
+    label: '流转卡号',
     field: 'sn',
     component: 'Input',
     colProps: { span: 24 },
@@ -154,7 +154,7 @@ export const columns: BasicColumn[] = [
     dataIndex: 'batch',
   },
   {
-    title: '条码',
+    title: '流转卡号',
     align: 'center',
     width: 80,
     dataIndex: 'lotSn',

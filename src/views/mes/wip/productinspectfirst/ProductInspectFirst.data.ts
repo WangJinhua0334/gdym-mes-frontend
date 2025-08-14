@@ -52,7 +52,7 @@ export const formSchema: FormSchema[] = [
     colProps: { span: 8 },
   },
   {
-    label: '条码',
+    label: '流转卡号',
     field: 'sn',
     component: 'Input',
     componentProps: {
@@ -118,6 +118,15 @@ export const formSchema: FormSchema[] = [
       };
     },
     colProps: { span: 8 },
+  },
+  {
+    label: '不良数量',
+    field: 'ngQty',
+    component: 'InputNumber',
+    colProps: { span: 8 },
+    ifShow: ({ values }) => {
+      return !!values.result && values.result === 'N';
+    },
   },
   {
     label: '缺陷代码',
@@ -188,17 +197,19 @@ export const formSchema: FormSchema[] = [
     colProps: { span: 8 },
   },
   {
-    label: '不良数量',
-    field: 'ngQty',
-    component: 'InputNumber',
-    defaultValue: 1,
-    colProps: { span: 8 },
-    ifShow: ({ values }) => {
-      return !!values.result && values.result === 'N';
+    label: '是否推送',
+    field: 'isPush',
+    defaultValue: 'Y',
+    component: 'JSwitch',
+    componentProps: {
+      dictCode: 'is_open',
+      checkedChildren: '是',
+      unCheckedChildren: '否',
     },
+    colProps: { span: 8 },
   },
   {
-    label: '不良消息接收人',
+    label: '消息接收人',
     field: 'ngUserBy',
     component: 'JSearchSelectCustom',
     componentProps: ({ formActionType }) => {
@@ -223,51 +234,48 @@ export const formSchema: FormSchema[] = [
         isShowNum: true,
         rowKey: 'username',
         labelKey: ['realname'],
-        multi: false,
+        multi: true,
         placeholder: '请选择',
       };
     },
     colProps: { span: 8 },
-    ifShow: ({ values }) => {
-      return !!values.result && values.result === 'N';
-    },
   },
-  {
-    label: '检验设备',
-    field: 'equipmentId',
-    component: 'JSearchSelectCustom',
-    componentProps: ({ formActionType }) => {
-      const { setFieldsValue, getFieldsValue } = formActionType;
+  // {
+  //   label: '检验设备',
+  //   field: 'equipmentId',
+  //   component: 'JSearchSelectCustom',
+  //   componentProps: ({ formActionType }) => {
+  //     const { setFieldsValue, getFieldsValue } = formActionType;
 
-      return {
-        setFieldsValue: setFieldsValue,
-        getFieldsValue: getFieldsValue,
-        method: 'get',
-        url: '/equipment/basEquipment/list',
-        params: { column: 'createTime', order: 'asc', searchFields: 'code,name' },
-        columns: [
-          {
-            name: '编码',
-            code: 'code',
-          },
-          {
-            name: '名称',
-            code: 'name',
-          },
-        ],
-        isShowNum: true,
-        rowKey: 'id',
-        labelKey: ['name'],
-        placeholder: '请输入',
-        multi: true,
-        queryBefore: (params) => {
-          params.notStatus = 'discard';
-          return params;
-        },
-      };
-    },
-    colProps: { span: 8 },
-  },
+  //     return {
+  //       setFieldsValue: setFieldsValue,
+  //       getFieldsValue: getFieldsValue,
+  //       method: 'get',
+  //       url: '/equipment/basEquipment/list',
+  //       params: { column: 'createTime', order: 'asc', searchFields: 'code,name' },
+  //       columns: [
+  //         {
+  //           name: '编码',
+  //           code: 'code',
+  //         },
+  //         {
+  //           name: '名称',
+  //           code: 'name',
+  //         },
+  //       ],
+  //       isShowNum: true,
+  //       rowKey: 'id',
+  //       labelKey: ['name'],
+  //       placeholder: '请输入',
+  //       multi: true,
+  //       queryBefore: (params) => {
+  //         params.notStatus = 'discard';
+  //         return params;
+  //       },
+  //     };
+  //   },
+  //   colProps: { span: 8 },
+  // },
   {
     label: '附件',
     field: 'attachments',
@@ -316,6 +324,7 @@ export const judTableColums: JVxeColumn[] = [
     disabled: true,
     width: 250,
     minWidth: 250,
+    fixed: 'left',
   },
   {
     title: '是否必填',
@@ -336,20 +345,20 @@ export const judTableColums: JVxeColumn[] = [
     disabled: true,
     width: 150,
   },
-  {
-    title: '检验依据',
-    key: 'inspBasis',
-    type: JVxeTypes.textarea,
-    disabled: true,
-    width: 150,
-  },
-  {
-    title: '技术要求',
-    key: 'techRequirements',
-    type: JVxeTypes.textarea,
-    disabled: true,
-    width: 150,
-  },
+  // {
+  //   title: '检验依据',
+  //   key: 'inspBasis',
+  //   type: JVxeTypes.textarea,
+  //   disabled: true,
+  //   width: 150,
+  // },
+  // {
+  //   title: '技术要求',
+  //   key: 'techRequirements',
+  //   type: JVxeTypes.textarea,
+  //   disabled: true,
+  //   width: 150,
+  // },
 ];
 
 export const meaTableColums: JVxeColumn[] = [
@@ -378,6 +387,7 @@ export const meaTableColums: JVxeColumn[] = [
     disabled: true,
     width: 250,
     minWidth: 250,
+    fixed: 'left',
   },
   {
     title: '是否必填',
@@ -398,20 +408,20 @@ export const meaTableColums: JVxeColumn[] = [
     disabled: true,
     width: 150,
   },
-  {
-    title: '检验依据',
-    key: 'inspBasis',
-    type: JVxeTypes.textarea,
-    disabled: true,
-    width: 150,
-  },
-  {
-    title: '技术要求',
-    key: 'techRequirements',
-    type: JVxeTypes.textarea,
-    disabled: true,
-    width: 150,
-  },
+  // {
+  //   title: '检验依据',
+  //   key: 'inspBasis',
+  //   type: JVxeTypes.textarea,
+  //   disabled: true,
+  //   width: 150,
+  // },
+  // {
+  //   title: '技术要求',
+  //   key: 'techRequirements',
+  //   type: JVxeTypes.textarea,
+  //   disabled: true,
+  //   width: 150,
+  // },
   {
     title: '下限比较符',
     key: 'minOperators',

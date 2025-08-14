@@ -43,8 +43,8 @@
     scanFunc.value = doScan;
     wkpId.value = data.wkpId;
     operateBy.value = data.operateBy;
-    bindId.value = data.record.id;
-    prodId.value = data.record.prodId;
+    bindId.value = data.id;
+    prodId.value = data.prodId;
 
     // 隐藏底部时禁用整个表单
     setProps({ disabled: unref(disabled) });

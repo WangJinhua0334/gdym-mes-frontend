@@ -5,7 +5,7 @@
     <DefectModal :defect="item" @addRefs="addRefs" />
   </div>
   <hr />
-  <a-tabs v-model:activeKey="activeKey" style="padding-bottom: 25px">
+  <a-tabs v-model:activeKey="activeKey" style="padding-bottom: 25px" v-if="prodBindTable.dataSource?.length > 0">
     <a-tab-pane tab="物料绑定" key="prodBind" :forceRender="true">
       <JVxeTable
         keep-source
@@ -20,17 +20,13 @@
         :toolbar="false"
       >
         <!-- 定义插槽 -->
-        <template #action="props">
-          <a @click="handleReplace(props)">替换</a>
-          <!-- <a-divider type="vertical" />
-          <a @click="handleUnbind(props)">解绑</a> -->
+        <template #action="{ row }">
+          <a @click="handleReplace(row)">替换</a>
+          <a @click="handleUnbind(row)" style="margin-left: 20px">解绑</a>
         </template>
       </JVxeTable>
     </a-tab-pane>
   </a-tabs>
-  <!-- <div class="submit-div">
-    <a-button type="primary" @click="handleSubmit"> 提交</a-button>
-  </div> -->
   <slot>
     <div class="footer">
       <a-button @click="doClose">关闭</a-button>
@@ -124,20 +120,9 @@
     });
   }
   /**
-   * 解绑
-   */
-  function handleUnbind(record) {
-    openUnbindModal(true, {
-      record: unref(record).row,
-      operateBy: unref(operateBy),
-    });
-  }
-
-  /**
    * 替换
    */
   function handleReplace(record) {
-    console.log(record);
     openBindModal(true, {
       wkpId: unref(props.componentData.record).workPostId,
       action: 'bindReplace',
@@ -145,6 +130,18 @@
       operateBy: unref(operateBy),
     });
   }
+
+  /**
+   * 解绑
+   */
+  function handleUnbind(record) {
+    console.log(record);
+    openUnbindModal(true, {
+      record: record,
+      operateBy: unref(operateBy),
+    });
+  }
+
   //加载事件
   onMounted(() => {
     resetFields();

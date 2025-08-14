@@ -52,7 +52,7 @@ export const formSchema: FormSchema[] = [
     colProps: { span: 8 },
   },
   {
-    label: '条码',
+    label: '流转卡号',
     field: 'sn',
     component: 'Input',
     componentProps: {
@@ -118,6 +118,15 @@ export const formSchema: FormSchema[] = [
       };
     },
     colProps: { span: 8 },
+  },
+  {
+    label: '不良数量',
+    field: 'ngQty',
+    component: 'InputNumber',
+    colProps: { span: 8 },
+    ifShow: ({ values }) => {
+      return !!values.result && values.result === 'N';
+    },
   },
   {
     label: '缺陷代码',
@@ -188,17 +197,19 @@ export const formSchema: FormSchema[] = [
     colProps: { span: 8 },
   },
   {
-    label: '不良数量',
-    field: 'ngQty',
-    component: 'InputNumber',
-    defaultValue: 1,
-    colProps: { span: 8 },
-    ifShow: ({ values }) => {
-      return !!values.result && values.result === 'N';
+    label: '是否推送',
+    field: 'isPush',
+    defaultValue: 'N',
+    component: 'JSwitch',
+    componentProps: {
+      dictCode: 'is_open',
+      checkedChildren: '是',
+      unCheckedChildren: '否',
     },
+    colProps: { span: 8 },
   },
   {
-    label: '不良消息接收人',
+    label: '消息接收人',
     field: 'ngUserBy',
     component: 'JSearchSelectCustom',
     componentProps: ({ formActionType }) => {
@@ -223,14 +234,11 @@ export const formSchema: FormSchema[] = [
         isShowNum: true,
         rowKey: 'username',
         labelKey: ['realname'],
-        multi: false,
+        multi: true,
         placeholder: '请选择',
       };
     },
     colProps: { span: 8 },
-    ifShow: ({ values }) => {
-      return !!values.result && values.result === 'N';
-    },
   },
   {
     label: '检验设备',

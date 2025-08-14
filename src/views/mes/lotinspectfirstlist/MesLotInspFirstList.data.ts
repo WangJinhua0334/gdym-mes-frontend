@@ -17,7 +17,7 @@ export const columns: BasicColumn[] = [
     width: 150,
   },
   {
-    title: '检验条码',
+    title: '流转卡号',
     align: 'center',
     dataIndex: 'lotSn',
     width: 150,
@@ -29,9 +29,25 @@ export const columns: BasicColumn[] = [
     width: 150,
   },
   {
+    title: '产品',
+    align: 'center',
+    dataIndex: 'prodId_dictText',
+  },
+  {
+    title: '产品名称',
+    align: 'center',
+    dataIndex: 'prodName_dictText',
+  },
+  {
     title: '工序',
     align: 'center',
     dataIndex: 'stationId_dictText',
+    width: 150,
+  },
+  {
+    title: '工位',
+    align: 'center',
+    dataIndex: 'wkpId_dictText',
     width: 150,
   },
   {
@@ -92,20 +108,35 @@ export const columns: BasicColumn[] = [
 //查询数据
 export const searchFormSchema: FormSchema[] = [
   {
-    label: '首检检验单',
-    field: 'code',
-    component: 'JInput',
-    colProps: { span: 6 },
-  },
-  {
     label: '工单号',
     field: 'moCode',
     component: 'Input',
     colProps: { span: 6 },
   },
   {
+    label: '产品',
+    field: 'prodQuery',
+    component: 'Input',
+    componentProps: {
+      placeholder: '请输入产品编码或名称',
+    },
+    colProps: { span: 6 },
+  },
+  {
     label: '流转卡号',
     field: 'lotSn',
+    component: 'JInput',
+    colProps: { span: 6 },
+  },
+  {
+    label: '工位',
+    field: 'wkpQuery',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: '首检检验单',
+    field: 'code',
     component: 'JInput',
     colProps: { span: 6 },
   },

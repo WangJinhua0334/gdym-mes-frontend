@@ -14,7 +14,21 @@ export const formSchema: FormSchema[] = [
       disabled: true,
     },
   },
-
+  {
+    label: '缺陷数量',
+    field: 'defectQty',
+    component: 'InputNumber',
+    defaultValue: 0,
+    dynamicRules: ({ model, schema, values }) => {
+      return [{ required: true, message: '请输入缺陷数量!' }];
+    },
+  },
+  {
+    label: '缺陷描述',
+    field: 'defectDesc',
+    component: 'Input',
+    componentProps: {},
+  },
   {
     label: '不良原因',
     field: 'defectReasonId',
@@ -28,9 +42,6 @@ export const formSchema: FormSchema[] = [
     field: 'scrapQty',
     component: 'InputNumber',
     componentProps: {},
-    dynamicRules: ({ model, schema, values }) => {
-      return [{ pattern: /^([1-9]\d*(\.\d*[1-9])?)|(0\.\d*[1-9])$/, message: '请输入正确的数量!' }];
-    },
   },
   {
     label: '报废原因',

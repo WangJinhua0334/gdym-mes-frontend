@@ -1,8 +1,7 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
-import { rules } from '/@/utils/helper/validator';
 import { render } from '/@/utils/common/renderUtils';
-import { JVxeTypes, JVxeColumn } from '/@/components/jeecg/JVxeTable/types';
+import { JVxeTypes } from '/@/components/jeecg/JVxeTable/src/types';
 import dayjs from 'dayjs';
 //列表数据
 export const columns: BasicColumn[] = [
@@ -215,6 +214,7 @@ export const getDetailJVxeColumns = function (detailView) {
       type: JVxeTypes.inputNumber,
       placeholder: '请输入${title}',
       defaultValue: '0',
+      width: 120,
       validateRules: [
         { required: true, message: '${title}不能为空' },
         {
@@ -228,6 +228,114 @@ export const getDetailJVxeColumns = function (detailView) {
           message: '${title}必须大于0',
         },
       ],
+    },
+    {
+      title: '单位',
+      key: 'unitId',
+      type: JVxeTypes.selectSearch,
+      dictCode: 'bas_unit,name,id',
+      width: 120,
+      placeholder: '请输入${title}',
+    },
+    {
+      title: 'WMS条码',
+      key: 'erpLineNo',
+      type: JVxeTypes.popupCustom,
+      method: 'get',
+      params: {},
+      url: '/apiService/WmsApi/selectStockFromWMS',
+      columns: [
+        {
+          title: '物料条码',
+          align: 'center',
+          dataIndex: 'qr',
+        },
+        {
+          title: '物料编码',
+          align: 'center',
+          dataIndex: 'prid',
+        },
+        {
+          title: '描述',
+          align: 'center',
+          dataIndex: 'des',
+        },
+        {
+          title: '地址码',
+          align: 'center',
+          dataIndex: 'address',
+        },
+        {
+          title: '供应商编码',
+          align: 'center',
+          dataIndex: 'suplierno',
+        },
+        {
+          title: '供应商名称',
+          align: 'center',
+          dataIndex: 'supliername',
+        },
+        {
+          title: '数量',
+          align: 'center',
+          dataIndex: 'boxcount',
+        },
+        {
+          title: '批次',
+          align: 'center',
+          dataIndex: 'lotno',
+        },
+        {
+          title: '箱号',
+          align: 'center',
+          dataIndex: 'boxno',
+        },
+        {
+          title: '操作人',
+          align: 'center',
+          dataIndex: 'username',
+        },
+        {
+          title: '箱号',
+          align: 'center',
+          dataIndex: 'boxno',
+        },
+        {
+          title: '库位',
+          align: 'center',
+          dataIndex: 'location',
+        },
+      ],
+      queryInfo: [
+        {
+          field: 'qr',
+          label: '物料条码',
+          mode: 'single',
+          view: 'string',
+        },
+        {
+          field: 'prid',
+          label: '物料编码',
+          mode: 'single',
+          view: 'string',
+        },
+        {
+          field: 'des',
+          label: '描述',
+          mode: 'single',
+          view: 'string',
+        },
+        {
+          field: 'address',
+          label: '地址码',
+          mode: 'single',
+          view: 'string',
+        },
+      ],
+      rowKey: 'qr',
+      labelKey: ['qr'],
+      placeholder: '请输入${title}',
+      validateRules: [{ required: true, message: '${title}不能为空' }],
     }
     /*{
       title: '仓库',
@@ -285,12 +393,6 @@ export const getDetailJVxeColumns = function (detailView) {
         key: 'actualPickBy_dictText',
         type: JVxeTypes.input,
       },
-      {
-        title: 'ERP行号',
-        key: 'erpLineNo',
-        type: JVxeTypes.input,
-        visible: false,
-      }
     );
   }
 
@@ -357,6 +459,11 @@ export const detailBasicColumns: BasicColumn[] = [
     align: 'center',
     dataIndex: 'pickedQty',
   },
+  {
+    title: '单位',
+    align: 'center',
+    dataIndex: 'unitId_dictText',
+  },
   /*{
     title: '仓库',
     align: 'center',
@@ -372,6 +479,11 @@ export const detailBasicColumns: BasicColumn[] = [
     },
   },
   {
+    title: 'WMS条码',
+    align: 'center',
+    dataIndex: 'erpLineNo',
+  },
+  {
     title: '领料时间',
     align: 'center',
     dataIndex: 'actualPickDate',
@@ -383,12 +495,6 @@ export const detailBasicColumns: BasicColumn[] = [
     title: '领料操作人',
     align: 'center',
     dataIndex: 'actualPickBy_dictText',
-  },
-  {
-    title: 'ERP行号',
-    align: 'center',
-    dataIndex: 'erpLineNo',
-    ifShow: false,
   },
 ];
 
@@ -443,17 +549,17 @@ export const detailReceiveFormSchema: FormSchema[] = [
     dynamicRules: ({ model, values, schema }) => {
       return [
         { required: true, message: '请输入领料数量！' },
-        {
-          required: false,
-          validator: (_, value) => {
-            if (value && value > Number(values.qty) - Number(values.pickedQty)) {
-              return Promise.reject('领料数量不能大于未领料数量！');
-            } else {
-              return Promise.resolve();
-            }
-          },
-          trigger: 'change',
-        },
+        // {
+        //   required: false,
+        //   validator: (_, value) => {
+        //     if (value && value > Number(values.qty) - Number(values.pickedQty)) {
+        //       return Promise.reject('领料数量不能大于未领料数量！');
+        //     } else {
+        //       return Promise.resolve();
+        //     }
+        //   },
+        //   trigger: 'change',
+        // },
       ];
     },
   },
