@@ -54,6 +54,18 @@ export const columns: BasicColumn[] = [
       ]);
     },
   },
+  {
+    title: '是否采集',
+    align: 'center',
+    sorter: true,
+    dataIndex: 'isScada',
+    customRender: ({ text }) => {
+      return render.renderSwitch(text, [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
+  },
 ];
 //查询数据
 export const searchFormSchema: FormSchema[] = [
@@ -183,6 +195,15 @@ export const formSchema: FormSchema[] = [
     label: '是否允许调整工位',
     field: 'isAdjust',
     defaultValue: 'Y',
+    component: 'JSwitch',
+    componentProps: {
+      dictCode: 'is_open',
+    },
+  },
+  {
+    label: '是否采集',
+    field: 'isScada',
+    defaultValue: 'N',
     component: 'JSwitch',
     componentProps: {
       dictCode: 'is_open',
