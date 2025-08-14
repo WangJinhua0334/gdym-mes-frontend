@@ -62,7 +62,7 @@
     editConfig: {
       trigger: 'click',
       mode: 'cell',
-      beforeEditMethod : ({ row, column }) => {
+      beforeEditMethod: ({ row, column }) => {
         console.log(column);
         console.log(row);
         if (column.property === 'fillRuleType') {
@@ -74,7 +74,11 @@
         }
 
         if (
-          (row.fillRuleType === 'year' || row.fillRuleType === 'month' || row.fillRuleType === 'date' || row.fillRuleType === 'week') &&
+          (row.fillRuleType === 'year' ||
+            row.fillRuleType === 'month' ||
+            row.fillRuleType === 'date' ||
+            row.fillRuleType === 'week' ||
+            row.fillRuleType === 'day') &&
           column.property === 'fillRuleLength'
         ) {
           return true;
@@ -189,13 +193,14 @@
         v.row.fillRuleLength = 5;
         v.row.fillRuleHex = 10;
         v.row.fillRuleStart = 1;
-      } else if (v.value === 'year' || v.value === 'month' || v.value === 'date' || v.value === 'week') {
+      } else if (v.value === 'year' || v.value === 'month' || v.value === 'date' || v.value === 'week' || v.value === 'day') {
         v.row.fillRuleValue = v.value;
 
         if (v.value == 'year') v.row.fillRuleLength = 4;
         if (v.value == 'month') v.row.fillRuleLength = 2;
         if (v.value == 'date') v.row.fillRuleLength = 2;
         if (v.value == 'week') v.row.fillRuleLength = 2;
+        if (v.value == 'day') v.row.fillRuleLength = 3;
       }
     }
   }
