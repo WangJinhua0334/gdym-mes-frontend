@@ -27,9 +27,9 @@
       title: '工单在制报表',
       api: moreportsearchlist,
       columns: moreportColumns,
-      clickToRowSelect:false,
+      clickToRowSelect: false,
       canResize: true,
-      showActionColumn:false,
+      showActionColumn: false,
       formConfig: {
         schemas: moreportSearchFormSchema,
         autoSubmitOnEnter: true,
@@ -39,7 +39,7 @@
       },
     },
     exportConfig: {
-      name: '工单在制报表', 
+      name: '工单在制报表',
       url: moreportsearchlistExportUrl,
     },
   });

@@ -27,9 +27,9 @@
       title: '工时统计报表',
       api: workrecordreportsearchlist,
       columns: workrecordreportColumns,
-      clickToRowSelect:false,
+      clickToRowSelect: false,
       canResize: true,
-      showActionColumn:false,
+      showActionColumn: false,
       formConfig: {
         schemas: workrecordreportSearchFormSchema,
         autoSubmitOnEnter: true,
@@ -39,7 +39,7 @@
       },
     },
     exportConfig: {
-      name: '工时统计报表', 
+      name: '工时统计报表',
       url: workrecordreportsearchlistExportUrl,
     },
   });

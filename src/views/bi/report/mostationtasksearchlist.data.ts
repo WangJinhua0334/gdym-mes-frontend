@@ -1,7 +1,20 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
+import { render } from '/@/utils/common/renderUtils';
 
 //列表数据
 export const mostationtaskColumns: BasicColumn[] = [
+  {
+    title: '生产车间',
+    align: 'center',
+    dataIndex: 'workShopId_dictText',
+    width: 160,
+  },
+  {
+    title: '工作中心',
+    align: 'center',
+    dataIndex: 'wkcIds_dictText',
+    width: 160,
+  },
   {
     title: '工单号',
     align: 'center',
@@ -15,30 +28,6 @@ export const mostationtaskColumns: BasicColumn[] = [
     width: 160,
   },
   {
-    title: '流转卡号',
-    align: 'center',
-    dataIndex: 'moSn',
-    width: 160,
-  },
-  {
-    title: '流转卡类型',
-    align: 'center',
-    dataIndex: 'moSnType_dictText',
-    width: 160,
-  },
-  {
-    title: '生产车间',
-    align: 'center',
-    dataIndex: 'workShopId_dictText',
-    width: 160,
-  },
-  // {
-  //   title: '工作中心',
-  //   align: 'center',
-  //   dataIndex: 'wkcIds_dictText',
-  //   width: 160,
-  // },
-  {
     title: '产品编码',
     align: 'center',
     dataIndex: 'prodId_dictText',
@@ -51,71 +40,130 @@ export const mostationtaskColumns: BasicColumn[] = [
     width: 160,
   },
   {
-    title: '生产状态',
+    title: '流转卡类型',
     align: 'center',
-    dataIndex: 'status_dictText',
-    width: 120,
+    dataIndex: 'moSnType',
+    width: 160,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'mo_sn_type', true);
+    },
   },
   {
-    title: '当前执行工序',
+    title: '流转卡号',
+    align: 'center',
+    dataIndex: 'sn',
+    width: 160,
+  },
+  {
+    title: '工艺工序',
     align: 'center',
     dataIndex: 'wfsId_dictText',
-    width: 120,
-  },
-  {
-    title: '工序执行状况',
-    align: 'center',
-    dataIndex: 'pathWfsId_dictText',
-    width: 120,
-  },
-  {
-    title: '计划数量',
-    align: 'center',
-    dataIndex: 'qty',
-    width: 120,
-  },
-  {
-    title: '已完工数量',
-    align: 'center',
-    dataIndex: 'completeQty',
-    width: 120,
+    width: 150,
   },
   // {
-  //   title: '合格数量',
+  //   title: '工序',
   //   align: 'center',
-  //   dataIndex: 'okQty',
-  //   width: 120,
+  //   dataIndex: 'stationId_dictText',
+  //   width: 150,
   // },
   {
-    title: '不合格数量',
+    title: '顺序',
     align: 'center',
-    dataIndex: 'ngQty',
-    width: 120,
+    dataIndex: 'sequence',
+    width: 100,
+  },
+  {
+    title: '数量',
+    align: 'center',
+    dataIndex: 'qty',
+    width: 100,
+  },
+  {
+    title: '投入数量',
+    align: 'center',
+    dataIndex: 'inputQty',
+    width: 100,
+  },
+  {
+    title: '完工数量',
+    align: 'center',
+    dataIndex: 'completeQty',
+    width: 100,
   },
   {
     title: '报废数量',
     align: 'center',
-    dataIndex: 'scrapedQty',
-    width: 120,
+    dataIndex: 'scrapQty',
+    width: 100,
   },
   {
-    title: '计划开始日期',
+    title: '不良数量',
+    align: 'center',
+    dataIndex: 'ngQty',
+    width: 100,
+  },
+  {
+    title: '不良次数',
+    align: 'center',
+    dataIndex: 'ngCout',
+    width: 100,
+  },
+  {
+    title: '维修数量',
+    align: 'center',
+    dataIndex: 'repairQty',
+    width: 100,
+  },
+  {
+    title: '维修次数',
+    align: 'center',
+    dataIndex: 'repairCout',
+    width: 100,
+  },
+  {
+    title: '状态',
+    align: 'center',
+    dataIndex: 'status',
+    width: 100,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'lot_status', true);
+    },
+  },
+  {
+    title: '工位',
+    align: 'center',
+    dataIndex: 'wkpIds_dictText',
+  },
+  {
+    title: '操作员',
+    align: 'center',
+    dataIndex: 'operateBys_dictText',
+  },
+  {
+    title: '计划开始时间',
     align: 'center',
     dataIndex: 'planStartTime',
-    width: 150,
   },
   {
-    title: '计划结束日期',
+    title: '计划完工时间',
     align: 'center',
     dataIndex: 'planCompleteTime',
-    width: 150,
   },
-  // {
-  //   title: '任务异常次数',
-  //   align: 'center',
-  //   dataIndex: 'taskAbnormalCount',
-  //   width: 120,
-  // },
+  {
+    title: '实际开工时间',
+    align: 'center',
+    dataIndex: 'acStartTime',
+  },
+  {
+    title: '实际完工时间',
+    align: 'center',
+    dataIndex: 'acCompleteTime',
+  },
+  {
+    title: '备注',
+    align: 'center',
+    dataIndex: 'remark',
+  },
 ];
 //查询数据
 export const mostationtaskSearchFormSchema: FormSchema[] = [
@@ -132,9 +180,77 @@ export const mostationtaskSearchFormSchema: FormSchema[] = [
     colProps: { span: 6 },
   },
   {
+    label: '生产车间',
+    field: 'wksId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        methods: 'get',
+        url: '/workshop/basWorkShop/list',
+        params: { column: 'createTime', order: 'desc', searchFields: 'code,name', code: '${code}' },
+        columns: [
+          {
+            name: '编码',
+            code: 'code',
+          },
+          {
+            name: '名称',
+            code: 'name',
+          },
+        ],
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        pageSize: 10,
+        multi: true,
+        maxTagCount: 2,
+        placeholder: '请选择',
+      };
+    },
+    colProps: { span: 6 },
+  },
+  {
+    label: '工作中心',
+    field: 'wkcId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        methods: 'get',
+        url: '/workcenter/basWorkCenter/list',
+        params: { column: 'createTime', order: 'desc', searchFields: 'code,name', code: '${code}' },
+        columns: [
+          {
+            name: '编码',
+            code: 'code',
+          },
+          {
+            name: '名称',
+            code: 'name',
+          },
+        ],
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        pageSize: 10,
+        multi: true,
+        maxTagCount: 2,
+        placeholder: '请选择',
+      };
+    },
+    colProps: { span: 6 },
+  },
+  {
     label: '流转卡号',
-    field: 'moSn',
-    component: 'Input',
+    field: 'sn',
+    component: 'JInput',
     colProps: { span: 6 },
   },
   {

@@ -2,21 +2,21 @@
   <div>
     <BasicForm submitOnReset @register="registerForm" @submit="handleSearchInfoChange" />
     <div style="margin-left: 15px !important; background-color: white !important">
-    <!--引用表格-->
-    <BasicTable @register="registerTable" :rowSelection="null" :toolbar="false" >
-      <!--插槽:table标题-->
-      <template #tableTitle>
-        <a-button type="primary" preIcon="ant-design:export-outlined" @click="onExportXls"> 导出</a-button>
-      </template>
-      <!--字段回显插槽-->
-      <template #htmlSlot="{ text }">
-        <div v-html="text"></div>
-      </template>
-    </BasicTable>
-    <div style="margin-top: 50px">
-            <AbnormalReportsEchart :data="custData" v-if="showCust"/>
-          </div>
-        </div>
+      <!--引用表格-->
+      <BasicTable @register="registerTable" :rowSelection="null" :toolbar="false">
+        <!--插槽:table标题-->
+        <template #tableTitle>
+          <a-button type="primary" preIcon="ant-design:export-outlined" @click="onExportXls"> 导出</a-button>
+        </template>
+        <!--字段回显插槽-->
+        <template #htmlSlot="{ text }">
+          <div v-html="text"></div>
+        </template>
+      </BasicTable>
+      <div style="margin-top: 50px">
+        <AbnormalReportsEchart :data="custData" v-if="showCust" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -42,30 +42,30 @@
     baseColProps: { span: 24 },
   });
 
-  const { tableContext,onExportXls } = useListPage({
+  const { tableContext, onExportXls } = useListPage({
     tableProps: {
       api: (params) => {
         params['dateRange'] = dateRange.value;
         return abnormalreportsearchlist(params);
       },
       columns: abnormalreportColumns,
-      pagination:false,
+      pagination: false,
       canResize: false,
       showActionColumn: false,
       useSearchForm: false,
-      showTableSetting: false,
-      showIndexColumn:true,
-    },exportConfig: {
-      name: '异常报表', 
+      showIndexColumn: true,
+    },
+    exportConfig: {
+      name: '异常报表',
       url: abnormalreportsearchlistExportUrl,
     },
   });
-  const [registerTable, { reload ,getRawDataSource: getRawDataSourceCust},] = tableContext;
+  const [registerTable, { reload, getRawDataSource: getRawDataSourceCust }] = tableContext;
 
   /**
    * 查询事件
    */
-   function handleSearchInfoChange() {
+  function handleSearchInfoChange() {
     showCust.value = false;
     const dateRange1 = getFieldsValue();
     if (dateRange1.dateRange) {
@@ -76,14 +76,14 @@
     reload();
     setTimeout(() => {
       showCust.value = true;
-        handleLoadEchartCust();
-      }, 500);
+      handleLoadEchartCust();
+    }, 500);
   }
 
   setTimeout(() => {
-      showCust.value = true;
-        handleLoadEchartCust();
-      }, 2000);
+    showCust.value = true;
+    handleLoadEchartCust();
+  }, 2000);
 
   function handleLoadEchartCust() {
     const custDataItem = getRawDataSourceCust();

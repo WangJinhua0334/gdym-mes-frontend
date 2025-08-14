@@ -31,9 +31,9 @@
       title: '在制品查询',
       api: productingsearchlist,
       columns: productionColumns,
-      clickToRowSelect:false,
+      clickToRowSelect: false,
       canResize: true,
-      showActionColumn:false,
+      showActionColumn: false,
       formConfig: {
         schemas: productionSearchFormSchema,
         autoSubmitOnEnter: true,
@@ -43,7 +43,7 @@
       },
     },
     exportConfig: {
-      name: '在制品查询', 
+      name: '在制品查询',
       url: productingsearchlistExportUrl,
     },
   });

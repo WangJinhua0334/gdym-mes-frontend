@@ -31,9 +31,9 @@
       title: '质量报表',
       api: qualityreportsearchlist,
       columns: qualityreportColumns,
-      clickToRowSelect:false,
+      clickToRowSelect: false,
       canResize: true,
-      showActionColumn:false,
+      showActionColumn: false,
       formConfig: {
         schemas: qualityreportSearchFormSchema,
         autoSubmitOnEnter: true,
@@ -43,7 +43,7 @@
       },
     },
     exportConfig: {
-      name: '质量报表', 
+      name: '质量报表',
       url: qualityreportsearchlistExportUrl,
     },
   });

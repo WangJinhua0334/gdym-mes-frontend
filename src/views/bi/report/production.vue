@@ -37,7 +37,7 @@
       },
     },
     exportConfig: {
-      name: '工单在制报表', 
+      name: '工单在制报表',
       url: productionExportUrl,
     },
   });
