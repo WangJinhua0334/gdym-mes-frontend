@@ -11,7 +11,7 @@ enum Api {
   deleteBatch = '/equipmaintainplan/eamEquipMaintainPlan/deleteBatch',
   importExcel = '/equipmaintainplan/eamEquipMaintainPlan/importExcel',
   exportXls = '/equipmaintainplan/eamEquipMaintainPlan/exportXls',
-  eamEquipMaintainRecItemList = '/equipmaintainplan/eamEquipMaintainPlan/listEamEquipMaintainRecItemByMainId',
+  eamEquipMaintainRecItemList = '/equipmaintainplan/eamEquipMaintainPlan/listEamEquipMaintainRecItemByMainIdNotPage',
   getEamEquipMaintainItemByCode = '/equipment/eamEquipment/queryEamEquipMaintainItemByCode',
   maintain = '/equipmaintainplan/eamEquipMaintainPlan/maintain',
   cancelMaintain = '/equipmaintainplan/eamEquipMaintainPlan/cancelSpotCheck',

@@ -161,7 +161,7 @@ export const formSchema: FormSchema[] = [
       };
     },
     dynamicRules: () => {
-      return [{ required: true, message: '请选择维修开始时间!' }];
+      return [{ required: true, message: '请选择设备!' }];
     },
   },
   {
@@ -207,7 +207,7 @@ export const formSchema: FormSchema[] = [
       };
     },
     dynamicRules: () => {
-      return [{ required: true, message: '请选择维修开始时间!' }];
+      return [{ required: true, message: '请选择车间!' }];
     },
   },
   {
@@ -220,7 +220,7 @@ export const formSchema: FormSchema[] = [
       width: '100%',
     },
     dynamicRules: () => {
-      return [{ required: true, message: '请选择维修开始时间!' }];
+      return [{ required: true, message: '请选择点检日期!' }];
     },
   },
   {
@@ -233,7 +233,7 @@ export const formSchema: FormSchema[] = [
       isRadioSelection: true,
     },
     dynamicRules: () => {
-      return [{ required: true, message: '请选择维修开始时间!' }];
+      return [{ required: true, message: '请选择点检人!' }];
     },
   },
   // {
@@ -413,7 +413,7 @@ export const formSchemaSpotCheck: FormSchema[] = [
       width: '100%',
     },
     dynamicRules: () => {
-      return [{ required: true, message: '请选择维修开始时间!' }];
+      return [{ required: true, message: '请选择实际点检日期!' }];
     },
   },
   {
@@ -426,7 +426,7 @@ export const formSchemaSpotCheck: FormSchema[] = [
       isRadioSelection: true,
     },
     dynamicRules: () => {
-      return [{ required: true, message: '请选择维修开始时间!' }];
+      return [{ required: true, message: '请选择实际点检人!' }];
     },
   },
   {
@@ -524,10 +524,16 @@ export const eamEquipSpotCheckItemColumns: JVxeColumn[] = [
     placeholder: '请输入${title}',
   },
   {
+    title: '数值',
+    key: 'value',
+    type: JVxeTypes.input,
+    placeholder: '请输入${title}',
+    defaultValue: '',
+  },
+  {
     title: '备注',
     key: 'remark',
     type: JVxeTypes.textarea,
-    dictCode: 'remark',
     placeholder: '请输入${title}',
     defaultValue: '',
   },

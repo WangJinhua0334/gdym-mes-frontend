@@ -14,6 +14,12 @@ export const columns: BasicColumn[] = [
     width: 150,
   },
   {
+    title: '车间',
+    align: 'center',
+    dataIndex: 'workShopId_dictText',
+    width: 150,
+  },
+  {
     title: '设备编码',
     align: 'center',
     dataIndex: 'equipCode_dictText',
@@ -232,6 +238,9 @@ export const formSchema: FormSchema[] = [
         disabled: true,
       };
     },
+    dynamicRules: () => {
+      return [{ required: true, message: '请选择车间!' }];
+    },
   },
   {
     label: '计划保养日期',
@@ -255,7 +264,7 @@ export const formSchema: FormSchema[] = [
       isRadioSelection: true,
     },
     dynamicRules: () => {
-      return [{ required: true, message: '请选择维修开始时间!' }];
+      return [{ required: true, message: '请选择计划保养人!' }];
     },
   },
   // {
@@ -437,7 +446,7 @@ export const formSchemaMaintain: FormSchema[] = [
       valueFormat: 'YYYY-MM-DD HH:mm:ss',
     },
     dynamicRules: () => {
-      return [{ required: true, message: '请选择维实际保养日期!' }];
+      return [{ required: true, message: '请选择实际保养日期!' }];
     },
   },
   {
@@ -560,10 +569,16 @@ export const eamMaintainRecItemJVxeColumns: JVxeColumn[] = [
     placeholder: '请输入${title}',
   },
   {
+    title: '数值',
+    key: 'value',
+    type: JVxeTypes.input,
+    placeholder: '请输入${title}',
+    defaultValue: '',
+  },
+  {
     title: '备注',
     key: 'remark',
     type: JVxeTypes.textarea,
-    dictCode: 'remark',
     placeholder: '请输入${title}',
     defaultValue: '',
   },

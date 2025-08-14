@@ -92,7 +92,7 @@ export const searchFormSchema: FormSchema[] = [
     field: 'equipTypeId',
     component: 'JSearchSelect',
     componentProps: {
-      dict: "eam_equipment_type where sys_org_code like '#{sys_org_code}%',name,id",
+      dict: 'eam_equipment_type,name,id',
       pageSize: 10,
       async: true,
       params: { column: 'code', order: 'asc', searchCols: 'code,name' },
@@ -132,7 +132,7 @@ export const searchFormSchema: FormSchema[] = [
     field: 'workShopId',
     component: 'JSearchSelect',
     componentProps: {
-      dict: "bas_work_shop where sys_org_code like '#{sys_org_code}%',name,id",
+      dict: 'bas_work_shop,name,id',
       pageSize: 10,
       async: true,
       params: { column: 'code', order: 'asc', searchCols: 'code,name' },
@@ -393,7 +393,7 @@ export const formSchema: FormSchema[] = [
     field: 'equipTypeId',
     component: 'JSearchSelect',
     componentProps: {
-      dict: "eam_equipment_type where sys_org_code like '#{sys_org_code}%',name,id",
+      dict: 'eam_equipment_type,name,id',
       pageSize: 10,
       async: true,
       params: { column: 'code', order: 'asc', searchCols: 'code,name' },
