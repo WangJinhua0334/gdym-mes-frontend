@@ -1,0 +1,666 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.intelligencePage {
+    width: 100%;
+    background: url('image/bg.png') center center no-repeat;
+    background-size: 100% 100%;
+
+    .title-bg {
+        width: 100%;
+        height: .875rem;
+        background: url('image/title.png') center center no-repeat;
+        background-size: 100% 100%;
+
+        .title {
+            width: 100%;
+            height: .625rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .title-info {
+                font-size: .375rem;
+                font-family: "PingFang-SC-Heavy";
+                font-weight: 800;
+                color: #FFFFFF;
+                line-height: .625rem;
+                height: .625rem;
+                background: linear-gradient(0deg, #33FFFF 0%, #FFFFFF 45%, #33FFFF 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+    }
+
+    .cont {
+        width: 100%;
+        height: calc(100% - .875rem);
+        padding: 0 .3rem;
+        display: flex;
+
+        h3 {
+            width: 60%;
+            font-size: 0.3rem;
+            line-height: 1rem;
+            height: 1rem;
+            color: #fff;
+            font-family: 'PingFangBold';
+        }
+
+        .cont-lt {
+            width: 32%;
+
+            h3 {
+                width: 60%;
+                font-size: 0.3rem;
+                line-height: 1rem;
+                height: 1rem;
+                color: #fff;
+                font-family: 'PingFangBold';
+            }
+            .lt-top {
+                width: 100%;
+                height: 48%;
+                background: url('image/lt2.png') center center no-repeat;
+                background-size: 100% 100%;
+                padding: .125rem .2125rem;
+                margin-bottom: 2%;
+
+                .center-title {
+                    display: flex;
+                    width: 100%;
+                }
+
+                .info-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 10px;
+                    font-size: 0.3rem;
+            
+                    .column {
+                      p {
+                        margin: 5px 0;
+                        padding-left: 10px;
+                        color: white; // 更深的颜色以确保可读性
+            
+                        strong {
+                          font-weight: bold;
+                          padding-right: 5px;
+                        }
+                      }
+                    }
+                }
+            }
+
+            .lt-bot {
+                width: 100%;
+                height: 48%;
+                background: url('image/lt3.png') center center no-repeat;
+                background-size: 100% 100%;
+                padding: .125rem .2125rem;
+                overflow: hidden;
+                
+              .sales-echart{
+                width: 100%;
+                height: calc(100% - 1.525rem);
+              }
+            }
+        }
+
+        .cont-center {
+            width: 36%;
+            margin: 0 1%;
+
+            .center-top {
+                width: 100%;
+                height: 48%;
+
+                .top-progress {
+                    width: 100%;
+                    height: 60%;
+                    display: flex;
+                    margin-bottom: .25rem;
+
+                    .item-time {
+                        width: .825rem;
+                        height: .825rem;
+                        background: url('image/time.gif') center center no-repeat;
+                        background-size: 100% 100%;
+                        position: absolute;
+                        top: -0.3125rem;
+                        text-align: center;
+                        line-height: .825rem;
+                        color: #33FFFF;
+                        font-size: .3rem;
+                        font-family: "PingFang-SC-Heavy";
+                    }
+
+                    .numerical-value {
+                        display: flex;
+                        justify-content: center;
+                        margin-bottom: .125rem;
+
+                        
+                    }
+
+                    .finish-progress {
+                        width: 100%;
+
+                        .finish-num {
+                            display: flex;
+
+                            p {
+                                flex: 1;
+                                font-size: .15rem;
+                                line-height: .375rem;
+                                color: #fff;
+                                font-family: "PingFang-SC-Heavy";
+                                display: flex;
+
+                                span {
+                                    display: block;
+                                    font-size: .2rem;
+                                    line-height: .375rem;
+                                    font-family: 'num';
+                                    margin-left: .125rem;
+                                }
+
+                                .color1 {
+                                    color: #FF8F57;
+                                }
+
+                                .color2 {
+                                    color: #FAE087;
+                                }
+                            }
+                        }
+                    }
+
+                    .progress-item-lt {
+                        flex: 1;
+                        height: 90%;
+                        margin-top: 5%;
+                        margin-right: .3rem;
+                        background: url('image/year.png') center center no-repeat;
+                        background-size: 100% 100%;
+                        position: relative;
+                        padding: .3rem .3125rem;
+
+                        .time-lt {
+                            left: 0;
+                        }
+
+                        .year-progress {
+                            width: 100%;
+                            height: .45rem;
+                            background: url('image/year-progress.png') center center no-repeat;
+                            background-size: 100% 100%;
+                            color: #fff;
+                            line-height: .45rem;
+                            font-family: "PingFang-SC-Heavy";
+                            margin-bottom: .125rem;
+                        }
+
+                    }
+
+                    .progress-item-rt {
+                        flex: 1;
+                        height: 90%;
+                        margin-top: 5%;
+                        margin-right: .3rem;
+                        background: url('image/month.png') center center no-repeat;
+                        background-size: 100% 100%;
+                        position: relative;
+                        padding: .3rem .3125rem;
+
+                        .time-rt {
+                            right: 0;
+                        }
+
+                        .year-progress {
+                            width: 100%;
+                            height: .45rem;
+                            background: url('image/month-progress.png') center center no-repeat;
+                            background-size: 100% 100%;
+                            color: #fff;
+                            line-height: .45rem;
+                            font-family: "PingFang-SC-Heavy";
+                            margin-bottom: .125rem;
+                        }
+                    }
+                }
+
+                .inproduction {
+                    width: 100%;
+                    height: 3rem;
+                    display: flex;
+                    margin-bottom: .25rem;
+
+                    .inproduction-item {
+                        flex: 1;
+                        margin: 0.3rem 0.3rem;
+                        // background: url('image/nun.gif') center center no-repeat;
+                        background-size: 100% 100%;
+                        padding-top: .25rem;
+
+                        .inproduction-num {
+                            font-family: 'num';
+                            font-size: .175rem;
+                            color: #eaf5f5;
+                            line-height: .625rem;
+                            text-align: center;
+                            background: linear-gradient(0deg, #FFFFFF 0%, #c0e0e0 100%);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+
+                            span {
+                                font-family: 'PingFang-SC-Heavy';
+                                font-size: .8rem;
+                                color: #d5ecec;
+                                line-height: .625rem;
+                                background: linear-gradient(0deg, #FFFFFF 0%, #d0ebeb 100%);
+                                -webkit-background-clip: text;
+                                -webkit-text-fill-color: transparent;
+                            }
+                        }
+
+                        .inproduction-title {
+                            font-family: 'PingFang-SC-Heavy';
+                            font-size: .225rem;
+                            line-height: .375rem;
+                            color: #fff;
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+
+            .center-bot {
+                width: 100%;
+                height: 48%;
+                background: url('image/lt3.png') center center no-repeat;
+                background-size: 100% 100%;
+                padding: .125rem .2125rem;
+
+                .center-title {
+                    display: flex;
+                    width: 100%;
+                }
+                .sales-echart{
+                    width: 100%;
+                    height: calc(100% - 1.525rem);
+                }
+            }
+
+        }
+
+        .cont-rt {
+            width: 30%;
+            height: 100%;
+            .rt-top{
+                width: 100%;
+                height: 48%;
+                background: url('image/lt2.png') center center no-repeat;
+                background-size: 100% 100%;
+                padding: .125rem .2125rem;
+                margin-bottom: 2%;
+                .table {
+                    width: 100%;
+                    height: calc(100% - 2.77vh);
+
+                    .table-list {
+                        width: 100%;
+                        height: 2.5vh;
+                        background-image: linear-gradient(to right, rgba(0, 8, 73, 0.36), rgba(5, 127, 250, 0.36), rgba(0, 8, 73, 0.36));
+                        display: flex;
+                        color: #33FFFF;
+                        font-family: 'PingFang-SC-Heavy';
+                        font-size: .15rem;
+
+                        li {
+                            flex: 1;
+                            line-height: 2.5vh;
+                        }
+                    }
+
+                    .race-lamp-card {
+                        height: calc(100% - 3.15vh);
+                        position: relative;
+                        overflow: hidden;
+
+                        .horseLamp_list {
+                            width: 100%;
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            overflow: hidden;
+
+                            .order-list {
+                                width: 100%;
+                                height: .625rem;
+                                margin-bottom: .0625rem;
+
+                                .list {
+                                    display: flex;
+                                    height: .3125rem;
+                                    p {
+                                        flex: 1;
+                                        font-size: .15rem;
+                                        line-height: .3125rem;
+                                        color: #fff;
+                                        overflow: hidden;
+                                        white-space: nowrap;
+                                        text-overflow: ellipsis;
+                                        -o-text-overflow: ellipsis;
+                                    }
+
+                                }
+
+                                .list-progress {
+                                    width: 100%;
+                                    height: .3125rem;
+                                    line-height: .3125rem;
+                                    margin-bottom: .0625rem;
+                                }
+                            }
+
+                        }
+
+                        @keyframes scroll {
+                            100% {
+                                /* 需要滚动内容的总高度 */
+                                top: -300px;
+                            }
+                        }
+                    }
+                }
+            }
+            .rt-bot{
+                width: 100%;
+                height: 48%;
+                background: url('image/lt3.png') center center no-repeat;
+                background-size: 100% 100%;
+                padding: .125rem .2125rem;
+                margin-bottom: 2%;
+                .center-title {
+                    display: flex;
+                    width: 100%;
+                    margin-bottom: .125rem;
+                }
+                .table {
+                    width: 100%;
+                    height: calc(100% - 2.77vh);
+
+                    .table-list {
+                        width: 100%;
+                        height: 2.5vh;
+                        background-image: linear-gradient(to right, rgba(0, 8, 73, 0.36), rgba(5, 127, 250, 0.36), rgba(0, 8, 73, 0.36));
+                        display: flex;
+                        color: #33FFFF;
+                        font-family: 'PingFang-SC-Heavy';
+                        font-size: .15rem;
+
+                        li {
+                            flex: 1;
+                            line-height: 2.5vh;
+                        }
+                    }
+
+                    .race-lamp-card {
+                        height: calc(100% - 3.15vh);
+                        position: relative;
+                        overflow: hidden;
+
+                        .horseLamp_list {
+                            width: 100%;
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            overflow: hidden;
+
+                            .order-list {
+                                width: 100%;
+                                height: .625rem;
+                                margin-bottom: .0625rem;
+
+                                .list {
+                                    display: flex;
+                                    height: .3125rem;
+                                    p {
+                                        flex: 1;
+                                        font-size: .15rem;
+                                        line-height: .3125rem;
+                                        color: #fff;
+                                        overflow: hidden;
+                                        white-space: nowrap;
+                                        text-overflow: ellipsis;
+                                        -o-text-overflow: ellipsis;
+                                    }
+
+                                }
+
+                                .list-progress {
+                                    width: 100%;
+                                    height: .3125rem;
+                                    line-height: .3125rem;
+                                    margin-bottom: .0625rem;
+                                }
+                            }
+
+                        }
+
+                        @keyframes scroll {
+                            100% {
+                                /* 需要滚动内容的总高度 */
+                                top: -300px;
+                            }
+                        }
+                    }
+                }
+                .bot-sales{
+                    width: 100%;
+                    height: calc(100% - .425rem);
+                }
+            }
+        }
+    }
+
+    .ant-progress-outer .ant-progress-inner {
+        background-color: #007799 !important;
+        opacity: 0.5 !important;
+    }
+
+    @media only screen and (max-width: 800px) {
+        .progress-item-lt {
+            .year-progress {
+                padding-left: 50%;
+                font-size: .15rem;
+            }
+        }
+
+        .progress-item-rt {
+            .year-progress {
+                padding-left: 15%;
+                font-size: .15rem;
+            }
+        }
+    }
+
+    @media only screen and (max-width: 1910px) {
+        .percent-num {
+            font-size: .15rem;
+            line-height: .3125rem;
+
+        }
+
+        .progress-item-lt {
+            .year-progress {
+                padding-left: 50%;
+                font-size: .175rem;
+            }
+        }
+
+        .progress-item-rt {
+            .year-progress {
+                padding-left: 15%;
+                font-size: .175rem;
+            }
+        }
+
+        .numerical-value {
+            .value-box {
+                height: 100%;
+                display: flex;
+                .value-border {
+                    margin-right: .125rem;
+                    background: linear-gradient(0deg, #000D4D, #0054A8, #000D4D);
+                    border: 1px solid;
+                    border-image: linear-gradient(0deg, #437FDB, #33FFFF, #437FDB) 5 5;
+
+                    >p {
+                        width: .3125rem;
+                        font-family: 'num';
+                        font-weight: 400;
+                        font-size: .375rem;
+                        color: #33FFFF;
+                        text-align: center;
+                        background: linear-gradient(0deg, #FFFFFF 0%, #33FFFF 100%);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                    }
+                }
+
+
+                .dian {
+                    width: .125rem;
+                    font-size: .5rem;
+                    font-family: 'num';
+                    font-weight: 400;
+                    color: #33FFFF;
+                    background: linear-gradient(0deg, #FFFFFF 0%, #33FFFF 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    margin-right: .0625rem;
+                }
+            }
+            .value-border1 {
+                width: .3125rem;
+                margin-right: .125rem;
+                background: linear-gradient(0deg, #000D4D, #0054A8, #000D4D);
+                border: 1px solid;
+                border-image: linear-gradient(0deg, #437FDB, #33FFFF, #437FDB) 5 5;
+
+                >p {
+                    font-family: 'num';
+                    font-weight: 400;
+                    color: #33FFFF;
+                    text-align: center;
+                    font-size: .375rem;
+                    background: linear-gradient(0deg, #FFFFFF 0%, #33FFFF 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+            }
+
+            .dian {
+                font-size: 1rem;
+                line-height: .625rem;
+
+            }
+        }
+    }
+
+    @media only screen and (min-width: 1920px) {
+        .percent-num {
+            font-size: .175rem;
+            line-height: .3125rem;
+        }
+
+        .progress-item-lt {
+            .year-progress {
+                padding-left: 50%;
+                font-size: .2rem;
+            }
+        }
+
+        .progress-item-rt {
+            .year-progress {
+                padding-left: 10%;
+                font-size: .2rem;
+            }
+        }
+
+        .numerical-value {
+            .value-box {
+                height: 100%;
+                display: flex;
+                .value-border {
+                    margin-right: .125rem;
+                    background: linear-gradient(0deg, #000D4D, #0054A8, #000D4D);
+                    border: 1px solid;
+                    border-image: linear-gradient(0deg, #437FDB, #33FFFF, #437FDB) 5 5;
+
+                    >p {
+                        width: .25rem;
+                        height: .5rem;
+                        font-family: 'num';
+                        font-weight: 400;
+                        font-size: .375rem;
+                        line-height: 0.5rem;
+                        color: #33FFFF;
+                        text-align: center;
+                        background: linear-gradient(0deg, #FFFFFF 0%, #33FFFF 100%);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                    }
+                }
+            }
+            .value-border1 {
+                margin-right: .125rem;
+                background: linear-gradient(0deg, #000D4D, #0054A8, #000D4D);
+                border: 1px solid;
+                border-image: linear-gradient(0deg, #437FDB, #33FFFF, #437FDB) 5 5;
+
+                >p {
+                    width: .25rem;
+                    height: .5rem;
+                    font-family: 'num';
+                    font-weight: 400;
+                    font-size: .35rem;
+                    line-height: 0.5rem;
+                    color: #33FFFF;
+                    text-align: center;
+                    background: linear-gradient(0deg, #FFFFFF 0%, #33FFFF 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+            }
+        }
+
+    }
+
+}
+/* 工位选择器样式 */
+.workstation-selector {
+    border: none; /* 去除边框 */
+    background-color: transparent; /* 设置背景透明 */
+    color: inherit; /* 使用父元素的文字颜色 */
+    font-size: inherit; /* 继承父元素字体大小 */
+    cursor: pointer; /* 改变鼠标悬停样式为指针 */
+    outline: none; /* 移除获得焦点时的轮廓 */
+    font-size: .375rem;
+    font-family: "PingFang-SC-Heavy";
+    font-weight: 800;
+    line-height: .625rem;
+    height: .625rem;
+    background: linear-gradient(0deg, #33FFFF 0%, #FFFFFF 45%, #33FFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .workstation-selector:focus {
+    outline: none; /* 确保在点击时也没有轮廓 */
+  }
