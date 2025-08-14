@@ -322,7 +322,7 @@
       currentWorkStation.value.shift = res?.shift;
       currentWorkStation.value.snQty = res?.snQty;
 
-      //setTimeout(getMesMoSnDataTimer, times);
+      setTimeout(getMesMoSnDataTimer, times);
     });
   }
   //包装信息

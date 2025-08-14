@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BasicForm @register="registerForm" style="width: 100%"></BasicForm>
+    <BasicForm @register="registerForm" style="width: 100%" />
     <div class="btn-box">
       <div class="btn btn1" @click="handleSubmit">确定</div>
       <div class="btn btn2" @click="switchCencl">取消</div>
@@ -15,9 +15,11 @@
   import { formSchema } from '../Workbench.data';
   import { useUserWorkbenchStore } from '/@/store/modules/userWorkbench';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { defHttp } from '/@/utils/http/axios';
 
   const userStoreWorkbench = useUserWorkbenchStore();
   const $message = useMessage();
+  const { createConfirm } = useMessage();
 
   // Emits声明
   const emit = defineEmits(['callback', 'register']);
@@ -43,13 +45,29 @@
   async function handleSubmit() {
     let values = await validate();
     try {
+      defHttp
+        .get({
+          url: '/workbench/checkWkp',
+          params: { wkpId: values.workPost },
+        })
+        .then((res) => {
+          if (res != '') {
+            createConfirm({
+              iconType: 'warning',
+              title: '提示消息',
+              content: res,
+              okText: '确认',
+              cancelText: '返回',
+            });
+          }
+        });
       emit('callback', values.workPost);
       $message.createMessage.success('切换成功');
     } catch (error) {
       console.log(error.message);
-    } 
+    }
   }
-  async function switchCencl(){
+  async function switchCencl() {
     emit('callback', false);
   }
 
@@ -71,13 +89,13 @@
 </script>
 
 <style lang="less" scoped>
-.btn-box{
+  .btn-box {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-.btn{
+  }
+  .btn {
     width: 90px;
     height: 32px;
     border-radius: 6px;
@@ -86,14 +104,14 @@
     font-size: 12px;
     float: left;
     cursor: pointer;
-}
-.btn1{
-    background-color: #1890FF;
+  }
+  .btn1 {
+    background-color: #1890ff;
     color: #fff;
-}
-.btn2{
+  }
+  .btn2 {
     background-color: #fff;
-    color: #7D8EA8;
+    color: #7d8ea8;
     margin-left: 10px;
-}
+  }
 </style>

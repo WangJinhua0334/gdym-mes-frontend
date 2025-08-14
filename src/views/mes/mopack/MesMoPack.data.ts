@@ -133,7 +133,7 @@ export const packListFormSchema: FormSchema[] = [
     colProps: { span: 6 },
   },
   {
-    label: '物料编码/名称',
+    label: '产品编码/名称/型号',
     field: 'prodQuery',
     component: 'Input',
     colProps: { span: 6 },
@@ -141,7 +141,7 @@ export const packListFormSchema: FormSchema[] = [
   {
     label: '工位',
     field: 'wkpQuery',
-    component: 'JInput',
+    component: 'Input',
     colProps: { span: 6 },
   },
 ];

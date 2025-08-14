@@ -3,6 +3,7 @@ import { FormSchema } from '/@/components/Table';
 import { render } from '/@/utils/common/renderUtils';
 import { JVxeTypes } from '/@/components/jeecg/JVxeTable/src/types';
 import dayjs from 'dayjs';
+import { before } from 'lodash-es';
 //列表数据
 export const columns: BasicColumn[] = [
   {
@@ -311,25 +312,21 @@ export const getDetailJVxeColumns = function (detailView) {
           field: 'qr',
           label: '物料条码',
           mode: 'single',
-          view: 'string',
         },
         {
           field: 'prid',
           label: '物料编码',
           mode: 'single',
-          view: 'string',
         },
         {
           field: 'des',
           label: '描述',
           mode: 'single',
-          view: 'string',
         },
         {
           field: 'address',
           label: '地址码',
           mode: 'single',
-          view: 'string',
         },
       ],
       rowKey: 'qr',
