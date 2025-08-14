@@ -20,17 +20,20 @@ export function useTableFooter(
   });
 
   // 是否有展开行
-  const hasExpandedRow = computed(() => Object.keys(slots).includes('expandedRowRender'))
+  const hasExpandedRow = computed(() => Object.keys(slots).includes('expandedRowRender'));
 
   const getFooterProps = computed((): Recordable | undefined => {
     const { summaryFunc, showSummary, summaryData, bordered } = unref(propsRef);
-    return showSummary && !unref(getIsEmptyData) ? () => h(TableFooter, {
-      bordered,
-      summaryFunc,
-      summaryData,
-      scroll: unref(scrollRef),
-      hasExpandedRow: hasExpandedRow.value
-    }) : undefined;
+    return showSummary && !unref(getIsEmptyData)
+      ? () =>
+          h(TableFooter, {
+            bordered,
+            summaryFunc,
+            summaryData,
+            scroll: unref(scrollRef),
+            hasExpandedRow: hasExpandedRow.value,
+          })
+      : undefined;
   });
 
   watchEffect(() => {
@@ -38,24 +41,34 @@ export function useTableFooter(
   });
 
   function handleSummary() {
-    const { showSummary } = unref(propsRef);
+    const { showSummary, canResize } = unref(propsRef);
     if (!showSummary || unref(getIsEmptyData)) return;
-
     nextTick(() => {
       const tableEl = unref(tableElRef);
       if (!tableEl) return;
-      const bodyDom = tableEl.$el.querySelector('.ant-table-content');
-      useEventListener({
-        el: bodyDom,
-        name: 'scroll',
-        listener: () => {
-          const footerBodyDom = tableEl.$el.querySelector('.ant-table-footer .ant-table-content') as HTMLDivElement;
-          if (!footerBodyDom || !bodyDom) return;
-          footerBodyDom.scrollLeft = bodyDom.scrollLeft;
-        },
-        wait: 0,
-        options: true,
-      });
+      let bodyDom;
+      // update-begin--author:liaozhiyang---date:20241111---for：【issues/7422】BasicTable列表canResize属性为true时合计行不能横向滚动
+      if (canResize) {
+        setTimeout(() => {
+          bodyDom = tableEl.$el.querySelector('.ant-table-body');
+        }, 50);
+      } else {
+        bodyDom = tableEl.$el.querySelector('.ant-table-content');
+      }
+      setTimeout(() => {
+        useEventListener({
+          el: bodyDom,
+          name: 'scroll',
+          listener: () => {
+            const footerBodyDom = tableEl.$el.querySelector('.ant-table-footer .ant-table-body') as HTMLDivElement;
+            if (!footerBodyDom || !bodyDom) return;
+            footerBodyDom.scrollLeft = bodyDom.scrollLeft;
+          },
+          wait: 0,
+          options: true,
+        });
+      }, 50);
+      // update-end--author:liaozhiyang---date:20241111---for：【issues/7422】BasicTable列表canResize属性为true时合计行不能横向滚动
     });
   }
   return { getFooterProps };

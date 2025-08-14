@@ -39,6 +39,16 @@ export const CustomIndex: AppRouteRecordRaw = {
   },
 };
 
+// 自定义首页
+export const BiIndex: AppRouteRecordRaw = {
+  path: '/bi/prodBoard',
+  name: 'prodBoard',
+  component: () => import('/@/views/bi/prodBoard/prodBoard.vue'),
+  meta: {
+    title: t('产线看板'),
+  },
+};
+
 export const LoginRoute: AppRouteRecordRaw = {
   path: '/login',
   name: 'Login',
@@ -85,4 +95,5 @@ export const basicRoutes = [
   PAGE_NOT_FOUND_ROUTE,
   TokenLoginRoute,
   Oauth2LoginRoute,
+  BiIndex,
 ];
