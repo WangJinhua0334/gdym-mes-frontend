@@ -6,14 +6,14 @@ import { render } from '/@/utils/common/renderUtils';
 //列表数据
 export const columns: BasicColumn[] = [
   {
-    title: '物料编码',
+    title: '工装物料编码',
     align: 'center',
     sorter: true,
     dataIndex: 'prodId_dictText',
     width: 150,
   },
   {
-    title: '物料名称',
+    title: '工装名称',
     align: 'center',
     sorter: true,
     dataIndex: 'prodName_dictText',
@@ -84,13 +84,13 @@ export const columns: BasicColumn[] = [
 //查询数据
 export const searchFormSchema: FormSchema[] = [
   {
-    label: '物料编码',
+    label: '工装物料编码',
     field: 'code',
     component: 'Input',
     colProps: { span: 6 },
   },
   {
-    label: '物料名称',
+    label: '工装名称',
     field: 'name',
     component: 'Input',
     colProps: { span: 6 },
@@ -110,7 +110,7 @@ export const searchFormSchema: FormSchema[] = [
 //表单数据
 export const formSchema: FormSchema[] = [
   {
-    label: '物料编码',
+    label: '工装物料编码',
     field: 'prodId',
     component: 'JPopupCustom',
     componentProps: ({ formActionType }) => {
@@ -135,6 +135,11 @@ export const formSchema: FormSchema[] = [
             align: 'center',
             dataIndex: 'name',
           },
+          {
+            title: '规格',
+            align: 'center',
+            dataIndex: 'specification',
+          },
         ],
         queryInfo: [
           {
@@ -153,7 +158,7 @@ export const formSchema: FormSchema[] = [
         isShowNum: true,
         rowKey: 'id',
         labelKey: ['code'],
-        linkmap: [{ version: 'prodCode_dictText', name: 'prodName_dictText' }],
+        linkmap: [{ specification: 'specification' }],
         placeholder: '请选择',
       };
     },
@@ -165,9 +170,7 @@ export const formSchema: FormSchema[] = [
     label: '规格型号',
     field: 'specification',
     component: 'Input',
-    dynamicRules: ({ model, schema }) => {
-      return [{ required: true, message: '请输入规格型号!' }];
-    },
+    dynamicDisabled: true,
   },
   {
     label: '类别名称',
