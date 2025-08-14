@@ -95,6 +95,20 @@ export const basWorkflowStationColumns: BasicColumn[] = [
     width: 100,
   },
   {
+    title: '产出品比例',
+    align: 'center',
+    dataIndex: 'prodRatio',
+    width: 100,
+    helpMessage: '与上一道工序产出对比；例如：1代表此工序计划产出数量与上道工序数量1比1;9代表是上一道工序数量的9倍',
+  },
+  {
+    title: '超报比例',
+    align: 'center',
+    dataIndex: 'passRatio',
+    width: 100,
+    helpMessage: '例如：0代表不允许超报，1允许超报1倍，0.5允许超报0.5倍',
+  },
+  {
     title: '按工单首检',
     align: 'center',
     dataIndex: 'isMoFirst',
@@ -210,7 +224,31 @@ export const formSchema: FormSchema[] = [
   {
     label: '工时',
     field: 'standardHours',
-    component: 'Input',
+    component: 'InputNumber',
+    ifShow: ({ values }) => {
+      return values.stationType != 'station_group';
+    },
+  },
+  {
+    label: '产出品比例',
+    field: 'prodRatio',
+    component: 'InputNumber',
+    defaultValue: 1,
+    helpMessage: ({ values }) => {
+      return '与上一道工序产出对比；例如：1代表此工序计划产出数量与上道工序数量1比1;9代表是上一道工序数量的9倍';
+    },
+    ifShow: ({ values }) => {
+      return values.stationType != 'station_group';
+    },
+  },
+  {
+    label: '超报比例',
+    field: 'passRatio',
+    component: 'InputNumber',
+    defaultValue: 0,
+    helpMessage: ({ values }) => {
+      return '例如：0代表不允许超报，1允许超报1倍，0.5允许超报0.5倍';
+    },
     ifShow: ({ values }) => {
       return values.stationType != 'station_group';
     },
@@ -524,6 +562,30 @@ export const formSchemaDrawer: FormSchema[] = [
     label: '工时',
     field: 'standardHours',
     component: 'Input',
+    ifShow: ({ values }) => {
+      return values.stationType != 'station_group';
+    },
+  },
+  {
+    label: '产出品比例',
+    field: 'prodRatio',
+    component: 'InputNumber',
+    defaultValue: 1,
+    helpMessage: ({ values }) => {
+      return '与上一道工序产出对比；例如：1代表此工序计划产出数量与上道工序数量1比1;9代表是上一道工序数量的9倍';
+    },
+    ifShow: ({ values }) => {
+      return values.stationType != 'station_group';
+    },
+  },
+  {
+    label: '超报比例',
+    field: 'passRatio',
+    component: 'InputNumber',
+    defaultValue: 0,
+    helpMessage: ({ values }) => {
+      return '例如：0代表不允许超报，1允许超报1倍，0.5允许超报0.5倍';
+    },
     ifShow: ({ values }) => {
       return values.stationType != 'station_group';
     },
