@@ -80,6 +80,32 @@
               <p class="inproduction-title">剩余数量</p>
             </div>
           </div>
+          <div class="inproduction">
+            <div class="inproduction-item">
+              <p class="inproduction-num"
+                ><span>{{ productProgress.ngQty }}</span
+                >件</p
+              >
+              <p class="inproduction-title">不良品总数</p>
+            </div>
+            <div class="inproduction-item">
+              <p class="inproduction-num"><span></span></p>
+              <p class="inproduction-title"></p>
+            </div>
+          </div>
+          <div class="inproduction">
+            <Progress
+              :percent="productProgress.percentage"
+              style="width: 100%; height: 20px; line-height: 0.3rem"
+              :stroke-color="{ '0%': '#437FDB', '100%': '#33FFFF' }"
+              trailColor="rgba(67,127,219,0.26)"
+              :size="[300, 20]"
+            >
+              <template #format="percent">
+                <span class="percent-num" style="color: #ffa070; font-size: 0.3rem">{{ percent }}%</span>
+              </template>
+            </Progress>
+          </div>
         </div>
         <div class="center-bot">
           <div class="center-title">
@@ -92,37 +118,27 @@
       </div>
       <div class="cont-rt">
         <div class="rt-top">
-          <h3>工位历史流转卡</h3>
+          <h3>工位物料信息</h3>
           <div class="table">
             <ul class="table-list">
-              <li>流转卡号</li>
-              <li>工单号</li>
-              <li>产品</li>
-              <li>数量</li>
-              <li>产出数</li>
+              <li style="width: 17%">物料条码</li>
+              <li style="width: 17%">物料编码</li>
+              <li style="width: 25%">物料名称</li>
+              <li style="width: 8%">数量</li>
+              <li style="width: 25%">上料时间</li>
+              <li style="width: 8%">人员</li>
             </ul>
             <div class="race-lamp-card"
               ><!--:style="{ height: showNum * .4375+'rem' }"-->
               <div class="horseLamp_list" :class="{ marquee_top: animate }">
                 <div class="order-list" v-for="(item, index) in horseLampList" :key="index">
                   <div class="list">
-                    <p>{{ item.moSn }}</p>
-                    <p>{{ item.code }}</p>
-                    <p>{{ item.prodId_dictText }}</p>
-                    <p>{{ item.totalQty }}</p>
-                    <p>{{ item.completedQty }}</p>
-                  </div>
-                  <div class="list-progress">
-                    <Progress
-                      :percent="item.percentage"
-                      style="width: 100%; height: 0.1rem; line-height: 0.3125rem"
-                      :stroke-color="{ '0%': '#437FDB', '100%': '#33FFFF' }"
-                      trailColor="rgba(67,127,219,0.26)"
-                    >
-                      <template #format="percent">
-                        <span class="percent-num" style="color: #ffa070">{{ percent }}%</span>
-                      </template>
-                    </Progress>
+                    <p style="width: 17%">{{ item.materialSn }}</p>
+                    <p style="width: 17%">{{ item.prodId_dictText }}</p>
+                    <p style="width: 25%">{{ item.prodName_dictText }}</p>
+                    <p style="width: 7%">{{ item.qty }}</p>
+                    <p style="width: 25%">{{ item.upTime }}</p>
+                    <p style="width: 8%">{{ item.upBy_dictText }}</p>
                   </div>
                 </div>
               </div>
@@ -135,14 +151,14 @@
           </div>
           <div class="bot-sales">
             <div class="info-item">
-              <div class="field">
+              <!-- <div class="field">
                 <span class="label">包装规则：</span>
                 <input type="text" v-model="values.packRule" readonly disabled />
-              </div>
-              <div class="field">
+              </div> -->
+              <!-- <div class="field">
                 <span class="label">包装托号：</span>
                 <input type="number" v-model="values.mesSnNum" readonly disabled />
-              </div>
+              </div> -->
             </div>
             <div class="info-item">
               <div class="field">
@@ -151,7 +167,6 @@
               </div>
               <div class="field">
                 <span class="label">未包数量：</span>
-
                 <input type="number" v-model="values.itemQty" readonly disabled />
               </div>
             </div>
@@ -171,6 +186,16 @@
                 <input type="number" v-model="values.packQty" />
               </div>
               <div class="field">
+                <span class="label">装箱数量：</span>
+                <input type="number" v-model="productProgress.boxQty" readonly disabled
+              /></div>
+            </div>
+            <div class="info-item">
+              <div class="field">
+                <span class="label"></span>
+                <button id="printLabelBtn" @click="upMat">上料</button>
+              </div>
+              <div class="field">
                 <span class="label"></span>
                 <button id="printLabelBtn" @click="doPack">打印标签</button>
               </div>
@@ -180,13 +205,25 @@
       </div>
     </div>
   </div>
+  <BasicModal
+    v-bind="$attrs"
+    @register="registerModal"
+    destroyOnClose
+    :title="'处理不良品'"
+    :width="800"
+    :confirmLoading="false"
+    :showCancelBtn="false"
+    :showOkBtn="false"
+  >
+    <WkpStockUp @success="handleSuccess" :componentData="componentData" @close="closeModal" @setModalProps="setModalProps" />
+  </BasicModal>
 </template>
 <script lang="ts" name="intelligencePage" setup>
   import { ref, computed, unref, onUnmounted } from 'vue';
   import { Progress } from 'ant-design-vue';
   import qualified from './components/qualified.vue';
   import sales from './components/sales.vue';
-  import { getWkpList, getMesMoSnData, getScadaData, getScadaWeight, getScadaheight, productionList, scranPack, pack } from './prodBoard.api';
+  import { getWkpList, getMesMoSnData, getScadaData, getScadaWeight, getScadaheight, wkpStockList, scranPack, pack } from './prodBoard.api';
   // 引入看板rem适配
   import '/@/utils/flexible.js';
   // 看板特殊字体
@@ -199,6 +236,10 @@
   import { loopPrintJimuReport } from '/@/utils';
   import { getToken } from '/@/utils/auth';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { BasicModal, useModal } from '/@/components/Modal';
+  import WkpStockUp from '/@/views/mes/wip/prodwkpstock/WkpStockUp.vue';
+
+  const [registerModal, { setModalProps, closeModal, openModal }] = useModal();
 
   const $message = useMessage();
 
@@ -218,6 +259,11 @@
   const selectedWkpId = ref(''); // 当前选中的工位
   const workStations = ref([]); //工位信息
   const times = 8000;
+  const componentData = ref({
+    record: ref({
+      workPostId: '',
+    }),
+  });
   // 示例数据
   const currentWorkStation = ref({
     flowCardNumber: '',
@@ -251,6 +297,8 @@
     inputQty: 0,
     outQty: 0,
     boxQty: 0,
+    percentage: 0,
+    ngQty: 0,
   });
   const weightEcharts = ref({
     Xdata: [],
@@ -283,6 +331,7 @@
 
   //值改变触发事件
   function onWorkStationChange() {
+    componentData.value.record.workPostId = selectedWkpId.value;
     // ✅ 先清除所有定时器
     if (scadaTimerId) clearTimeout(scadaTimerId);
     if (heightTimerId) clearTimeout(heightTimerId);
@@ -339,10 +388,10 @@
     //   packTimerId = setTimeout(getPackListTimer, times);
     // });
   }
-  // 历史流转卡信息
+  // 工位上料信息
   function productionListTimer() {
     if (productTimerId) clearTimeout(productTimerId);
-    productionList({
+    wkpStockList({
       wkpId: selectedWkpId.value,
     }).then((res) => {
       horseLampList.value = res;
@@ -360,6 +409,13 @@
       productProgress.value.inputQty = res.inputQty;
       productProgress.value.outQty = res.outQty;
       productProgress.value.boxQty = res.boxQty;
+      productProgress.value.ngQty = res.ngQty;
+      // 计算百分比并保留两位小数
+      const rawPercentage = (res.inputQty * 100) / currentWorkStation.value.snQty;
+
+      // 或者保留两位小数（使用 Math.round，数值类型）
+      const roundedPercentage = Math.round(rawPercentage * 100) / 100;
+      productProgress.value.percentage = roundedPercentage;
 
       scadaTimerId = setTimeout(getScadaDataTimer, times);
     });
@@ -402,8 +458,15 @@
       sn: sn,
     })
       .then((res) => {
+        values.value.completeQty = 0;
+        values.value.mesSnNum = 0;
+        values.value.packNum = 0;
+        values.value.packQty = 0;
+        values.value.packRule = '';
+        values.value.snNum = 0;
+        values.value.qty = 0;
+        values.value.itemQty = 0;
         if (res.lotSn) {
-          console.log(res);
           values.value.completeQty = res.completeQty;
           values.value.mesSnNum = res.snNum;
           values.value.packNum = res.packNum;
@@ -417,6 +480,14 @@
       })
       .catch((err) => {});
   }
+  //上料成功后事件
+  function handleSuccess() {}
+
+  // 上料
+  async function upMat() {
+    openModal();
+  }
+
   // 包装
   async function doPack() {
     values.value.wkpId = selectedWkpId.value;
@@ -429,12 +500,15 @@
       $message.createMessage.warning('该工位没有绑定流转卡任务!');
       return;
     }
+    if (values.value == null || values.value.packQty != 0) {
+      $message.createMessage.warning('请输入包装数量!');
+      return;
+    }
     //提交表单
     await pack(values.value).then((res) => {
       if (!unref(res)) {
         return;
       }
-      console.log(res);
       const ids = Object.keys(res);
       defHttp
         .get({
@@ -456,6 +530,7 @@
 </script>
 <style scoped lang="less">
   @import url('prodBoard.less');
+  /* 全局样式（建议在 App.vue 或单独的 CSS 文件中定义） */
   .intelligencePage .cont .cont-rt .rt-bot .bot-sales {
     width: 100%;
     height: calc(90% - 0.425rem);
@@ -464,7 +539,7 @@
     width: 100%;
     height: 100%;
     color: white; /* 白色字体 */
-    font-size: 20px; /* 字体放大 */
+    font-size: 0.3rem; /* 字体放大 */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -524,7 +599,7 @@
   button {
     width: 140px;
     padding: 10px 20px;
-    font-size: 18px;
+    font-size: 0.375rem;
     background-color: #0056b3;
     border: none;
     border-radius: 6px;
