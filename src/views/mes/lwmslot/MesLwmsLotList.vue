@@ -13,6 +13,10 @@
         <a-button type="primary" v-auth="'org.jeecg.modules:mes_lwms_lot:patchwork'" @click="handlePatchwork">补打</a-button>
         <a-button type="primary" v-auth="'org.jeecg.modules:mes_lwms_lot:exportXls'" @click="onExportXls"> 导出 </a-button>
       </template>
+      <!--操作栏-->
+      <template #action="{ record }">
+        <TableAction :actions="getTableAction(record)" />
+      </template>
       <!--字段回显插槽-->
       <template #htmlSlot="{ text }">
         <div v-html="text"></div>
@@ -31,6 +35,7 @@
     <MesLwmsLotGenerateModal @register="generateModal" @success="handleSuccess" />
     <MesLwmsLotGenerateByMoModal @register="generateByMoModal" @success="handleSuccess" />
     <MesLwmsLotGenerateByPickModal @register="generateByPickModal" @success="handleSuccess" />
+    <MesLwmsLotSplitModal @register="splitModal" @success="handleSuccess" />
   </div>
 </template>
 
@@ -43,6 +48,7 @@
   import MesLwmsLotGenerateModal from './components/MesLwmsLotGenerateModal.vue';
   import MesLwmsLotGenerateByMoModal from './components/MesLwmsLotGenerateByMoModal.vue';
   import MesLwmsLotGenerateByPickModal from './components/MesLwmsLotGenerateByPickModal.vue';
+  import MesLwmsLotSplitModal from './components/MesLwmsLotSplitModal.vue';
   import { columns, searchFormSchema } from './MesLwmsLot.data';
   import { list, deleteOne, batchDelete, getImportUrl, getExportUrl } from './MesLwmsLot.api';
   import { downloadFile } from '/@/utils/common/renderUtils';
@@ -58,6 +64,8 @@
   const [generateModal, { openModal: openGenerateModal }] = useModal();
   const [generateByMoModal, { openModal: openGenerateByMoModal }] = useModal();
   const [generateByPickModal, { openModal: openGenerateByPickModal }] = useModal();
+  const [splitModal, { openModal: openSplitModal }] = useModal();
+
   //注册table数据
   const { prefixCls, tableContext, onExportXls, onImportXls } = useListPage({
     tableProps: {
@@ -73,7 +81,12 @@
         fieldMapToNumber: [],
         fieldMapToTime: [],
       },
-      showActionColumn: false,
+      showActionColumn: true,
+      actionColumn: {
+        title: '操作',
+        width: 120,
+        fixed: 'right',
+      },
     },
     exportConfig: {
       name: '在制库条码表',
@@ -148,6 +161,30 @@
     } finally {
       setLoading(false);
     }
+  }
+
+  /**
+   * 条码拆分
+   */
+  function handleSplit(record: Recordable) {
+    openSplitModal(true, {
+      record,
+      isUpdate: true,
+      showFooter: true,
+    });
+  }
+
+  /**
+   * 操作栏
+   */
+  function getTableAction(record) {
+    return [
+      {
+        label: '拆分',
+        onClick: handleSplit.bind(null, record),
+        auth: 'mes:lwmslot:split',
+      },
+    ];
   }
 
   /**

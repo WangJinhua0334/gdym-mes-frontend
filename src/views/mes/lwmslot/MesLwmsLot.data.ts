@@ -1,6 +1,7 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { JVxeTypes } from '/@/components/jeecg/JVxeTable/src/types';
+import { render } from '/@/utils/common/renderUtils';
 import { getSnQty } from '/@/views/mes/lwmslot/MesLwmsLot.api';
 //列表数据
 export const columns: BasicColumn[] = [
@@ -44,6 +45,20 @@ export const columns: BasicColumn[] = [
     align: 'center',
     dataIndex: 'qty',
     width: 150,
+  },
+  {
+    title: '单位',
+    align: 'center',
+    dataIndex: 'unitId_dictText',
+    width: 150,
+  },
+  {
+    title: '状态',
+    align: 'center',
+    dataIndex: 'status',
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'lwms_lot_status', true);
+    },
   },
   {
     title: '供应商',
@@ -361,6 +376,72 @@ export const formSchema: FormSchema[] = [
       };
     },
     colProps: { span: 24 },
+  },
+  // TODO 主键隐藏字段，目前写死为ID
+  {
+    label: '',
+    field: 'id',
+    component: 'Input',
+    show: false,
+  },
+];
+
+//拆批功能
+export const splitFormSchema: FormSchema[] = [
+  {
+    label: '物料条码',
+    field: 'lwmsSn',
+    component: 'Input',
+    componentProps: {
+      disabled: true,
+    },
+    colProps: { span: 24 },
+  },
+  {
+    label: '物料编码',
+    field: 'prodIdCode_dictText',
+    component: 'Input',
+    componentProps: {
+      disabled: true,
+    },
+    colProps: { span: 24 },
+  },
+  {
+    label: '数量',
+    field: 'qty',
+    component: 'Input',
+    componentProps: {
+      disabled: true,
+    },
+    colProps: { span: 24 },
+  },
+  {
+    label: '物料名称',
+    field: 'prodId_dictText',
+    component: 'Input',
+    componentProps: {
+      disabled: true,
+    },
+    colProps: { span: 24 },
+  },
+  {
+    label: '批次号',
+    field: 'batchNo',
+    component: 'Input',
+    componentProps: {
+      disabled: true,
+    },
+    colProps: { span: 24 },
+  },
+  {
+    label: '最小包装数',
+    field: 'packQty',
+    component: 'InputNumber',
+    defaultValue: 1,
+    colProps: { span: 24 },
+    dynamicRules: ({ model, schema, values }) => {
+      return [{ required: true, message: '请输入最小包装数!' }];
+    },
   },
   // TODO 主键隐藏字段，目前写死为ID
   {

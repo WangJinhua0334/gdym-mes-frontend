@@ -16,6 +16,7 @@ enum Api {
   getSnQty = '/lwmslot/mesLwmsLot//getSnQty',
   generateLwmsSn = '/lwmslot/mesLwmsLot/generateLwmsSn',
   jmreport = '/jmreport/exportPdf',
+  splitLwmsSn = '/lwmslot/mesLwmsLot/splitLwmsSn',
 }
 /**
  * 导出api
@@ -72,6 +73,13 @@ export const batchDelete = (params, handleSuccess) => {
 export const saveOrUpdate = (params, isUpdate) => {
   let url = isUpdate ? Api.edit : Api.save;
   return defHttp.post({ url: url, params });
+};
+/**
+ * 保存或者更新
+ * @param params
+ */
+export const splitLwmsSn = (params) => {
+  return defHttp.post({ url: Api.splitLwmsSn, params });
 };
 
 /**
