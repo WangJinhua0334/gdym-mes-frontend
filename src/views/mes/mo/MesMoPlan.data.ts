@@ -10,6 +10,8 @@ export const moId = ref<any>(null);
 /**工作中心ID */
 export const wkcIds = ref<any>(null);
 
+export const planStartTime = ref<any>(null);
+export const planEndTime = ref<any>(null);
 //列表数据
 export const columns: BasicColumn[] = [
   {
@@ -418,9 +420,13 @@ export function getFormSchema(moCompleteKitCheck): FormSchema[] {
       component: 'DatePicker',
       componentProps: {
         showTime: true,
+        // 传给后端的时间格式
+        valueFormat: 'YYYY-MM-DD HH:mm:ss',
         getPopupContainer: (node) => document.body,
       },
       dynamicRules: ({ model, schema, values }) => {
+        if (model.planStartTime) planStartTime.value = model.planStartTime;
+        else planStartTime.value = null;
         return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];
       },
     },
@@ -430,9 +436,13 @@ export function getFormSchema(moCompleteKitCheck): FormSchema[] {
       component: 'DatePicker',
       componentProps: {
         showTime: true,
+        // 传给后端的时间格式
+        valueFormat: 'YYYY-MM-DD HH:mm:ss',
         getPopupContainer: (node) => document.body,
       },
       dynamicRules: ({ model, schema, values }) => {
+        if (model.planCompleteTime) planEndTime.value = model.planCompleteTime;
+        else planEndTime.value = null;
         return [{ required: true, message: '请选择计划完工日期!' }, { ...rules.endTime(model.planStartTime, true)[0] }];
       },
     },
@@ -503,6 +513,16 @@ export const mesMoPlanTaskJVxeColumns: JVxeColumn[] = [
     visible: false,
   },
   {
+    title: '计划开始时间',
+    key: 'planStartTime',
+    type: JVxeTypes.datetime,
+  },
+  {
+    title: '计划结束时间',
+    key: 'planCompleteTime',
+    type: JVxeTypes.datetime,
+  },
+  {
     title: '工位',
     key: 'wkpIds',
     type: JVxeTypes.selectDictCustomSearch,
@@ -526,14 +546,12 @@ export const mesMoPlanTaskJVxeColumns: JVxeColumn[] = [
     rowKey: 'id',
     labelKey: 'name',
     multi: true,
-    maxTagCount: 2,
     placeholder: '请输入${title}',
     queryBefore: (params) => {
       params.wkcId = '-1';
       if (unref(wkcIds)) {
         params.wkcId = unref(wkcIds).join();
       }
-
       return params;
     },
     formatter: ({ cellValue, row, column }) => {
@@ -560,7 +578,6 @@ export const mesMoPlanTaskJVxeColumns: JVxeColumn[] = [
     rowKey: 'username',
     labelKey: 'realname',
     multi: true,
-    maxTagCount: 2,
     placeholder: '请输入${title}',
     formatter: ({ cellValue, row, column }) => {
       return row[column.params.key + '_dictText'] || cellValue;
@@ -643,5 +660,25 @@ export const mesMoPlanTaskColumns: BasicColumn[] = [
     title: '作业员',
     align: 'center',
     dataIndex: 'operateBys_dictText',
+  },
+  {
+    title: '计划开始时间',
+    align: 'center',
+    dataIndex: 'planStartTime',
+  },
+  {
+    title: '计划完工时间',
+    align: 'center',
+    dataIndex: 'planCompleteTime',
+  },
+  {
+    title: '实际开工时间',
+    align: 'center',
+    dataIndex: 'acStartTime',
+  },
+  {
+    title: '实际完工时间',
+    align: 'center',
+    dataIndex: 'acCompleteTime',
   },
 ];

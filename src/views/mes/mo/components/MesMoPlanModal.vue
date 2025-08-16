@@ -28,7 +28,7 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { JVxeTable } from '/@/components/jeecg/JVxeTable';
   import { useJvxeMethod } from '/@/hooks/system/useJvxeMethods.ts';
-  import { getFormSchema, mesMoPlanTaskJVxeColumns, moId, wkcIds } from '../MesMoPlan.data';
+  import { getFormSchema, mesMoPlanTaskJVxeColumns, moId, wkcIds, planStartTime, planEndTime } from '../MesMoPlan.data';
   import {
     moCompleteKitCheck,
     getAddData,
@@ -122,7 +122,6 @@
         /**表单赋值 */
         await getEditData({ moPlanId: data.record.id }).then((res) => {
           setFieldsValue({ ...res });
-
           requestSubTableData(listMoPlanTaskByMoPlanId, { moPlanId: data.record.id }, mesMoPlanTaskTable);
         });
       } catch (error) {
@@ -154,7 +153,14 @@
       if (unref(moId)) {
         getAddData({ moId: unref(moId) }).then((res) => {
           setFieldsValue({ ...res });
-          requestSubTableData(listMoPlanTaskByMoId, { moId: unref(moId), wkcIds: !unref(wkcIds) ? '' : unref(wkcIds).join() }, mesMoPlanTaskTable);
+          requestSubTableData(
+            listMoPlanTaskByMoId,
+            {
+              moId: unref(moId),
+              wkcIds: !unref(wkcIds) ? '' : unref(wkcIds).join(),
+            },
+            mesMoPlanTaskTable
+          );
           //mesMoPlanTaskTable.dataSource = res.moPlanTaskList;
           //mesMoPlanTask.value.getXTable().updateData();
         });
@@ -173,6 +179,33 @@
       if (tmpMoId) {
         requestSubTableData(listMoPlanTaskByMoId, { moId: unref(tmpMoId), wkcIds: !unref(wkcIds) ? '' : unref(wkcIds).join() }, mesMoPlanTaskTable);
       }
+    },
+    { immediate: false, deep: true }
+  );
+  /**监听计划开始时间选择 */
+  watch(
+    () => unref(planStartTime),
+    async () => {
+      const data = mesMoPlanTask.value.getTableData();
+      //循环data
+      data.forEach((item) => {
+        item.planStartTime = planStartTime;
+      });
+      mesMoPlanTaskTable.dataSource = data;
+    },
+    { immediate: false, deep: true }
+  );
+
+  /**监听计划结束时间选择 */
+  watch(
+    () => unref(planEndTime),
+    async () => {
+      const data = mesMoPlanTask.value.getTableData();
+      //循环data
+      data.forEach((item) => {
+        item.planCompleteTime = planEndTime;
+      });
+      mesMoPlanTaskTable.dataSource = data;
     },
     { immediate: false, deep: true }
   );

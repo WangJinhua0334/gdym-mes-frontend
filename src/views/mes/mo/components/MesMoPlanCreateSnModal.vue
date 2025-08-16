@@ -1,8 +1,22 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="registerModal" destroyOnClose :title="title" :width="896" @cancel="handleCancel" @ok="handleOk">
+  <BasicModal v-bind="$attrs" @register="registerModal" destroyOnClose :title="title" :width="896" @cancel="handleCancel" @ok="handleSubmit">
     <BasicForm @register="registerForm" ref="formRef" />
     <!-- 子表单区域 -->
-    <a-tabs v-show="showMaterialTab" v-model:activeKey="activeKey" @change="handleChangeTabs">
+    <a-tabs v-model:activeKey="activeKey" @change="handleChangeTabs">
+      <a-tab-pane tab="工序派工" key="mesMoPlanTask" :forceRender="true">
+        <JVxeTable
+          keep-source
+          resizable
+          ref="mesMoPlanTask"
+          :loading="mesMoPlanTaskTable.loading"
+          :columns="mesMoPlanTaskTable.columns"
+          :dataSource="mesMoPlanTaskTable.dataSource"
+          :max-height="450"
+          :rowNumber="true"
+          :sortKey="''"
+          :rowSelection="false"
+        />
+      </a-tab-pane>
       <a-tab-pane tab="前加工物料" key="materialInfo" :forceRender="true">
         <JVxeTable
           keep-source
@@ -52,8 +66,17 @@
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { JVxeTable } from '/@/components/jeecg/JVxeTable';
   import { useJvxeMethod } from '/@/hooks/system/useJvxeMethods.ts';
-  import { formSchema, materialJVxeColumns, moSnList, doEnterPressing } from './MesMoPlanCreateSn.data';
-  import { getProductCreateSnData, listMaterialCreateSnData, createSn } from '../MesMoPlan.api';
+  import {
+    formSchema,
+    materialJVxeColumns,
+    moSnList,
+    doEnterPressing,
+    mesMoPlanTaskJVxeColumns,
+    wkcIds,
+    planStartTime,
+    planEndTime,
+  } from './MesMoPlanCreateSn.data';
+  import { getProductCreateSnData, listMaterialCreateSnData, createSn, listMoPlanTaskByMoPlanId } from '../MesMoPlan.api';
   import { defHttp } from '/@/utils/http/axios';
   import { getToken } from '/@/utils/auth';
   import { loopPrintJimuReport } from '/@/utils';
@@ -66,11 +89,20 @@
 
   const showMaterialTab = ref(true);
 
-  const refKeys = ref(['materialInfo']);
-  const activeKey = ref('materialInfo');
+  const refKeys = ref(['mesMoPlanTask', 'materialInfo']);
+  const activeKey = ref('mesMoPlanTask');
+
+  const mesMoPlanTask = ref();
+
+  const mesMoPlanTaskTable = reactive({
+    loading: false,
+    dataSource: [],
+    columns: mesMoPlanTaskJVxeColumns,
+  });
+
   const materialInfo = ref();
 
-  const tableRefs = { materialInfo };
+  const tableRefs = { mesMoPlanTask, materialInfo };
   const materialInfoTable = reactive({
     loading: false,
     dataSource: [],
@@ -87,7 +119,13 @@
   });
 
   /**子表格方法配置*/
-  const [handleChangeTabs, handleSubmit, requestSubTableData, formRef] = useJvxeMethod(null, null, tableRefs, activeKey, refKeys);
+  const [handleChangeTabs, handleSubmit, requestSubTableData, formRef] = useJvxeMethod(
+    requestAddOrEdit,
+    classifyIntoFormData,
+    tableRefs,
+    activeKey,
+    refKeys
+  );
 
   /**表单赋值*/
   const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
@@ -100,6 +138,9 @@
       if (productRes.moSnList && productRes.moSnList.length > 0) {
         moSnList.value = productRes.moSnList;
       }
+      wkcIds.value = productRes.wkcIds;
+      planStartTime.value = productRes.planStartTime;
+      planEndTime.value = productRes.planCompleteTime;
 
       await setFieldsValue({ ...productRes });
       requestSubTableData(listMaterialCreateSnData, { id: data.record.id }, materialInfoTable, (materialRes) => {
@@ -107,7 +148,7 @@
           showMaterialTab.value = false;
 
           setProps({ baseColProps: { span: 12 } });
-          setModalProps({ defaultFullscreen: false });
+          //setModalProps({ defaultFullscreen: false });
         }
 
         if (!unref(showMaterialTab) && productRes.qty <= 0) {
@@ -115,6 +156,7 @@
           handleCancel();
         }
       });
+      requestSubTableData(listMoPlanTaskByMoPlanId, { moPlanId: data.record.id }, mesMoPlanTaskTable);
     });
   });
 
@@ -123,6 +165,33 @@
     () => doEnterPressing.value,
     () => {
       toggleQty(doEnterPressing.value);
+    },
+    { immediate: false, deep: true }
+  );
+  /**监听计划开始时间选择 */
+  watch(
+    () => unref(planStartTime),
+    async () => {
+      const data = mesMoPlanTask.value.getTableData();
+      //循环data
+      data.forEach((item) => {
+        item.planStartTime = planStartTime;
+      });
+      mesMoPlanTaskTable.dataSource = data;
+    },
+    { immediate: false, deep: true }
+  );
+
+  /**监听计划结束时间选择 */
+  watch(
+    () => unref(planEndTime),
+    async () => {
+      const data = mesMoPlanTask.value.getTableData();
+      //循环data
+      data.forEach((item) => {
+        item.planCompleteTime = planEndTime;
+      });
+      mesMoPlanTaskTable.dataSource = data;
     },
     { immediate: false, deep: true }
   );
@@ -144,10 +213,22 @@
   /**提交参数构造 */
   function classifyIntoFormData(allValues) {
     let main = Object.assign({}, allValues.formValue);
-    return {
-      ...main, // 展开
-      materialDtoList: allValues.tablesValue[0].tableData,
-    };
+    let hasErr = false;
+    allValues.tablesValue[1].tableData?.forEach((element) => {
+      if (element && element.qty.length > 0) hasErr = true;
+    });
+    if (hasErr) {
+      return {
+        ...main, // 展开
+        moPlanTaskList: allValues.tablesValue[0].tableData,
+      };
+    } else {
+      return {
+        ...main, // 展开
+        moPlanTaskList: allValues.tablesValue[0].tableData,
+        materialDtoList: allValues.tablesValue[1].tableData,
+      };
+    }
   }
 
   /**表单提交事件*/
@@ -156,14 +237,54 @@
       setModalProps({ confirmLoading: true });
 
       //提交表单
-      await createSn(values).then((res) => {
+      await createSn(values).then(async (res) => {
+        if (!unref(res)) {
+          return;
+        }
+
+        const ids = Object.keys(res);
+        /**注释掉分配流转卡后的打印功能 开始 */
+        // defHttp
+        //   .get({
+        //     url: '/template/basTemplate/getReportIdByIds',
+        //     params: { ids: ids.join(','), type: 'mo_sn' },
+        //   })
+        //   .then(async (reportRs) => {
+        //     // 打印数据集 { reportId, parameters }
+        //     const printSet: any = {};
+
+        //     const templateIds = Object.keys(reportRs);
+        //     for (const templateId of templateIds) {
+        //       const reportId = reportRs[templateId];
+        //       printSet[reportId] = { id: `${res[templateId].join(',')}` };
+        //     }
+
+        //     loopPrintJimuReport(printSet, getToken, () => {
+        //       //清除流转卡缓存
+        //       moSnList.value = [];
+        //       //设置非加载中
+        //       setModalProps({ confirmLoading: false });
+        //       //打印提示
+        //       $message.createMessage.success('打印成功!');
+        //       //关闭弹窗
+        //       closeModal();
+        //       //刷新列表
+        //       emit('success', res);
+        //     });
+        //   });
+        /**注释掉分配流转卡后的打印功能 结束 */
+        //清除流转卡缓存
+        moSnList.value = [];
+        //设置非加载中
+        setModalProps({ confirmLoading: false });
         //关闭弹窗
         handleCancel();
         //刷新列表
         emit('success', res);
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      setModalProps({ confirmLoading: false });
     } finally {
       setModalProps({ confirmLoading: false });
     }
@@ -172,7 +293,7 @@
   async function handleOk() {
     try {
       const main = await validate();
-      const parameters = { ...main, materialDtoList: [] };
+      const parameters = { ...main, materialDtoList: [], moPlanTaskList: [] };
       if (unref(showMaterialTab)) {
         let hasErr = false;
         await materialInfo.value.validateTable().then((errMap) => {
@@ -182,6 +303,9 @@
         if (hasErr) return;
 
         parameters.materialDtoList = materialInfo.value.getTableData();
+      }
+      if (unref(mesMoPlanTaskTable)) {
+        parameters.moPlanTaskList = mesMoPlanTask.value.getTableData();
       }
 
       setModalProps({ confirmLoading: true });

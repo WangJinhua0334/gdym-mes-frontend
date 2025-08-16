@@ -8,6 +8,11 @@ export const moSnList = ref<any>([]);
 
 export const doEnterPressing = ref(1);
 
+export const wkcIds = ref<string>('');
+
+export const planStartTime = ref<any>(null);
+export const planEndTime = ref<any>(null);
+
 //表单数据
 export const formSchema: FormSchema[] = [
   {
@@ -76,9 +81,13 @@ export const formSchema: FormSchema[] = [
     component: 'DatePicker',
     componentProps: {
       showTime: true,
+      // 传给后端的时间格式
+      valueFormat: 'YYYY-MM-DD HH:mm:ss',
       getPopupContainer: (node) => document.body,
     },
     dynamicRules: ({ model, schema, values }) => {
+      if (model.planStartTime) planStartTime.value = model.planStartTime;
+      else planStartTime.value = null;
       return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];
     },
   },
@@ -88,9 +97,13 @@ export const formSchema: FormSchema[] = [
     component: 'DatePicker',
     componentProps: {
       showTime: true,
+      // 传给后端的时间格式
+      valueFormat: 'YYYY-MM-DD HH:mm:ss',
       getPopupContainer: (node) => document.body,
     },
     dynamicRules: ({ model, schema, values }) => {
+      if (model.planCompleteTime) planEndTime.value = model.planCompleteTime;
+      else planEndTime.value = null;
       return [{ required: true, message: '请选择计划完工日期!' }, { ...rules.endTime(model.planStartTime, true)[0] }];
     },
   },
@@ -288,5 +301,132 @@ export const materialJVxeColumns: JVxeColumn[] = [
     type: JVxeTypes.hidden,
     slotName: 'resultSwitch',
     width: 120,
+  },
+];
+
+/**工序任务编辑表格配置 */
+export const mesMoPlanTaskJVxeColumns: JVxeColumn[] = [
+  {
+    title: '',
+    key: 'id',
+    type: JVxeTypes.input,
+    disabled: true,
+    visible: false,
+  },
+  {
+    title: '工艺工序ID',
+    key: 'wfsId',
+    type: JVxeTypes.input,
+    disabled: true,
+    visible: false,
+  },
+  {
+    title: '工序ID',
+    key: 'stationId',
+    type: JVxeTypes.input,
+    disabled: true,
+    visible: false,
+  },
+  {
+    title: '工序',
+    key: 'wfsId_dictText',
+    type: JVxeTypes.input,
+    disabled: true,
+    width: 160,
+  },
+  {
+    title: '加工物料ID',
+    key: 'prodId',
+    type: JVxeTypes.input,
+    disabled: true,
+    visible: false,
+  },
+  {
+    title: '加工物料',
+    key: 'prodId_dictText',
+    type: JVxeTypes.input,
+    disabled: true,
+    width: 160,
+  },
+  {
+    title: '物料名称',
+    key: 'prodName_dictText',
+    type: JVxeTypes.input,
+    disabled: true,
+  },
+  {
+    title: '工艺工位',
+    key: 'wfsWorkPostIds',
+    type: JVxeTypes.input,
+    disabled: true,
+    visible: false,
+  },
+  {
+    title: '计划开始时间',
+    key: 'planStartTime',
+    type: JVxeTypes.datetime,
+  },
+  {
+    title: '计划结束时间',
+    key: 'planCompleteTime',
+    type: JVxeTypes.datetime,
+  },
+  {
+    title: '工位',
+    key: 'wkpIds',
+    type: JVxeTypes.selectDictCustomSearch,
+    method: 'get',
+    url: '/mo/mesMoPlan/listWorkPost',
+    params: { column: 'code', order: 'asc', searchFields: 'code,name', stationId: '${stationId}', wkpIds: '${wfsWorkPostIds}' },
+    columns: [
+      {
+        name: '编码',
+        code: 'code',
+      },
+      {
+        name: '名称',
+        code: 'name',
+      },
+    ],
+    rowKey: 'id',
+    labelKey: 'name',
+    multi: true,
+    placeholder: '请输入${title}',
+    queryBefore: (params) => {
+      params.wkcId = '-1';
+      if (unref(wkcIds)) {
+        params.wkcId = unref(wkcIds);
+      }
+      return params;
+    },
+    formatter: ({ cellValue, row, column }) => {
+      return row[column.params.key + '_dictText'] || cellValue;
+    },
+  },
+  {
+    title: '作业员',
+    key: 'operateBys',
+    type: JVxeTypes.selectDictCustomSearch,
+    method: 'get',
+    url: '/sys/user/list',
+    params: { column: 'username', order: 'asc', searchFields: 'username,realname' },
+    columns: [
+      {
+        name: '账号',
+        code: 'username',
+      },
+      {
+        name: '姓名',
+        code: 'realname',
+      },
+    ],
+    rowKey: 'username',
+    labelKey: 'realname',
+    multi: true,
+    placeholder: '请输入${title}',
+    formatter: ({ cellValue, row, column }) => {
+      return row[column.params.key + '_dictText'] || cellValue;
+    },
+    width: 240,
   },
 ];

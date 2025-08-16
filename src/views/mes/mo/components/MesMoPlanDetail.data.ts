@@ -173,4 +173,24 @@ export const mesMoPlanTaskJVxeColumns: JVxeColumn[] = [
     key: 'operateBys_dictText',
     type: JVxeTypes.input,
   },
+  {
+    title: '计划开始时间',
+    type: JVxeTypes.input,
+    key: 'planStartTime',
+  },
+  {
+    title: '计划完工时间',
+    type: JVxeTypes.input,
+    key: 'planCompleteTime',
+  },
+  {
+    title: '实际开工时间',
+    type: JVxeTypes.input,
+    key: 'acStartTime',
+  },
+  {
+    title: '实际完工时间',
+    type: JVxeTypes.input,
+    key: 'acCompleteTime',
+  },
 ];
