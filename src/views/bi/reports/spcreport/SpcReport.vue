@@ -49,6 +49,9 @@
             dataIndex: item,
             fixed: 'left',
             width: 180,
+            customHeaderCell: () => {
+              return { class: 'table-header-wrap' };
+            },
           });
         } else if (item == 'id') {
         } else {
@@ -57,6 +60,9 @@
             align: 'center',
             dataIndex: item,
             width: 100,
+            customHeaderCell: () => {
+              return { class: 'table-header-wrap' };
+            },
           });
         }
       });
@@ -139,4 +145,14 @@
   .jeecg-basic-form .ant-form-item:not(.ant-form-item-with-help) {
     margin-bottom: 13px !important;
   }
+  /* --- 添加用于标题换行的CSS样式 --- */
+  /* .ant-table-thead 是 Ant Design Vue 表格头部的默认类名 */
+  /* .table-header-wrap 是我们在列配置中添加的自定义类名 */
+  /* 使用 :deep() 穿透 scoped CSS 限制 */
+  :deep(.ant-table-thead th.table-header-wrap) {
+    white-space: normal; /* 允许正常换行 */
+    word-break: break-word; /* 在长单词或 URL 地址内部进行换行 */
+    line-height: 1.4; /* 可选：调整行高使多行更美观 */
+  }
+  /* ------------------------------- */
 </style>

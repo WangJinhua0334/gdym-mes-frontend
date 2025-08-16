@@ -4,7 +4,24 @@
 
 <script lang="ts" setup>
   import { onMounted, ref, Ref, watch } from 'vue';
-  import { useECharts } from '/@/hooks/web/useECharts';
+  import * as echarts from 'echarts';
+
+  // 假设 useECharts hook 的简化实现，如果项目中没有，可以替换为直接使用 echarts
+  // 这里为了兼容原始代码结构，提供一个基础的实现
+  function useECharts(elRef: Ref<HTMLDivElement | null>) {
+    let chartInstance: echarts.ECharts | null = null;
+
+    const setOptions = (options: echarts.EChartsOption) => {
+      if (elRef.value) {
+        if (!chartInstance) {
+          chartInstance = echarts.init(elRef.value);
+        }
+        chartInstance.setOption(options, true); // 使用 notMerge: true 确保更新
+      }
+    };
+
+    return { setOptions };
+  }
 
   const props = defineProps({
     width: {
@@ -30,14 +47,13 @@
   watch(
     () => props.data,
     () => {
-      const series = props.data.series.map((item, index) => ({
+      const series = props.data.series.map((item: any, index: number) => ({
         name: item.name,
-        data: item.data.map((value) => value),
+        data: item.data.map((value: any) => value),
         type: item.type || 'line',
         smooth: true,
         itemStyle: {
-          color:
-            item.color || ['#2196F3', '#08C9C9', '#00C345', '#FAD714', '#FF9300', '#F52222', '#EB2F96', '#7500EA', '#2D46C4', '#484848'][index % 10],
+          color: item.color || ['#f5222d', '#ff4d4f', '#ff7875', '#ffccc7', '#ffa39e'][index % 10],
         },
         label: {
           show: item.showLabel === undefined ? true : item.showLabel,
@@ -45,6 +61,22 @@
           fontWeight: 'bold',
         },
       }));
+      const auxiliaryLineColor = '#87CEEB';
+      // 定义辅助线的Y轴值和样式
+      const markLines = [
+        { yAxis: 1.33, lineStyle: { color: auxiliaryLineColor }, label: { formatter: '1.33', position: 'start' } },
+        { yAxis: 1.67, lineStyle: { color: auxiliaryLineColor }, label: { formatter: '1.67', position: 'start' } },
+        { yAxis: 2.0, lineStyle: { color: auxiliaryLineColor }, label: { formatter: '2.00', position: 'start' } },
+      ];
+
+      // 为每个系列添加辅助线
+      series.forEach((s: any) => {
+        s.markLine = {
+          silent: true, // 辅助线不响应鼠标事件
+          symbol: 'none', // 不显示标记符号
+          data: markLines,
+        };
+      });
 
       setOptions({
         tooltip: {
@@ -92,6 +124,7 @@
         yAxis: {
           type: 'value',
           splitNumber: 4,
+          max: 4, // 固定Y轴最大值为5
         },
         series: series,
         dataZoom: [
