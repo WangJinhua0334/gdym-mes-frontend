@@ -1,3 +1,4 @@
+import { h } from 'vue';
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { render } from '/@/utils/common/renderUtils';
@@ -85,6 +86,20 @@ export const listColumns: BasicColumn[] = [
     sorter: true,
     dataIndex: 'matData',
     width: 300,
+    // 使用 customRender 来处理换行
+    customRender: ({ text, record, index }) => {
+      // 假设 text 就是 matData 字符串
+      // 如果需要根据特定分隔符（如逗号）换行，可以这样处理：
+      // const formattedText = text ? text.replace(/, /g, ',\n') : '';
+      // 如果 text 本身已经包含 \n，则直接返回即可，或者用 div 包裹确保样式生效
+
+      // 使用一个 span 或 div 包裹内容，并应用特定的 CSS 类来强制换行
+      // 这个 CSS 类需要在使用此表格的 Vue 组件的 <style scoped> 中定义，或者使用 :deep() 穿透
+      return h('div', { class: 'table-cell-wrap' }, text || '');
+      // 如果你更习惯用 JSX/TSX 风格，可以写成：
+      // return <div class="table-cell-wrap">{text || ''}</div>;
+      // 注意：上面的 h 函数需要从 vue 中导入: import { h } from 'vue';
+    },
   },
   {
     title: '备注',
