@@ -209,7 +209,7 @@
     v-bind="$attrs"
     @register="registerModal"
     destroyOnClose
-    :title="'处理不良品'"
+    :title="'工位上料'"
     :width="800"
     :confirmLoading="false"
     :showCancelBtn="false"
@@ -500,7 +500,7 @@
       $message.createMessage.warning('该工位没有绑定流转卡任务!');
       return;
     }
-    if (values.value == null || values.value.packQty != 0) {
+    if (values.value == null || values.value.packQty == 0) {
       $message.createMessage.warning('请输入包装数量!');
       return;
     }
