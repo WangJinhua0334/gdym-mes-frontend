@@ -1,5 +1,6 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
+import { render } from '/@/utils/common/renderUtils';
 
 //SN列表信息列表配置
 export const retraceListColumns: BasicColumn[] = [
@@ -52,11 +53,20 @@ export const retraceListColumns: BasicColumn[] = [
     width: 120,
   },
   {
+    title: '当前工位',
+    align: 'center',
+    dataIndex: 'wkpId_dictText',
+    width: 120,
+  },
+  {
     title: '状态',
     align: 'center',
     sorter: true,
-    dataIndex: 'status_dictText',
+    dataIndex: 'status',
     width: 100,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'lot_status', true);
+    },
   },
   {
     title: '生产批次',
@@ -144,6 +154,55 @@ export const retraceListSearchFormSchema: FormSchema[] = [
     label: '产品编码',
     field: 'prodCode',
     component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: '车间',
+    field: 'workShopId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/workshop/basWorkShop/list',
+        params: { column: 'code', order: 'asc', searchFields: 'code,name' /*, code: '${code}'*/ },
+        columns: [
+          {
+            name: '编码',
+            code: 'code',
+          },
+          {
+            name: '名称',
+            code: 'name',
+          },
+        ],
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        multi: true,
+        maxTagCount: 2,
+        placeholder: '请输入',
+        //pageSize: 10,
+      };
+    },
+    colProps: { span: 6 },
+  },
+  {
+    label: '工位',
+    field: 'wkpQuery',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: '状态',
+    field: 'status',
+    component: 'JSelectMultiple',
+    componentProps: {
+      dictCode: 'lot_status',
+    },
     colProps: { span: 6 },
   },
   {
