@@ -1,7 +1,7 @@
 <template>
   <BasicModal v-bind="$attrs" @register="registerModal" destroyOnClose :title="title" :width="896" @ok="handleSubmit">
-      <BasicForm @register="registerForm" ref="formRef"/>
-  <!-- 子表单区域 -->
+    <BasicForm @register="registerForm" ref="formRef"/>
+    <!-- 子表单区域 -->
     <a-tabs v-model:activeKey="activeKey" @change="handleChangeTabs">
       <a-tab-pane tab="供应商料号" key="basSupplierProduct" :forceRender="true">
         <JVxeTable
@@ -16,7 +16,7 @@
           :rowNumber="true"
           :rowSelection="true"
           :toolbar="true"
-          />
+        />
       </a-tab-pane>
     </a-tabs>
   </BasicModal>
