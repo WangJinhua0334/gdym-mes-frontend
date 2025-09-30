@@ -5,11 +5,11 @@
       <!--插槽:table标题-->
       <template #tableTitle>
         <a-button type="primary" v-auth="'mes:mes_incoming:add'" @click="handleAdd" preIcon="ant-design:plus-outlined"> 新增</a-button>
-        <a-button type="primary" v-auth="'mes:mes_incoming:waitInsp'" @click="handleWaitInsp" preIcon="ant-design:phone-outlined"> 推送IQC</a-button>
-        <a-button type="primary" v-auth="'mes:mes_incoming:exportXls'" preIcon="ant-design:export-outlined" @click="onExportXls"> 导出</a-button>
-        <j-upload-button type="primary" v-auth="'mes:mes_incoming:importExcel'" preIcon="ant-design:import-outlined" @click="onImportXls"
-          >导入</j-upload-button
-        >
+<!--        <a-button type="primary" v-auth="'mes:mes_incoming:waitInsp'" @click="handleWaitInsp" preIcon="ant-design:phone-outlined"> 推送IQC</a-button>-->
+<!--        <a-button type="primary" v-auth="'mes:mes_incoming:exportXls'" preIcon="ant-design:export-outlined" @click="onExportXls"> 导出</a-button>-->
+<!--        <j-upload-button type="primary" v-auth="'mes:mes_incoming:importExcel'" preIcon="ant-design:import-outlined" @click="onImportXls"-->
+<!--          >导入</j-upload-button-->
+<!--        >-->
         <!-- <a-dropdown v-if="selectedRowKeys.length > 0">
           <template #overlay>
             <a-menu>
@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts" name="incoming-mesIncoming" setup>
-  import { ref, reactive, computed, unref } from 'vue';
+  import { ref, reactive, computed, unref ,watch} from 'vue';
   import { BasicTable, useTable, TableAction, ActionItem } from '/@/components/Table';
   import { useModal } from '/@/components/Modal';
   import { useListPage } from '/@/hooks/system/useListPage';
@@ -62,6 +62,7 @@
 
   const queryParam = reactive<any>({});
   const $message = useMessage();
+
   //注册model
   const [registerModal, { openModal }] = useModal();
   const [registerInspModal, { openModal: openInspModal }] = useModal();
@@ -72,15 +73,26 @@
     tableProps: {
       title: '来料单',
       api: list,
+      immediate: false, // 👈 添加此行，禁止初始化时立即请求数据
+      //来料单表格列表数据
       columns,
       canResize: false,
       formConfig: {
         //labelWidth: 120,
         schemas: searchFormSchema,
         autoSubmitOnEnter: true,
-        showAdvancedButton: true,
+        // 隐藏提交按钮
+        // showSubmitButton: false,
+        //不显示所有的输入框
+        showAdvancedButton: false,
+        // 添加这一行隐藏重置按钮
+        showResetButton: false,
         fieldMapToNumber: [],
         fieldMapToTime: [],
+        submitButtonOptions: {
+          text: '添加',  // 修改查询按钮文本
+          //preIcon: null,  // 移除放大镜图标
+        },
       },
       actionColumn: {
         title: '操作',
@@ -88,6 +100,10 @@
         fixed: 'right',
       },
       beforeFetch: (params) => {
+        // 如果需要精确匹配，移除通配符
+        if (params.coilNo) {
+          params.coilNo = params.coilNo.replace(/\*/g, '');
+        }
         return Object.assign(params, queryParam);
       },
     },
@@ -103,6 +119,7 @@
   });
 
   const [registerTable, { reload }, { rowSelection, selectedRowKeys }] = tableContext;
+
 
   // 高级查询配置
   const superQueryConfig = reactive(superQuerySchema);

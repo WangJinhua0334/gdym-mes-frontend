@@ -2,9 +2,11 @@ import { defHttp } from '/@/utils/http/axios';
 import { useMessage } from '/@/hooks/web/useMessage';
 
 const { createConfirm } = useMessage();
-
+//来料单接口地址
 enum Api {
-  list = '/incoming/mesIncoming/list',
+  //来料单查询接口
+  list ='/mes/inComing/querySteelCoilInfoByCoilNo',
+  //list = '/incoming/mesIncoming/list',
   save = '/incoming/mesIncoming/add',
   edit = '/incoming/mesIncoming/edit',
   deleteOne = '/incoming/mesIncoming/delete',
