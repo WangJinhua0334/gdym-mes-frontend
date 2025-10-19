@@ -1,258 +1,119 @@
 import {FormSchema} from "@/components/Form";
 import {JVxeTypes} from "@/components/jeecg/JVxeTable/types";
+import dayjs from "dayjs";
+import {planStartTime} from "@/views/mes/mo/components/MesMoPlanCreateSn.data";
+import {rules} from "@/utils/helper/validator";
+import {useUserStore} from "@/store/modules/user";
+import { getTenantId } from "/@/utils/auth";
 //酸洗扫码完工页面表单配置
 export const getDetailJVxeColumns = function () {
   const arr: any[] = [];
   arr.push(
     {
-      title: '',
-      key: 'id',
-      type: JVxeTypes.input,
-      visible: false,
-    },
-    {
-      title: '工单ID',
-      key: 'moId',
-      type: JVxeTypes.input,
-      visible: false,
-    },
-    {
-      title: '物料ID',
-      key: 'prodId',
-      type: JVxeTypes.input,
-      visible: false,
-    },
-    {
-      title: '物料编码',
-      key: 'prodId_dictText1',
-      type: JVxeTypes.input,
-      width: 240,
-      disabled: true,
-    },
-    {
-      title: '物料名称',
-      key: 'prodId_dictText2',
-      type: JVxeTypes.input,
-      disabled: true,
-    },
-    {
-      title: '规格型号',
-      key: 'prodId_dictText3',
-      type: JVxeTypes.input,
-      width: 240,
-      disabled: true,
-    },
-    {
       title: '钢卷号',
-      key: 'prodId_dictText4',
+      key: 'newCoilNo',
       type: JVxeTypes.input,
-      disabled: true,
     },
     {
       title: '重量',
-      key: 'prodId_dictText5',
+      key: 'weight',
       type: JVxeTypes.input,
-      visible: false,
+      disabled: true,   // 禁止编辑
+    },
+    /**
+     * 流转去向: 1入库、2退料
+     */
+    {
+      title: '流传去向',
+      key: 'destination',
+      type: JVxeTypes.select,// 使用 select 类型
+      dictCode: 'gxlzqx',// 指定字典编码
+      disabled: true,   // 禁止编辑
     },
     {
-      title: '条码',
-      key: 'prodId_dictText6',
+      title: '仓库Id',
+      key: 'warehouseId',
       type: JVxeTypes.input,
-      width: 240,
-      disabled: true,
+      disabled: true,   // 禁止编辑
+      visible: false,   // 设置为隐藏状态，只能通过程序设置
     },
     {
-      title: '流转去向',
-      key: 'prodId_dictText7',
+      title: '仓库名称',
+      key: 'warehouseName',
       type: JVxeTypes.input,
-      disabled: true,
+      disabled: true,   // 禁止编辑
     },
-    /*{
-      title: '仓库',
-      key: 'whId',
-      type: JVxeTypes.selectDictCustomSearch,
-      method: 'get',
-      url: '/warehouse/basWarehouse/list',
-      params: { column: 'code', order: 'asc', searchFields: 'code,name' },
-      columns: [
-        {
-          name: '编码',
-          code: 'code',
-        },
-        {
-          name: '名称',
-          code: 'name',
-        },
-      ],
-      rowKey: 'id',
-      labelKey: 'name',
-      placeholder: '请输入${title}',
-      formatter: ({ cellValue, row, column }) => {
-        return row[column.params.key + '_dictText'] || cellValue;
-      },
-    },*/
   );
   return arr;
 };
 //酸洗扫码完工新增弹框页面表单配置
 export const formSchema: FormSchema[] = [
   {
-    label: '',
-    field: 'id',
-    component: 'Input',
-    show: false,
-  },
-  {
-    label: '条码',
-    field: 'licensePlateNumber1',
-    component: 'Input',
-  },
-  {
     label: '钢卷号',
-    field: 'licensePlateNumber2',
+    field: 'newCoilNo',
+    component: 'Input',
+    dynamicDisabled: true, // 设置为禁用状态，只能通过程序设置
+  },
+  {
+    label: '重量',
+    field: 'weight',
     component: 'Input',
   },
-  /*{
-    label: '工单',
-    field: 'moId',
-    component: 'JPopupCustom',
+  {
+    label: '流转去向',
+    field: 'destination',
+    component: 'JDictSelectTag',
+    componentProps: {
+      dictCode: 'gxlzqx',
+    },
+  },
+  {
+    label: '仓库 Id',
+    field: 'warehouseId',
+    component: 'Input',
+    show: false,//禁止显示
+  },
+  {
+    label: '仓库',
+    field: 'warehouseName',
+    component: 'JSearchSelectCustom',
     componentProps: ({ formActionType }) => {
       const { setFieldsValue, getFieldsValue } = formActionType;
       return {
         setFieldsValue: setFieldsValue,
         getFieldsValue: getFieldsValue,
         method: 'get',
-        url: '/mo/mesMo/list',
-        params: {},
+        url: '/basic/wareHouse/list',
+        params: { column: 'createTime', order: 'desc', searchFields: 'id,name', code: '${code}' },
         columns: [
           {
-            title: '工单号',
-            align: 'center',
-            dataIndex: 'code',
+            name: '仓库编码',
+            code: 'id',
           },
           {
-            title: '类型',
-            align: 'center',
-            dataIndex: 'type_dictText',
-          },
-          {
-            title: '产品编码',
-            align: 'center',
-            dataIndex: 'prodId_dictText',
-          },
-          {
-            title: '产品名称',
-            align: 'center',
-            dataIndex: 'prodName_dictText',
-          },
-          {
-            title: '状态',
-            align: 'center',
-            dataIndex: 'status_dictText',
+            name: '仓库名称',
+            code: 'name',
           },
         ],
-        queryInfo: [
+        isShowNum: false,
+        rowKey: 'name',
+        labelKey: ['name'],
+        linkmap: [
           {
-            field: 'code',
-            label: '工单号',
-            mode: 'single',
-            view: 'string',
-          },
-          {
-            field: 'prodQuery',
-            label: '产品编码',
-            mode: 'single',
-            view: 'string',
+            id:'warehouseId',//物料编码
           },
         ],
-        isShowNum: true,
-        rowKey: 'id',
-        labelKey: ['code'],
-        placeholder: '请选择',
+        //pageSize: 10,
         multi: false,
-        linkmap: [{ wkfId: 'wkfId' }],
-        getPopupContainer: (node) => node.parentNode,
+        maxTagCount: 2,
+        placeholder: '请选择',
+        // 启用滚动分页
+        scroll: {
+          pageSize: 10
+        },
       };
     },
-    dynamicRules: ({ model, schema }) => {
-      return [{ required: true, message: '请选择工单!' }];
-    },
-  },*/
-  {
-    label: '物料编码',
-    field: 'licensePlateNumber3',
-    component: 'Input',
   },
-  {
-    label: '物料名称',
-    field: 'licensePlateNumber4',
-    component: 'Input',
-  },
-  {
-    label: '规格型号',
-    field: 'licensePlateNumber5',
-    component: 'Input',
-  },
-  {
-    label: '重量',
-    field: 'licensePlateNumber6',
-    component: 'Input',
-  },
-  {
-    label: '流转去向',
-    field: 'licensePlateNumber7',
-    component: 'Input',
-  },
-  /*{
-    label: '工时',
-    field: 'workHours',
-    component: 'InputNumber',
-    defaultValue: 0,
-  },
-  {
-    label: '工作日加班',
-    field: 'workHoursOvertime',
-    component: 'InputNumber',
-    defaultValue: 0,
-  },
-  {
-    label: '休息日加班',
-    field: 'restHours',
-    component: 'InputNumber',
-    defaultValue: 0,
-  },
-  {
-    label: '节假日加班',
-    field: 'holidaysHours',
-    component: 'InputNumber',
-    defaultValue: 0,
-  },
-  {
-    label: '作业员',
-    field: 'operateBy',
-    component: 'JSelectUser',
-    componentProps: {
-      labelKey: 'realname',
-      rowKey: 'username',
-      isRadioSelection: true,
-    },
-    dynamicRules: ({ model, schema }) => {
-      return [{ required: true, message: '请输入作业员!' }];
-    },
-  },
-  {
-    label: '描述',
-    field: 'description',
-    component: 'InputTextArea',
-  },
-  {
-    label: '附件',
-    field: 'attachments',
-    component: 'JUploadCustom',
-    componentProps: {
-      uploadType: ['camera', 'uplaod'],
-    },
-  },*/
 ];
 
 //酸洗扫码完工页面表单配置
@@ -260,7 +121,7 @@ export function getFormSchema(): FormSchema[] {
   const retValue = [
     {
       label: '钢卷号',
-      field: 'stock_emp_id',
+      field: 'flowCardId',
       component: 'JSearchSelectCustom',
       componentProps: ({ formActionType }) => {
         const { setFieldsValue, getFieldsValue } = formActionType;
@@ -268,22 +129,27 @@ export function getFormSchema(): FormSchema[] {
           setFieldsValue: setFieldsValue,
           getFieldsValue: getFieldsValue,
           method: 'get',
-          url: '/workshop/basWorkShop/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'id,name' /*, code: '${code}'*/ },
-          //url: '/bas/basPlant/list',
-          //params: { column: 'createTime', order: 'desc', searchFields: 'id,name', code: '${code}'},
+          //url: '/mes/picking/list',
+          url: '/mes/picking/end/list',
+          params: { column: 'createTime', order: 'desc', searchFields: 'id,steelId', steelId: '${steelId}' },
           columns: [
-            { name: '钢卷号', code: 'name' },
+            {
+              name: '钢卷号',
+              code: 'steelId',
+            },
           ],
           // 是否显示序号
           isShowNum: false,
           rowKey: 'id',
-          labelKey: ['name'],
+          labelKey: ['steelId'],
           placeholder: '请输入',
           linkmap: [
             {
-              code:'code',
-              createTime: 'createTime',
+              materialId:'materialId',//物料编码
+              /*materialName:'materialName',//物料名称*/
+              modelNumber: 'modelNumber',//规格型号
+              exceptedWeight: 'exceptedWeight',//标签重
+              actualWeight: 'weight',//重量
             },
           ],
         };
@@ -291,19 +157,30 @@ export function getFormSchema(): FormSchema[] {
     },
     {
       label: '物料编码',
-      field: 'code',
+      field: 'materialId',
       component: 'Input',
       dynamicDisabled: true,//禁用
     },
+    /* {
+       label: '物料名称',
+       field: 'materialName',
+       component: 'Input',
+       dynamicDisabled: true,//禁用
+     },*/
     {
       label: '规格型号',
-      field: 'createTime',
+      field: 'modelNumber',
       component: 'Input',
       dynamicDisabled: true,//禁用
     },
-    {
+    /*{
       label: '生产厂区',
-      field: 'note',
+      field: 'plantId',
+      component: 'Input',
+    },*/
+    {
+      label: '生产车间',
+      field: 'workShopNumber',
       component: 'JSearchSelectCustom',
       componentProps: ({ formActionType }) => {
         const { setFieldsValue, getFieldsValue } = formActionType;
@@ -312,9 +189,7 @@ export function getFormSchema(): FormSchema[] {
           getFieldsValue: getFieldsValue,
           method: 'get',
           url: '/workshop/basWorkShop/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'id,name' /*, code: '${code}'*/ },
-          //url: '/bas/basPlant/list',
-          //params: { column: 'createTime', order: 'desc', searchFields: 'id,name', code: '${code}'},
+          params: { column: 'createTime', order: 'desc', searchFields: 'id,name' },
           columns: [
             { name: '编码', code: 'id' },
             { name: '名称', code: 'name' },
@@ -329,48 +204,76 @@ export function getFormSchema(): FormSchema[] {
     },
     {
       label: '生产班组',
-      field: 'licensePlateNumber',
-      component: 'Input',
-    },
-    /*{
-      label: '操作员',
-      field: '操作员',
-      component: 'Input',
-    },*/
-    {
-      label: '开工时间',
-      field: 'warehouseId',
-      component: 'Input',
+      field: 'workTeamId',
+      component: 'JSearchSelectCustom',
+      componentProps: ({ formActionType }) => {
+        const { setFieldsValue, getFieldsValue } = formActionType;
+        return {
+          setFieldsValue: setFieldsValue,
+          getFieldsValue: getFieldsValue,
+          method: 'get',
+          url: '/basic/basWorkTeam/list',
+          params: { column: 'createTime', order: 'desc', searchFields: 'id,name'},
+          columns: [
+            { name: '编码', code: 'id' },
+            { name: '名称', code: 'name' },
+          ],
+          // 是否显示序号
+          isShowNum: false,
+          rowKey: 'id',
+          labelKey: ['name'],
+          placeholder: '请输入',
+        };
+      },
     },
     {
       label: '完工时间',
-      field: 'warehouseId',
-      component: 'Input',
+      field: 'endTime',
+      component: 'DatePicker',
+      dynamicDefaultValue: () => {
+        return dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
+      },
+      componentProps: {
+        showTime: true,
+        valueFormat: 'YYYY-MM-DD HH:mm:ss',
+        getPopupContainer: (node) => document.body
+      },
+      dynamicRules: ({ model, schema, values }) => {
+        if (model.planStartTime) planStartTime.value = model.planStartTime;
+        else planStartTime.value = null;
+        return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];
+      },
     },
     {
-      label: '标签重',
-      field: 'note',
-      component: 'Input',
+      label: '重量',
+      field: 'weight',
+      component: 'InputNumber',
+      dynamicDisabled: true,//禁用
+      componentProps: {
+        style: { width: '100%' }
+      }
     },
     {
-      label: '实际重量',
-      field: '实际重量',
-      component: 'Input',
+      label:'收料员',
+      field: 'operatorId',
+      component:'Input',
+      defaultValue:useUserStore().getUserInfo.username,
+      dynamicDisabled: true,//禁用
+      //show: false,//默认隐藏
+      componentProps: {
+        style: { width: '100%' }
+      }
     },
     {
-      label: '范围值',
-      field: 'note',
-      component: 'Input',
-    },
-    {
-      label: '设备',
-      field: 'warehouseId',
-      component: 'Input',
-    },
-    {
-      label: '要求查看',
-      field: 'warehouseId',
-      component: 'Input',
+      label:'租户 ID',
+      field: 'tenantId',
+      component:'Input',
+      defaultValue:getTenantId(),
+      dynamicDisabled: true,//禁用
+      show: false,//默认隐藏
+      componentProps: {
+        style: { width: '100%' }
+      }
     },
   ];
   return retValue;
