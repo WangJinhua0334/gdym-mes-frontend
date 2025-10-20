@@ -8,9 +8,6 @@ import {computed, onMounted, reactive, ref, unref} from "vue";
 import { BasicModal, useModal, useModalInner } from '@/components/Modal';
 import {buildUUID} from "@/utils/uuid";
 import dayjs from "dayjs";
-
-//租户id
-const tenantId = ref<string>('');
 // 提示方法声明
 const $message = useMessage();
 // Emits声明
@@ -26,12 +23,7 @@ const mesProductPickDetailTable = reactive({
   dataSource: [],
   columns: detailJVxeColumns,
 });
-function handleDelete(record: Recordable) {
-  console.log('点击了删除', record);
-}
-function handleOpen(record: Recordable) {
-  console.log('点击了启用', record);
-}
+
 //表单配置 酸洗扫码完工表单
 const [registerForm,{validate,setFieldsValue,getFieldsValue}] = useForm({
   labelWidth: 160,

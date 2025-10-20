@@ -254,7 +254,7 @@ export function getFormSchema(): FormSchema[] {
       }
     },
     {
-      label:'收料员',
+      label:'操作员',
       field: 'operatorId',
       component:'Input',
       defaultValue:useUserStore().getUserInfo.username,
