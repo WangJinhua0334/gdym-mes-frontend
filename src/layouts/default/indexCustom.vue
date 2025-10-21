@@ -28,6 +28,7 @@
       </div>
     </Header>
     <div class="cont-menu">
+      <!--   /home对应的页面的菜单容器   -->
       <div class="menu-box" v-for="(item, index) in newMenuList" :key="index">
         <div class="item-top">
           <div class="menu-item" v-for="(val, num) in item" :key="num">
@@ -100,10 +101,12 @@
   import { PageEnum } from '/@/enums/pageEnum';
   import { useMultipleTabStore } from '/@/store/modules/multipleTab';
   import { useUserStore } from '/@/store/modules/user';
+  import { Icon } from '@/components/Icon';
 
   export default defineComponent({
     name: 'DefaultIndex',
     components: {
+      Icon,
       Header: Layout.Header,
       // DownOutlined,
       // UserOutlined,
@@ -125,7 +128,7 @@
       const { prefixCls } = useDesign('layout-header');
       const manager = ref('');
       const manageList = ref([{}]);
-      const menuList = ref([{}]);
+      const menuList = ref([{}]); // 菜单列表
       const newMenuList = ref([]);
       const tabIndex = ref(-1);
       const clicked = ref(false);

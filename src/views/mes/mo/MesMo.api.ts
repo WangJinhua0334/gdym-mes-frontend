@@ -3,9 +3,24 @@ import { useMessage } from '/@/hooks/web/useMessage';
 
 const { createConfirm } = useMessage();
 
-enum Api {
-  /**列表查询 */
-  list = '/mo/mesMo/list',
+export enum Api {
+  // ========================半成品生产工单=========================
+  // 查询所有的半成品生产工单
+  list = '/mo/workOrder/semi/list',
+
+  // 模糊查询生产工单号
+  fuzzyQueryByOrderNo = '/mo/workOrder/semi/fuzzyQueryByOrderNo',
+
+  // 表单查询（工单号、生产类型、状态）
+  formQuery = '/mo/workOrder/semi/formQuery',
+
+  // 根据 orderNo 查询对应的明细信息（钢卷信息）
+  workOrderDetailList = '/mo/workOrderDetail/semi/listByOrderNo',
+
+  // 模糊查询钢卷号
+  fuzzyQueryByCoilNo = '/mo/workOrderDetail/semi/fuzzyQueryByCoilNo',
+
+
   /**新增 */
   save = '/mo/mesMo/add',
   /**编辑 */
@@ -82,14 +97,31 @@ export const getExportUrl = Api.exportXls;
  */
 export const getImportUrl = Api.importExcel;
 
+// ======================================= 半成品生产工单 =================================
 /**
- * 列表接口
- * @param params
+ * 查询所有的半成品生产工单
  */
 export const list = (params) => defHttp.get({ url: Api.list, params });
 
-/**查询工单数据 */
-export const getMoById = (params) => defHttp.get({ url: Api.getMoById, params });
+/**
+ * 模糊查询生产工单号
+ */
+export const fuzzyQueryByOrderNo = (params) => defHttp.get({ url: Api.fuzzyQueryByOrderNo, params });
+
+/**
+ * 表单查询（工单号、生产类型、状态）
+ */
+export const formQuery = (params) => defHttp.get({ url: Api.formQuery, params });
+
+/**
+ * 根据 orderNo 查询对应的明细信息（钢卷信息）
+ */
+export const workOrderDetailList = ( params) => defHttp.get({ url: Api.workOrderDetailList, params });
+
+/**
+ * 模糊查询钢卷号
+ */
+export const fuzzyQueryByCoilNo = (params) => defHttp.get({ url: Api.fuzzyQueryByCoilNo, params });
 
 /**审核 */
 export const audit = (params, handleSuccess) => {

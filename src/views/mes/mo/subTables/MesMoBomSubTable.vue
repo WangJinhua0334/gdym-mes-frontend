@@ -10,7 +10,7 @@
   import { BasicTable } from '/@/components/Table';
   import { useListPage } from '/@/hooks/system/useListPage';
   import { mesMoBomSearchFormSchema, mesMoBomColumns } from '../MesMo.data';
-  import { mesMoBomPage } from '../MesMo.api';
+  import { mesMoBomPage, mesMoCoil } from "../MesMo.api";
 
   const props = defineProps({
     id: {
@@ -27,7 +27,7 @@
           parameters['mainId'] = props.id;
         }
 
-        return mesMoBomPage(parameters);
+        return mesMoCoil(parameters);
       },
       rowKey: 'id',
       columns: mesMoBomColumns,

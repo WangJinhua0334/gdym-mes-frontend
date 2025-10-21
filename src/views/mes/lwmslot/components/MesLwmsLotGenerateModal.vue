@@ -68,16 +68,28 @@
   async function handlePrint() {
     try {
       loading.value = true;
-      const values = lwmsLotBinding?.value?.getTableData();
-      let validateTable = await lwmsLotBinding?.value?.validateTable();
+      const values = lwmsLotBinding?.value?.getTableData();      // 获取表格的数据
+      let validateTable = await lwmsLotBinding?.value?.validateTable();  // 验证表格数据的有效性
       if (validateTable != null) {
         loading.value = false;
         return;
       }
+      /** export const generateLwmsSn = (params) => {
+        return defHttp.post({ url: '/lwmslot/mesLwmsLot/generateLwmsSn', params });
+      };
+       */
       let res = await generateLwmsSn({ mesLwmsLots: values });
       let ids = res.ids;
       //console.log('ids', ids);
-      defHttp.get({ url: '/template/basTemplate/getReportIdByCode', params: { code: 'SystemDefaultTemplate', type: 'lwms_lot_sn' } }).then((res) => {
+      defHttp.get(
+        {
+          url: '/template/basTemplate/getReportIdByCode',
+          params: {
+            code: 'SystemDefaultTemplate',    //
+            type: 'lwms_lot_sn'  // 步骤 2 中，模板类型/在制库条码打印 标签对应的数据值
+          }
+        }
+      ).then((res) => {
         printJimuReport(res, { printAll: true, id: `${unref(ids).join(',')}` }, getToken(), false, () => {
           loading.value = false;
           //关闭弹窗

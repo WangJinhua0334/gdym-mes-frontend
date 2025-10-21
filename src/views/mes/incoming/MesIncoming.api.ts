@@ -5,9 +5,10 @@ const { createConfirm } = useMessage();
 //来料单接口地址
 enum Api {
   //来料单查询接口
-  list ='/mes/inComing/querySteelCoilInfoByCoilNo',
+  list ='/mes/inComing/purchaseReceiptBillDetail/list',
   //list = '/incoming/mesIncoming/list',
-  save = '/incoming/mesIncoming/add',
+  save = '/apiService/k3cloudApi/business/exportPurchaseReceiptBillAfterInsertDb',
+
   edit = '/incoming/mesIncoming/edit',
   deleteOne = '/incoming/mesIncoming/delete',
   deleteBatch = '/incoming/mesIncoming/deleteBatch',

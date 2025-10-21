@@ -100,7 +100,7 @@ export const formSchema: FormSchema[] = [
         labelKey: ['name'],
         linkmap: [
           {
-            id:'warehouseId',//物料编码
+            id:'warehouseId', //物料编码
           },
         ],
         //pageSize: 10,

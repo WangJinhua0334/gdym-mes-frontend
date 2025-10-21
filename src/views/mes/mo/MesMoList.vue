@@ -4,47 +4,12 @@
     <BasicTable @register="registerTable" :rowSelection="rowSelection" :expandedRowKeys="expandedRowKeys" @expand="handleExpand">
       <template #expandedRowRender="{ record }">
         <a-tabs tabPosition="top">
-          <a-tab-pane tab="工单BOM" key="mesMoBom" forceRender>
-            <MesMoBomSubTable :id="expandedRowKeys[0]" />
+          <a-tab-pane tab="钢卷信息" key="mesMoCoil" forceRender>
+            <MesMoCoilSubTable :id="expandedRowKeys[0]" :order-no="expandedRowKeys[1]"/>
           </a-tab-pane>
         </a-tabs>
       </template>
 
-      <!--插槽:table标题-->
-      <template #tableTitle>
-        <a-button type="primary" v-auth="'mes:mes_mo:add'" @click="handleAdd" preIcon="ant-design:plus-outlined"> 新增</a-button>
-        <a-button type="primary" @click="batchHandleAudit" v-auth="'mes:mes_mo:audit'" preIcon="ant-design:check-circle-outlined"> 审核</a-button>
-        <j-upload-button type="primary" v-auth="'mes:mes_mo:importExcel'" preIcon="ant-design:import-outlined" @click="onImportXls">
-          导入</j-upload-button
-        >
-        <a-button type="primary" v-auth="'mes:mes_mo:exportXls'" preIcon="ant-design:export-outlined" @click="onExportXls"> 导出</a-button>
-        <a-dropdown v-if="selectedRowKeys.length > 0">
-          <template #overlay>
-            <a-menu>
-              <!-- <a-menu-item key="1" @click="batchHandleAudit">
-                <Icon icon="ant-design:check-circle-outlined" />
-                审核
-              </a-menu-item> -->
-              <a-menu-item v-if="hasPermission('mes:mes_mo:stop')" key="2" @click="batchHandleStop">
-                <Icon icon="ant-design:stop-outlined" />
-                暂停
-              </a-menu-item>
-              <a-menu-item v-if="hasPermission('mes:mes_mo:close')" key="2" @click="batchHandleClose">
-                <Icon icon="ant-design:close-circle-outlined" />
-                关闭
-              </a-menu-item>
-              <a-menu-item v-if="hasPermission('mes:mes_mo:deleteBatch')" key="3" @click="batchHandleDelete">
-                <Icon icon="ant-design:delete-outlined" />
-                删除
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button>
-            批量操作
-            <Icon icon="mdi:chevron-down" />
-          </a-button>
-        </a-dropdown>
-      </template>
       <!--操作栏-->
       <template #action="{ record }">
         <TableAction :actions="getTableAction(record)" :dropDownActions="getDropDownAction(record)" />
@@ -57,35 +22,35 @@
       <template #pcaSlot="{ text }">
         {{ getAreaTextByCode(text) }}
       </template>
-      <template #fileSlot="{ text }">
-        <span v-if="!text" style="font-size: 12px; font-style: italic">无文件</span>
-        <a-button v-else :ghost="true" type="primary" preIcon="ant-design:download-outlined" size="small" @click="downloadFile(text)">下载</a-button>
-      </template>
-      <template #progressSlot="{ record }">
-        <Tooltip :title="'投入 ' + (record.inputedQty ?? 0) + ' / 产出 ' + (record.completedQty ?? 0) + ' / 报废 ' + (record.scrapedQty ?? 0)">
-          <Progress
-            :percent="Math.floor((Number(record.inputedQty ?? 0) / Number(record.qty)) * 100)"
-            :success="{ percent: Math.floor((Number(record.completedQty ?? 0) / Number(record.qty)) * 100), strokeColor: '#52c41a' }"
-            :strokeColor="'orange'"
-            :showInfo="false"
-            :size="'small'"
-          />
-        </Tooltip>
-      </template>
+<!--      <template #fileSlot="{ text }">-->
+<!--        <span v-if="!text" style="font-size: 12px; font-style: italic">无文件</span>-->
+<!--        <a-button v-else :ghost="true" type="primary" preIcon="ant-design:download-outlined" size="small" @click="downloadFile(text)">下载</a-button>-->
+<!--      </template>-->
+<!--      <template #progressSlot="{ record }">-->
+<!--        <Tooltip :title="'投入 ' + (record.inputedQty ?? 0) + ' / 产出 ' + (record.completedQty ?? 0) + ' / 报废 ' + (record.scrapedQty ?? 0)">-->
+<!--          <Progress-->
+<!--            :percent="Math.floor((Number(record.inputedQty ?? 0) / Number(record.qty)) * 100)"-->
+<!--            :success="{ percent: Math.floor((Number(record.completedQty ?? 0) / Number(record.qty)) * 100), strokeColor: '#52c41a' }"-->
+<!--            :strokeColor="'orange'"-->
+<!--            :showInfo="false"-->
+<!--            :size="'small'"-->
+<!--          />-->
+<!--        </Tooltip>-->
+<!--      </template>-->
     </BasicTable>
 
-    <!-- 工单新增/编辑表单区域 -->
-    <MesMoModal @register="registerMoModal" @success="handleSuccess" />
-    <!-- 工单详情表单区域 -->
-    <MesMoDetailModal @register="registerMoDetailModal" />
-    <!-- 工单关闭-->
-    <MesMoCloseModal @register="registerMoCloseModal" @success="handleSuccess" />
-    <!-- 工单分配流转卡表单区域-->
-    <MesMoCreateSnModal @register="registerMoCreateSnModal" @success="handleSuccess" />
-    <!-- 工单物料齐套表单区域-->
-    <MesMoCompleteKitModal @register="registerCompleteKitModal" @success="handleSuccess" />
-    <!-- 工单下发任务表单区域-->
-    <MesMoPlanModal @register="registerMoPlanModal" :moId="currentId" @success="handleSuccess" />
+<!--    &lt;!&ndash; 工单新增/编辑表单区域 &ndash;&gt;-->
+<!--    <MesMoModal @register="registerMoModal" @success="handleSuccess" />-->
+<!--    &lt;!&ndash; 工单详情表单区域 &ndash;&gt;-->
+<!--    <MesMoDetailModal @register="registerMoDetailModal" />-->
+<!--    &lt;!&ndash; 工单关闭&ndash;&gt;-->
+<!--    <MesMoCloseModal @register="registerMoCloseModal" @success="handleSuccess" />-->
+<!--    &lt;!&ndash; 工单分配流转卡表单区域&ndash;&gt;-->
+<!--    <MesMoCreateSnModal @register="registerMoCreateSnModal" @success="handleSuccess" />-->
+<!--    &lt;!&ndash; 工单物料齐套表单区域&ndash;&gt;-->
+<!--    <MesMoCompleteKitModal @register="registerCompleteKitModal" @success="handleSuccess" />-->
+<!--    &lt;!&ndash; 工单下发任务表单区域&ndash;&gt;-->
+<!--    <MesMoPlanModal @register="registerMoPlanModal" :moId="currentId" @success="handleSuccess" />-->
 
     <!-- 工单流转卡列表区域 -->
     <BasicModal
@@ -136,9 +101,12 @@
   import { downloadFile } from '/@/utils/common/renderUtils';
   import { useMessage } from '/@/hooks/web/useMessage';
 
+  import { defHttp } from '/@/utils/http/axios';
   import { usePermission } from '/@/hooks/web/usePermission';
+  import MesMoCoilSubTable from "@/views/mes/mo/subTables/MesMoCoilSubTable.vue";
   const { hasPermission } = usePermission();
 
+  // 消息提示
   const $message = useMessage();
 
   /**是否开启齐套检查 */
@@ -177,16 +145,11 @@
       formConfig: {
         schemas: searchFormSchema,
         autoSubmitOnEnter: true,
-        showAdvancedButton: true,
+        showAdvancedButton: false,
         fieldMapToNumber: [],
         fieldMapToTime: [],
       },
-      actionColumn: {
-        title: '操作',
-        width: 200,
-        align: 'center',
-        fixed: 'right',
-      },
+      actionColumn: null,
     },
     exportConfig: {
       name: '生产工单',
@@ -210,6 +173,7 @@
     expandedRowKeys.value = [];
     if (expanded === true) {
       expandedRowKeys.value.push(record.id);
+      expandedRowKeys.value.push(record.orderNo);
     }
   }
 
@@ -433,6 +397,7 @@
       },
     });
   }
+
   /**
    * 批量删除事件
    */

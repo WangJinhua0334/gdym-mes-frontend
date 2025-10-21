@@ -6,10 +6,11 @@ import { isFunction } from '/@/utils/is';
 
 export function useTableForm(
   propsRef: ComputedRef<BasicTableProps>,
-  slots: Slots,
-  fetch: (opt?: FetchParams | undefined) => Promise<void>,
-  getLoading: ComputedRef<boolean | undefined>
+  slots: Slots,      // 组件的插槽
+  fetch: (opt?: FetchParams | undefined) => Promise<void>, // 获取数据的函数
+  getLoading: ComputedRef<boolean | undefined>             // 获取加载状态的计算属性
 ) {
+  // 提取表单的配置
   const getFormProps = computed((): Partial<FormProps> => {
     const { formConfig } = unref(propsRef);
     const { submitButtonOptions, autoSubmitOnEnter} = formConfig || {};

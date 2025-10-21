@@ -45,12 +45,10 @@ interface IDoRequestOptions {
   clearSelection?: boolean;
 }
 
-/**
- * listPage页面公共方法
- *
- * @param options
- */
+// 自定义 Hook，用于简化列表页面的开发，封装了常用的列表页面功能
 export function useListPage(options: ListPageOptions) {
+
+  // 弹出确认框询问用户
   const $message = useMessage();
   let $design = {} as ReturnType<typeof useDesign>;
   if (options.designScope) {
@@ -65,9 +63,9 @@ export function useListPage(options: ListPageOptions) {
   async function onExportXls() {
     //update-begin---author:wangshuai ---date:20220411  for：导出新增自定义参数------------
     let { url, name, params } = options?.exportConfig ?? {};
-    let realUrl = typeof url === 'function' ? url() : url;
+    let realUrl = ((typeof url === 'function') ? url() : url);
     if (realUrl) {
-      let title = typeof name === 'function' ? name() : name;
+      let title = ((typeof name === 'function') ? name() : name);
       //update-begin-author:taoyan date:20220507 for: erp代码生成 子表 导出报错，原因未知-
       let paramsForm:any = {};
       try {
@@ -76,15 +74,17 @@ export function useListPage(options: ListPageOptions) {
         console.error(e);
       }
       //update-end-author:taoyan date:20220507 for: erp代码生成 子表 导出报错，原因未知-
-      
+
       //update-begin-author:liusq date:20230410 for:[/issues/409]导出功能没有按排序结果导出,设置导出默认排序，创建时间倒序
+      // 设置排序方式
       if(!paramsForm?.column){
          Object.assign(paramsForm,{column:'createTime',order:'desc'});
       }
       //update-begin-author:liusq date:20230410 for: [/issues/409]导出功能没有按排序结果导出,设置导出默认排序，创建时间倒序
-      
+
       //如果参数不为空，则整合到一起
       //update-begin-author:taoyan date:20220507 for: erp代码生成 子表 导出动态设置mainId
+      // 合并自定义参数
       if (params) {
         Object.keys(params).map((k) => {
           let temp = (params as object)[k];
@@ -268,13 +268,13 @@ export function useListTable(tableProps: TableProps): [
     actionColumn: {
       width: 120,
       title: '操作',
-      //是否锁定操作列取值 right ,left,false
+      //是否锁定操作列，取值 right ,left,false
       fixed: false,
       dataIndex: 'action',
       slots: { customRender: 'action' },
     },
   };
-  // 合并用户个性化配置
+  // ================= 1、useListPage方法传入的对象中，假如有 tableProps对象作为属性，那么将表单的配置整合到表格的配置中=================
   if (tableProps) {
     //update-begin---author:wangshuai---date:2024-04-28---for:【issues/6180】前端代码配置表变查询条件显示列不生效---
     if(tableProps.formConfig){
@@ -285,7 +285,7 @@ export function useListTable(tableProps: TableProps): [
     merge(defaultTableProps, tableProps);
   }
 
-  // 发送请求之前调用的方法
+  // ================ 2、api 方法的入参中添加默认的参数字段（{ column: 'createTime', order: 'desc' }）
   function beforeFetch(params) {
     // 默认以 createTime 降序排序
     return Object.assign({ column: 'createTime', order: 'desc' }, params);
@@ -293,6 +293,7 @@ export function useListTable(tableProps: TableProps): [
 
   // 合并方法
   Object.assign(defaultTableProps, { beforeFetch });
+
   if (typeof tableProps.beforeFetch === 'function') {
     defaultTableProps.beforeFetch = function (params) {
       params = beforeFetch(params);
@@ -302,15 +303,17 @@ export function useListTable(tableProps: TableProps): [
     };
   }
 
+  // ============ 3、行选择功能增强 =============================
+
   // 当前选择的行
   const selectedRowKeys = ref<any[]>([]);
   // 选择的行记录
   const selectedRows = ref<Recordable[]>([]);
 
-  // 表格选择列配置
+  // 获取用户传入的行选择配置，如果用户没有提供则使用空对象作为默认值。
   const rowSelection: any = tableProps?.rowSelection ?? {};
   const defaultRowSelection = reactive({
-    ...rowSelection,
+    ...rowSelection, // 配置继承，保留用户传入的所有配置项
     type: rowSelection.type ?? 'checkbox',
     // 选择列宽度，默认 50
     columnWidth: rowSelection.columnWidth ?? 50,
@@ -319,13 +322,18 @@ export function useListTable(tableProps: TableProps): [
     onChange(...args) {
       selectedRowKeys.value = args[0];
       selectedRows.value = args[1];
+      // 调用用户传入的 onChange 方法
       if (typeof rowSelection.onChange === 'function') {
         rowSelection.onChange(...args);
       }
     },
   });
+  // 从默认表格属性中删除原始的 rowSelection 配置，避免与增强版配置冲突。
   delete defaultTableProps.rowSelection;
 
+
+
+  // =================== 4、表单配置中的特定属性替换 ==========================
   /**
    * 设置表格参数
    *

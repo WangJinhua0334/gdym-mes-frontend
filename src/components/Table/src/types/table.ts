@@ -10,10 +10,13 @@ import { RoleEnum } from '/@/enums/roleEnum';
 
 export declare type SortOrder = 'ascend' | 'descend';
 
+
+// 表格当前数据源的类型结构：键值对<string, any>类型
 export interface TableCurrentDataSource<T = Recordable> {
   currentDataSource: T[];
 }
 
+// 用于配置表格行选择功能的接口，它扩展了 Ant Design Vue 的 ITableRowSelection 接口。
 export interface TableRowSelection<T = any> extends ITableRowSelection {
   /**
    * Callback executed when selected rows change
@@ -40,49 +43,68 @@ export interface TableRowSelection<T = any> extends ITableRowSelection {
   onSelectInvert?: (selectedRows: string[] | number[]) => any;
 }
 
+// 用于表示表格中的自定义行记录，包含记录数据和行索引。
 export interface TableCustomRecord<T> {
   record?: T;
   index?: number;
 }
 
+// 拓展了 TableCustomRecord<T> 泛型接口，并添加了两个额外的可选属性
 export interface ExpandedRowRenderRecord<T> extends TableCustomRecord<T> {
-  indent?: number;
-  expanded?: boolean;
+  indent?: number;     // 嵌套层级的深度
+  expanded?: boolean;  // 是否展开
 }
 
+
+//
 export interface ColumnFilterItem {
   text?: string;
   value?: string;
   children?: any;
 }
 
+// 描述表格中自定义行记录
 export interface TableCustomRecord<T = Recordable> {
-  record?: T;
-  index?: number;
+  record?: T;   // 某一行的数据记录，包含该行的所有数据字段
+  index?: number;  // 该行在表格中的索引位置(从 0 开始)，用于标识行的顺序位置
 }
 
+
+//
 export interface SorterResult {
+  /**
+   * column: 列属性，比如 title、dataIndex、width 等;
+   * order: 排序顺序
+   * field: 列的字段名
+   * columnKey: 列的唯一标识符
+   * columnKey 是前端 UI层的列标识符，field是数据层面的
+   */
   column: ColumnProps;
   order: SortOrder;
   field: string;
   columnKey: string;
 }
 
+// 为表格组件提供了一种标准化的方式来传递数据获取所需的参数
 export interface FetchParams {
-  searchInfo?: Recordable;
-  page?: number;
-  sortInfo?: Recordable;
-  filterInfo?: Recordable;
+  searchInfo?: Recordable; // 查询条件，键值对类型
+  page?: number;           // 请求的页码，跳转指定页面
+  sortInfo?: Recordable;   // 排序信息，什么字段需要排序
+  filterInfo?: Recordable; // 过滤条件
 }
 
+
+// 用于在获取表格列时指定过滤和排序选项。
 export interface GetColumnsParams {
-  ignoreIndex?: boolean;
-  ignoreAction?: boolean;
-  sort?: boolean;
+  ignoreIndex?: boolean;  // 是否忽略索引列, 当设置为 true 时，获取的列将不包含序号列
+  ignoreAction?: boolean; // 是否忽略操作列, 当设置为 true 时，获取的列将不包含操作列(通常是最右边包含编辑、删除等操作按钮的列)
+  sort?: boolean;         // 是否排序, 当设置为 true 时，将按照列的固定位置（左、中、右）进行排序
 }
 
 export type SizeType = 'middle' | 'small' | 'large';
 
+
+//
 export interface TableActionType {
   reload: (opt?: FetchParams) => Promise<void>;
   getSelectRows: <T = Recordable>() => T[];
