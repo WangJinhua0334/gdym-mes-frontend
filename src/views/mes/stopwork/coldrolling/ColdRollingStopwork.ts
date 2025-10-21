@@ -60,6 +60,43 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
   },
   {
+    label: '物料编码',
+    field: 'materialNumber',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/etl/rolling/materialMappingInfo',
+        params: { column: 'createTime', order: 'desc', searchFields: 'id,name', code: '${code}',flowCardId: '${flowCardId}' },
+        columns: [
+          {
+            name: '物料编码',
+            code: 'number',
+          },
+        ],
+        isShowNum: false,
+        rowKey: 'number',
+        labelKey: ['name'],
+        linkmap: [
+          {
+            id:'warehouseId',//物料编码
+          },
+        ],
+        //pageSize: 10,
+        multi: false,
+        maxTagCount: 2,
+        placeholder: '请选择',
+        // 启用滚动分页
+        scroll: {
+          pageSize: 10
+        },
+      };
+    },
+  },
+  {
     label: '流转去向',
     field: 'destination',
     component: 'JDictSelectTag',
@@ -121,7 +158,7 @@ export function getFormSchema(): FormSchema[] {
   const retValue = [
     {
       label: '钢卷号',
-      field: 'flowCardId',
+      field: 'newCoilNo',
       component: 'JSearchSelectCustom',
       componentProps: ({ formActionType }) => {
         const { setFieldsValue, getFieldsValue } = formActionType;
@@ -130,49 +167,57 @@ export function getFormSchema(): FormSchema[] {
           getFieldsValue: getFieldsValue,
           method: 'get',
           //url: '/mes/picking/list',
-          url: '/mes/picking/end/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'id,steelId', steelId: '${steelId}' },
+          url: '/etl/rolling/end/list',
+          params: { column: 'createTime', order: 'desc', searchFields: 'id,newCoilNo', newCoilNo: '${newCoilNo}' },
           columns: [
             {
               name: '钢卷号',
-              code: 'steelId',
+              code: 'newCoilNo',
             },
           ],
           // 是否显示序号
           isShowNum: false,
-          rowKey: 'id',
-          labelKey: ['steelId'],
+          rowKey: 'newCoilNo',
+          labelKey: ['newCoilNo'],
           placeholder: '请输入',
           linkmap: [
             {
-              materialId:'materialId',//物料编码
+              materialId:'materialId',//物料编号
+              materialNumber:'materialNumber',//物料编码
               /*materialName:'materialName',//物料名称*/
               modelNumber: 'modelNumber',//规格型号
               exceptedWeight: 'exceptedWeight',//标签重
-              actualWeight: 'weight',//重量
+              weight: 'weight',//重量
+              cardId:'flowCardId',//流转卡号
             },
           ],
         };
       },
     },
     {
+      label: '流转卡号',
+      field: 'flowCardId',
+      component: 'Input',
+      show: false,//禁止显示
+    },
+    /*{
       label: '物料编码',
       field: 'materialId',
       component: 'Input',
       dynamicDisabled: true,//禁用
     },
-    /* {
+     {
        label: '物料名称',
        field: 'materialName',
        component: 'Input',
        dynamicDisabled: true,//禁用
-     },*/
+     },
     {
       label: '规格型号',
       field: 'modelNumber',
       component: 'Input',
       dynamicDisabled: true,//禁用
-    },
+    },*/
     /*{
       label: '生产厂区',
       field: 'plantId',

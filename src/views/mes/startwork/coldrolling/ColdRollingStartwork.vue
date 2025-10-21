@@ -28,7 +28,7 @@ const [registerForm,{ validate, getFieldsValue, setFieldsValue,resetFields}] = u
   baseColProps: { span: 8 },
   disabled: false,
 });
-//效验方法
+/*//效验方法
 function verification() {
   // 获取当前表单值
   const values = getFieldsValue();
@@ -75,46 +75,24 @@ function verification() {
       }
     });
   }
-}
-
+}*/
 // 添加 handleSubmit 方法
 async function handleSubmit() {
   try {
     // 验证表单
     const values = await validate();
-    // 检查限定占比是否有值
-    if (!values.limitedProportion) {
+    // 添加设备校验
+    if (!values.equipmentId) { // 假设设备字段名为 equipmentId，请根据实际字段名调整
       $message.createWarningModal({
         title: '提示',
-        content: '请先进行效验操作',
+        content: '请选择设备',
         onOk: () => {
-          console.log('请先效验确认');
+          console.log('请先选择设备确认');
         }
       });
       return; // 阻止继续执行
     }
-    // 获取实际重量和限定占比
-    const actualWeight = parseFloat(values.actualWeight || 0);
-    const limitedProportion = parseFloat(values.limitedProportion || 0);
-    // 比较实际重量和限定占比
-    if (actualWeight < limitedProportion) {
-      // 通过验证，直接提交
-      await requestAddOrEdit(values);
-    } else {
-      // 不通过验证，提示用户选择是否放行
-      $message.createWarningModal({
-        title: '警告',
-        content: '实际重量不在有效范围值内，是否继续放行？',
-        okText: '是',
-        cancelText: '否',
-        onOk: async () => {
-          await requestAddOrEdit(values);
-        },
-        onCancel: () => {
-          console.log('用户取消操作');
-        }
-      });
-    }
+    await requestAddOrEdit(values);
   } catch (error) {
     // 处理验证错误
     console.log('验证失败:', error);
@@ -133,14 +111,13 @@ async function requestAddOrEdit(values) {
     console.log(error);
   }
 }
-
 </script>
 
 <template>
   <div class="custom-form-wrapper">
     <BasicForm @register="registerForm" :width="896"/>
     <div class="button-container">
-      <a-button @click="verification" type="primary">效验</a-button>
+<!--      <a-button @click="verification" type="primary">效验</a-button>-->
       <a-button @click="handleSubmit" type="primary">扫码开工</a-button>
     </div>
   </div>

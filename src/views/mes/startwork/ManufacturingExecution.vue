@@ -82,6 +82,17 @@ async function handleSubmit() {
   try {
     // 验证表单
     const values = await validate();
+    // 添加设备校验
+    if (!values.equipmentId) { // 假设设备字段名为 equipmentId，请根据实际字段名调整
+      $message.createWarningModal({
+        title: '提示',
+        content: '请选择设备',
+        onOk: () => {
+          console.log('请先选择设备确认');
+        }
+      });
+      return; // 阻止继续执行
+    }
     // 检查限定占比是否有值
     if (!values.limitedProportion) {
       $message.createWarningModal({

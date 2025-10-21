@@ -81,8 +81,16 @@ async function requestAddOrEdit(values) {
   try {
     //提交表单
     await saveOrUpdate(values);
-    //清空表单数据
+    //清空主表数据
     await resetFields();
+    //重置子表数据源
+    mesProductPickDetailTable.dataSource = [];
+    //重置时间字段
+    setTimeout(() => {
+      setFieldsValue({
+        endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      });
+    }, 100);
     //刷新列表
     emit('success');
   } catch (error) {

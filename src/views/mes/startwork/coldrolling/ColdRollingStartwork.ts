@@ -9,7 +9,7 @@ export function getFormSchema(): FormSchema[] {
   const retValue = [
     {
       label: '钢卷号',
-      field: 'flowCardId',
+      field: 'newCoilNo',
       component: 'JSearchSelectCustom',
       componentProps: ({ formActionType }) => {
         const { setFieldsValue, getFieldsValue } = formActionType;
@@ -18,48 +18,64 @@ export function getFormSchema(): FormSchema[] {
           getFieldsValue: getFieldsValue,
           method: 'get',
           //url: '/mes/picking/list',
-          url: '/mes/picking/start/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'id,steelId', steelId: '${steelId}' },
+          url: '/etl/rolling/start/list',
+          params: { column: 'createTime', order: 'desc', searchFields: 'id,newCoilNo', },
           columns: [
             {
               name: '钢卷号',
-              code: 'steelId',
+              code: 'newCoilNo',
             },
           ],
           // 是否显示序号
           isShowNum: false,
-          rowKey: 'id',
-          labelKey: ['steelId'],
+          rowKey: 'newCoilNo',
+          labelKey: ['newCoilNo'],
           placeholder: '请输入',
           linkmap: [
             {
-              materialId:'materialId',//物料编码
+              materialId:'materialId',//物料编号
+              materialNumber:'materialNumber',//物料编码
               /*materialName:'materialName',//物料名称*/
               modelNumber: 'modelNumber',//规格型号
               exceptedWeight: 'exceptedWeight',//标签重
+              weight: 'weight',//重量
+              cardId:'flowCardId',//流转卡号
             },
           ],
         };
       },
     },
     {
-      label: '物料编码',
+      label: '流转卡号',
+      field: 'flowCardId',
+      component: 'Input',
+      show: false,//禁止显示
+    },
+    /*{
+      label: '物料编号',
       field: 'materialId',
       component: 'Input',
       dynamicDisabled: true,//禁用
+      show: false,//禁止显示
     },
+    {
+      label: '物料编码',
+      field: 'materialNumber',
+      component: 'Input',
+      dynamicDisabled: true,//禁用
+    },*/
     /* {
        label: '物料名称',
        field: 'materialName',
        component: 'Input',
        dynamicDisabled: true,//禁用
      },*/
-    {
+    /*{
       label: '规格型号',
       field: 'modelNumber',
       component: 'Input',
       dynamicDisabled: true,//禁用
-    },
+    },*/
     /*{
       label: '生产厂区',
       field: 'plantId',
@@ -83,7 +99,7 @@ export function getFormSchema(): FormSchema[] {
           ],
           // 是否显示序号
           isShowNum: false,
-          rowKey: 'id',
+          rowKey: 'code',
           labelKey: ['name'],
           placeholder: '请输入',
         };
@@ -132,15 +148,15 @@ export function getFormSchema(): FormSchema[] {
       },
     },
     {
-      label: '标签重',
-      field: 'exceptedWeight',
+      label: '重量',
+      field: 'weight',
       component: 'InputNumber',
       componentProps: {
         style: { width: '100%' }
       },
       dynamicDisabled: true,//禁用
     },
-    {
+    /*{
       label: '实际重量',
       field: 'actualWeight',
       component: 'InputNumber',
@@ -166,7 +182,7 @@ export function getFormSchema(): FormSchema[] {
         addonAfter: '‰' , // 在输入框后添加千分号
         style: { width: '100%' }
       }
-    },
+    },*/
     {
       label: '设备',
       field: 'equipmentId',

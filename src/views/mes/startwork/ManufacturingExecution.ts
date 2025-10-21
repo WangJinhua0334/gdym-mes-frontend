@@ -33,18 +33,27 @@ export function getFormSchema(): FormSchema[] {
           placeholder: '请输入',
           linkmap: [
             {
-              materialId:'materialId',//物料编码
+              materialId:'materialId',//物料编号
+              materialNumber:'materialNumber',//物料编码
               /*materialName:'materialName',//物料名称*/
               modelNumber: 'modelNumber',//规格型号
               exceptedWeight: 'exceptedWeight',//标签重
+              actualWeight: 'weight',//重量
             },
           ],
         };
       },
     },
     {
-      label: '物料编码',
+      label: '物料编号',
       field: 'materialId',
+      component: 'Input',
+      dynamicDisabled: true,//禁用
+      show: false,//禁止显示
+    },
+    {
+      label: '物料编码',
+      field: 'materialNumber',
       component: 'Input',
       dynamicDisabled: true,//禁用
     },
@@ -76,14 +85,14 @@ export function getFormSchema(): FormSchema[] {
           getFieldsValue: getFieldsValue,
           method: 'get',
           url: '/workshop/basWorkShop/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'id,name' },
+          params: { column: 'createTime', order: 'desc', searchFields: 'id,name,code' },
           columns: [
             { name: '编码', code: 'id' },
             { name: '名称', code: 'name' },
           ],
           // 是否显示序号
           isShowNum: false,
-          rowKey: 'id',
+          rowKey: 'code',
           labelKey: ['name'],
           placeholder: '请输入',
         };
