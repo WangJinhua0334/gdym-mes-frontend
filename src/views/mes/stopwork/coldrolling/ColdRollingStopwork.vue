@@ -95,7 +95,7 @@ function handleAddDetail() {
   // 获取表单数据中的钢卷号
   const formData = getFieldsValue();
   const coilNo = formData.flowCardId?.steelId || formData.flowCardId || '';
-
+  const flowCardId = coilNo;
   // 获取当前子表的数据源长度作为序号（确保每次都获取最新的数据长度）
   const currentDataSource = mesProductPickDetail.value ? mesProductPickDetail.value.getTableData() : mesProductPickDetailTable.dataSource;
   const currentIndex = Array.isArray(currentDataSource) ? currentDataSource.length + 1 : 1;
@@ -106,7 +106,8 @@ function handleAddDetail() {
   // 延迟设置值，确保弹框已打开并且表单已初始化
   setTimeout(() => {
     setExtendedFieldsValue({
-      newCoilNo: newCoilNo
+      newCoilNo: newCoilNo,
+      flowCardId:flowCardId,
     });
   }, 100);
 }
@@ -136,6 +137,9 @@ async function handleModalOk() {
       id: buildUUID(),
       newCoilNo: values.newCoilNo || '',   // 钢卷号
       weight: values.weight || '',   // 重量
+      materialNumber: values.materialNumber || '',   //物料编码
+      materialName: values.name || '',   // 物料名称
+      materialModelNumber: values.materialModelNumber || '',   // 规格型号
       destination: destinationLabel || values.destination || '',   // 流转去向
       warehouseId: values.warehouseId || '',   // 仓库id
       warehouseName: values.warehouseName || '',   // 仓库名称
