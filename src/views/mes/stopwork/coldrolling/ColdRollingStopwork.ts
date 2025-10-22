@@ -5,47 +5,6 @@ import {planStartTime} from "@/views/mes/mo/components/MesMoPlanCreateSn.data";
 import {rules} from "@/utils/helper/validator";
 import {useUserStore} from "@/store/modules/user";
 import { getTenantId } from "/@/utils/auth";
-//冷轧扫码完工页面表单配置
-export const getDetailJVxeColumns = function () {
-  const arr: any[] = [];
-  arr.push(
-    {
-      title: '钢卷号',
-      key: 'newCoilNo',
-      type: JVxeTypes.input,
-    },
-    {
-      title: '重量',
-      key: 'weight',
-      type: JVxeTypes.input,
-      disabled: true,   // 禁止编辑
-    },
-    /**
-     * 流转去向: 1入库、2退料
-     */
-    {
-      title: '流传去向',
-      key: 'destination',
-      type: JVxeTypes.select,// 使用 select 类型
-      dictCode: 'gxlzqx',// 指定字典编码
-      disabled: true,   // 禁止编辑
-    },
-    {
-      title: '仓库Id',
-      key: 'warehouseId',
-      type: JVxeTypes.input,
-      disabled: true,   // 禁止编辑
-      visible: false,   // 设置为隐藏状态，只能通过程序设置
-    },
-    {
-      title: '仓库名称',
-      key: 'warehouseName',
-      type: JVxeTypes.input,
-      disabled: true,   // 禁止编辑
-    },
-  );
-  return arr;
-};
 //冷轧扫码完工新增弹框页面表单配置
 export const formSchema: FormSchema[] = [
   {
@@ -53,6 +12,13 @@ export const formSchema: FormSchema[] = [
     field: 'newCoilNo',
     component: 'Input',
     dynamicDisabled: true, // 设置为禁用状态，只能通过程序设置
+  },
+  {
+    label: '钢卷号',//用来过滤物料编码信息
+    field: 'flowCardId',
+    component: 'Input',
+    dynamicDisabled: true, // 设置为禁用状态，只能通过程序设置
+    show: false,//禁止显示
   },
   {
     label: '重量',
@@ -70,19 +36,20 @@ export const formSchema: FormSchema[] = [
         getFieldsValue: getFieldsValue,
         method: 'get',
         url: '/etl/rolling/materialMappingInfo',
-        params: { column: 'createTime', order: 'desc', searchFields: 'id,name', code: '${code}',flowCardId: '${flowCardId}' },
+        params: { column: 'createTime', order: 'desc', flowCardId: '${flowCardId}',searchFields: 'number,name'},
         columns: [
-          {
-            name: '物料编码',
-            code: 'number',
-          },
+          {name: '物料编码', code: 'number'},
+          {name: '物料名称', code: 'name'},
+          {name: '规格型号', code: 'materialModelNumber'},
         ],
         isShowNum: false,
         rowKey: 'number',
         labelKey: ['name'],
         linkmap: [
           {
-            id:'warehouseId',//物料编码
+            number:'number',//物料编码
+            name:'name',//物料名称
+            materialModelNumber:'materialModelNumber',//规格型号
           },
         ],
         //pageSize: 10,
@@ -95,6 +62,18 @@ export const formSchema: FormSchema[] = [
         },
       };
     },
+  },
+  {
+    label: '物料名称',
+    field: 'name',
+    component: 'Input',
+    show: false,//禁止显示
+  },
+  {
+    label: '规格型号',
+    field: 'materialModelNumber',
+    component: 'Input',
+    show: false,//禁止显示
   },
   {
     label: '流转去向',
@@ -168,7 +147,7 @@ export function getFormSchema(): FormSchema[] {
           method: 'get',
           //url: '/mes/picking/list',
           url: '/etl/rolling/end/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'id,newCoilNo', newCoilNo: '${newCoilNo}' },
+          params: { column: 'createTime', order: 'desc', searchFields: 'id,newCoilNo', },
           columns: [
             {
               name: '钢卷号',
@@ -283,11 +262,6 @@ export function getFormSchema(): FormSchema[] {
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
         getPopupContainer: (node) => document.body
       },
-      dynamicRules: ({ model, schema, values }) => {
-        if (model.planStartTime) planStartTime.value = model.planStartTime;
-        else planStartTime.value = null;
-        return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];
-      },
     },
     {
       label: '重量',
@@ -323,3 +297,62 @@ export function getFormSchema(): FormSchema[] {
   ];
   return retValue;
 }
+//冷轧扫码完工页面产品表格字段
+export const getDetailJVxeColumns = function () {
+  const arr: any[] = [];
+  arr.push(
+    {
+      title: '钢卷号',
+      key: 'newCoilNo',
+      type: JVxeTypes.input,
+    },
+    {
+      title: '重量',
+      key: 'weight',
+      type: JVxeTypes.input,
+      disabled: true,   // 禁止编辑
+    },
+    {
+      title: '物料编码',
+      key: 'materialNumber',
+      type: JVxeTypes.input,
+      disabled: true,   // 禁止编辑
+    },
+    {
+      title: '物料名称',
+      key: 'materialName',
+      type: JVxeTypes.input,
+      disabled: true,   // 禁止编辑
+    },
+    {
+      title: '规格型号',
+      key: 'materialModelNumber',
+      type: JVxeTypes.input,
+      disabled: true,   // 禁止编辑
+    },
+    /**
+     * 流转去向: 1入库、2退料
+     */
+    {
+      title: '流传去向',
+      key: 'destination',
+      type: JVxeTypes.select,// 使用 select 类型
+      dictCode: 'gxlzqx',// 指定字典编码
+      disabled: true,   // 禁止编辑
+    },
+    {
+      title: '仓库Id',
+      key: 'warehouseId',
+      type: JVxeTypes.input,
+      disabled: true,   // 禁止编辑
+      visible: false,   // 设置为隐藏状态，只能通过程序设置
+    },
+    {
+      title: '仓库名称',
+      key: 'warehouseName',
+      type: JVxeTypes.input,
+      disabled: true,   // 禁止编辑
+    },
+  );
+  return arr;
+};

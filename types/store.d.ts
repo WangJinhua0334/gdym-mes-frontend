@@ -31,7 +31,7 @@ export interface ErrorLogInfo {
 }
 
 export interface UserInfo {
-  id: string | number;
+  id: string | number;  // 用户 id
   userId: string | number;
   username: string;
   realname: string;

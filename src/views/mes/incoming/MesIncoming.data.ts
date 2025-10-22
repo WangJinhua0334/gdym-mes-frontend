@@ -1,8 +1,5 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
-import { rules } from '/@/utils/helper/validator';
-import { render } from '/@/utils/common/renderUtils';
-import { getWeekMonthQuarterYear } from '/@/utils';
 import { ref } from 'vue';
 import dayjs from "dayjs";
 import {useUserStore} from "/@/store/modules/user";
@@ -311,23 +308,25 @@ export const formSchema: FormSchema[] = [
             label: '钢卷号',
             mode: 'single',
             view: 'string',
-          }
+          },
         ],
         isShowNum: true,
         rowKey: 'coilNo',
         labelKey: ['coilNo'],
-        linkmap: [{
-          materialId: 'materialId' ,
-          materialNumber: 'materialNumber' ,
-          materialName: 'materialName' ,
-          modelNumber: 'modelNumber' ,
-          brand: 'brand' ,
-          weight: 'weight'
-        }],
+        linkmap: [
+          {
+            materialId: 'materialId',
+            materialNumber: 'materialNumber',
+            materialName: 'materialName',
+            modelNumber: 'modelNumber',
+            brand: 'brand',
+            weight: 'weight',
+          },
+        ],
         placeholder: '请选择钢卷号',
       };
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请选择钢卷号!' }];
     },
   },
@@ -368,19 +367,11 @@ export const formSchema: FormSchema[] = [
     component: 'InputNumber',
     dynamicDisabled: true,
   },
-  // {
-  //   label: '重量单位',
-  //   field: 'unit',
-  //   component: 'Input',
-  //   dynamicDisabled: false,
-  //   defaultValue: '01',
-  //   ifShow: false,
-  // },
   {
     label: '车牌号',
     field: 'licensePlateNumber',
     component: 'Input',
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请输入车牌号!' }];
     },
   },
@@ -395,7 +386,7 @@ export const formSchema: FormSchema[] = [
         getFieldsValue: getFieldsValue,
         method: 'get',
         url: '/basic/basOrganization/list',
-        params: { column: 'id', order: 'asc', searchFields: 'id,name,number'  },
+        params: { column: 'id', order: 'asc', searchFields: 'id,name,number' },
         columns: [
           {
             name: '名称',
@@ -405,16 +396,28 @@ export const formSchema: FormSchema[] = [
         isShowNum: false,
         rowKey: 'id',
         labelKey: ['name'],
+        linkmap: [
+          {
+            number: 'stockOrgNumber',
+          },
+        ],
         // pageSize: 10,
         multi: false,
         maxTagCount: 2,
         placeholder: '请输入',
-        getPopupContainer: (node) => document.body,
+        getPopupContainer: () => document.body,
       };
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请选择收料组织!' }];
     },
+  },
+  {
+    label: '收料组织编码',
+    field: 'stockOrgNumber',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: false,
   },
   {
     label: '收料部门',
@@ -428,7 +431,11 @@ export const formSchema: FormSchema[] = [
         method: 'get',
         url: '/sys/sysDepart/list',
         params: {
-          status: '1', orgCategory: '2', column: 'id', order: 'asc', searchFields: 'id,departNameAbbr,orgCode'
+          status: '1',
+          orgCategory: '2',
+          column: 'id',
+          order: 'asc',
+          searchFields: 'id,departNameAbbr,orgCode',
         },
         columns: [
           {
@@ -439,11 +446,16 @@ export const formSchema: FormSchema[] = [
         isShowNum: true,
         rowKey: 'id',
         labelKey: ['departNameAbbr'],
+        linkmap: [
+          {
+            orgCode: 'stockDeptNumber',
+          },
+        ],
         // pageSize: 10,
         multi: false,
         maxTagCount: 2,
         placeholder: '请输入',
-        getPopupContainer: (node) => document.body,
+        getPopupContainer: () => document.body,
         // queryBefore: (params) => {
         //   params.status = "1";
         //   params.orgCategory = "2";
@@ -451,9 +463,16 @@ export const formSchema: FormSchema[] = [
         // }
       };
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请选择收料组织!' }];
     },
+  },
+  {
+    label: '收料部门编码',
+    field: 'stockDeptNumber',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: false,
   },
   {
     label: '收料员',
@@ -461,16 +480,16 @@ export const formSchema: FormSchema[] = [
     component: 'InputNumber',
     defaultValue: useUserStore().getUserInfo.username,
     dynamicDisabled: true,
-    ifShow: true,
+    show: true,
   },
-  // {
-  //   label: '收料员的 id',
-  //   field: 'stockEmpId',
-  //   component: 'InputNumber',
-  //   defaultValue: useUserStore().getUserInfo.userId,
-  //   dynamicDisabled: true,
-  //   ifShow: false,
-  // },
+  {
+    label: '收料员的 id',
+    field: 'stockEmpId',
+    component: 'InputNumber',
+    defaultValue: useUserStore().getUserInfo.id,
+    dynamicDisabled: true,
+    show: false,
+  },
   {
     label: '仓库',
     // field: 'wksId',
@@ -483,7 +502,7 @@ export const formSchema: FormSchema[] = [
         getFieldsValue: getFieldsValue,
         methods: 'get',
         url: '/basic/wareHouse/list',
-        params: { column: 'id', order: 'asc', searchFields: 'id,name', /** code: '${code}' */},
+        params: { column: 'id', order: 'asc', searchFields: 'id,name,code' /** code: '${code}' */ },
         columns: [
           {
             name: '仓库编码',
@@ -497,19 +516,31 @@ export const formSchema: FormSchema[] = [
         isShowNum: false,
         rowKey: 'id',
         labelKey: ['name'],
+        linkmap: [
+          {
+            code: 'warehouseNumber',
+          },
+        ],
         pageSize: 10,
         multi: false,
         maxTagCount: 2,
         placeholder: '请选择仓库',
         // 启用滚动分页
         scroll: {
-          pageSize: 10
-        }
+          pageSize: 10,
+        },
       };
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请选择仓库!' }];
     },
+  },
+  {
+    label: '仓库编码',
+    field: 'warehouseNumber',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: false,
   },
   {
     label: '采购组织',
@@ -522,7 +553,7 @@ export const formSchema: FormSchema[] = [
         getFieldsValue: getFieldsValue,
         method: 'get',
         url: '/basic/basOrganization/list',
-        params: { column: 'id', order: 'asc', searchFields: 'id,name,number'  },
+        params: { column: 'id', order: 'asc', searchFields: 'id,name,number' },
         columns: [
           {
             name: '名称',
@@ -532,51 +563,29 @@ export const formSchema: FormSchema[] = [
         isShowNum: false,
         rowKey: 'id',
         labelKey: ['name'],
+        linkmap: [
+          {
+            number: 'purchaseOrgNumber',
+          },
+        ], //关联字段
         // pageSize: 10,
         multi: false,
         maxTagCount: 2,
         placeholder: '请输入',
-        getPopupContainer: (node) => document.body,
+        getPopupContainer: () => document.body,
       };
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请选择采购组织!' }];
     },
   },
-  // {
-  //   // 预送货单只有采购单号、采购组织，没有采购部门
-  //   label: '采购部门',
-  //   field: 'stockOrgId',
-  //   component: 'JSearchSelectCustom',
-  //   componentProps: ({ formActionType }) => {
-  //     const { setFieldsValue, getFieldsValue } = formActionType;
-  //     return {
-  //       setFieldsValue: setFieldsValue,
-  //       getFieldsValue: getFieldsValue,
-  //       method: 'get',
-  //       url: '/basic/basDept/list',
-  //       params: { column: 'id', order: 'asc', searchFields: 'id,name,number'  },
-  //       columns: [
-  //         {
-  //           name: '名称',
-  //           code: 'name',
-  //         },
-  //       ],
-  //       isShowNum: false,
-  //       rowKey: 'number',
-  //       labelKey: ['name'],
-  //       // pageSize: 10,
-  //       multi: false,
-  //       maxTagCount: 2,
-  //       placeholder: '请输入',
-  //       getPopupContainer: (node) => document.body,
-  //     };
-  //   },
-  //   dynamicRules: ({ model, schema }) => {
-  //     return [{ required: true, message: '请选择收料组织!' }];
-  //   },
-  // },
-
+  {
+    label: '采购组织编码',
+    field: 'purchaseOrgNumber',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: false,
+  },
   {
     label: '供应商',
     field: 'supplierId',
@@ -597,29 +606,42 @@ export const formSchema: FormSchema[] = [
           },
         ],
         isShowNum: false,
-        rowKey: 'number',
+        rowKey: 'code',
         labelKey: ['name'],
+        linkmap: [
+          {
+            code: 'supplierNumber',
+          },
+        ],
         // pageSize: 10,
         multi: false,
         maxTagCount: 2,
         placeholder: '请输入',
-        getPopupContainer: (node) => document.body,
+        getPopupContainer: () => document.body,
       };
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请选择供应商!' }];
     },
+  },
+  {
+    label: '供应商编码',
+    field: 'supplierNumber',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: true,
   },
   {
     label: '入库时间',
     field: 'inStockTime',
     component: 'DatePicker',
+    defaultValue: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
     componentProps: {
       showTime: true,
       valueFormat: 'YYYY-MM-DD HH:mm:ss',
-      getPopupContainer: (node) => document.body,
+      getPopupContainer: () => document.body,
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请选择生产日期!' }];
     },
   },
@@ -628,86 +650,6 @@ export const formSchema: FormSchema[] = [
     field: 'materialDesc',
     component: 'InputTextArea',
   },
-
-  // {
-  //   label: '批次号',
-  //   field: 'batchNo',
-  //   component: 'Input',
-  // },
-  // {
-  //   label: '库位',
-  //   field: 'whBinId',
-  //   component: 'JSearchSelectCustom',
-  //   componentProps: ({ formActionType }) => {
-  //     const { setFieldsValue, getFieldsValue } = formActionType;
-  //
-  //     return {
-  //       setFieldsValue: setFieldsValue,
-  //       getFieldsValue: getFieldsValue,
-  //       method: 'get',
-  //       url: '/warehousearea/basWarehouseBin/list',
-  //       params: { column: 'code', order: 'asc', searchFields: 'code,name,whQuery' /*, code: '${code}'*/ },
-  //       columns: [
-  //         {
-  //           name: '编码',
-  //           code: 'code',
-  //         },
-  //         {
-  //           name: '名称',
-  //           code: 'name',
-  //         },
-  //       ],
-  //       isShowNum: false,
-  //       rowKey: 'id',
-  //       labelKey: ['name'],
-  //       //pageSize: 10,
-  //       multi: false,
-  //       maxTagCount: 2,
-  //       placeholder: '请输入',
-  //       queryBefore: function (currentParams) {
-  //         currentParams.whQuery = 'waitInsp';
-  //         return currentParams;
-  //       },
-  //       getPopupContainer: (node) => document.body,
-  //     };
-  //   },
-  //   dynamicRules: ({ model, schema }) => {
-  //     return [{ required: true, message: '请选择库位!' }];
-  //   },
-  // },
-  // {
-  //   label: '入库时间',
-  //   field: 'inStockTime',
-  //   component: 'DatePicker',
-  //   // 如果这个工具函数能返回当天日期
-  //   defaultValue: dayjs().format('YYYY-MM-DD  HH:mm:ss'), // 需要先引入 dayjs
-  //   //defaultValue: new Date().toISOString().split('T')[0], // YYYY-MM-DD 格式
-  //   componentProps: {
-  //     format: 'YYYY-MM-DD  HH:mm:ss',
-  //     valueFormat: 'YYYY-MM-DD  HH:mm:ss',
-  //     placeholder: '请选择日期', // 添加占位符
-  //     getPopupContainer: (node) => document.body, // 确保弹出层正确显示
-  //   },
-  // },
-  // {
-  //   label: '物料成本',
-  //   field: 'materialCost',
-  //   component: 'InputNumber',
-  //   defaultValue: 0,
-  // },
-
-  // {
-  //   label: '附件',
-  //   field: 'attachments',
-  //   component: 'JUpload',
-  // },
-  // TODO 主键隐藏字段，目前写死为ID
-  // {
-  //   label: '',
-  //   field: 'id',
-  //   component: 'Input',
-  //   show: false,
-  // },
 ];
 
 //退货
@@ -746,10 +688,10 @@ export const returnFormSchema: FormSchema[] = [
           //currentParams.whQuery = 'waitInsp';
           return currentParams;
         },
-        getPopupContainer: (node) => document.body,
+        getPopupContainer: () => document.body,
       };
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请选择库位!' }];
     },
   },
@@ -767,7 +709,7 @@ export const stockFormSchema: FormSchema[] = [
     label: '流转卡号',
     field: 'code',
     component: 'Input',
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请输入或扫描流转卡号信息!' }];
     },
   },
@@ -775,7 +717,7 @@ export const stockFormSchema: FormSchema[] = [
     label: '入库数量',
     field: 'inQty',
     component: 'InputNumber',
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请输入数量!' }];
     },
   },
@@ -813,10 +755,10 @@ export const stockFormSchema: FormSchema[] = [
           //currentParams.whQuery = 'waitInsp';
           return currentParams;
         },
-        getPopupContainer: (node) => document.body,
+        getPopupContainer: () => document.body,
       };
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请选择库位!' }];
     },
   },
