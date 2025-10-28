@@ -1,5 +1,5 @@
 <script setup lang="ts" name="mo-PicklingStopwork">
-import { getFormSchema ,getDetailJVxeColumns,formSchema} from './PicklingStopwork.ts';
+import { getFormSchema ,getDetailJVxeColumns,formSchema,printFormSchema} from './PicklingStopwork.ts';
 import {BasicForm, useForm} from "@/components/Form";
 import {saveOrUpdate} from "@/views/mes/stopwork/pickling/PicklingStopwork.api";
 import {useMessage} from "@/hooks/web/useMessage";
@@ -8,6 +8,9 @@ import {computed, onMounted, reactive, ref, unref} from "vue";
 import { BasicModal, useModal, useModalInner } from '@/components/Modal';
 import {buildUUID} from "@/utils/uuid";
 import dayjs from "dayjs";
+import {defHttp} from "@/utils/http/axios";
+import {loopPrintJimuReport} from "@/utils";
+import {getToken} from "@/utils/auth";
 // 提示方法声明
 const $message = useMessage();
 // Emits声明
@@ -40,6 +43,15 @@ const [registerExtendedFormModal, { validate: validateExtendedForm, resetFields,
   schemas: formSchema,
   showActionButtonGroup: false,
   disabled: false,
+});
+//注册弹框打印
+const [registerModaldy, { setModalProps, closeModal:closeDyModal, openModal:openDyModal }] = useModal();
+//打印表单配置
+const [registerFormdy] = useForm({
+  labelWidth: 100,
+  schemas: printFormSchema,
+  showActionButtonGroup: false,
+  baseColProps: { span: 24 },
 });
 /*// 酸洗扫码完工提交事件
 async function handleSubmit() {
@@ -172,6 +184,51 @@ onMounted(() => {
     });
   }, 100);
 });
+/**
+ * 新增打印提交
+ */
+async function handleSubmitdy() {
+  setModalProps({ loading: true });
+  let values = await validate();
+  const printPackCodes = [];
+/*  selectedRows.value.map((item) => {
+    if (item.code && item.code != null && item.code != '') {
+      printPackCodes.push(item.code);
+    }
+  });*/
+  try {
+    defHttp
+      .get({
+        url: '/template/basTemplate/getReportIdByIds',
+        params: { ids: values.templateId, type: 'pack_sn' },
+      })
+      .then(async (reportRs) => {
+        setModalProps({ loading: false });
+        // 打印数据集 { reportId, parameters }
+        const printSet: any = {};
+
+        const templateIds = Object.keys(reportRs);
+        for (const templateId of templateIds) {
+          const reportId = reportRs[templateId];
+          printSet[reportId] = { id: `${printPackCodes.join(',')}` };
+        }
+
+        loopPrintJimuReport(printSet, getToken, () => {
+          closeDyModal();
+          $message.createMessage.success('打印成功!');
+        });
+      });
+  } catch (error) {
+    console.log(error);
+  }
+}
+/**
+ * 打印-弹出选择打印模板
+ */
+function handlePrint() {
+  openDyModal(true, {});
+}
+
 </script>
 <template>
   <div class="custom-form-wrapper">
@@ -199,7 +256,10 @@ onMounted(() => {
         </JVxeTable>
         <!-- 将按钮放在表格容器内右下角 -->
         <div class="button-wrapper">
-          <a-button @click="handleSubmit" type="primary">扫码完工</a-button>
+          <div class="button-group">
+            <a-button type="primary" preIcon="ant-design:printer-outlined" @click="handlePrint">打印</a-button>
+            <a-button @click="handleSubmit" type="primary" class="submit-button" style="background-color: red">扫码完工</a-button>
+          </div>
         </div>
       </a-tab-pane>
     </a-tabs>
@@ -215,6 +275,11 @@ onMounted(() => {
       <BasicForm @register="registerExtendedFormModal" ref="extendedFormRef" />
     </BasicModal>
   </div>
+
+  <BasicModal v-bind="$attrs" @register="registerModaldy" destroyOnClose :title="'选择打印标签'" :centered="true" :width="600" @ok="handleSubmitdy">
+    <BasicForm @register="registerFormdy" style="padding: 3%" />
+  </BasicModal>
+
 </template>
 
 <style scoped>
@@ -227,16 +292,22 @@ onMounted(() => {
   overflow: hidden; /* 隐藏溢出内容 */
 }
 
-/* 为表格区域添加滚动条 */
-.tabs-container {
-  height: calc(100% - 100px); /* 减去表单高度 */
-  overflow-y: auto;
-}
-
+/* 修改样式部分 */
 .button-wrapper {
   position: absolute;
   bottom: -40px;
-  right: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.button-group {
+  display: flex;
+  gap: 20px; /* 设置按钮间距离 */
+}
+
+.submit-button {
+  margin-left: 0; /* 覆盖可能存在的默认左边距 */
 }
 </style>
 

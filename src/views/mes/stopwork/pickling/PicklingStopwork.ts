@@ -286,3 +286,34 @@ export function getFormSchema(): FormSchema[] {
   ];
   return retValue;
 }
+
+//打印模板
+export const printFormSchema: FormSchema[] = [
+  {
+    label: '打印模板',
+    field: 'templateId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/template/basTemplate/list',
+        params: { column: 'code', order: 'asc' },
+        columns: [
+          { name: '编码', code: 'code' },
+          { name: '名称', code: 'name' },
+        ],
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        placeholder: '请选择',
+        getPopupContainer: (node) => document.body,
+      };
+    },
+    dynamicRules: ({ model, schema }) => {
+      return [{ required: true, message: '请选择打印模板!' }];
+    },
+  },
+];
