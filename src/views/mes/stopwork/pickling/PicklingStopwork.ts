@@ -84,7 +84,7 @@ export const formSchema: FormSchema[] = [
         getFieldsValue: getFieldsValue,
         method: 'get',
         url: '/basic/wareHouse/list',
-        params: { column: 'createTime', order: 'desc', searchFields: 'id,name', code: '${code}' },
+        params: { column: 'createTime', order: 'desc', searchFields: 'id,name,number', code: '${code}' },
         columns: [
           {
             name: '仓库编码',
@@ -96,7 +96,7 @@ export const formSchema: FormSchema[] = [
           },
         ],
         isShowNum: false,
-        rowKey: 'name',
+        rowKey: 'number',
         labelKey: ['name'],
         linkmap: [
           {
@@ -118,7 +118,7 @@ export const formSchema: FormSchema[] = [
 
 //酸洗扫码完工页面表单配置
 export function getFormSchema(): FormSchema[] {
-  const retValue = [
+  return [
     {
       label: '钢卷号',
       field: 'flowCardId',
@@ -130,7 +130,7 @@ export function getFormSchema(): FormSchema[] {
           getFieldsValue: getFieldsValue,
           method: 'get',
           //url: '/mes/picking/list',
-          url: '/mes/picking/end/list',
+          url: '/etl/picking/end/list',
           params: { column: 'createTime', order: 'desc', searchFields: 'id,steelId', steelId: '${steelId}' },
           columns: [
             {
@@ -244,9 +244,9 @@ export function getFormSchema(): FormSchema[] {
       componentProps: {
         showTime: true,
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
-        getPopupContainer: (node) => document.body
+        getPopupContainer: () => document.body
       },
-      dynamicRules: ({ model, schema, values }) => {
+      dynamicRules: ({ model}) => {
         if (model.planStartTime) planStartTime.value = model.planStartTime;
         else planStartTime.value = null;
         return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];
@@ -284,5 +284,5 @@ export function getFormSchema(): FormSchema[] {
       }
     },
   ];
-  return retValue;
+  // return retValue;
 }

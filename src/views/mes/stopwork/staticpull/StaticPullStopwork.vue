@@ -1,5 +1,5 @@
 <script setup lang="ts" name="mo-StaticPullStopwork">
-import { getFormSchema ,getDetailJVxeColumns,formSchema} from './StaticPullStopwork.ts';
+import getFormSchema, { getDetailJVxeColumns,formSchema} from './StaticPullStopwork.ts';
 import {BasicForm, useForm} from "@/components/Form";
 import {saveOrUpdate} from "@/views/mes/stopwork/staticpull/StaticPullStopwork.api";
 import {useMessage} from "@/hooks/web/useMessage";

@@ -1,6 +1,5 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
-import { rules } from '/@/utils/helper/validator';
 import { render } from '/@/utils/common/renderUtils';
 import { JVxeTypes, JVxeColumn } from '/@/components/jeecg/JVxeTable/types';
 //列表数据
@@ -195,7 +194,7 @@ export const formSchema: FormSchema[] = [
         placeholder: '请选择',
       };
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请选择物料组!' }];
     },
   },
@@ -203,7 +202,7 @@ export const formSchema: FormSchema[] = [
     label: '物料编码',
     field: 'code',
     component: 'Input',
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请输入料号!' }];
     },
   },
@@ -222,7 +221,7 @@ export const formSchema: FormSchema[] = [
     field: 'version',
     defaultValue: 'A0',
     component: 'Input',
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请输入版本!' }];
     },
   },
@@ -230,7 +229,7 @@ export const formSchema: FormSchema[] = [
     label: '名称',
     field: 'name',
     component: 'InputTextArea',
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请输入名称!' }];
     },
   },
@@ -252,7 +251,7 @@ export const formSchema: FormSchema[] = [
     componentProps: {
       dictCode: 'is_open',
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请输入是否默认!' }];
     },
   },
@@ -264,7 +263,7 @@ export const formSchema: FormSchema[] = [
     componentProps: {
       dictCode: 'is_open',
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: false, message: '请输入是否关键物料!' }];
     },
   },
@@ -276,7 +275,7 @@ export const formSchema: FormSchema[] = [
     componentProps: {
       dictCode: 'is_open',
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: false, message: '请输入是否虚拟料!' }];
     },
   },
@@ -288,7 +287,7 @@ export const formSchema: FormSchema[] = [
     componentProps: {
       dictCode: 'prod_status',
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请输入状态!' }];
     },
   },
@@ -370,10 +369,10 @@ export const formSchema: FormSchema[] = [
         //pageSize: 10,
         //multi: true,
         //maxTagCount: 2,
-        getPopupContainer: (node) => document.body,
+        getPopupContainer: () => document.body,
       };
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请选择单位!' }];
     },
   },
