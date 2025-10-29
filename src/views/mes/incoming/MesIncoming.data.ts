@@ -10,12 +10,7 @@ export const columns: BasicColumn[] = [
   {
     title: '钢卷号',
     align: 'center',
-    dataIndex: 'originalCoilNumber',
-  },
-  {
-    title: '物料编码',
-    align: 'center',
-    dataIndex: 'materialId',
+    dataIndex: 'internalCoilNumber',
   },
   {
     title: '物料名称',
@@ -23,14 +18,9 @@ export const columns: BasicColumn[] = [
     dataIndex: 'materialName',
   },
   {
-    title: '物料说明',
+    title: '物料编码',
     align: 'center',
-    dataIndex: 'prodName',
-  },
-  {
-    title: '规格',
-    align: 'center',
-    dataIndex: 'inQty',
+    dataIndex: 'materialNumber',
   },
   {
     title: '规格型号',
@@ -40,22 +30,27 @@ export const columns: BasicColumn[] = [
   {
     title: '重量',
     align: 'center',
-    dataIndex: 'expectedWeight',
+    dataIndex: 'weight',
   },
   {
-    title: '车牌号',
+    title: '单位',
     align: 'center',
-    dataIndex: 'purchaseCode',
+    dataIndex: 'baseUnitId_dictText',
   },
   {
     title: '供应商',
     align: 'center',
-    dataIndex: 'supplierId',
+    dataIndex: 'supplierId_dictText',
+  },
+  {
+    title: '车牌号',
+    align: 'center',
+    dataIndex: 'licensePlateNumber',
   },
   {
     title: '备注',
     align: 'center',
-    dataIndex: 'note',
+    dataIndex: 'materialDesc',
   },
   /*{
     title: '状态',
@@ -100,141 +95,10 @@ export const columns: BasicColumn[] = [
     slots: { customRender: 'fileSlot' },
   },*/
 ];
-//查询数据-来料单查询条件
-export const searchFormSchema: FormSchema[] =
-[
-  {
-    label: '钢卷号',
-    field: 'coilNo',
-    component: 'JInput',
-  },
-  {
-    label: '供应商',
-    // field: 'wksId',
-    field: 'supplierId',
-    component: 'JSearchSelectCustom',
-    componentProps: ({ formActionType }) => {
-      const { setFieldsValue, getFieldsValue } = formActionType;
-      return {
-        setFieldsValue: setFieldsValue,
-        getFieldsValue: getFieldsValue,
-        methods: 'get',
-        url: '/basic/basSupplier/getAllSupplier',
-        //url: '/workshop/basWorkShop/list',
-        params: { column: 'createTime', order: 'desc', searchFields: 'id,name', code: '${code}'},
-        columns: [
-          {
-            name: '编码',
-            code: 'id',
-          },
-          {
-            name: '供应商名称',
-            code: 'name',
-          },
-        ],
-        isShowNum: false,
-        rowKey: 'id',
-        labelKey: ['name'],
-        // pageSize: 10,
-        multi: true,
-        maxTagCount: 2,
-        placeholder: '请选择',
-        // 启用滚动分页
-       /* scroll: {
-          pageSize: 10
-        }*/
-      };
-    },
-  },
-  // {
-  //   label: '入库时间',
-  //   field: 'inStockTime',
-  //   component: 'DatePicker',
-  //   // 如果这个工具函数能返回当天日期
-  //   // defaultValue: dayjs().format('YYYY-MM-DD'), // 需要先引入 dayjs
-  //   //defaultValue: new Date().toISOString().split('T')[0], // YYYY-MM-DD 格式
-  //   componentProps: {
-  //     format: 'YYYY-MM-DD',
-  //     valueFormat: 'YYYY-MM-DD',
-  //     placeholder: '请选择日期', // 添加占位符
-  //     getPopupContainer: (node) => document.body, // 确保弹出层正确显示
-  //   },
-  // },
-  // {
-  //   label: '入库时间（范围）',
-  //   field: 'createTime',
-  //   component: 'RangePicker',
-  //   colProps: { span: 10 },
-  //   defaultValue: [dayjs().subtract(0, 'day').startOf('day').format("YYYY-MM-DD HH:mm:ss"), dayjs().endOf('day').format("YYYY-MM-DD HH:mm:ss")],
-  //   componentProps: {
-  //     showTime: true,
-  //     format: 'YYYY-MM-DD HH:mm:ss',
-  //     placeholder: ['请选择开始时间', '请选择结束时间'],
-  //     // 传给后端的时间格式
-  //     valueFormat: "YYYY-MM-DD HH:mm:ss",
-  //     getPopupContainer: () => document.body,
-  //   },
-  // },
-  // {
-  //   label: '车牌号',
-  //   field: 'licensePlateNumber',
-  //   component: 'JInput',
-  // },
-  // {
-  //   label: '仓库',
-  //   // field: 'wksId',
-  //   field: 'warehouseId',
-  //   component: 'JSearchSelectCustom',
-  //   componentProps: ({ formActionType }) => {
-  //     const { setFieldsValue, getFieldsValue } = formActionType;
-  //     return {
-  //       setFieldsValue: setFieldsValue,
-  //       getFieldsValue: getFieldsValue,
-  //       methods: 'get',
-  //       url: '/basic/wareHouse/list',
-  //       params: { column: 'createTime', order: 'desc', searchFields: 'id,name', /** code: '${code}' */},
-  //       columns: [
-  //         {
-  //           name: '仓库编码',
-  //           code: 'id',
-  //         },
-  //         {
-  //           name: '仓库名称',
-  //           code: 'name',
-  //         },
-  //       ],
-  //       isShowNum: false,
-  //       rowKey: 'id',
-  //       labelKey: ['name'],
-  //       //pageSize: 10,
-  //       multi: true,
-  //       maxTagCount: 2,
-  //       placeholder: '请选择',
-  //       // // 启用滚动分页
-  //       // scroll: {
-  //       //   pageSize: 10
-  //       // }
-  //     };
-  //   },
-  // },
-  // {
-  //   label: '备注',
-  //   field: 'note',
-  //   component: 'JInput',
-  // },
-];
 
 // 新增页面的表单数据
 export const formSchema: FormSchema[] = [
-  // {
-  //   label: '来料单号',
-  //   field: 'code',
-  //   component: 'Input',
-  //   dynamicDisabled: true,
-  //   ifShow: ({ values }) => {
-  //     return !!values.id;
-  //   },
-  // },
+
   // {
   //   label: '二维码解析',
   //   field: 'qrCode',
@@ -566,20 +430,20 @@ export const formSchema: FormSchema[] = [
   // },
   {
     label: '收料员',
-    field: 'stockEmpNumber',
-    component: 'InputNumber',
+    field: 'operatorNumber',
+    component: 'Input',
     defaultValue: useUserStore().getUserInfo.username,
     dynamicDisabled: true,
     show: true,
   },
-  {
-    label: '收料员的 id',
-    field: 'stockEmpId',
-    component: 'InputNumber',
-    defaultValue: useUserStore().getUserInfo.id,
-    dynamicDisabled: true,
-    show: false,
-  },
+  // {
+  //   label: '收料员的 id',
+  //   field: 'stockEmpId',
+  //   component: 'InputNumber',
+  //   defaultValue: useUserStore().getUserInfo.id,
+  //   dynamicDisabled: true,
+  //   show: false,
+  // },
   // {
   //   label: '仓库',
   //   // field: 'wksId',
@@ -749,6 +613,133 @@ export const formSchema: FormSchema[] = [
   }
 ];
 
+
+//查询数据-来料单查询条件
+export const searchFormSchema: FormSchema[] =
+[
+  {
+    label: '钢卷号',
+    field: 'coilNo',
+    component: 'JInput',
+  },
+  {
+    label: '供应商',
+    // field: 'wksId',
+    field: 'supplierId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        methods: 'get',
+        url: '/basic/basSupplier/getAllSupplier',
+        //url: '/workshop/basWorkShop/list',
+        params: { column: 'createTime', order: 'desc', searchFields: 'id,name', code: '${code}'},
+        columns: [
+          {
+            name: '编码',
+            code: 'id',
+          },
+          {
+            name: '供应商名称',
+            code: 'name',
+          },
+        ],
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        // pageSize: 10,
+        multi: true,
+        maxTagCount: 2,
+        placeholder: '请选择',
+        // 启用滚动分页
+       /* scroll: {
+          pageSize: 10
+        }*/
+      };
+    },
+  },
+  {
+    label: '入库时间',
+    field: 'inStockTime',
+    component: 'DatePicker',
+    // 如果这个工具函数能返回当天日期
+    // defaultValue: dayjs().format('YYYY-MM-DD'), // 需要先引入 dayjs
+    //defaultValue: new Date().toISOString().split('T')[0], // YYYY-MM-DD 格式
+    componentProps: {
+      format: 'YYYY-MM-DD',
+      valueFormat: 'YYYY-MM-DD',
+      placeholder: '请选择日期', // 添加占位符
+      getPopupContainer: () => document.body, // 确保弹出层正确显示
+    },
+  },
+  // {
+  //   label: '入库时间（范围）',
+  //   field: 'createTime',
+  //   component: 'RangePicker',
+  //   colProps: { span: 10 },
+  //   defaultValue: [dayjs().subtract(0, 'day').startOf('day').format("YYYY-MM-DD HH:mm:ss"), dayjs().endOf('day').format("YYYY-MM-DD HH:mm:ss")],
+  //   componentProps: {
+  //     showTime: true,
+  //     format: 'YYYY-MM-DD HH:mm:ss',
+  //     placeholder: ['请选择开始时间', '请选择结束时间'],
+  //     // 传给后端的时间格式
+  //     valueFormat: "YYYY-MM-DD HH:mm:ss",
+  //     getPopupContainer: () => document.body,
+  //   },
+  // },
+  {
+    label: '车牌号',
+    field: 'licensePlateNumber',
+    component: 'JInput',
+  },
+  // {
+  //   label: '仓库',
+  //   // field: 'wksId',
+  //   field: 'warehouseId',
+  //   component: 'JSearchSelectCustom',
+  //   componentProps: ({ formActionType }) => {
+  //     const { setFieldsValue, getFieldsValue } = formActionType;
+  //     return {
+  //       setFieldsValue: setFieldsValue,
+  //       getFieldsValue: getFieldsValue,
+  //       methods: 'get',
+  //       url: '/basic/wareHouse/list',
+  //       params: { column: 'createTime', order: 'desc', searchFields: 'id,name', /** code: '${code}' */},
+  //       columns: [
+  //         {
+  //           name: '仓库编码',
+  //           code: 'id',
+  //         },
+  //         {
+  //           name: '仓库名称',
+  //           code: 'name',
+  //         },
+  //       ],
+  //       isShowNum: false,
+  //       rowKey: 'id',
+  //       labelKey: ['name'],
+  //       //pageSize: 10,
+  //       multi: true,
+  //       maxTagCount: 2,
+  //       placeholder: '请选择',
+  //       // // 启用滚动分页
+  //       // scroll: {
+  //       //   pageSize: 10
+  //       // }
+  //     };
+  //   },
+  // },
+  {
+    label: '备注',
+    field: 'note',
+    component: 'JInput',
+  },
+];
+
+
+
 //退货
 export const returnFormSchema: FormSchema[] = [
   {
@@ -886,11 +877,7 @@ export const superQuerySchema = {
   attachments: { title: '附件', order: 14, view: 'text', type: 'string' },
 }
 
-/**
- * 流程表单调用这个方法获取formSchema
- * @param param
- */
-export function getBpmFormSchema(_formData): FormSchema[] {
+export function getBpmFormSchema(): FormSchema[] {
   // 默认和原始表单保持一致 如果流程中配置了权限数据，这里需要单独处理formSchema
   return formSchema;
 }
