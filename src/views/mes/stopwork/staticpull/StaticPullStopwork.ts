@@ -117,7 +117,71 @@ export const formSchema: FormSchema[] = [
 ];
 
 //精拉扫码完工页面表单配置
-export function getFormSchema(): FormSchema[] {
+function getFormSchema(): ({
+  label: string;
+  field: string;
+  component: string;
+  componentProps: ({ formActionType }: { formActionType: any }) => {
+    setFieldsValue: any;
+    getFieldsValue: any;
+    method: string;
+    url: string;
+    params: { column: string; order: string; searchFields: string; steelId: string };
+    columns: { name: string; code: string }[];
+    isShowNum: boolean;
+    rowKey: string;
+    labelKey: string[];
+    placeholder: string;
+    linkmap: { materialId: string; modelNumber: string; exceptedWeight: string; actualWeight: string }[]
+  }
+} | { label: string; field: string; component: string; dynamicDisabled: boolean } | {
+  label: string;
+  field: string;
+  component: string;
+  componentProps: ({ formActionType }: { formActionType: any }) => {
+    setFieldsValue: any;
+    getFieldsValue: any;
+    method: string;
+    url: string;
+    params: { column: string; order: string; searchFields: string };
+    columns: ({ name: string; code: string } | { name: string; code: string })[];
+    isShowNum: boolean;
+    rowKey: string;
+    labelKey: string[];
+    placeholder: string
+  }
+} | {
+  label: string;
+  field: string;
+  component: string;
+  dynamicDefaultValue: () => string;
+  componentProps: { showTime: boolean; valueFormat: string; getPopupContainer: (node) => HTMLElement };
+  dynamicRules: ({ model, schema, values }: { model: any; schema: any; values: any }) => [{
+    required: boolean;
+    message: string
+  }, { required: any; validator: (_, value) => (Promise<never>); trigger: string }]
+} | {
+  label: string;
+  field: string;
+  component: string;
+  dynamicDisabled: boolean;
+  componentProps: { style: { width: string } }
+} | {
+  label: string;
+  field: string;
+  component: string;
+  defaultValue: string;
+  dynamicDisabled: boolean;
+  componentProps: { style: { width: string } }
+} | {
+  label: string;
+  field: string;
+  component: string;
+  defaultValue: string;
+  dynamicDisabled: boolean;
+  show: boolean;
+  componentProps: { style: { width: string } }
+})[] {
   const retValue = [
     {
       label: '钢卷号',
@@ -236,9 +300,9 @@ export function getFormSchema(): FormSchema[] {
       componentProps: {
         showTime: true,
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
-        getPopupContainer: (node) => document.body
+        getPopupContainer: () => document.body
       },
-      dynamicRules: ({ model, schema, values }) => {
+      dynamicRules: ({ model}) => {
         if (model.planStartTime) planStartTime.value = model.planStartTime;
         else planStartTime.value = null;
         return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];
@@ -278,3 +342,5 @@ export function getFormSchema(): FormSchema[] {
   ];
   return retValue;
 }
+
+export default getFormSchema;

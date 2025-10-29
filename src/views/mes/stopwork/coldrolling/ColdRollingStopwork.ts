@@ -262,6 +262,11 @@ export function getFormSchema(): FormSchema[] {
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
         getPopupContainer: (node) => document.body
       },
+      dynamicRules: ({ model, schema, values }) => {
+        if (model.planStartTime) planStartTime.value = model.planStartTime;
+        else planStartTime.value = null;
+        return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];
+      },
     },
     {
       label: '重量',
