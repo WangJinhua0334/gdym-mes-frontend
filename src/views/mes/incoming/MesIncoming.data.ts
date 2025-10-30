@@ -591,7 +591,7 @@ export const searchFormSchema: FormSchema[] =
     label: '入库时间',
     field: 'prodTimeRange',
     component: 'RangePicker',
-    colProps: { span: 10 },
+    // colProps: { span: 10 },
     defaultValue: [dayjs().subtract(0, 'day').startOf('day').format("YYYY-MM-DD HH:mm:ss"), dayjs().endOf('day').format("YYYY-MM-DD HH:mm:ss")],
     componentProps: {
       showTime: true,

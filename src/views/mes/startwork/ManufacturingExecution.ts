@@ -183,8 +183,11 @@ export function getFormSchema(): FormSchema[] {
       label: '实际重量',
       field: 'weight',
       component: 'InputNumber',
+      // defaultValue: 0.00,
       componentProps: {
-        style: { width: '100%' }
+        style: { width: '100%' },
+        precision: 2,        // 设置小数点后两位
+        step: 0.01,          // 设置步进值为0.01
       }
     },
     {
