@@ -639,11 +639,11 @@ export const searchFormSchema: FormSchema[] =
   //     };
   //   },
   // },
-  {
-    label: '备注',
-    field: 'note',
-    component: 'JInput',
-  },
+  // {
+  //   label: '备注',
+  //   field: 'note',
+  //   component: 'JInput',
+  // },
 ];
 
 
