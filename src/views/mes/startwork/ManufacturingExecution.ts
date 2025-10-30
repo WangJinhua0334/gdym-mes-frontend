@@ -21,7 +21,7 @@ export function getFormSchema(): FormSchema[] {
           url: '/etl/picking/start/list',  // 返回的是流转卡记录
           params: {
             column: 'createTime',
-            order: 'desc',
+            order: 'asc',
             searchFields: 'id',
             // steelId: '${steelId}'
           },

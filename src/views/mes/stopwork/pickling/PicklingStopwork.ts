@@ -18,7 +18,7 @@ export const getDetailJVxeColumns = function () {
       title: '重量',
       key: 'weight',
       type: JVxeTypes.input,
-      disabled: true,   // 禁止编辑
+      disabled: false,   // 禁止编辑
     },
     /**
      * 流转去向: 1入库、2退料
@@ -28,21 +28,28 @@ export const getDetailJVxeColumns = function () {
       key: 'destination',
       type: JVxeTypes.select,// 使用 select 类型
       dictCode: 'gxlzqx',// 指定字典编码
-      disabled: true,   // 禁止编辑
+      disabled: false,   // 禁止编辑
     },
     {
-      title: '仓库Id',
-      key: 'warehouseId',
-      type: JVxeTypes.input,
-      disabled: true,   // 禁止编辑
-      visible: false,   // 设置为隐藏状态，只能通过程序设置
+      title: '质量汇报',
+      key: 'qualityReport',
+      type: JVxeTypes.textarea, // 文本框
+      disabled: false,   // 禁止编辑
     },
-    {
-      title: '仓库名称',
-      key: 'warehouseName',
-      type: JVxeTypes.input,
-      disabled: true,   // 禁止编辑
-    },
+    // {
+    //   title: '仓库Id',
+    //   key: 'warehouseId',
+    //   type: JVxeTypes.input,
+    //   disabled: false,   // 禁止编辑
+    //   visible: false,   // 设置为隐藏状态，只能通过程序设置
+    // },
+    // {
+    //   title: '仓库名称',
+    //   key: 'warehouseName',
+    //   type: JVxeTypes.input,
+    //   disabled: false,   // 禁止编辑
+    //   visible: false,   // 设置为隐藏状态，只能通过程序设置
+    // },
   );
   return arr;
 };
@@ -68,52 +75,57 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
-    label: '仓库 Id',
-    field: 'warehouseId',
-    component: 'Input',
-    show: false,//禁止显示
-  },
-  {
-    label: '仓库',
-    field: 'warehouseName',
-    component: 'JSearchSelectCustom',
-    componentProps: ({ formActionType }) => {
-      const { setFieldsValue, getFieldsValue } = formActionType;
-      return {
-        setFieldsValue: setFieldsValue,
-        getFieldsValue: getFieldsValue,
-        method: 'get',
-        url: '/basic/wareHouse/list',
-        params: { column: 'createTime', order: 'desc', searchFields: 'id,name,number', code: '${code}' },
-        columns: [
-          {
-            name: '仓库编码',
-            code: 'id',
-          },
-          {
-            name: '仓库名称',
-            code: 'name',
-          },
-        ],
-        isShowNum: false,
-        rowKey: 'number',
-        labelKey: ['name'],
-        linkmap: [
-          {
-            id:'warehouseId', //物料编码
-          },
-        ],
-        //pageSize: 10,
-        multi: false,
-        maxTagCount: 2,
-        placeholder: '请选择',
-        // 启用滚动分页
-        scroll: {
-          pageSize: 10
-        },
-      };
-    },
-  },
+    label: '质量汇报',
+    field: 'qualityReport',
+    component: 'InputTextArea',
+  }
+  // {
+  //   label: '仓库 Id',
+  //   field: 'warehouseId',
+  //   component: 'Input',
+  //   show: false,//禁止显示
+  // },
+  // {
+  //   label: '仓库',
+  //   field: 'warehouseName',
+  //   component: 'JSearchSelectCustom',
+  //   componentProps: ({ formActionType }) => {
+  //     const { setFieldsValue, getFieldsValue } = formActionType;
+  //     return {
+  //       setFieldsValue: setFieldsValue,
+  //       getFieldsValue: getFieldsValue,
+  //       method: 'get',
+  //       url: '/basic/wareHouse/list',
+  //       params: { column: 'createTime', order: 'desc', searchFields: 'id,name,number', code: '${code}' },
+  //       columns: [
+  //         {
+  //           name: '仓库编码',
+  //           code: 'id',
+  //         },
+  //         {
+  //           name: '仓库名称',
+  //           code: 'name',
+  //         },
+  //       ],
+  //       isShowNum: false,
+  //       rowKey: 'number',
+  //       labelKey: ['name'],
+  //       linkmap: [
+  //         {
+  //           id:'warehouseId', //物料编码
+  //         },
+  //       ],
+  //       //pageSize: 10,
+  //       multi: false,
+  //       maxTagCount: 2,
+  //       placeholder: '请选择',
+  //       // 启用滚动分页
+  //       scroll: {
+  //         pageSize: 10
+  //       },
+  //     };
+  //   },
+  // },
 ];
 
 //酸洗扫码完工页面表单配置
@@ -131,7 +143,12 @@ export function getFormSchema(): FormSchema[] {
           method: 'get',
           //url: '/mes/picking/list',
           url: '/etl/picking/end/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'id,steelId', steelId: '${steelId}' },
+          params: {
+            column: 'createTime',
+            order: 'asc',
+            searchFields: '',
+            steelId: '${steelId}'
+          },
           columns: [
             {
               name: '钢卷号',
@@ -186,54 +203,54 @@ export function getFormSchema(): FormSchema[] {
       field: 'plantId',
       component: 'Input',
     },*/
-    {
-      label: '生产车间',
-      field: 'workShopNumber',
-      component: 'JSearchSelectCustom',
-      componentProps: ({ formActionType }) => {
-        const { setFieldsValue, getFieldsValue } = formActionType;
-        return {
-          setFieldsValue: setFieldsValue,
-          getFieldsValue: getFieldsValue,
-          method: 'get',
-          url: '/workshop/basWorkShop/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'id,name,code' },
-          columns: [
-            { name: '编码', code: 'id' },
-            { name: '名称', code: 'name' },
-          ],
-          // 是否显示序号
-          isShowNum: false,
-          rowKey: 'code',
-          labelKey: ['name'],
-          placeholder: '请输入',
-        };
-      },
-    },
-    {
-      label: '生产班组',
-      field: 'workTeamId',
-      component: 'JSearchSelectCustom',
-      componentProps: ({ formActionType }) => {
-        const { setFieldsValue, getFieldsValue } = formActionType;
-        return {
-          setFieldsValue: setFieldsValue,
-          getFieldsValue: getFieldsValue,
-          method: 'get',
-          url: '/basic/basWorkTeam/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'id,name'},
-          columns: [
-            { name: '编码', code: 'id' },
-            { name: '名称', code: 'name' },
-          ],
-          // 是否显示序号
-          isShowNum: false,
-          rowKey: 'id',
-          labelKey: ['name'],
-          placeholder: '请输入',
-        };
-      },
-    },
+    // {
+    //   label: '生产车间',
+    //   field: 'workShopNumber',
+    //   component: 'JSearchSelectCustom',
+    //   componentProps: ({ formActionType }) => {
+    //     const { setFieldsValue, getFieldsValue } = formActionType;
+    //     return {
+    //       setFieldsValue: setFieldsValue,
+    //       getFieldsValue: getFieldsValue,
+    //       method: 'get',
+    //       url: '/workshop/basWorkShop/list',
+    //       params: { column: 'createTime', order: 'desc', searchFields: 'id,name,code' },
+    //       columns: [
+    //         { name: '编码', code: 'id' },
+    //         { name: '名称', code: 'name' },
+    //       ],
+    //       // 是否显示序号
+    //       isShowNum: false,
+    //       rowKey: 'code',
+    //       labelKey: ['name'],
+    //       placeholder: '请输入',
+    //     };
+    //   },
+    // },
+    // {
+    //   label: '生产班组',
+    //   field: 'workTeamId',
+    //   component: 'JSearchSelectCustom',
+    //   componentProps: ({ formActionType }) => {
+    //     const { setFieldsValue, getFieldsValue } = formActionType;
+    //     return {
+    //       setFieldsValue: setFieldsValue,
+    //       getFieldsValue: getFieldsValue,
+    //       method: 'get',
+    //       url: '/basic/basWorkTeam/list',
+    //       params: { column: 'createTime', order: 'desc', searchFields: 'id,name'},
+    //       columns: [
+    //         { name: '编码', code: 'id' },
+    //         { name: '名称', code: 'name' },
+    //       ],
+    //       // 是否显示序号
+    //       isShowNum: false,
+    //       rowKey: 'id',
+    //       labelKey: ['name'],
+    //       placeholder: '请输入',
+    //     };
+    //   },
+    // },
     {
       label: '完工时间',
       field: 'endTime',
@@ -263,7 +280,7 @@ export function getFormSchema(): FormSchema[] {
     },
     {
       label:'操作员',
-      field: 'operatorId',
+      field: 'operatorNumber',
       component:'Input',
       defaultValue:useUserStore().getUserInfo.username,
       dynamicDisabled: true,//禁用
@@ -309,10 +326,10 @@ export const printFormSchema: FormSchema[] = [
         rowKey: 'id',
         labelKey: ['name'],
         placeholder: '请选择',
-        getPopupContainer: (node) => document.body,
+        getPopupContainer: () => document.body,
       };
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请选择打印模板!' }];
     },
   },

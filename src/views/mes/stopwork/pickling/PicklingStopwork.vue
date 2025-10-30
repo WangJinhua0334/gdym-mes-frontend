@@ -38,7 +38,7 @@ const [registerForm,{validate,setFieldsValue,getFieldsValue}] = useForm({
 // 注册弹框
 const [registerModal, { openModal, closeModal }] = useModal();
 //酸洗扫码完工新增引用弹框
-const [registerExtendedFormModal, { validate: validateExtendedForm, resetFields,setFieldsValue: setExtendedFieldsValue, }] = useForm({
+const [registerExtendedFormModal, { validate: validateExtendedForm, resetFields ,setFieldsValue: setExtendedFieldsValue, }] = useForm({
   labelWidth: 160,
   schemas: formSchema,
   showActionButtonGroup: false,
@@ -79,10 +79,11 @@ async function handleSubmit() {
     // 组装完整数据 - 将主表数据和子表数据平级合并
     const submitData = {
       ...mainFormValues,
-      pickingProductInfoList: detailData
+      productInfoList: detailData
     };
     // 调用提交方法
     await requestAddOrEdit(submitData);
+    await handlePrint();
   } catch (error) {
     // 处理验证错误
     console.log('表单验证失败:', error);
@@ -120,7 +121,9 @@ function handleAddDetail() {
   const currentDataSource = mesProductPickDetail.value ? mesProductPickDetail.value.getTableData() : mesProductPickDetailTable.dataSource;
   const currentIndex = Array.isArray(currentDataSource) ? currentDataSource.length + 1 : 1;
   // 拼接新的钢卷号
-  const newCoilNo = `10-${coilNo}-${currentIndex}`;
+  const newCoilNo = currentIndex > 10? `10-${coilNo}-${currentIndex}` : `10-${coilNo}-0${currentIndex}`;
+
+  // const newCoilNo = `10-${coilNo}-${currentIndex}`;
   // 先打开弹框
   openModal(true, {});
   // 延迟设置值，确保弹框已打开并且表单已初始化
@@ -144,10 +147,10 @@ async function handleModalOk() {
       $message.createMessage.warning('请选择流转去向');
       return;
     }
-    if (!values.warehouseId) {
-      $message.createMessage.warning('请选择仓库');
-      return;
-    }
+    // if (!values.warehouseId) {
+    //   $message.createMessage.warning('请选择仓库');
+    //   return;
+    // }
     // 获取字典标签（如果需要显示中文）
     let destinationLabel = values.destination;
     // 如果需要转换为中文标签，可以在这里处理
@@ -157,8 +160,9 @@ async function handleModalOk() {
       newCoilNo: values.newCoilNo || '',   // 钢卷号
       weight: values.weight || '',   // 重量
       destination: destinationLabel || values.destination || '',   // 流转去向
-      warehouseId: values.warehouseId || '',   // 仓库id
-      warehouseName: values.warehouseName || '',   // 仓库名称
+      qualityReport: values.qualityReport || '',   // 质检报告
+      // warehouseId: values.warehouseId || '',   // 仓库id
+      // warehouseName: values.warehouseName || '',   // 仓库名称
     };
     // 添加到表格
     mesProductPickDetail.value.addRows([rowData]);
@@ -184,6 +188,7 @@ onMounted(() => {
     });
   }, 100);
 });
+
 /**
  * 新增打印提交
  */
@@ -191,11 +196,11 @@ async function handleSubmitdy() {
   setModalProps({ loading: true });
   let values = await validate();
   const printPackCodes = [];
-/*  selectedRows.value.map((item) => {
-    if (item.code && item.code != null && item.code != '') {
-      printPackCodes.push(item.code);
-    }
-  });*/
+  /*  selectedRows.value.map((item) => {
+      if (item.code && item.code != null && item.code != '') {
+        printPackCodes.push(item.code);
+      }
+    });*/
   try {
     defHttp
       .get({
@@ -228,7 +233,16 @@ async function handleSubmitdy() {
 function handlePrint() {
   openDyModal(true, {});
 }
+function clearTableDate() {
+   resetFields();
+  // 清空子表数据源
+  mesProductPickDetailTable.dataSource = [];
 
+  // 如果有子表实例，也可以调用其清空方法
+  if (mesProductPickDetail.value) {
+    mesProductPickDetail.value.reload([]);
+  }
+}
 </script>
 <template>
   <div class="custom-form-wrapper">
@@ -257,6 +271,7 @@ function handlePrint() {
         <!-- 将按钮放在表格容器内右下角 -->
         <div class="button-wrapper">
           <div class="button-group">
+            <a-button type="primary" preIcon="ant-design:" @click="clearTableDate">清空数据</a-button>
             <a-button type="primary" preIcon="ant-design:printer-outlined" @click="handlePrint">打印</a-button>
             <a-button @click="handleSubmit" type="primary" class="submit-button" style="background-color: red">扫码完工</a-button>
           </div>
@@ -279,7 +294,6 @@ function handlePrint() {
   <BasicModal v-bind="$attrs" @register="registerModaldy" destroyOnClose :title="'选择打印标签'" :centered="true" :width="600" @ok="handleSubmitdy">
     <BasicForm @register="registerFormdy" style="padding: 3%" />
   </BasicModal>
-
 </template>
 
 <style scoped>
