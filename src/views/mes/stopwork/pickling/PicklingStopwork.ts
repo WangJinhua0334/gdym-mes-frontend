@@ -13,6 +13,7 @@ export const getDetailJVxeColumns = function () {
       title: '钢卷号',
       key: 'newCoilNo',
       type: JVxeTypes.input,
+      disabled: true,   // 禁止编辑
     },
     {
       title: '重量',
@@ -28,7 +29,7 @@ export const getDetailJVxeColumns = function () {
       key: 'destination',
       type: JVxeTypes.select,// 使用 select 类型
       dictCode: 'gxlzqx',// 指定字典编码
-      disabled: false,   // 禁止编辑
+      disabled: true,   // 禁止编辑
     },
     {
       title: '质量汇报',
@@ -146,8 +147,8 @@ export function getFormSchema(): FormSchema[] {
           params: {
             column: 'createTime',
             order: 'asc',
-            searchFields: '',
-            steelId: '${steelId}'
+            searchFields: 'id',
+            // steelId: '${steelId}'
           },
           columns: [
             {
@@ -158,7 +159,7 @@ export function getFormSchema(): FormSchema[] {
           // 是否显示序号
           isShowNum: false,
           rowKey: 'id',
-          labelKey: ['steelId'],
+          labelKey: ['id'],
           placeholder: '请输入',
           linkmap: [
             {
@@ -282,12 +283,28 @@ export function getFormSchema(): FormSchema[] {
       label:'操作员',
       field: 'operatorNumber',
       component:'Input',
-      defaultValue:useUserStore().getUserInfo.username,
+      defaultValue: useUserStore().getUserInfo.username,
       dynamicDisabled: true,//禁用
       //show: false,//默认隐藏
       componentProps: {
         style: { width: '100%' }
-      }
+      },
+      dynamicRules: () => {
+        return [
+          {
+            required: true,
+            message: '操作员信息不能为空，请重新登录或联系管理员!'
+          },
+          {
+            validator: (_, value) => {
+              if (!value || value.trim() === '') {
+                return Promise.reject('操作员信息不能为空，请重新登录或联系管理员!');
+              }
+              return Promise.resolve();
+            }
+          }
+        ];
+      },
     },
     {
       label:'租户 ID',

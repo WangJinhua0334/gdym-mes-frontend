@@ -76,6 +76,21 @@ async function handleSubmit() {
     if (mesProductPickDetail.value) {
       detailData = mesProductPickDetail.value.getTableData();
     }
+    // 判断产出品总重 和领料重量是否一致，如果不相等，则抛出异常
+    // 获取子表中钢卷号的 weight之和（转换为数值类型）
+    const totalWeight = detailData.reduce((acc, cur) => {
+      // 将字符串转换为浮点数进行累加
+      return acc + parseFloat(cur.weight || '0');
+    }, 0);
+
+    // 将主表重量也转换为数值类型进行比较
+    const mainWeight = parseFloat(mainFormValues.weight || '0');
+
+    // 使用适当的精度比较浮点数
+    if (Math.abs(totalWeight - mainWeight) > 0.001) {
+      $message.createMessage.warning('产出品总重和领料重量不一致，请检查！');
+      return;
+    }
     // 组装完整数据 - 将主表数据和子表数据平级合并
     const submitData = {
       ...mainFormValues,
@@ -95,7 +110,22 @@ async function requestAddOrEdit(values) {
     //提交表单
     await saveOrUpdate(values);
     //清空主表数据
-    await resetFields();
+    setFieldsValue({
+      flowCardId: undefined,
+      materialId: undefined,
+      materialNumber: undefined,
+      materialName: undefined,
+      modelNumber: undefined,
+      exceptedWeight: undefined,
+      weight: undefined,
+      limitedProportion: undefined,
+      rangeValue: 3,
+      equipmentId: undefined,
+      equipmentNumber: undefined,
+      // operatorNumber: undefined,
+      // tenantId: undefined,
+      endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), // 或者设置为 undefined
+    });
     //重置子表数据源
     mesProductPickDetailTable.dataSource = [];
     //重置时间字段
@@ -196,16 +226,32 @@ async function handleSubmitdy() {
   setModalProps({ loading: true });
   let values = await validate();
   const printPackCodes = [];
-  /*  selectedRows.value.map((item) => {
+  /*selectedRows.value.map((item) => {
       if (item.code && item.code != null && item.code != '') {
         printPackCodes.push(item.code);
       }
     });*/
+  // 获取选中的行数据
+  if (mesProductPickDetail.value) {
+    const selectedRows = mesProductPickDetail.value.getSelectRows();
+    selectedRows.map((item) => {
+      if (item.newCoilNo && item.newCoilNo != null && item.newCoilNo != '') {
+        printPackCodes.push(item.newCoilNo);
+      }
+    });
+  }
+
+  // 如果没有选中的行，可以添加提示
+  if (printPackCodes.length === 0) {
+    $message.createMessage.warning('请至少选择一条数据进行打印');
+    setModalProps({ loading: false });
+    return;
+  }
   try {
     defHttp
       .get({
         url: '/template/basTemplate/getReportIdByIds',
-        params: { ids: values.templateId, type: 'pack_sn' },
+        params: { ids: values.templateId, type: 'mo_sn' },
       })
       .then(async (reportRs) => {
         setModalProps({ loading: false });
@@ -235,6 +281,22 @@ function handlePrint() {
 }
 function clearTableDate() {
    resetFields();
+  setFieldsValue({
+    flowCardId: undefined,
+    materialId: undefined,
+    materialNumber: undefined,
+    materialName: undefined,
+    modelNumber: undefined,
+    exceptedWeight: undefined,
+    weight: undefined,
+    limitedProportion: undefined,
+    rangeValue: 3,
+    equipmentId: undefined,
+    equipmentNumber: undefined,
+    // operatorNumber: undefined,
+    // tenantId: undefined,
+    endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), // 或者设置为 undefined
+  });
   // 清空子表数据源
   mesProductPickDetailTable.dataSource = [];
 
