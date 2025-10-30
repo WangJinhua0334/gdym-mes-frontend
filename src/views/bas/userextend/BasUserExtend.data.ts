@@ -116,12 +116,12 @@ export const columns: BasicColumn[] = [
 export const searchFormSchema: FormSchema[] = [
   {
     label: '用户账号',
-    field: 'username',
+    field: 'userName',
     component: 'JInput',
   },
   {
     label: '真实姓名',
-    field: 'realname',
+    field: 'realName',
     component: 'JInput',
   },
 ];
@@ -139,15 +139,15 @@ export const formSchema: FormSchema[] = [
         getFieldsValue: getFieldsValue,
         method: 'get',
         url: '/sys/user/list',
-        params: { searchFields: 'username,realname' },
+        params: { searchFields: 'userName,realName' },
         columns: [
           {
             name: '账号',
-            code: 'username',
+            code: 'userName',
           },
           {
             name: '姓名',
-            code: 'realname',
+            code: 'realName',
           },
           {
             name: '工号',
@@ -156,12 +156,12 @@ export const formSchema: FormSchema[] = [
         ],
         isShowNum: false,
         rowKey: 'id',
-        labelKey: ['realname'],
+        labelKey: ['realName'],
         placeholder: '请选择用户',
         multi: false,
         linkmap: [
-          { realname: 'realname' },
-          { username: 'username' }
+          { realName: 'realName' },
+          { userName: 'userName' }
         ],
         queryBefore: (params) => {
           return params;
@@ -175,13 +175,13 @@ export const formSchema: FormSchema[] = [
   },
   {
     label: '用户账号',
-    field: 'username',
+    field: 'userName',
     component: 'Input',
     show: false,
   },
   {
     label: '真实姓名',
-    field: 'realname',
+    field: 'realName',
     component: 'Input',
     dynamicDisabled: true,
     show: false,
