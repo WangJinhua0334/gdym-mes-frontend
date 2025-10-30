@@ -31,9 +31,9 @@
         <!-- <super-query :config="superQueryConfig" @search="handleSuperQuery" /> -->
       </template>
       <!--操作栏-->
-      <template #action="{ record }">
-        <TableAction :actions="getTableAction(record)" :dropDownActions="getDropDownAction(record)" />
-      </template>
+<!--      <template #action="{ record }">-->
+<!--        <TableAction :actions="getTableAction(record)" :dropDownActions="getDropDownAction(record)" />-->
+<!--      </template>-->
       <!--字段回显插槽-->
       <template v-slot:bodyCell="{ column, record, index, text }"> </template>
       <template #fileSlot="{ text }">
@@ -99,11 +99,12 @@ const $message = useMessage();
           //preIcon: null,  // 移除放大镜图标
         },
       },
-      actionColumn: {
-        title: '操作',
-        width: 180,
-        fixed: 'right',
-      },
+      // actionColumn: {
+      //   title: '操作',
+      //   width: 180,
+      //   fixed: 'right',
+      // },
+      showActionColumn: false,
       beforeFetch: (params) => {
         // 如果需要精确匹配，移除通配符
         if (params.coilNo) {
