@@ -1,6 +1,7 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { render } from '@/utils/common/renderUtils';
+import { useUserStore } from '@/store/modules/user';
 //列表数据
 export const columns: BasicColumn[] = [
   {
@@ -116,12 +117,12 @@ export const columns: BasicColumn[] = [
 export const searchFormSchema: FormSchema[] = [
   {
     label: '用户账号',
-    field: 'username',
+    field: 'userName',
     component: 'JInput',
   },
   {
     label: '真实姓名',
-    field: 'realname',
+    field: 'realName',
     component: 'JInput',
   },
 ];
@@ -160,8 +161,8 @@ export const formSchema: FormSchema[] = [
         placeholder: '请选择用户',
         multi: false,
         linkmap: [
-          { realname: 'realname' },
-          { username: 'username' }
+          { realname: 'realName' },
+          { username: 'userName' }
         ],
         queryBefore: (params) => {
           return params;
@@ -175,13 +176,13 @@ export const formSchema: FormSchema[] = [
   },
   {
     label: '用户账号',
-    field: 'username',
+    field: 'userName',
     component: 'Input',
     show: false,
   },
   {
     label: '真实姓名',
-    field: 'realname',
+    field: 'realName',
     component: 'Input',
     dynamicDisabled: true,
     show: false,
@@ -527,6 +528,14 @@ export const formSchema: FormSchema[] = [
       //是否禁用
       disabled: false
     },
+  },
+  {
+    label: '租户 Id',
+    field: 'tenantId',
+    component: 'Input',
+    defaultValue: useUserStore().getTenant,
+    dynamicDisabled: true,
+    show: false,
   }
 ];
 
