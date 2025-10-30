@@ -48,10 +48,16 @@ export const columns: BasicColumn[] = [
     dataIndex: 'licensePlateNumber',
   },
   {
+    title: "入库时间",
+    align: 'center',
+    dataIndex: 'createTime',
+  },
+  {
     title: '备注',
     align: 'center',
     dataIndex: 'materialDesc',
   },
+
   /*{
     title: '状态',
     align: 'center',
@@ -98,104 +104,6 @@ export const columns: BasicColumn[] = [
 
 // 新增页面的表单数据
 export const formSchema: FormSchema[] = [
-
-  // {
-  //   label: '二维码解析',
-  //   field: 'qrCode',
-  //   component: 'Input',
-  //   componentProps: {
-  //     onkeyup: function (e) {
-  //       if (e.keyCode == 13) {
-  //         doQrCode.value = new Date().getTime();
-  //       }
-  //     },
-  //   },
-  // },
-  // {
-  //   label: '钢卷号',
-  //   // field: 'wksId',
-  //   field: 'coilNo',
-  //   component: 'JSearchSelectCustom',
-  //   componentProps: ({ formActionType }) => {
-  //     const { setFieldsValue, getFieldsValue } = formActionType;
-  //     return {
-  //       setFieldsValue: setFieldsValue,
-  //       getFieldsValue: getFieldsValue,
-  //       methods: 'get',
-  //       url: '/mes/incoming/preDeliveryBillDetail/list',
-  //       //url: '/workshop/basWorkShop/list',
-  //       params: {
-  //         column: 'id',
-  //         order: 'desc',
-  //         searchFields: 'id,coilNo',
-  //         isReceipted: '0',
-  //         // code: '${code}',
-  //       },
-  //       columns: [
-  //         {
-  //           title: '钢卷号',
-  //           align: 'center',
-  //           dataIndex: 'coilNo',
-  //         },
-  //         {
-  //           title: '物料编号',
-  //           align: 'center',
-  //           dataIndex: 'materialId',
-  //         },
-  //         {
-  //           title: '物料编码',
-  //           align: 'center',
-  //           dataIndex: 'materialNumber',
-  //         },
-  //         {
-  //           title: '物料名称',
-  //           align: 'center',
-  //           dataIndex: 'materialName',
-  //         },
-  //         {
-  //           title: '规格型号',
-  //           align: 'center',
-  //           dataIndex: 'modelNumber',
-  //         },
-  //         {
-  //           title: '牌号',
-  //           align: 'center',
-  //           dataIndex: 'brand',
-  //         },
-  //         {
-  //           title: '重量',
-  //           align: 'center',
-  //           dataIndex: 'weight',
-  //           customRender: ({ text }) => {
-  //             // 保留 4 位小数
-  //             return parseFloat(text).toFixed(4);
-  //           },
-  //         },
-  //       ],
-  //       isShowNum: false,
-  //       rowKey: 'coilNo',
-  //       labelKey: ['coilNo'],
-  //       linkmap: [
-  //         {
-  //           materialId: 'materialId',
-  //           materialNumber: 'materialNumber',
-  //           materialName: 'materialName',
-  //           modelNumber: 'modelNumber',
-  //           brand: 'brand',
-  //           weight: 'weight',
-  //         },
-  //       ],
-  //       // pageSize: 10,
-  //       multi: false,
-  //       maxTagCount: 2,
-  //       placeholder: '请选择',
-  //       // 启用滚动分页
-  //       scroll: {
-  //          pageSize: 10
-  //        }
-  //     };
-  //   },
-  // },
   {
     label: '钢卷号',
     field: 'coilNo',
@@ -619,7 +527,7 @@ export const searchFormSchema: FormSchema[] =
 [
   {
     label: '钢卷号',
-    field: 'coilNo',
+    field: 'originalCoilNumber',
     component: 'JInput',
   },
   {
