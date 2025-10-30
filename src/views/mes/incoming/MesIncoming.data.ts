@@ -568,6 +568,11 @@ export const searchFormSchema: FormSchema[] =
       };
     },
   },
+  {
+    label: '车牌号',
+    field: 'licensePlateNumber',
+    component: 'JInput',
+  },
   // {
   //   label: '入库时间',
   //   field: 'productionDate',
@@ -583,7 +588,7 @@ export const searchFormSchema: FormSchema[] =
   //   },
   // },
   {
-    label: '入库时间（范围）',
+    label: '入库时间',
     field: 'prodTimeRange',
     component: 'RangePicker',
     colProps: { span: 10 },
@@ -596,11 +601,6 @@ export const searchFormSchema: FormSchema[] =
       valueFormat: "YYYY-MM-DD HH:mm:ss",
       getPopupContainer: () => document.body,
     },
-  },
-  {
-    label: '车牌号',
-    field: 'licensePlateNumber',
-    component: 'JInput',
   },
   // {
   //   label: '仓库',
