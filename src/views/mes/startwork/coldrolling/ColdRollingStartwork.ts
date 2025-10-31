@@ -16,7 +16,7 @@ export function getFormSchema(): FormSchema[] {
     },
     {
       label: '钢卷号',
-      field: 'newCoilNo',
+      field: 'oldCoilNo',  // 传入给后端时，对于冷轧来说是旧钢卷号
       component: 'JSearchSelectCustom',
       componentProps: ({ formActionType }) => {
         const { setFieldsValue, getFieldsValue } = formActionType;
@@ -24,7 +24,6 @@ export function getFormSchema(): FormSchema[] {
           setFieldsValue: setFieldsValue,
           getFieldsValue: getFieldsValue,
           method: 'get',
-          //url: '/mes/picking/list',
           url: '/etl/rolling/start/list',
           params: { column: 'endTime', order: 'asc', searchFields: 'id,newCoilNo'},
           columns: [
@@ -49,6 +48,9 @@ export function getFormSchema(): FormSchema[] {
             },
           ],
         };
+      },
+      dynamicRules: ({ model, schema, values }) => {
+        return [{ required: true, message: '请选择钢卷!' }];
       },
     },
     {
@@ -152,9 +154,14 @@ export function getFormSchema(): FormSchema[] {
       field: 'weight',
       component: 'InputNumber',
       componentProps: {
-        style: { width: '100%' }
+        style: { width: '100%' },
+        precision: 2,        // 设置小数点后两位
+        step: 0.01,          // 设置步进值为0.01
       },
       dynamicDisabled: true,//禁用
+      dynamicRules: ({ model, schema, values }) => {
+        return [{ required: true, message: '请输入重量!' }];
+      },
     },
 
     /*{
@@ -216,6 +223,9 @@ export function getFormSchema(): FormSchema[] {
           }],
           placeholder: '请输入',
         };
+      },
+      dynamicRules: ({ model, schema, values }) => {
+        return [{ required: true, message: '请选择设备!' }];
       },
     },
     {

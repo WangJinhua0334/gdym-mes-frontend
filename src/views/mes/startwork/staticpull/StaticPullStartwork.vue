@@ -79,46 +79,48 @@ function verification() {
 
 // 添加 handleSubmit 方法
 async function handleSubmit() {
-  try {
-    // 验证表单
-    const values = await validate();
-    // 检查限定占比是否有值
-    if (!values.limitedProportion) {
-      $message.createWarningModal({
-        title: '提示',
-        content: '请先进行效验操作',
-        onOk: () => {
-          console.log('请先效验确认');
-        }
-      });
-      return; // 阻止继续执行
-    }
-    // 获取实际重量和限定占比
-    const actualWeight = parseFloat(values.actualWeight || 0);
-    const limitedProportion = parseFloat(values.limitedProportion || 0);
-    // 比较实际重量和限定占比
-    if (actualWeight < limitedProportion) {
-      // 通过验证，直接提交
-      await requestAddOrEdit(values);
-    } else {
-      // 不通过验证，提示用户选择是否放行
-      $message.createWarningModal({
-        title: '警告',
-        content: '实际重量不在有效范围值内，是否继续放行？',
-        okText: '是',
-        cancelText: '否',
-        onOk: async () => {
-          await requestAddOrEdit(values);
-        },
-        onCancel: () => {
-          console.log('用户取消操作');
-        }
-      });
-    }
-  } catch (error) {
-    // 处理验证错误
-    console.log('验证失败:', error);
-  }
+  const values = await validate();
+  await requestAddOrEdit(values);
+  // try {
+  //   // 验证表单
+  //   const values = await validate();
+  //   // 检查限定占比是否有值
+  //   if (!values.limitedProportion) {
+  //     $message.createWarningModal({
+  //       title: '提示',
+  //       content: '请先进行效验操作',
+  //       onOk: () => {
+  //         console.log('请先效验确认');
+  //       }
+  //     });
+  //     return; // 阻止继续执行
+  //   }
+  //   // 获取实际重量和限定占比
+  //   const actualWeight = parseFloat(values.actualWeight || 0);
+  //   const limitedProportion = parseFloat(values.limitedProportion || 0);
+  //   // 比较实际重量和限定占比
+  //   if (actualWeight < limitedProportion) {
+  //     // 通过验证，直接提交
+  //     await requestAddOrEdit(values);
+  //   } else {
+  //     // 不通过验证，提示用户选择是否放行
+  //     $message.createWarningModal({
+  //       title: '警告',
+  //       content: '实际重量不在有效范围值内，是否继续放行？',
+  //       okText: '是',
+  //       cancelText: '否',
+  //       onOk: async () => {
+  //         await requestAddOrEdit(values);
+  //       },
+  //       onCancel: () => {
+  //         console.log('用户取消操作');
+  //       }
+  //     });
+  //   }
+  // } catch (error) {
+  //   // 处理验证错误
+  //   console.log('验证失败:', error);
+  // }
 }
 /**表单提交事件*/
 async function requestAddOrEdit(values) {
@@ -140,7 +142,7 @@ async function requestAddOrEdit(values) {
   <div class="custom-form-wrapper">
     <BasicForm @register="registerForm" :width="896"/>
     <div class="button-container">
-      <a-button @click="verification" type="primary">效验</a-button>
+<!--      <a-button @click="verification" type="primary">效验</a-button>-->
       <a-button @click="handleSubmit" type="primary">扫码开工</a-button>
     </div>
   </div>

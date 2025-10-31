@@ -8,8 +8,15 @@ import {getTenantId} from "@/utils/auth";
 export function getFormSchema(): FormSchema[] {
   return [
     {
-      label: '钢卷号',
+      label: '流转卡号',
       field: 'flowCardId',
+      component: 'Input',
+      show: false,//禁止显示
+      dynamicDisabled: true,//禁用
+    },
+    {
+      label: '钢卷号',
+      field: 'oldCoilNo',
       component: 'JSearchSelectCustom',
       componentProps: ({ formActionType }) => {
         const { setFieldsValue, getFieldsValue } = formActionType;
@@ -38,7 +45,7 @@ export function getFormSchema(): FormSchema[] {
           placeholder: '请输入',
           linkmap: [
             {
-              id: 'newCoilNo',
+              id: 'flowCardId',
               materialId:'materialId',//物料编号
               materialNumber:'materialNumber',//物料编码
               materialName:'materialName',//物料名称
@@ -49,13 +56,9 @@ export function getFormSchema(): FormSchema[] {
           ],
         };
       },
-    },
-    {
-      label: '钢卷号',
-      field: 'newCoilNo',
-      component: 'Input',
-      dynamicDisabled: true,//禁用
-      show: false,//禁止显示
+      dynamicRules: ({ model, schema, values }) => {
+        return [{ required: true, message: '请选择钢卷!' }];
+      },
     },
     {
       label: '物料编号',
@@ -196,7 +199,10 @@ export function getFormSchema(): FormSchema[] {
         style: { width: '100%' },
         precision: 2,        // 设置小数点后两位
         step: 0.01,          // 设置步进值为0.01
-      }
+      },
+      dynamicRules: ({ model, schema, values }) => {
+        return [{ required: true, message: '请输入重量!' }];
+      },
     },
     {
       label: '限定占比',
@@ -251,6 +257,9 @@ export function getFormSchema(): FormSchema[] {
           placeholder: '请输入',
         };
       },
+      dynamicRules: ({ model, schema, values }) => {
+        return [{ required: true, message: '请选择设备!' }];
+      },
     },
     {
       label: '设备 number',
@@ -281,10 +290,10 @@ export function getFormSchema(): FormSchema[] {
         style: { width: '100%' }
       }
     },
-    /*{
-      label: '要求查看',
-      field: 'requireId',
-      component: 'Input',
-    },*/
+    // {
+    //   label: '要求查看',
+    //   field: 'requireId',
+    //   component: 'Input',
+    // },
   ];
 }

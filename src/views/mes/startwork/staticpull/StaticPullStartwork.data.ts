@@ -16,7 +16,7 @@ export function getFormSchema(): FormSchema[] {
     },
     {
       label: '钢卷号',
-      field: 'newCoilNo',
+      field: 'oldCoilNo',
       component: 'JSearchSelectCustom',
       componentProps: ({ formActionType }) => {
         const { setFieldsValue, getFieldsValue } = formActionType;
@@ -54,6 +54,9 @@ export function getFormSchema(): FormSchema[] {
             },
           ],
         };
+      },
+      dynamicRules: ({ model, schema, values }) => {
+        return [{ required: true, message: '请选择钢卷!' }];
       },
     },
     {
@@ -220,6 +223,9 @@ export function getFormSchema(): FormSchema[] {
           }],
           placeholder: '请输入',
         };
+      },
+      dynamicRules: ({ model, schema, values }) => {
+        return [{ required: true, message: '请选择设备!' }];
       },
     },
     {
