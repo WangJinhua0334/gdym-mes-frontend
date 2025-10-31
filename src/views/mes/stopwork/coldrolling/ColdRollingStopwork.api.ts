@@ -2,7 +2,7 @@ import {defHttp} from "@/utils/http/axios";
 
 
 enum Api {
-  save = '/etl/picking/pickEnd',
+  save = '/etl/rolling/rollingEnd',
 }
 
 //冷轧扫码完工页面新增页面表单提交

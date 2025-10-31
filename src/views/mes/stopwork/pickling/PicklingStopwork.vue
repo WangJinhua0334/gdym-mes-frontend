@@ -251,7 +251,7 @@ async function handleSubmitdy() {
     defHttp
       .get({
         url: '/template/basTemplate/getReportIdByIds',
-        params: { ids: values.templateId, type: 'mo_sn' },
+        params: { ids: values.templateId, type: 'pack_sn' },
       })
       .then(async (reportRs) => {
         setModalProps({ loading: false });

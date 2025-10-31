@@ -5,6 +5,7 @@ import {planStartTime} from "@/views/mes/mo/components/MesMoPlanCreateSn.data";
 import {rules} from "@/utils/helper/validator";
 import {useUserStore} from "@/store/modules/user";
 import { getTenantId } from "/@/utils/auth";
+import { getUserInfo } from '@/api/sys/user';
 //冷轧扫码完工新增弹框页面表单配置
 export const formSchema: FormSchema[] = [
   {
@@ -14,16 +15,21 @@ export const formSchema: FormSchema[] = [
     dynamicDisabled: true, // 设置为禁用状态，只能通过程序设置
   },
   {
-    label: '钢卷号',//用来过滤物料编码信息
+    label: '流转卡卡号',//用来过滤物料编码信息
     field: 'flowCardId',
     component: 'Input',
     dynamicDisabled: true, // 设置为禁用状态，只能通过程序设置
-    show: false,//禁止显示
+    show: true,//禁止显示
   },
   {
     label: '重量',
     field: 'weight',
     component: 'Input',
+    componentProps: {
+      style: { width: '100%' },
+      precision: 2,        // 设置小数点后两位
+      step: 0.01,          // 设置步进值为0.01
+    }
   },
   {
     label: '物料编码',
@@ -36,7 +42,12 @@ export const formSchema: FormSchema[] = [
         getFieldsValue: getFieldsValue,
         method: 'get',
         url: '/etl/rolling/materialMappingInfo',
-        params: { column: 'createTime', order: 'desc', flowCardId: '${flowCardId}',searchFields: 'number,name'},
+        params: {
+          column: 'createTime',
+          order: 'desc',
+          flowCardId: '${flowCardId}',
+          searchFields: 'old_name,old_model_number'
+        },
         columns: [
           {name: '物料编码', code: 'number'},
           {name: '物料名称', code: 'name'},
@@ -47,9 +58,10 @@ export const formSchema: FormSchema[] = [
         labelKey: ['name'],
         linkmap: [
           {
-            number:'number',//物料编码
-            name:'name',//物料名称
-            materialModelNumber:'materialModelNumber',//规格型号
+            id:'newMaterialId',//物料编号
+            number:'newMaterialNumber',//物料编码
+            name:'newMaterialName',//物料名称
+            materialModelNumber:'newModelNumber',//规格型号
           },
         ],
         //pageSize: 10,
@@ -64,16 +76,31 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
-    label: '物料名称',
-    field: 'name',
+    label: "物料编号",
+    field: 'newMaterialId',
     component: 'Input',
-    show: false,//禁止显示
+    show: true,//禁止显示
+    dynamicDisabled : true,
+  },
+  {
+    label: '物料名称',
+    field: 'newMaterialName',
+    component: 'Input',
+    show: true,//禁止显示
+    dynamicDisabled : true,
+  },{
+    label: '物料编码',
+    field: 'newMaterialNumber',
+    component: 'Input',
+    show: true,//禁止显示
+    dynamicDisabled : true,
   },
   {
     label: '规格型号',
-    field: 'materialModelNumber',
+    field: 'newModelNumber',
     component: 'Input',
-    show: false,//禁止显示
+    show: true,//禁止显示
+    dynamicDisabled : true,
   },
   {
     label: '流转去向',
@@ -84,57 +111,21 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
-    label: '仓库 Id',
-    field: 'warehouseId',
-    component: 'Input',
-    show: false,//禁止显示
-  },
-  {
-    label: '仓库',
-    field: 'warehouseName',
-    component: 'JSearchSelectCustom',
-    componentProps: ({ formActionType }) => {
-      const { setFieldsValue, getFieldsValue } = formActionType;
-      return {
-        setFieldsValue: setFieldsValue,
-        getFieldsValue: getFieldsValue,
-        method: 'get',
-        url: '/basic/wareHouse/list',
-        params: { column: 'createTime', order: 'desc', searchFields: 'id,name', code: '${code}' },
-        columns: [
-          {
-            name: '仓库编码',
-            code: 'id',
-          },
-          {
-            name: '仓库名称',
-            code: 'name',
-          },
-        ],
-        isShowNum: false,
-        rowKey: 'name',
-        labelKey: ['name'],
-        linkmap: [
-          {
-            id:'warehouseId',//物料编码
-          },
-        ],
-        //pageSize: 10,
-        multi: false,
-        maxTagCount: 2,
-        placeholder: '请选择',
-        // 启用滚动分页
-        scroll: {
-          pageSize: 10
-        },
-      };
-    },
-  },
+    label: '质量汇报',
+    field: 'qualityReport',
+    component: 'InputTextArea',
+  }
 ];
 
 //冷轧扫码完工页面表单配置
 export function getFormSchema(): FormSchema[] {
-  const retValue = [
+  return [
+    {
+      label: '流转卡号',
+      field: 'flowCardId',
+      component: 'Input',
+      show: false,//禁止显示
+    },
     {
       label: '钢卷号',
       field: 'newCoilNo',
@@ -147,26 +138,30 @@ export function getFormSchema(): FormSchema[] {
           method: 'get',
           //url: '/mes/picking/list',
           url: '/etl/rolling/end/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'id,newCoilNo', },
+          params: {
+            column: 'createTime',
+            order: 'desc',
+            searchFields: 'oldCoilNo',
+            username: useUserStore().getUserInfo.username,
+          },
           columns: [
             {
               name: '钢卷号',
-              code: 'newCoilNo',
+              code: 'oldCoilNo',
             },
           ],
           // 是否显示序号
           isShowNum: false,
-          rowKey: 'newCoilNo',
-          labelKey: ['newCoilNo'],
+          rowKey: 'oldCoilNo',
+          labelKey: ['oldCoilNo'],
           placeholder: '请输入',
           linkmap: [
             {
-              materialId:'materialId',//物料编号
-              materialNumber:'materialNumber',//物料编码
-              /*materialName:'materialName',//物料名称*/
-              modelNumber: 'modelNumber',//规格型号
-              exceptedWeight: 'exceptedWeight',//标签重
-              weight: 'weight',//重量
+              oldMaterialId:'materialId',//物料编号
+              oldMaterialNumber:'materialNumber',//物料编码
+              oldMaterialName:'materialName',//物料名称
+              oldModelNumber: 'modelNumber',//规格型号
+              startWeight: 'weight',//
               cardId:'flowCardId',//流转卡号
             },
           ],
@@ -174,81 +169,30 @@ export function getFormSchema(): FormSchema[] {
       },
     },
     {
-      label: '流转卡号',
-      field: 'flowCardId',
-      component: 'Input',
-      show: false,//禁止显示
-    },
-    /*{
-      label: '物料编码',
+      label: '物料编号',
       field: 'materialId',
       component: 'Input',
       dynamicDisabled: true,//禁用
+      show: false,//禁止显示
     },
-     {
-       label: '物料名称',
-       field: 'materialName',
-       component: 'Input',
-       dynamicDisabled: true,//禁用
-     },
+    {
+      label: '物料名称',
+      field: 'materialName',
+      component: 'Input',
+      dynamicDisabled: true,//禁用
+    },
+    {
+      label: '物料编码',
+      field: 'materialNumber',
+      component: 'Input',
+      dynamicDisabled: true,//禁用
+      show: true,//禁止显示
+    },
     {
       label: '规格型号',
       field: 'modelNumber',
       component: 'Input',
       dynamicDisabled: true,//禁用
-    },*/
-    /*{
-      label: '生产厂区',
-      field: 'plantId',
-      component: 'Input',
-    },*/
-    {
-      label: '生产车间',
-      field: 'workShopNumber',
-      component: 'JSearchSelectCustom',
-      componentProps: ({ formActionType }) => {
-        const { setFieldsValue, getFieldsValue } = formActionType;
-        return {
-          setFieldsValue: setFieldsValue,
-          getFieldsValue: getFieldsValue,
-          method: 'get',
-          url: '/workshop/basWorkShop/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'id,name' },
-          columns: [
-            { name: '编码', code: 'id' },
-            { name: '名称', code: 'name' },
-          ],
-          // 是否显示序号
-          isShowNum: false,
-          rowKey: 'id',
-          labelKey: ['name'],
-          placeholder: '请输入',
-        };
-      },
-    },
-    {
-      label: '生产班组',
-      field: 'workTeamId',
-      component: 'JSearchSelectCustom',
-      componentProps: ({ formActionType }) => {
-        const { setFieldsValue, getFieldsValue } = formActionType;
-        return {
-          setFieldsValue: setFieldsValue,
-          getFieldsValue: getFieldsValue,
-          method: 'get',
-          url: '/basic/basWorkTeam/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'id,name'},
-          columns: [
-            { name: '编码', code: 'id' },
-            { name: '名称', code: 'name' },
-          ],
-          // 是否显示序号
-          isShowNum: false,
-          rowKey: 'id',
-          labelKey: ['name'],
-          placeholder: '请输入',
-        };
-      },
     },
     {
       label: '完工时间',
@@ -279,7 +223,7 @@ export function getFormSchema(): FormSchema[] {
     },
     {
       label:'操作员',
-      field: 'operatorId',
+      field: 'operatorNumber',
       component:'Input',
       defaultValue:useUserStore().getUserInfo.username,
       dynamicDisabled: true,//禁用
@@ -300,7 +244,6 @@ export function getFormSchema(): FormSchema[] {
       }
     },
   ];
-  return retValue;
 }
 //冷轧扫码完工页面产品表格字段
 export const getDetailJVxeColumns = function () {
@@ -315,23 +258,23 @@ export const getDetailJVxeColumns = function () {
       title: '重量',
       key: 'weight',
       type: JVxeTypes.input,
-      disabled: true,   // 禁止编辑
+      disabled: false,   // 禁止编辑
     },
     {
       title: '物料编码',
-      key: 'materialNumber',
+      key: 'newMaterialNumber',
       type: JVxeTypes.input,
       disabled: true,   // 禁止编辑
     },
     {
       title: '物料名称',
-      key: 'materialName',
+      key: 'newMaterialName',
       type: JVxeTypes.input,
       disabled: true,   // 禁止编辑
     },
     {
       title: '规格型号',
-      key: 'materialModelNumber',
+      key: 'newModelNumber',
       type: JVxeTypes.input,
       disabled: true,   // 禁止编辑
     },
@@ -346,18 +289,24 @@ export const getDetailJVxeColumns = function () {
       disabled: true,   // 禁止编辑
     },
     {
-      title: '仓库Id',
-      key: 'warehouseId',
-      type: JVxeTypes.input,
-      disabled: true,   // 禁止编辑
-      visible: false,   // 设置为隐藏状态，只能通过程序设置
-    },
-    {
-      title: '仓库名称',
-      key: 'warehouseName',
-      type: JVxeTypes.input,
+      title: '质量汇报',
+      key: 'qualityReport',
+      type: JVxeTypes.textarea,// 使用 select 类型
       disabled: true,   // 禁止编辑
     },
+    // {
+    //   title: '仓库Id',
+    //   key: 'warehouseId',
+    //   type: JVxeTypes.input,
+    //   disabled: true,   // 禁止编辑
+    //   visible: false,   // 设置为隐藏状态，只能通过程序设置
+    // },
+    // {
+    //   title: '仓库名称',
+    //   key: 'warehouseName',
+    //   type: JVxeTypes.input,
+    //   disabled: true,   // 禁止编辑
+    // },
   );
   return arr;
 };
