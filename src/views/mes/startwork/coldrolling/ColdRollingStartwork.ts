@@ -26,7 +26,7 @@ export function getFormSchema(): FormSchema[] {
           method: 'get',
           //url: '/mes/picking/list',
           url: '/etl/rolling/start/list',
-          params: { column: 'endTime', order: 'asc', searchFields: 'id,newCoilNo', },
+          params: { column: 'endTime', order: 'asc', searchFields: 'id,newCoilNo'},
           columns: [
             {
               name: '钢卷号',

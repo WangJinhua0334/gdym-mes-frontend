@@ -179,6 +179,7 @@ async function handleModalOk() {
       id: buildUUID(),
       newCoilNo: values.newCoilNo || '',   // 钢卷号
       weight: values.weight || '',   // 重量
+      newMaterialId: values.newMaterialId || '',   //物料id
       newMaterialNumber: values.newMaterialNumber || '',   //物料编码
       newMaterialName: values.newMaterialName || '',   // 物料名称
       newModelNumber: values.newModelNumber || '',   // 规格型号
