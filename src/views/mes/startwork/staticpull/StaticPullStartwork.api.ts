@@ -2,7 +2,7 @@ import {defHttp} from "@/utils/http/axios";
 
 
 enum Api {
-  save = '/etl/picking/pickStart',
+  save = '/etl/drawing/drawingStart',
 }
 
 //精拉扫码开工页面新增页面表单提交

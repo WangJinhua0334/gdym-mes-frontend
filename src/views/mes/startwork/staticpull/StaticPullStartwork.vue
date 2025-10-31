@@ -1,7 +1,7 @@
 <script setup lang="ts" name="mo-StaticPullStartwork">
-import { getFormSchema } from './StaticPullStartwork.ts';
+import { getFormSchema } from './StaticPullStartwork.data';
 import {BasicForm, useForm} from "@/components/Form";
-import {saveOrUpdate} from "@/views/mes/startwork/staticpull/StaticPullStartwork.api";
+import {saveOrUpdate} from "./StaticPullStartwork.api";
 import {useMessage} from "@/hooks/web/useMessage";
 import { onMounted } from 'vue';
 import dayjs from "dayjs";

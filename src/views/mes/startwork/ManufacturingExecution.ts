@@ -38,6 +38,7 @@ export function getFormSchema(): FormSchema[] {
           placeholder: '请输入',
           linkmap: [
             {
+              id: 'newCoilNo',
               materialId:'materialId',//物料编号
               materialNumber:'materialNumber',//物料编码
               materialName:'materialName',//物料名称
@@ -48,6 +49,13 @@ export function getFormSchema(): FormSchema[] {
           ],
         };
       },
+    },
+    {
+      label: '钢卷号',
+      field: 'newCoilNo',
+      component: 'Input',
+      dynamicDisabled: true,//禁用
+      show: false,//禁止显示
     },
     {
       label: '物料编号',
