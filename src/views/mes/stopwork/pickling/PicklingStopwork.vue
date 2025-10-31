@@ -71,6 +71,14 @@ async function handleSubmit() {
   try {
     // 验证表单
     const mainFormValues = await validate();
+    if(!mainFormValues.oldCoilNo){
+      $message.createMessage.warning('请先扫码钢卷号');
+      return;
+    }
+    if(mesProductPickDetail.value.getTableData().length === 0){
+      $message.createMessage.warning('请先添加产出品');
+      return;
+    }
     // 获取子表数据
     let detailData = [];
     if (mesProductPickDetail.value) {
@@ -122,6 +130,7 @@ async function requestAddOrEdit(values) {
       rangeValue: 3,
       equipmentId: undefined,
       equipmentNumber: undefined,
+      qualityReport: undefined,
       // operatorNumber: undefined,
       // tenantId: undefined,
       endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), // 或者设置为 undefined
@@ -145,8 +154,12 @@ async function requestAddOrEdit(values) {
 function handleAddDetail() {
   // 获取表单数据中的钢卷号
   const formData = getFieldsValue();
-  const coilNo = formData.flowCardId?.steelId || formData.flowCardId || '';
+  if (!formData.oldCoilNo) {
+    $message.createMessage.warning('请先输入钢卷号');
+    return;
+  }
 
+  const coilNo = formData.oldCoilNo
   // 获取当前子表的数据源长度作为序号（确保每次都获取最新的数据长度）
   const currentDataSource = mesProductPickDetail.value ? mesProductPickDetail.value.getTableData() : mesProductPickDetailTable.dataSource;
   const currentIndex = Array.isArray(currentDataSource) ? currentDataSource.length + 1 : 1;
@@ -159,7 +172,7 @@ function handleAddDetail() {
   // 延迟设置值，确保弹框已打开并且表单已初始化
   setTimeout(() => {
     setExtendedFieldsValue({
-      newCoilNo: newCoilNo
+      newCoilNo: newCoilNo,
     });
   }, 100);
 }
@@ -177,10 +190,6 @@ async function handleModalOk() {
       $message.createMessage.warning('请选择流转去向');
       return;
     }
-    // if (!values.warehouseId) {
-    //   $message.createMessage.warning('请选择仓库');
-    //   return;
-    // }
     // 获取字典标签（如果需要显示中文）
     let destinationLabel = values.destination;
     // 如果需要转换为中文标签，可以在这里处理
@@ -199,6 +208,23 @@ async function handleModalOk() {
     // 关闭弹窗并重置表单
     closeModal();
     resetFields();
+    setFieldsValue({
+      // flowCardId: undefined,
+      // materialId: undefined,
+      // materialNumber: undefined,
+      // materialName: undefined,
+      // modelNumber: undefined,
+      // exceptedWeight: undefined,
+      // weight: undefined,
+      // limitedProportion: undefined,
+      // rangeValue: 3,
+      equipmentId: undefined,
+      equipmentNumber: undefined,
+      // qualityReport: undefined,
+      // operatorNumber: undefined,
+      // tenantId: undefined,
+      endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), // 或者设置为 undefined
+    });
   } catch (error) {
     console.log('表单验证失败:', error);
   }
@@ -207,6 +233,23 @@ async function handleModalOk() {
 function handleModalCancel() {
   // 重置表单数据
   resetFields();
+  setFieldsValue({
+    // flowCardId: undefined,
+    // materialId: undefined,
+    // materialNumber: undefined,
+    // materialName: undefined,
+    // modelNumber: undefined,
+    // exceptedWeight: undefined,
+    // weight: undefined,
+    // limitedProportion: undefined,
+    // rangeValue: 3,
+    equipmentId: undefined,
+    equipmentNumber: undefined,
+    qualityReport: undefined,
+    // operatorNumber: undefined,
+    // tenantId: undefined,
+    endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), // 或者设置为 undefined
+  });
   // 关闭弹窗
   closeModal();
 }
@@ -281,22 +324,6 @@ function handlePrint() {
 }
 function clearTableDate() {
    resetFields();
-  setFieldsValue({
-    flowCardId: undefined,
-    materialId: undefined,
-    materialNumber: undefined,
-    materialName: undefined,
-    modelNumber: undefined,
-    exceptedWeight: undefined,
-    weight: undefined,
-    limitedProportion: undefined,
-    rangeValue: 3,
-    equipmentId: undefined,
-    equipmentNumber: undefined,
-    // operatorNumber: undefined,
-    // tenantId: undefined,
-    endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), // 或者设置为 undefined
-  });
   // 清空子表数据源
   mesProductPickDetailTable.dataSource = [];
 

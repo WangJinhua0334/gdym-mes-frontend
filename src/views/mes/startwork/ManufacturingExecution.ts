@@ -200,9 +200,6 @@ export function getFormSchema(): FormSchema[] {
         precision: 2,        // 设置小数点后两位
         step: 0.01,          // 设置步进值为0.01
       },
-      dynamicRules: ({ model, schema, values }) => {
-        return [{ required: true, message: '请输入重量!' }];
-      },
     },
     {
       label: '限定占比',

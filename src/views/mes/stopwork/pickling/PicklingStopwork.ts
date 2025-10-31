@@ -5,7 +5,7 @@ import {planStartTime} from "@/views/mes/mo/components/MesMoPlanCreateSn.data";
 import {rules} from "@/utils/helper/validator";
 import {useUserStore} from "@/store/modules/user";
 import { getTenantId } from "/@/utils/auth";
-//酸洗扫码完工页面表单配置
+//酸洗扫码完工页面产品表格字段
 export const getDetailJVxeColumns = function () {
   const arr: any[] = [];
   arr.push(
@@ -14,21 +14,13 @@ export const getDetailJVxeColumns = function () {
       key: 'newCoilNo',
       align: 'center',
       type: JVxeTypes.input,
-      disabled: true,   // 禁止编辑
     },
-    // {
-    //   label: '流转卡卡号',//用来过滤物料编码信息
-    //   field: 'flowCardId',
-    //   component: 'Input',
-    //   dynamicDisabled: true, // 设置为禁用状态，只能通过程序设置
-    //   show: true,//禁止显示
-    // },
     {
       title: '重量',
       key: 'weight',
       align: 'center',
       type: JVxeTypes.input,
-      disabled: true,   // 禁止编辑
+      disabled: false,   // 禁止编辑
     },
     // {
     //   label: '物料编码',
@@ -82,24 +74,26 @@ export const getDetailJVxeColumns = function () {
     //   show: false,//禁止显示
     //   dynamicDisabled : true,
     // },
+    //
+    // {
+    //   label: '物料编码',
+    //   field: 'newMaterialNumber',
+    //   component: 'Input',
+    //   show: true,//禁止显示
+    //   dynamicDisabled : true,
+    // },
     // {
     //   label: '物料名称',
     //   field: 'newMaterialName',
     //   component: 'Input',
-    //   show: false,//禁止显示
-    //   dynamicDisabled : true,
-    // },{
-    //   label: '物料编码',
-    //   field: 'newMaterialNumber',
-    //   component: 'Input',
-    //   show: false,//禁止显示
+    //   show: true,//禁止显示
     //   dynamicDisabled : true,
     // },
     // {
     //   label: '规格型号',
     //   field: 'newModelNumber',
     //   component: 'Input',
-    //   show: false,//禁止显示
+    //   show: true,//禁止显示
     //   dynamicDisabled : true,
     // },
     /**
@@ -111,14 +105,14 @@ export const getDetailJVxeColumns = function () {
       align: 'center',
       type: JVxeTypes.select,// 使用 select 类型
       dictCode: 'gxlzqx',// 指定字典编码
-      disabled: true,   // 禁止编辑
+      disabled: false,   // 禁止编辑
     },
     {
       title: '质量汇报',
       key: 'qualityReport',
       align: 'center',
       type: JVxeTypes.textarea, // 文本框
-      disabled: true,   // 禁止编辑
+      disabled: false,   // 禁止编辑
     },
     // {
     //   title: '仓库Id',
@@ -216,8 +210,14 @@ export const formSchema: FormSchema[] = [
 export function getFormSchema(): FormSchema[] {
   return [
     {
-      label: '钢卷号',
+      label: '流转卡号',
       field: 'flowCardId',
+      component: 'Input',
+      show: false,//禁止显示
+    },
+    {
+      label: '钢卷号',
+      field: 'oldCoilNo',
       component: 'JSearchSelectCustom',
       componentProps: ({ formActionType }) => {
         const { setFieldsValue, getFieldsValue } = formActionType;
@@ -246,6 +246,7 @@ export function getFormSchema(): FormSchema[] {
           placeholder: '请输入',
           linkmap: [
             {
+              id:'flowCardId', //钢卷号
               materialId:'materialId',//物料编号
               materialNumber:'materialNumber',//物料编码
               materialName:'materialName',//物料名称
@@ -265,17 +266,17 @@ export function getFormSchema(): FormSchema[] {
       show: false,//禁止显示
     },
     {
-      label: '物料编码',
-      field: 'materialNumber',
-      component: 'Input',
-      dynamicDisabled: true,//禁用
-    },
-    {
        label: '物料名称',
        field: 'materialName',
        component: 'Input',
        dynamicDisabled: true,//禁用
      },
+    {
+      label: '物料编码',
+      field: 'materialNumber',
+      component: 'Input',
+      dynamicDisabled: true,//禁用
+    },
     {
       label: '规格型号',
       field: 'modelNumber',
@@ -401,7 +402,6 @@ export function getFormSchema(): FormSchema[] {
       }
     },
   ];
-  // return retValue;
 }
 
 //打印模板
