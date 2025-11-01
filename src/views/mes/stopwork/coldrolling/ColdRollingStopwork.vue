@@ -73,6 +73,14 @@ async function handleSubmit() {
   try {
     // 验证表单
     const mainFormValues = await validate();
+    if(!mainFormValues.flowCardId){
+      $message.createMessage.warning('请先扫码钢卷号');
+      return;
+    }
+    if(mesProductPickDetail.value.getTableData().length === 0){
+      $message.createMessage.warning('请先添加产出品');
+      return;
+    }
     // 获取子表数据
     let detailData = [];
     if (mesProductPickDetail.value) {
@@ -113,6 +121,23 @@ async function requestAddOrEdit(values) {
     await saveOrUpdate(values);
     //清空表单数据
     await resetFields();
+    setFieldsValue({
+      flowCardId: undefined,
+      materialId: undefined,
+      materialNumber: undefined,
+      materialName: undefined,
+      modelNumber: undefined,
+      exceptedWeight: undefined,
+      weight: undefined,
+      limitedProportion: undefined,
+      rangeValue: 3,
+      equipmentId: undefined,
+      equipmentNumber: undefined,
+      qualityReport: undefined,
+      // operatorNumber: undefined,
+      // tenantId: undefined,
+      endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), // 或者设置为 undefined
+    });
 
     //重置子表数据源
     mesProductPickDetailTable.dataSource = [];
@@ -184,6 +209,7 @@ async function handleModalOk() {
       newMaterialName: values.newMaterialName || '',   // 物料名称
       newModelNumber: values.newModelNumber || '',   // 规格型号
       destination: destinationLabel || values.destination || '',   // 流转去向
+      qualityReport: values.qualityReport || '',   // 质检报告
       // warehouseId: values.warehouseId || '',   // 仓库id
       // warehouseName: values.warehouseName || '',   // 仓库名称
     };
@@ -309,6 +335,7 @@ function clearTableDate() {
         <JVxeTable
           keep-source
           resizable
+          round =  true
           ref="mesProductPickDetail"
           :loading="mesProductPickDetailTable.loading"
           :columns="mesProductPickDetailTable.columns"

@@ -32,8 +32,8 @@ export const formSchema: FormSchema[] = [
     }
   },
   {
-    label: '物料编码',
-    field: 'materialNumber',
+    label: '物料名称',
+    field: 'newMaterialName',
     component: 'JSearchSelectCustom',
     componentProps: ({ formActionType }) => {
       const { setFieldsValue, getFieldsValue } = formActionType;
@@ -41,7 +41,7 @@ export const formSchema: FormSchema[] = [
         setFieldsValue: setFieldsValue,
         getFieldsValue: getFieldsValue,
         method: 'get',
-        url: '/etl/rolling/materialMappingInfo',
+        url: '/etl/rolling/getNewMaterialInfo',
         params: {
           column: 'createTime',
           order: 'desc',
@@ -49,29 +49,29 @@ export const formSchema: FormSchema[] = [
           searchFields: 'old_name,old_model_number'
         },
         columns: [
-          {name: '物料编码', code: 'number'},
+          {name: '物料编码', code: 'code'},
           {name: '物料名称', code: 'name'},
-          {name: '规格型号', code: 'materialModelNumber'},
+          {name: '规格型号', code: 'modelNumber'},
         ],
         isShowNum: false,
-        rowKey: 'number',
+        rowKey: 'name',
         labelKey: ['name'],
         linkmap: [
           {
             id:'newMaterialId',//物料编号
-            number:'newMaterialNumber',//物料编码
-            name:'newMaterialName',//物料名称
-            materialModelNumber:'newModelNumber',//规格型号
+            code:'newMaterialNumber',//物料编码
+            // name:'newMaterialName',//物料名称
+            modelNumber:'newModelNumber',//规格型号
           },
         ],
         //pageSize: 10,
         multi: false,
         maxTagCount: 2,
         placeholder: '请选择',
-        // 启用滚动分页
-        scroll: {
-          pageSize: 10
-        },
+        // // 启用滚动分页
+        // scroll: {
+        //   pageSize: 10
+        // },
       };
     },
   },
@@ -83,12 +83,6 @@ export const formSchema: FormSchema[] = [
     dynamicDisabled : true,
   },
   {
-    label: '物料名称',
-    field: 'newMaterialName',
-    component: 'Input',
-    show: true,//禁止显示
-    dynamicDisabled : true,
-  },{
     label: '物料编码',
     field: 'newMaterialNumber',
     component: 'Input',
@@ -230,7 +224,23 @@ export function getFormSchema(): FormSchema[] {
       //show: false,//默认隐藏
       componentProps: {
         style: { width: '100%' }
-      }
+      },
+      dynamicRules: () => {
+        return [
+          {
+            required: true,
+            message: '操作员信息不能为空，请重新登录或联系管理员!'
+          },
+          {
+            validator: (_, value) => {
+              if (!value || value.trim() === '') {
+                return Promise.reject('操作员信息不能为空，请重新登录或联系管理员!');
+              }
+              return Promise.resolve();
+            }
+          }
+        ];
+      },
     },
     {
       label:'租户 ID',
@@ -245,6 +255,8 @@ export function getFormSchema(): FormSchema[] {
     },
   ];
 }
+
+
 //冷轧扫码完工页面产品表格字段
 export const getDetailJVxeColumns = function () {
   const arr: any[] = [];
@@ -252,37 +264,49 @@ export const getDetailJVxeColumns = function () {
     {
       title: '钢卷号',
       key: 'newCoilNo',
+      align: 'center',
       type: JVxeTypes.input,
+      // width: auto,
+      fixed: true,
     },
     {
       title: '重量',
       key: 'weight',
+      align: 'center',
       type: JVxeTypes.input,
       disabled: false,   // 禁止编辑
+      // width: 120
     },
     {
       title: '物料编码',
+      align: 'center',
       key: 'newMaterialNumber',
       type: JVxeTypes.input,
       disabled: true,   // 禁止编辑
+      // width: auto
     },
     {
       title: '物料名称',
+      align: 'center',
       key: 'newMaterialName',
       type: JVxeTypes.input,
       disabled: true,   // 禁止编辑
+      // width: 120
     },
     {
       title: '规格型号',
+      align: 'center',
       key: 'newModelNumber',
       type: JVxeTypes.input,
       disabled: true,   // 禁止编辑
+      // width: 120
     },
     /**
      * 流转去向: 1入库、2退料
      */
     {
       title: '流传去向',
+      align: 'center',
       key: 'destination',
       type: JVxeTypes.select,// 使用 select 类型
       dictCode: 'gxlzqx',// 指定字典编码
@@ -290,23 +314,44 @@ export const getDetailJVxeColumns = function () {
     },
     {
       title: '质量汇报',
+      align: 'center',
+      fixed: true,
       key: 'qualityReport',
       type: JVxeTypes.textarea,// 使用 select 类型
       disabled: true,   // 禁止编辑
     },
-    // {
-    //   title: '仓库Id',
-    //   key: 'warehouseId',
-    //   type: JVxeTypes.input,
-    //   disabled: true,   // 禁止编辑
-    //   visible: false,   // 设置为隐藏状态，只能通过程序设置
-    // },
-    // {
-    //   title: '仓库名称',
-    //   key: 'warehouseName',
-    //   type: JVxeTypes.input,
-    //   disabled: true,   // 禁止编辑
-    // },
   );
   return arr;
 };
+
+
+//打印模板
+export const printFormSchema: FormSchema[] = [
+  {
+    label: '打印模板',
+    field: 'templateId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/template/basTemplate/list',
+        params: { column: 'code', order: 'asc' },
+        columns: [
+          { name: '编码', code: 'code' },
+          { name: '名称', code: 'name' },
+        ],
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        placeholder: '请选择',
+        getPopupContainer: () => document.body,
+      };
+    },
+    dynamicRules: () => {
+      return [{ required: true, message: '请选择打印模板!' }];
+    },
+  },
+];
