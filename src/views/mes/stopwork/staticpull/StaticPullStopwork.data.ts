@@ -127,7 +127,7 @@ export function getFormSchema(): FormSchema[] {
     },
     {
       label: '钢卷号',
-      field: 'newCoilNo',
+      field: 'oldCoilNo',
       component: 'JSearchSelectCustom',
       componentProps: ({ formActionType }) => {
         const { setFieldsValue, getFieldsValue } = formActionType;

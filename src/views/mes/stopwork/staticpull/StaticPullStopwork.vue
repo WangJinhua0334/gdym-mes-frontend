@@ -134,12 +134,12 @@ function handleAddDetail() {
   // 获取表单数据中的钢卷号
   const formData = getFieldsValue();
   const flowCardId = formData.flowCardId || "";
-  if (!formData.newCoilNo) {
+  if (!formData.oldCoilNo) {
     $message.createMessage.warning('请先输入钢卷号');
     return;
   }
   // 将 coilNo根据 - 只划分一次子串，只保留后面这段
-  const str = formData.newCoilNo;
+  const str = formData.oldCoilNo;
   const coilNo = str.substring(3);
   // const oldMaterialId = formData.materialId;
   // 获取当前子表的数据源长度作为序号（确保每次都获取最新的数据长度）
