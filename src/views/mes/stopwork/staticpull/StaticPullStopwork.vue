@@ -183,6 +183,7 @@ async function handleModalOk() {
       newMaterialName: values.newMaterialName || '',   // 物料名称
       newModelNumber: values.newModelNumber || '',   // 规格型号
       destination: destinationLabel || values.destination || '',   // 流转去向
+      qualityReport: values.qualityReport || '',   // 质量汇报
       // warehouseId: values.warehouseId || '',   // 仓库id
       // warehouseName: values.warehouseName || '',   // 仓库名称
     };
