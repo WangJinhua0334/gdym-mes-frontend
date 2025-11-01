@@ -120,6 +120,7 @@ async function requestAddOrEdit(values) {
     //清空主表数据
     setFieldsValue({
       flowCardId: undefined,
+      oldCoilNo: undefined,
       materialId: undefined,
       materialNumber: undefined,
       materialName: undefined,
@@ -323,7 +324,25 @@ function handlePrint() {
   openDyModal(true, {});
 }
 function clearTableDate() {
-   resetFields();
+  resetFields();
+  setFieldsValue({
+    flowCardId: undefined,
+    oldCoilNo: undefined,
+    materialId: undefined,
+    materialNumber: undefined,
+    materialName: undefined,
+    modelNumber: undefined,
+    // exceptedWeight: undefined,
+    weight: undefined,
+    // limitedProportion: undefined,
+    // rangeValue: 3,
+    equipmentId: undefined,
+    equipmentNumber: undefined,
+    qualityReport: undefined,
+    // operatorNumber: undefined,
+    // tenantId: undefined,
+    endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), // 或者设置为 undefined
+  });
   // 清空子表数据源
   mesProductPickDetailTable.dataSource = [];
 

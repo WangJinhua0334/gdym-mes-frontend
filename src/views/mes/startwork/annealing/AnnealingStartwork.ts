@@ -4,12 +4,19 @@ import {planStartTime} from "@/views/mes/mo/components/MesMoPlanCreateSn.data";
 import dayjs from "dayjs";
 import {useUserStore} from "@/store/modules/user";
 import {getTenantId} from "@/utils/auth";
-//退火扫码开工页面表单配置
+//冷轧扫码开工页面表单配置
 export function getFormSchema(): FormSchema[] {
-  const retValue = [
+  return [
+    {
+      label: '流转卡号',
+      field: 'flowCardId',
+      component: 'Input',
+      show: false,//禁止显示
+      dynamicDisabled: true,//禁用
+    },
     {
       label: '钢卷号',
-      field: 'flowCardId',
+      field: 'oldCoilNo',  // 传入给后端时，对于冷轧来说是旧钢卷号
       component: 'JSearchSelectCustom',
       componentProps: ({ formActionType }) => {
         const { setFieldsValue, getFieldsValue } = formActionType;
@@ -17,43 +24,54 @@ export function getFormSchema(): FormSchema[] {
           setFieldsValue: setFieldsValue,
           getFieldsValue: getFieldsValue,
           method: 'get',
-          //url: '/mes/picking/list',
-          url: '/mes/picking/start/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'id,steelId', steelId: '${steelId}' },
+          url: '/etl/drawing/start/list',
+          params: { column: 'endTime', order: 'asc', searchFields: 'id,newCoilNo'},
           columns: [
             {
               name: '钢卷号',
-              code: 'steelId',
+              code: 'newCoilNo',
             },
           ],
           // 是否显示序号
           isShowNum: false,
-          rowKey: 'id',
-          labelKey: ['steelId'],
+          rowKey: 'newCoilNo',
+          labelKey: ['newCoilNo'],
           placeholder: '请输入',
           linkmap: [
             {
-              materialId:'materialId',//物料编码
-              /*materialName:'materialName',//物料名称*/
-              modelNumber: 'modelNumber',//规格型号
-              exceptedWeight: 'exceptedWeight',//标签重
+              newMaterialId:'materialId',//物料编号
+              newMaterialNumber:'materialNumber',//物料编码
+              newMaterialName:'materialName',//物料名称
+              newModelNumber: 'modelNumber',//规格型号
+              endWeight: 'weight',//
+              cardId:'flowCardId',//流转卡号
             },
           ],
         };
       },
+      dynamicRules: () => {
+        return [{ required: true, message: '请选择钢卷!' }];
+      },
     },
     {
-      label: '物料编码',
+      label: '物料编号',
       field: 'materialId',
       component: 'Input',
       dynamicDisabled: true,//禁用
+      show: false,//禁止显示
     },
-    /* {
-       label: '物料名称',
-       field: 'materialName',
-       component: 'Input',
-       dynamicDisabled: true,//禁用
-     },*/
+    {
+      label: '物料编码',
+      field: 'materialNumber',
+      component: 'Input',
+      dynamicDisabled: true,//禁用
+    },
+    {
+      label: '物料名称',
+      field: 'materialName',
+      component: 'Input',
+      dynamicDisabled: true,//禁用
+    },
     {
       label: '规格型号',
       field: 'modelNumber',
@@ -65,54 +83,54 @@ export function getFormSchema(): FormSchema[] {
       field: 'plantId',
       component: 'Input',
     },*/
-    {
-      label: '生产车间',
-      field: 'workShopNumber',
-      component: 'JSearchSelectCustom',
-      componentProps: ({ formActionType }) => {
-        const { setFieldsValue, getFieldsValue } = formActionType;
-        return {
-          setFieldsValue: setFieldsValue,
-          getFieldsValue: getFieldsValue,
-          method: 'get',
-          url: '/workshop/basWorkShop/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'id,name' },
-          columns: [
-            { name: '编码', code: 'id' },
-            { name: '名称', code: 'name' },
-          ],
-          // 是否显示序号
-          isShowNum: false,
-          rowKey: 'id',
-          labelKey: ['name'],
-          placeholder: '请输入',
-        };
-      },
-    },
-    {
-      label: '生产班组',
-      field: 'workTeamId',
-      component: 'JSearchSelectCustom',
-      componentProps: ({ formActionType }) => {
-        const { setFieldsValue, getFieldsValue } = formActionType;
-        return {
-          setFieldsValue: setFieldsValue,
-          getFieldsValue: getFieldsValue,
-          method: 'get',
-          url: '/basic/basWorkTeam/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'id,name'},
-          columns: [
-            { name: '编码', code: 'id' },
-            { name: '名称', code: 'name' },
-          ],
-          // 是否显示序号
-          isShowNum: false,
-          rowKey: 'id',
-          labelKey: ['name'],
-          placeholder: '请输入',
-        };
-      },
-    },
+    // {
+    //   label: '生产车间',
+    //   field: 'workShopNumber',
+    //   component: 'JSearchSelectCustom',
+    //   componentProps: ({ formActionType }) => {
+    //     const { setFieldsValue, getFieldsValue } = formActionType;
+    //     return {
+    //       setFieldsValue: setFieldsValue,
+    //       getFieldsValue: getFieldsValue,
+    //       method: 'get',
+    //       url: '/workshop/basWorkShop/list',
+    //       params: { column: 'createTime', order: 'desc', searchFields: 'id,name' },
+    //       columns: [
+    //         { name: '编码', code: 'id' },
+    //         { name: '名称', code: 'name' },
+    //       ],
+    //       // 是否显示序号
+    //       isShowNum: false,
+    //       rowKey: 'code',
+    //       labelKey: ['name'],
+    //       placeholder: '请输入',
+    //     };
+    //   },
+    // },
+    // {
+    //   label: '生产班组',
+    //   field: 'workTeamId',
+    //   component: 'JSearchSelectCustom',
+    //   componentProps: ({ formActionType }) => {
+    //     const { setFieldsValue, getFieldsValue } = formActionType;
+    //     return {
+    //       setFieldsValue: setFieldsValue,
+    //       getFieldsValue: getFieldsValue,
+    //       method: 'get',
+    //       url: '/basic/basWorkTeam/list',
+    //       params: { column: 'createTime', order: 'desc', searchFields: 'id,name'},
+    //       columns: [
+    //         { name: '编码', code: 'id' },
+    //         { name: '名称', code: 'name' },
+    //       ],
+    //       // 是否显示序号
+    //       isShowNum: false,
+    //       rowKey: 'id',
+    //       labelKey: ['name'],
+    //       placeholder: '请输入',
+    //     };
+    //   },
+    // },
     {
       label: '开工时间',
       field: 'startTime',
@@ -132,13 +150,18 @@ export function getFormSchema(): FormSchema[] {
       },
     },
     {
-      label: '标签重',
-      field: 'exceptedWeight',
+      label: '重量',
+      field: 'weight',
       component: 'InputNumber',
       componentProps: {
-        style: { width: '100%' }
+        style: { width: '100%' },
+        precision: 2,        // 设置小数点后两位
+        step: 0.01,          // 设置步进值为0.01
       },
       dynamicDisabled: true,//禁用
+      dynamicRules: ({ model, schema, values }) => {
+        return [{ required: true, message: '请输入重量!' }];
+      },
     },
     {
       label: '实际重量',
@@ -148,6 +171,8 @@ export function getFormSchema(): FormSchema[] {
         style: { width: '100%' }
       }
     },
+
+    /*
     {
       label: '限定占比',
       field: 'limitedProportion',
@@ -166,7 +191,7 @@ export function getFormSchema(): FormSchema[] {
         addonAfter: '‰' , // 在输入框后添加千分号
         style: { width: '100%' }
       }
-    },
+    },*/
     {
       label: '设备',
       field: 'equipmentId',
@@ -177,8 +202,13 @@ export function getFormSchema(): FormSchema[] {
           setFieldsValue: setFieldsValue,
           getFieldsValue: getFieldsValue,
           method: 'get',
-          url: '/basic/basEquipment/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'code,name', code: '${code}' },
+          url: '/etl/annealing/getEquipment',
+          params: {
+            column: 'createTime',
+            order: 'desc',
+            searchFields: 'code,name',
+            code: '${code}'
+          },
           columns: [
             {
               name: '编码',
@@ -189,6 +219,11 @@ export function getFormSchema(): FormSchema[] {
               code: 'name',
             },
           ],
+          linkmap: [{
+            // equipmentId:'equipmentId',//设备编号
+            code:'equipmentNumber',//设备编号
+            // equipmentName:'equipmentName',//设备名称
+          }],
           // 是否显示序号
           isShowNum: false,
           rowKey: 'id',
@@ -196,14 +231,31 @@ export function getFormSchema(): FormSchema[] {
           placeholder: '请输入',
         };
       },
+      dynamicRules: ({ model, schema, values }) => {
+        return [{ required: true, message: '请选择设备!' }];
+      },
     },
     {
+      label: '设备编码',
+      field: 'equipmentNumber',
+      component: 'Input',
+      dynamicDisabled: true,//禁用
+      show: false,//禁止显示
+    },
+    // {
+    //   label: '设备名称',
+    //   field: 'equipmentName',
+    //   component: 'Input',
+    //   dynamicDisabled: true,//禁用
+    //   show: false,//禁止显示
+    // },
+    {
       label:'操作员',
-      field: 'operatorId',
+      field: 'operatorNumber',
       component:'Input',
       defaultValue:useUserStore().getUserInfo.username,
       dynamicDisabled: true,//禁用
-      show: false,//默认隐藏
+      show: true,//默认隐藏
       componentProps: {
         style: { width: '100%' }
       }
@@ -225,5 +277,4 @@ export function getFormSchema(): FormSchema[] {
       component: 'Input',
     },*/
   ];
-  return retValue;
 }

@@ -1,34 +1,36 @@
 <script setup lang="ts" name="mo-ColdRollingStartwork">
-import { getFormSchema } from './ColdRollingStartwork.ts';
-import {BasicForm, useForm} from "@/components/Form";
-import {saveOrUpdate} from "@/views/mes/startwork/coldrolling/ColdRollingStartwork.api";
-import {useMessage} from "@/hooks/web/useMessage";
-import { onMounted } from 'vue';
-import dayjs from "dayjs";
+  import { getFormSchema } from './ColdRollingStartwork.ts';
+  import { BasicForm, useForm } from '@/components/Form';
+  import { saveOrUpdate } from '@/views/mes/startwork/coldrolling/ColdRollingStartwork.api';
+  import { useMessage } from '@/hooks/web/useMessage';
+  import { onMounted, ref } from 'vue';
+  import dayjs from 'dayjs';
 
-// 提示方法声明
-const $message = useMessage();
-// Emits声明
-const emit = defineEmits(['register', 'success']);
+  // 提示方法声明
+  const $message = useMessage();
+  // Emits声明
+  const emit = defineEmits(['register', 'success']);
 
-onMounted(() => {
-  // 延迟一点时间确保表单完全初始化
-  setTimeout(() => {
-    setFieldsValue({
-      startTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-    });
-  }, 100);
-});
+  const loading = ref(false);
 
-//表单配置
-const [registerForm,{ validate, getFieldsValue, setFieldsValue,resetFields}] = useForm({
-  labelWidth: 160,
-  schemas: getFormSchema(),
-  showActionButtonGroup: false,
-  baseColProps: { span: 8 },
-  disabled: false,
-});
-/*//效验方法
+  onMounted(() => {
+    // 延迟一点时间确保表单完全初始化
+    setTimeout(() => {
+      setFieldsValue({
+        startTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      });
+    }, 100);
+  });
+
+  //表单配置
+  const [registerForm, { validate, getFieldsValue, setFieldsValue, resetFields }] = useForm({
+    labelWidth: 160,
+    schemas: getFormSchema(),
+    showActionButtonGroup: false,
+    baseColProps: { span: 8 },
+    disabled: false,
+  });
+  /*//效验方法
 function verification() {
   // 获取当前表单值
   const values = getFieldsValue();
@@ -76,64 +78,68 @@ function verification() {
     });
   }
 }*/
-// 添加 handleSubmit 方法
-async function handleSubmit() {
-  try {
-    // 验证表单
-    const values = await validate();
-    // 添加设备校验
-    if (!values.equipmentId) { // 假设设备字段名为 equipmentId，请根据实际字段名调整
-      $message.createWarningModal({
-        title: '提示',
-        content: '请选择设备',
-        onOk: () => {
-          console.log('请先选择设备确认');
-        }
-      });
-      return; // 阻止继续执行
+  // 添加 handleSubmit 方法
+  async function handleSubmit() {
+    loading.value = true;
+    try {
+      // 验证表单
+      const values = await validate();
+      // 添加设备校验
+      if (!values.equipmentId) {
+        // 假设设备字段名为 equipmentId，请根据实际字段名调整
+        $message.createWarningModal({
+          title: '提示',
+          content: '请选择设备',
+          onOk: () => {
+            console.log('请先选择设备确认');
+          },
+        });
+        return; // 阻止继续执行
+      }
+      await requestAddOrEdit(values);
+    } catch (error) {
+      // 处理验证错误
+      console.log('验证失败:', error);
+    }finally {
+      loading.value = false;
     }
-    await requestAddOrEdit(values);
-  } catch (error) {
-    // 处理验证错误
-    console.log('验证失败:', error);
   }
-}
-/**表单提交事件*/
-async function requestAddOrEdit(values) {
-  try {
-    //提交表单
-    await saveOrUpdate(values);
-    //清空表单数据
-    await resetFields();
-    //刷新列表
-    emit('success');
-  } catch (error) {
-    console.log(error);
+  /**表单提交事件*/
+  async function requestAddOrEdit(values) {
+    try {
+      //提交表单
+      await saveOrUpdate(values);
+      //清空表单数据
+      await resetFields();
+      //刷新列表
+      emit('success');
+    } catch (error) {
+      console.log(error);
+    }
   }
-}
 </script>
 
 <template>
   <div class="custom-form-wrapper">
-    <BasicForm @register="registerForm" :width="896"/>
+    <BasicForm @register="registerForm" :width="896" />
     <div class="button-container">
-<!--      <a-button @click="verification" type="primary">效验</a-button>-->
-      <a-button @click="handleSubmit" type="primary">扫码开工</a-button>
+      <!--      <a-button @click="verification" type="primary">效验</a-button>-->
+      <a-button @click="handleSubmit" :loading = "loading" type="primary">扫码开工</a-button>
     </div>
   </div>
 </template>
 
 <style scoped>
-.custom-form-wrapper{
-  background-color: white; /* 设置背景颜色 */
-  padding: 20px; /* 可选：添加内边距 */
-  border-radius: 4px; /* 可选：添加圆角 */
-  min-height: calc(100vh - 40px);
-}
-.button-container {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 20px;
-}
+  .custom-form-wrapper {
+    background-color: white; /* 设置背景颜色 */
+    padding: 20px; /* 可选：添加内边距 */
+    border-radius: 4px; /* 可选：添加圆角 */
+    min-height: calc(100vh - 40px);
+  }
+  .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
 </style>
