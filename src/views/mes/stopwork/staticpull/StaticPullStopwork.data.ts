@@ -18,7 +18,7 @@ export const formSchema: FormSchema[] = [
     field: 'flowCardId',
     component: 'Input',
     dynamicDisabled: true, // 设置为禁用状态，只能通过程序设置
-    show: true,//禁止显示
+    show: false,//禁止显示
   },
   {
     label: '重量',
@@ -30,77 +30,77 @@ export const formSchema: FormSchema[] = [
       step: 0.01,          // 设置步进值为0.01
     }
   },
-  {
-    label: '物料编码',
-    field: 'materialNumber',
-    component: 'JSearchSelectCustom',
-    componentProps: ({ formActionType }) => {
-      const { setFieldsValue, getFieldsValue } = formActionType;
-      return {
-        setFieldsValue: setFieldsValue,
-        getFieldsValue: getFieldsValue,
-        method: 'get',
-        url: '/etl/drawing/materialMappingInfo',
-        params: {
-          column: 'createTime',
-          order: 'desc',
-          flowCardId: '${flowCardId}',
-          searchFields: 'old_name,old_model_number'
-        },
-        columns: [
-          {name: '物料编码', code: 'number'},
-          {name: '物料名称', code: 'name'},
-          {name: '规格型号', code: 'materialModelNumber'},
-        ],
-        isShowNum: false,
-        rowKey: 'number',
-        labelKey: ['name'],
-        linkmap: [
-          {
-            id:'newMaterialId',//物料编号
-            number:'newMaterialNumber',//物料编码
-            name:'newMaterialName',//物料名称
-            materialModelNumber:'newModelNumber',//规格型号
-          },
-        ],
-        //pageSize: 10,
-        multi: false,
-        maxTagCount: 2,
-        placeholder: '请选择',
-        // 启用滚动分页
-        scroll: {
-          pageSize: 10
-        },
-      };
-    },
-  },
-  {
-    label: "物料编号",
-    field: 'newMaterialId',
-    component: 'Input',
-    show: true,//禁止显示
-    dynamicDisabled : true,
-  },
-  {
-    label: '物料名称',
-    field: 'newMaterialName',
-    component: 'Input',
-    show: true,//禁止显示
-    dynamicDisabled : true,
-  },{
-    label: '物料编码',
-    field: 'newMaterialNumber',
-    component: 'Input',
-    show: true,//禁止显示
-    dynamicDisabled : true,
-  },
-  {
-    label: '规格型号',
-    field: 'newModelNumber',
-    component: 'Input',
-    show: true,//禁止显示
-    dynamicDisabled : true,
-  },
+  // {
+  //   label: '物料编码',
+  //   field: 'materialNumber',
+  //   component: 'JSearchSelectCustom',
+  //   componentProps: ({ formActionType }) => {
+  //     const { setFieldsValue, getFieldsValue } = formActionType;
+  //     return {
+  //       setFieldsValue: setFieldsValue,
+  //       getFieldsValue: getFieldsValue,
+  //       method: 'get',
+  //       url: '/etl/drawing/getNewMaterialInfo',
+  //       params: {
+  //         column: 'createTime',
+  //         order: 'desc',
+  //         flowCardId: '${flowCardId}',
+  //         searchFields: 'old_name,old_model_number'
+  //       },
+  //       columns: [
+  //         {name: '物料编码', code: 'number'},
+  //         {name: '物料名称', code: 'name'},
+  //         {name: '规格型号', code: 'materialModelNumber'},
+  //       ],
+  //       isShowNum: false,
+  //       rowKey: 'number',
+  //       labelKey: ['name'],
+  //       linkmap: [
+  //         {
+  //           id:'newMaterialId',//物料编号
+  //           number:'newMaterialNumber',//物料编码
+  //           name:'newMaterialName',//物料名称
+  //           materialModelNumber:'newModelNumber',//规格型号
+  //         },
+  //       ],
+  //       //pageSize: 10,
+  //       multi: false,
+  //       maxTagCount: 2,
+  //       placeholder: '请选择',
+  //       // 启用滚动分页
+  //       scroll: {
+  //         pageSize: 10
+  //       },
+  //     };
+  //   },
+  // },
+  // {
+  //   label: "物料编号",
+  //   field: 'newMaterialId',
+  //   component: 'Input',
+  //   show: true,//禁止显示
+  //   dynamicDisabled : true,
+  // },
+  // {
+  //   label: '物料名称',
+  //   field: 'newMaterialName',
+  //   component: 'Input',
+  //   show: true,//禁止显示
+  //   dynamicDisabled : true,
+  // },{
+  //   label: '物料编码',
+  //   field: 'newMaterialNumber',
+  //   component: 'Input',
+  //   show: true,//禁止显示
+  //   dynamicDisabled : true,
+  // },
+  // {
+  //   label: '规格型号',
+  //   field: 'newModelNumber',
+  //   component: 'Input',
+  //   show: true,//禁止显示
+  //   dynamicDisabled : true,
+  // },
   {
     label: '流转去向',
     field: 'destination',
@@ -259,24 +259,24 @@ export const getDetailJVxeColumns = function () {
       type: JVxeTypes.input,
       disabled: false,   // 禁止编辑
     },
-    {
-      title: '物料编码',
-      key: 'newMaterialNumber',
-      type: JVxeTypes.input,
-      disabled: true,   // 禁止编辑
-    },
-    {
-      title: '物料名称',
-      key: 'newMaterialName',
-      type: JVxeTypes.input,
-      disabled: true,   // 禁止编辑
-    },
-    {
-      title: '规格型号',
-      key: 'newModelNumber',
-      type: JVxeTypes.input,
-      disabled: true,   // 禁止编辑
-    },
+    // {
+    //   title: '物料编码',
+    //   key: 'newMaterialNumber',
+    //   type: JVxeTypes.input,
+    //   disabled: true,   // 禁止编辑
+    // },
+    // {
+    //   title: '物料名称',
+    //   key: 'newMaterialName',
+    //   type: JVxeTypes.input,
+    //   disabled: true,   // 禁止编辑
+    // },
+    // {
+    //   title: '规格型号',
+    //   key: 'newModelNumber',
+    //   type: JVxeTypes.input,
+    //   disabled: true,   // 禁止编辑
+    // },
     /**
      * 流转去向: 1入库、2退料
      */
@@ -285,13 +285,13 @@ export const getDetailJVxeColumns = function () {
       key: 'destination',
       type: JVxeTypes.select,// 使用 select 类型
       dictCode: 'gxlzqx',// 指定字典编码
-      disabled: true,   // 禁止编辑
+      disabled: false,   // 禁止编辑
     },
     {
       title: '质量汇报',
       key: 'qualityReport',
       type: JVxeTypes.textarea,// 使用 select 类型
-      disabled: true,   // 禁止编辑
+      disabled: false,   // 禁止编辑
     },
     // {
     //   title: '仓库Id',
