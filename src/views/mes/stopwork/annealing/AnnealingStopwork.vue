@@ -28,7 +28,7 @@ const mesProductPickDetailTable = reactive({
   columns: detailJVxeColumns,
 });
 
-//表单配置 冷轧扫码完工表单
+//表单配置 退火扫码完工表单
 const [registerForm,{validate,setFieldsValue,getFieldsValue}] = useForm({
   labelWidth: 160,
   schemas: getFormSchema(),
@@ -68,12 +68,12 @@ async function handleSubmit() {
   }
 }*/
 
-// 冷轧扫码完工提交事件
+// 退火扫码完工提交事件
 async function handleSubmit() {
   try {
     // 验证表单
     const mainFormValues = await validate();
-    if(!mainFormValues.flowCardId){
+    if(!mainFormValues.oldCoilNo){
       $message.createMessage.warning('请先扫码钢卷号');
       return;
     }
@@ -159,7 +159,7 @@ async function requestAddOrEdit(values) {
 function handleAddDetail() {
   // 获取表单数据中的钢卷号
   const formData = getFieldsValue();
-  const flowCardId = formData.flowCardId || "";
+  const flowCardId = formData.flowCardId;
   if (!formData.oldCoilNo) {
     $message.createMessage.warning('请先输入钢卷号');
     return;
@@ -172,7 +172,7 @@ function handleAddDetail() {
   const currentDataSource = mesProductPickDetail.value ? mesProductPickDetail.value.getTableData() : mesProductPickDetailTable.dataSource;
   const currentIndex = Array.isArray(currentDataSource) ? currentDataSource.length + 1 : 1;
   // 拼接新的钢卷号
-  const newCoilNo = currentIndex > 9? `20-${coilNo}-${currentIndex}`: `20-${coilNo}-0${currentIndex}`;
+  const newCoilNo = currentIndex > 9? `40-${coilNo}-${currentIndex}`: `40-${coilNo}-0${currentIndex}`;
   // 先打开弹框
   openModal(true, {});
   // 延迟设置值，确保弹框已打开并且表单已初始化

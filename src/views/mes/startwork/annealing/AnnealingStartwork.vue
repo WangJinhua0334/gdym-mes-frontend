@@ -1,7 +1,7 @@
 <script setup lang="ts" name="mo-AnnealingStartwork">
 import { getFormSchema } from './AnnealingStartwork';
 import { BasicForm, useForm } from '@/components/Form';
-import { saveOrUpdate } from '@/views/mes/startwork/coldrolling/ColdRollingStartwork.api';
+import { saveOrUpdate } from './AnnealingStartwork.api';
 import { useMessage } from '@/hooks/web/useMessage';
 import { onMounted, ref } from 'vue';
 import dayjs from 'dayjs';
