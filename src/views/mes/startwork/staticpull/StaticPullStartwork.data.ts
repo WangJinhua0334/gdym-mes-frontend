@@ -201,8 +201,13 @@ export function getFormSchema(): FormSchema[] {
           setFieldsValue: setFieldsValue,
           getFieldsValue: getFieldsValue,
           method: 'get',
-          url: '/basic/basEquipment/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'code,name', code: '${code}' },
+          url: '/etl/drawing/getEquipment',
+          params: {
+            column: 'createTime',
+            order: 'desc',
+            searchFields: 'code,name',
+            code: '${code}'
+          },
           columns: [
             {
               name: '编码',
@@ -213,14 +218,15 @@ export function getFormSchema(): FormSchema[] {
               code: 'name',
             },
           ],
+          linkmap: [{
+            // equipmentId:'equipmentId',//设备编号
+            code:'equipmentNumber',//设备编号
+            // equipmentName:'equipmentName',//设备名称
+          }],
           // 是否显示序号
           isShowNum: false,
           rowKey: 'id',
           labelKey: ['name'],
-          linkmap: [{
-            code: 'equipmentNumber',
-            // name: 'equipmentName',
-          }],
           placeholder: '请输入',
         };
       },

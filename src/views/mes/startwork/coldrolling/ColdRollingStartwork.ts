@@ -159,9 +159,6 @@ export function getFormSchema(): FormSchema[] {
         step: 0.01,          // 设置步进值为0.01
       },
       dynamicDisabled: true,//禁用
-      dynamicRules: ({ model, schema, values }) => {
-        return [{ required: true, message: '请输入重量!' }];
-      },
     },
 
     /*{
@@ -201,8 +198,13 @@ export function getFormSchema(): FormSchema[] {
           setFieldsValue: setFieldsValue,
           getFieldsValue: getFieldsValue,
           method: 'get',
-          url: '/basic/basEquipment/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'code,name', code: '${code}' },
+          url: '/etl/rolling/getEquipment',
+          params: {
+            column: 'createTime',
+            order: 'desc',
+            searchFields: 'code,name',
+            code: '${code}'
+          },
           columns: [
             {
               name: '编码',
@@ -213,14 +215,15 @@ export function getFormSchema(): FormSchema[] {
               code: 'name',
             },
           ],
+          linkmap: [{
+            // equipmentId:'equipmentId',//设备编号
+            code:'equipmentNumber',//设备编号
+            // equipmentName:'equipmentName',//设备名称
+          }],
           // 是否显示序号
           isShowNum: false,
           rowKey: 'id',
           labelKey: ['name'],
-          linkmap: [{
-            code: 'equipmentNumber',
-            // name: 'equipmentName',
-          }],
           placeholder: '请输入',
         };
       },
@@ -248,7 +251,7 @@ export function getFormSchema(): FormSchema[] {
       component:'Input',
       defaultValue:useUserStore().getUserInfo.username,
       dynamicDisabled: true,//禁用
-      show: false,//默认隐藏
+      show: true,//默认隐藏
       componentProps: {
         style: { width: '100%' }
       }

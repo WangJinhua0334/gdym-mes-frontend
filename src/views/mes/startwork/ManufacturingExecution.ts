@@ -230,8 +230,13 @@ export function getFormSchema(): FormSchema[] {
           setFieldsValue: setFieldsValue,
           getFieldsValue: getFieldsValue,
           method: 'get',
-          url: '/basic/basEquipment/list',
-          params: { column: 'createTime', order: 'desc', searchFields: 'code,name', code: '${code}' },
+          url: '/etl/picking/getEquipment',
+          params: {
+            column: 'createTime',
+            order: 'desc',
+            searchFields: 'code,name',
+            code: '${code}'
+          },
           columns: [
             {
               name: '编码',
@@ -271,7 +276,7 @@ export function getFormSchema(): FormSchema[] {
       component:'Input',
       defaultValue:useUserStore().getUserInfo.username,
       dynamicDisabled: true,//禁用
-      show: false,//默认隐藏
+      show: true,//默认隐藏
       componentProps: {
         style: { width: '100%' }
       }

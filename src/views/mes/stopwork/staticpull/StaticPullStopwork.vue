@@ -277,6 +277,7 @@ function clearTableDate() {
   resetFields();
   setFieldsValue({
     flowCardId: undefined,
+    oldCoilNo: undefined,
     materialId: undefined,
     materialNumber: undefined,
     materialName: undefined,
