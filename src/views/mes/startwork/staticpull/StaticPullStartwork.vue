@@ -97,6 +97,10 @@ async function handleSubmit() {
       return; // 阻止继续执行
     }
     await requestAddOrEdit(values);
+    await resetFields();
+    setFieldsValue({
+      startTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+    })
   } catch (error) {
     // 处理验证错误
     console.log('验证失败:', error);
@@ -124,7 +128,7 @@ async function requestAddOrEdit(values) {
     <BasicForm @register="registerForm" :width="896" />
     <div class="button-container">
       <!--      <a-button @click="verification" type="primary">效验</a-button>-->
-      <a-button @click="handleSubmit" :loading = "loading" type="primary">扫码开工</a-button>
+      <a-button @click="handleSubmit" :loading = "loading" type="primary">打码开工</a-button>
     </div>
   </div>
 </template>
