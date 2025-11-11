@@ -49,7 +49,7 @@ export function getFormSchema(): FormSchema[] {
           ],
         };
       },
-      dynamicRules: ({ model, schema, values }) => {
+      dynamicRules: () => {
         return [{ required: true, message: '请选择钢卷!' }];
       },
     },
@@ -148,7 +148,7 @@ export function getFormSchema(): FormSchema[] {
         else planStartTime.value = null;
         return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];
       },
-    },
+    } as FormSchema,
     {
       label: '重量',
       field: 'weight',
@@ -227,7 +227,7 @@ export function getFormSchema(): FormSchema[] {
           placeholder: '请输入',
         };
       },
-      dynamicRules: ({ model, schema, values }) => {
+      dynamicRules: () => {
         return [{ required: true, message: '请选择设备!' }];
       },
     },

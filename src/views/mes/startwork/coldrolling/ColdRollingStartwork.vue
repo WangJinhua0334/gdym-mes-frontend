@@ -1,5 +1,5 @@
 <script setup lang="ts" name="mo-ColdRollingStartwork">
-  import { getFormSchema } from './ColdRollingStartwork.ts';
+  import { getFormSchema } from './ColdRollingStartwork.data.ts';
   import { BasicForm, useForm } from '@/components/Form';
   import { saveOrUpdate } from '@/views/mes/startwork/coldrolling/ColdRollingStartwork.api';
   import { useMessage } from '@/hooks/web/useMessage';
@@ -97,6 +97,10 @@ function verification() {
         return; // 阻止继续执行
       }
       await requestAddOrEdit(values);
+      await resetFields();
+      setFieldsValue({
+        startTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      })
     } catch (error) {
       // 处理验证错误
       console.log('验证失败:', error);
