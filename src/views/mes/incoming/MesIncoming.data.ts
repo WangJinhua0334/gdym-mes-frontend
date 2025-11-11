@@ -48,9 +48,19 @@ export const columns: BasicColumn[] = [
     dataIndex: 'licensePlateNumber',
   },
   {
+    title: '收料后的第一道工序',
+    align: 'center',
+    dataIndex: 'firstOperationNumber_dictText',
+  },
+  {
     title: "入库时间",
     align: 'center',
-    dataIndex: 'createTime',
+    dataIndex: 'productionDate',
+  },
+  {
+    title: "收料员工",
+    align: 'center',
+    dataIndex: 'createBy_dictText',
   },
   {
     title: '备注',
@@ -185,6 +195,34 @@ export const formSchema: FormSchema[] = [
     },
     dynamicRules: () => {
       return [{ required: true, message: '请选择钢卷号!' }];
+    },
+  },
+  {
+    label: '第一道工序',
+    field: 'firstOperation',
+    component: 'RadioButtonGroup',
+    componentProps: {
+      options: [
+        {
+          label: '酸洗',
+          value: 'sx',
+        },
+        {
+          label: '退火',
+          value: 'th',
+        },
+      ],
+    },
+    defaultValue: "sx",
+    // 不设置默认值，确保用户必须选择，验证规则才能生效
+    dynamicRules: () => {
+      return [
+        { 
+          required: true, 
+          message: '请选择钢卷的第一道工序!',
+          trigger: 'change',
+        },
+      ];
     },
   },
   {
@@ -523,8 +561,7 @@ export const formSchema: FormSchema[] = [
 
 
 //查询数据-来料单查询条件
-export const searchFormSchema: FormSchema[] =
-[
+export const searchFormSchema: FormSchema[] = [
   {
     label: '钢卷号',
     field: 'originalCoilNumber',
@@ -789,3 +826,34 @@ export function getBpmFormSchema(): FormSchema[] {
   // 默认和原始表单保持一致 如果流程中配置了权限数据，这里需要单独处理formSchema
   return formSchema;
 }
+
+//打印模板
+export const printFormSchema: FormSchema[] = [
+  {
+    label: '打印模板',
+    field: 'templateId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/template/basTemplate/list',
+        params: { column: 'code', order: 'asc' },
+        columns: [
+          { name: '编码', code: 'code' },
+          { name: '名称', code: 'name' },
+        ],
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        placeholder: '请选择',
+        getPopupContainer: () => document.body,
+      };
+    },
+    dynamicRules: () => {
+      return [{ required: true, message: '请选择打印模板!' }];
+    },
+  },
+];
