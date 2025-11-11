@@ -4,18 +4,18 @@ import { useMessage } from "/@/hooks/web/useMessage";
 const { createConfirm } = useMessage();
 
 enum Api {
-  list = '/workTeam/basWorkTeam/list',
-  save='/workTeam/basWorkTeam/add',
-  edit='/workTeam/basWorkTeam/edit',
-  deleteOne = '/workTeam/basWorkTeam/delete',
-  deleteBatch = '/workTeam/basWorkTeam/deleteBatch',
-  importExcel = '/workTeam/basWorkTeam/importExcel',
-  exportXls = '/workTeam/basWorkTeam/exportXls',
-  basWorkTeamStaffList = '/workTeam/basWorkTeam/listBasWorkTeamStaffByMainId',
-  basWorkTeamStaffSave='/workTeam/basWorkTeam/addBasWorkTeamStaff',
-  basWorkTeamStaffEdit='/workTeam/basWorkTeam/editBasWorkTeamStaff',
-  basWorkTeamStaffDelete = '/workTeam/basWorkTeam/deleteBasWorkTeamStaff',
-  basWorkTeamStaffDeleteBatch = '/workTeam/basWorkTeam/deleteBatchBasWorkTeamStaff',
+  list = '/basic/basWorkTeam/list',
+  save='/basic/basWorkTeam/add',
+  edit='/basic/basWorkTeam/edit',
+  deleteOne = '/basic/basWorkTeam/delete',
+  deleteBatch = '/basic/basWorkTeam/deleteBatch',
+  importExcel = '/basic/basWorkTeam/importExcel',
+  exportXls = '/basic/basWorkTeam/exportXls',
+  basWorkTeamStaffList = '/basic/basWorkTeam/listBasWorkTeamStaffByMainId',
+  basWorkTeamStaffSave='/basic/basWorkTeam/addBasWorkTeamStaff',
+  basWorkTeamStaffEdit='/basic/basWorkTeam/editBasWorkTeamStaff',
+  basWorkTeamStaffDelete = '/basic/basWorkTeam/deleteBasWorkTeamStaff',
+  basWorkTeamStaffDeleteBatch = '/basic/basWorkTeam/deleteBatchBasWorkTeamStaff',
 }
 /**
  * 导出api

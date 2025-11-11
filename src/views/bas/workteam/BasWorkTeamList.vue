@@ -13,6 +13,7 @@
       <!--插槽:table标题-->
       <template #tableTitle>
         <a-button type="primary" @click="handleAdd" preIcon="ant-design:plus-outlined" v-auth="'bas:bas_work_team:add'"> 新增</a-button>
+        <a-button type="primary" @click="handleGetFromK3Cloud" preIcon="ant-design:import-outlined" v-auth="'bas:bas_customer:edit'">同步金蝶班组信息</a-button>
         <a-button type="primary" preIcon="ant-design:export-outlined" @click="onExportXls" v-auth="'bas:bas_work_team:exportXls'"> 导出</a-button>
         <j-upload-button type="primary" preIcon="ant-design:import-outlined" @click="onImportXls" v-auth="'bas:bas_work_team:importExcel'">
           导入
@@ -70,6 +71,11 @@
   import { columns, searchFormSchema } from './BasWorkTeam.data';
   import { list, deleteOne, batchDelete, getImportUrl, getExportUrl } from './BasWorkTeam.api';
   import { downloadFile } from '/@/utils/common/renderUtils';
+  import { useUserStore } from "@/store/modules/user";
+  import {defHttp} from "@/utils/http/axios";
+  import { useMessage } from '/@/hooks/web/useMessage';
+
+
 
   //注册model
   const [registerModal, { openModal }] = useModal();
@@ -127,6 +133,24 @@
   //const mainId = computed(() => (unref(selectedRowKeys).length > 0 ? unref(selectedRowKeys)[0] : ''));
   //下发 mainId,子组件接收
   //provide('mainId', mainId);
+  /**
+   * 同步金蝶信息
+   */
+  function handleGetFromK3Cloud() {
+    const { createMessage } = useMessage();
+
+    // 显示加载提示
+    // const hide = createMessage.loading('正在同步金蝶客户信息...', 0);
+
+    // 调用接口
+    defHttp.get({
+      url: '/apiService/k3cloudApi/basic/importAllWorkTeams',
+      params: {
+        tenantId: useUserStore().getTenant,
+      }
+      // hide();
+    });
+  }
   /**
    * 新增事件
    */
