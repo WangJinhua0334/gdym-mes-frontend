@@ -39,10 +39,10 @@ export function getFormSchema(): FormSchema[] {
                   // 将范围值转换为小数（千分比转小数）
                   const rangeDecimal = rangeValue / 1000;
                   // 计算限定占比：标签重 × (1 - 范围值)
-                  const limitedProportion = exceptedWeight * (1 - rangeDecimal);
+                  const limitedProportion = (exceptedWeight * (1 - rangeDecimal)).toFixed(2);
                   // 设置限定占比字段的值（使用原始的 setFieldsValue）
                   originalSetFieldsValue({
-                    limitedProportion: parseFloat(limitedProportion.toFixed(2)), // 保留两位小数
+                    limitedProportion: limitedProportion, // 保留两位小数
                   });
                 }
               }, 10);
