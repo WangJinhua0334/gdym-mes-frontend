@@ -187,34 +187,6 @@ export const formSchema: FormSchema[] = [
     dynamicDisabled: true,
     show: false,
   },
-  // {
-  //   label: '标准工时(元/时)',
-  //   field: 'standardMoney',
-  //   component: 'InputNumber',
-  //   defaultValue: 0,
-  //   ifShow: false,
-  // },
-  // {
-  //   label: '工作日加班工时(元/时)',
-  //   field: 'workMoney',
-  //   component: 'InputNumber',
-  //   defaultValue: 0,
-  //   ifShow: false,
-  // },
-  // {
-  //   label: '休息日加班工时(元/时)',
-  //   field: 'restMoney',
-  //   component: 'InputNumber',
-  //   defaultValue: 0,
-  //   ifShow: false,
-  // },
-  // {
-  //   label: '节假日加班工时(元/时)',
-  //   field: 'holidaysMoney',
-  //   component: 'InputNumber',
-  //   defaultValue: 0,
-  //   ifShow: false,
-  // },
   {
     label: '生产厂区',
     // label: '生产厂区编号',
@@ -474,7 +446,7 @@ export const formSchema: FormSchema[] = [
         setFieldsValue: setFieldsValue,
         getFieldsValue: getFieldsValue,
         method: 'get',
-        url: '/equipmenttype/basEquipmentType/list',
+        url: '/basic/basEquipmentType/list',
         params: { column: 'createTime', order: 'desc', searchFields: 'id,name,code' },
         columns: [
           { name: '编号', code: 'id' },
