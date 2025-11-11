@@ -21,6 +21,7 @@
     "typeRoots": ["./node_modules/@types/", "./types","./node_modules"],
     "noImplicitAny": false,
     "skipLibCheck": true,
+    "noEmit": true,
     "paths": {
       "/@/*": ["src/*"],
       "/#/*": ["types/*"],
@@ -41,5 +42,19 @@
     "mock/**/*.ts",
     "vite.config.ts"
   ],
-  "exclude": ["node_modules", "tests/server/**/*.ts", "dist", "**/*.js"]
+  "exclude": [
+    "node_modules",
+    "tests/server/**/*.ts",
+    "dist",
+    "**/*.js",
+    "src/**/*.js",
+    "build/**/*.js",
+    "mock/**/*.js",
+    "src/components/Form/src/utils/areaDataUtil.js",
+    "src/components/logicflow/registerNode/*.js",
+    "src/utils/dict/*.js",
+    "src/utils/encryption/*.js",
+    "src/utils/flexible.js",
+    "src/utils/loms.js"
+  ]
 }

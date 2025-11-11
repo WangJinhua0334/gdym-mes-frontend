@@ -26,7 +26,6 @@
         if (props.id && props.id != '') {
           parameters['mainId'] = props.id;
         }
-
         return mesMoCoil(parameters);
       },
       rowKey: 'id',

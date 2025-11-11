@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" name="mo-SalesOutboundModel">
 
 import {saveOrUpdate, getEditData, listMoPlanTaskByMoPlanId,} from './SalesOutbound.api'
 import {getFormSchema, mesSalesOutboundTaskJVxeColumns} from './SalesOutbound.data';
@@ -116,7 +116,7 @@ const [registerModalInner, { setModalProps, closeModal }] = useModalInner(async 
 
   setProps({ disabled: unref(disabled) });
 });
-</script>
+</script  >
 <!--销售发货页面-->
 <template>
   <BasicModal v-bind="$attrs" @register="registerModalInner" :title="title" destroyOnClose  :width="896" :showFullScreen="true" @cancel="handleCancel" @ok="handleSubmit">
@@ -141,6 +141,6 @@ const [registerModalInner, { setModalProps, closeModal }] = useModalInner(async 
     </a-tabs>
   </BasicModal>
 </template>
-<style scoped lang="less" name="mo-SalesOutbound">
+<style scoped lang="less" >
 
 </style>

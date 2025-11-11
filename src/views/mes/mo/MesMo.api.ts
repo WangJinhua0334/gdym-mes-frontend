@@ -300,3 +300,5 @@ export const mesMoBomPage = (params) => defHttp.get({ url: Api.mesMoBomPage, par
  * @param code 系统规则编码
  */
 export const fillRule = (code) => defHttp.put({ url: Api.fillRule + code });
+
+export const mesMoCoil = (params) => defHttp.get({ url: Api.mesMoCoil, params });

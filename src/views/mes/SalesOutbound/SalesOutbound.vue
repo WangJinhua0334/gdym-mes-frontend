@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" name="mo-SalesOutbound">
 
 import {BasicTable, TableAction} from "@/components/Table";
 import {useListPage} from "@/hooks/system/useListPage";
@@ -77,6 +77,6 @@ function handleSuccess() {
   </div>
 </template>
 
-<style scoped lang="less" name="mo-SalesOutbound">
+<style scoped lang="less" >
 
 </style>
