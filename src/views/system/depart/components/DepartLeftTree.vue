@@ -2,6 +2,7 @@
   <a-card :bordered="false" style="height: 100%">
     <div class="j-table-operator" style="width: 100%">
       <a-button type="primary" preIcon="ant-design:plus-outlined" @click="onAddDepart">新增</a-button>
+      <a-button type="primary" @click="handleGetFromK3Cloud" preIcon="ant-design:import-outlined" >同步金蝶部门信息</a-button>
       <a-button type="primary" preIcon="ant-design:plus-outlined" @click="onAddChildDepart()">添加下级</a-button>
       <a-upload name="file" :showUploadList="false" :customRequest="onImportXls">
         <a-button type="primary" preIcon="ant-design:import-outlined">导入</a-button>
@@ -96,6 +97,8 @@
   import { searchByKeywords } from '/@/views/system/departUser/depart.user.api';
   import DepartFormModal from '/@/views/system/depart/components/DepartFormModal.vue';
   import { Popconfirm } from 'ant-design-vue';
+  import { defHttp } from "@/utils/http/axios";
+  import { useUserStore } from "@/store/modules/user";
 
   const prefixCls = inject('prefixCls');
   const emit = defineEmits(['select', 'rootTreeData']);
@@ -218,6 +221,25 @@
       currentDepart.value = data;
       emit('select', data);
     }
+  }
+
+  /**
+   * 同步金蝶部门信息
+   */
+  function handleGetFromK3Cloud() {
+    const { createMessage } = useMessage();
+
+    // 显示加载提示
+    // const hide = createMessage.loading('正在同步金蝶客户信息...', 0);
+
+    // 调用接口
+    defHttp.get({
+      url: '/apiService/k3cloudApi/basic/importAllSysDeparts',
+      params: {
+        tenantId: useUserStore().getTenant,
+      }
+      // hide();
+    });
   }
 
   // 添加一级部门
