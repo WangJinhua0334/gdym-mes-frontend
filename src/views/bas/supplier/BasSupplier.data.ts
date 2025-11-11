@@ -25,31 +25,31 @@ export const columns: BasicColumn[] = [
     sorter: true,
     dataIndex: 'fullName',
   },
-  {
-    title: '负责人',
-    align: 'center',
-    dataIndex: 'principal',
-    width: 150,
-  },
-  {
-    title: '电话号码',
-    align: 'center',
-    dataIndex: 'telephone',
-    width: 150,
-  },
-  {
-    title: '是否锁定',
-    align: 'center',
-    sorter: true,
-    dataIndex: 'isLock',
-    width: 150,
-    customRender: ({ text }) => {
-      return render.renderSwitch(text, [
-        { text: '是', value: 'Y', isChecked: true },
-        { text: '否', value: 'N', isChecked: false },
-      ]);
-    },
-  },
+  // {
+  //   title: '负责人',
+  //   align: 'center',
+  //   dataIndex: 'principal',
+  //   width: 150,
+  // },
+  // {
+  //   title: '电话号码',
+  //   align: 'center',
+  //   dataIndex: 'telephone',
+  //   width: 150,
+  // },
+  // {
+  //   title: '是否锁定',
+  //   align: 'center',
+  //   sorter: true,
+  //   dataIndex: 'isLock',
+  //   width: 150,
+  //   customRender: ({ text }) => {
+  //     return render.renderSwitch(text, [
+  //       { text: '是', value: 'Y', isChecked: true },
+  //       { text: '否', value: 'N', isChecked: false },
+  //     ]);
+  //   },
+  // },
 ];
 //查询数据
 export const searchFormSchema: FormSchema[] = [
