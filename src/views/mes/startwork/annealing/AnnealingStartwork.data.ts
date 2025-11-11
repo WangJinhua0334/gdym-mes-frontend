@@ -19,13 +19,48 @@ export function getFormSchema(): FormSchema[] {
       field: 'oldCoilNo',  // 传入给后端时，对于冷轧来说是旧钢卷号
       component: 'JSearchSelectCustom',
       componentProps: ({ formActionType }) => {
-        const { setFieldsValue, getFieldsValue } = formActionType;
+        const { setFieldsValue: originalSetFieldsValue, getFieldsValue } = formActionType;
         return {
-          setFieldsValue: setFieldsValue,
+          // 包装 setFieldsValue，在设置字段值后计算限定占比
+          setFieldsValue: (values: any) => {
+            // 先设置 linkmap 映射的字段值（使用原始的 setFieldsValue）
+            originalSetFieldsValue(values);
+            // 当重新选择钢卷号时，清空实际重量
+            originalSetFieldsValue({
+              weight: undefined,
+            });
+            // 如果标签重有值，计算限定占比
+            if (values && values.exceptedWeight) {
+              // 获取标签重和范围值（范围值从 values 中获取，如果没有则使用默认值3）
+              const exceptedWeight = parseFloat(values.exceptedWeight || 0);
+              // 使用 setTimeout 确保字段值已经设置完成后再获取范围值
+              setTimeout(() => {
+                const currentValues = getFieldsValue();
+                const rangeValue = parseFloat(currentValues.rangeValue || 3); // 默认范围值为3
+                
+                // 如果标签重有值，计算限定占比
+                if (exceptedWeight && exceptedWeight > 0) {
+                  // 将范围值转换为小数（千分比转小数）
+                  const rangeDecimal = rangeValue / 1000;
+                  // 计算限定占比：标签重 × (1 - 范围值)
+                  const limitedProportion = exceptedWeight * (1 - rangeDecimal);
+                  // 设置限定占比字段的值（使用原始的 setFieldsValue）
+                  originalSetFieldsValue({
+                    limitedProportion: Math.round(limitedProportion * 100) / 100, // 四舍五入到两位小数
+                  });
+                }
+              }, 10);
+            } else {
+              // 如果标签重为空，清空限定占比
+              originalSetFieldsValue({
+                limitedProportion: undefined,
+              });
+            }
+          },
           getFieldsValue: getFieldsValue,
           method: 'get',
-          url: '/etl/drawing/start/list',
-          params: { column: 'endTime', order: 'asc', searchFields: 'id,newCoilNo'},
+          url: '/etl/annealing/start/list',
+          params: { column: 'endTime', order: 'asc', searchFields: 'id,oldCoilNo'},
           columns: [
             {
               name: '钢卷号',
@@ -43,7 +78,7 @@ export function getFormSchema(): FormSchema[] {
               newMaterialNumber:'materialNumber',//物料编码
               newMaterialName:'materialName',//物料名称
               newModelNumber: 'modelNumber',//规格型号
-              endWeight: 'weight',//
+              endWeight: 'exceptedWeight',//标签重（从钢卷号数据源获取）
               cardId:'flowCardId',//流转卡号
             },
           ],
@@ -141,38 +176,77 @@ export function getFormSchema(): FormSchema[] {
       componentProps: {
         showTime: true,
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
-        getPopupContainer: (node) => document.body
+        getPopupContainer: () => document.body
       },
-      dynamicRules: ({ model, schema, values }) => {
+      dynamicRules: ({ model }) => {
         if (model.planStartTime) planStartTime.value = model.planStartTime;
         else planStartTime.value = null;
-        return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];
+        return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }] as any;
       },
-    },
+    } as FormSchema,
     {
-      label: '重量',
-      field: 'weight',
-      component: 'InputNumber',
-      componentProps: {
-        style: { width: '100%' },
-        precision: 2,        // 设置小数点后两位
-        step: 0.01,          // 设置步进值为0.01
-      },
-      dynamicDisabled: true,//禁用
-      dynamicRules: ({ model, schema, values }) => {
-        return [{ required: true, message: '请输入重量!' }];
-      },
-    },
-    {
-      label: '实际重量',
-      field: 'actualWeight',
+      label: '标签重',
+      field: 'exceptedWeight',
       component: 'InputNumber',
       componentProps: {
         style: { width: '100%' }
-      }
+      },
+      dynamicDisabled: true,//禁用
     },
-
-    /*
+    {
+      label: '实际重量',
+      field: 'weight',
+      component: 'Input',
+      componentProps: {
+        style: { width: '100%' },
+        placeholder: '请输入实际重量',
+      },
+      dynamicRules: () => {
+        return [
+          {
+            required: true,
+            validator: (_, value) => {
+              // 如果值为空，返回错误
+              if (value === null || value === undefined || value === '') {
+                return Promise.reject(new Error('请输入实际重量'));
+              }
+              // 将值转换为字符串进行验证
+              let strValue = String(value).trim();
+              // 处理以小数点结尾的情况，如 "10." -> "10"
+              if (strValue.endsWith('.')) {
+                strValue = strValue.slice(0, -1);
+              }
+              // 检查是否包含非数字字符（除了小数点）
+              // 正则表达式：只允许数字和小数点，不允许字母、负号或其他字符
+              // 允许：纯数字、数字+小数点、数字+小数点+数字（包括两位小数）
+              const numberRegex = /^\d+(\.\d*)?$/;
+              if (!numberRegex.test(strValue) || strValue === '.' || strValue === '') {
+                // 检查是否包含字母
+                if (/[a-zA-Z]/.test(strValue)) {
+                  return Promise.reject(new Error('请输入有效的数字，不能包含字母'));
+                }
+                // 检查是否包含负号
+                if (strValue.includes('-')) {
+                  return Promise.reject(new Error('实际重量不能为负数'));
+                }
+                // 其他无效字符
+                return Promise.reject(new Error('请输入有效的数字，不能包含特殊字符'));
+              }
+              // 转换为数字进行范围检查
+              const numValue = parseFloat(strValue);
+              if (isNaN(numValue) || !isFinite(numValue)) {
+                return Promise.reject(new Error('请输入有效的数字'));
+              }
+              if (numValue < 0) {
+                return Promise.reject(new Error('实际重量不能小于0'));
+              }
+              return Promise.resolve();
+            },
+            trigger: ['change', 'blur'],
+          },
+        ];
+      },
+    },
     {
       label: '限定占比',
       field: 'limitedProportion',
@@ -191,7 +265,7 @@ export function getFormSchema(): FormSchema[] {
         addonAfter: '‰' , // 在输入框后添加千分号
         style: { width: '100%' }
       }
-    },*/
+    },
     {
       label: '设备',
       field: 'equipmentId',
@@ -231,7 +305,7 @@ export function getFormSchema(): FormSchema[] {
           placeholder: '请输入',
         };
       },
-      dynamicRules: ({ model, schema, values }) => {
+      dynamicRules: () => {
         return [{ required: true, message: '请选择设备!' }];
       },
     },
