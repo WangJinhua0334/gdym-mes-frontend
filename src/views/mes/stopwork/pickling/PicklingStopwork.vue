@@ -1,11 +1,11 @@
 <script setup lang="ts" name="mo-PicklingStopwork">
-import { getFormSchema ,getDetailJVxeColumns,formSchema,printFormSchema} from './PicklingStopwork.ts';
+import { getFormSchema ,getDetailJVxeColumns,formSchema,printFormSchema} from './PicklingStopwork.data';
 import {BasicForm, useForm} from "@/components/Form";
 import {saveOrUpdate} from "@/views/mes/stopwork/pickling/PicklingStopwork.api";
 import {useMessage} from "@/hooks/web/useMessage";
 import {JVxeTable} from "@/components/jeecg/JVxeTable";
-import {computed, onMounted, reactive, ref, unref} from "vue";
-import { BasicModal, useModal, useModalInner } from '@/components/Modal';
+import {computed, onMounted, reactive, ref, watch} from "vue";
+import { BasicModal, useModal } from '@/components/Modal';
 import {buildUUID} from "@/utils/uuid";
 import dayjs from "dayjs";
 import {defHttp} from "@/utils/http/axios";
@@ -15,9 +15,8 @@ import {getToken} from "@/utils/auth";
 const $message = useMessage();
 // Emits声明
 const emit = defineEmits(['register', 'success']);
-const isUpdate = ref(true);
 const formDisabled = ref(false);
-const detailJVxeColumns = computed(() => getDetailJVxeColumns(unref(formDisabled)));
+const detailJVxeColumns = computed(() => getDetailJVxeColumns());
 
 const activeKey = ref('mesProductPickDetail');
 const mesProductPickDetail = ref();
@@ -25,6 +24,34 @@ const mesProductPickDetailTable = reactive({
   loading: false,
   dataSource: [],
   columns: detailJVxeColumns,
+});
+// 保存上次输入的质量汇报信息
+const lastQualityReport = ref('');
+// 编辑模式标识
+const isEditMode = ref(false);
+// 当前编辑的行ID
+const editingRowId = ref('');
+// 选中的行数据
+const selectedRows = ref<any[]>([]);
+// 表格数据
+const tableData = ref<any[]>([]);
+// 打码完工按钮加载状态
+const submitLoading = ref(false);
+// 打码完工按钮禁用状态（成功后禁用）
+const submitDisabled = ref(false);
+// 是否显示打印按钮（请求成功后显示）
+const showPrintButtonAfterSubmit = ref(false);
+// 保存所有行的钢卷号（用于请求成功后的打印）
+const allRowsCoilNumbers = ref<string[]>([]);
+
+// 计算属性：是否显示编辑按钮（选中一行，且未提交成功）
+const showEditButton = computed(() => {
+  return selectedRows.value && selectedRows.value.length === 1 && !submitDisabled.value;
+});
+
+// 计算属性：是否启用打印按钮（选中了至少一行）
+const enablePrintButton = computed(() => {
+  return selectedRows.value && selectedRows.value.length > 0;
 });
 
 //表单配置 酸洗扫码完工表单
@@ -38,7 +65,7 @@ const [registerForm,{validate,setFieldsValue,getFieldsValue}] = useForm({
 // 注册弹框
 const [registerModal, { openModal, closeModal }] = useModal();
 //酸洗扫码完工新增引用弹框
-const [registerExtendedFormModal, { validate: validateExtendedForm, resetFields ,setFieldsValue: setExtendedFieldsValue, }] = useForm({
+const [registerExtendedFormModal, { validate: validateExtendedForm, resetFields ,setFieldsValue: setExtendedFieldsValue, getFieldsValue: getExtendedFieldsValue }] = useForm({
   labelWidth: 160,
   schemas: formSchema,
   showActionButtonGroup: false,
@@ -47,7 +74,7 @@ const [registerExtendedFormModal, { validate: validateExtendedForm, resetFields 
 //注册弹框打印
 const [registerModaldy, { setModalProps, closeModal:closeDyModal, openModal:openDyModal }] = useModal();
 //打印表单配置
-const [registerFormdy] = useForm({
+const [registerFormdy, { validate: validatePrintForm }] = useForm({
   labelWidth: 100,
   schemas: printFormSchema,
   showActionButtonGroup: false,
@@ -68,25 +95,43 @@ async function handleSubmit() {
 
 // 酸洗扫码完工提交事件
 async function handleSubmit() {
+  // 先检查表格是否有数据
+  if (!mesProductPickDetail.value) {
+    $message.createMessage.warning('请新增产出品明细信息');
+    return;
+  }
+  
+  const tableData = mesProductPickDetail.value.getTableData();
+  if (!tableData || tableData.length === 0) {
+    // 表格没有数据时，提示用户
+    $message.createMessage.warning('请新增产出品明细信息');
+    return;
+  }
+  
+  // 有数据时，开始显示加载状态
+  submitLoading.value = true;
+  
   try {
     // 验证表单
     const mainFormValues = await validate();
     if(!mainFormValues.oldCoilNo){
       $message.createMessage.warning('请先扫码钢卷号');
+      submitLoading.value = false;
       return;
     }
     if(mesProductPickDetail.value.getTableData().length === 0){
       $message.createMessage.warning('请先添加产出品');
+      submitLoading.value = false;
       return;
     }
     // 获取子表数据
-    let detailData = [];
+    let detailData: any[] = [];
     if (mesProductPickDetail.value) {
       detailData = mesProductPickDetail.value.getTableData();
     }
     // 判断产出品总重 和领料重量是否一致，如果不相等，则抛出异常
     // 获取子表中钢卷号的 weight之和（转换为数值类型）
-    const totalWeight = detailData.reduce((acc, cur) => {
+    const totalWeight = detailData.reduce((acc, cur: any) => {
       // 将字符串转换为浮点数进行累加
       return acc + parseFloat(cur.weight || '0');
     }, 0);
@@ -97,6 +142,7 @@ async function handleSubmit() {
     // 使用适当的精度比较浮点数
     if (Math.abs(totalWeight - mainWeight) > 0.001) {
       $message.createMessage.warning('产出品总重和领料重量不一致，请检查！');
+      submitLoading.value = false;
       return;
     }
     // 组装完整数据 - 将主表数据和子表数据平级合并
@@ -106,10 +152,29 @@ async function handleSubmit() {
     };
     // 调用提交方法
     await requestAddOrEdit(submitData);
-    await handlePrint();
+    
+    // 提交成功后，禁用"打码完工"按钮
+    submitDisabled.value = true;
+    
+    // 获取所有行的钢卷号用于打印
+    const allCoilNumbers: string[] = [];
+    detailData.forEach((row: any) => {
+      if (row.newCoilNo && row.newCoilNo !== null && row.newCoilNo !== '') {
+        allCoilNumbers.push(row.newCoilNo);
+      }
+    });
+    
+    // 保存所有行的钢卷号，并显示打印按钮
+    if (allCoilNumbers.length > 0) {
+      allRowsCoilNumbers.value = allCoilNumbers;
+      showPrintButtonAfterSubmit.value = true;
+    }
   } catch (error) {
     // 处理验证错误
     console.log('表单验证失败:', error);
+  } finally {
+    // 无论成功还是失败，都要清除加载状态
+    submitLoading.value = false;
   }
 }
 /**表单提交事件*/
@@ -117,33 +182,42 @@ async function requestAddOrEdit(values) {
   try {
     //提交表单
     await saveOrUpdate(values);
-    //清空主表数据
-    setFieldsValue({
-      flowCardId: undefined,
-      oldCoilNo: undefined,
-      materialId: undefined,
-      materialNumber: undefined,
-      materialName: undefined,
-      modelNumber: undefined,
-      exceptedWeight: undefined,
-      weight: undefined,
-      limitedProportion: undefined,
-      rangeValue: 3,
-      equipmentId: undefined,
-      equipmentNumber: undefined,
-      qualityReport: undefined,
-      // operatorNumber: undefined,
-      // tenantId: undefined,
-      endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), // 或者设置为 undefined
-    });
-    //重置子表数据源
-    mesProductPickDetailTable.dataSource = [];
-    //重置时间字段
-    setTimeout(() => {
-      setFieldsValue({
-        endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      });
-    }, 100);
+    // //清空主表数据
+    // setFieldsValue({
+    //   flowCardId: undefined,
+    //   oldCoilNo: undefined,
+    //   materialId: undefined,
+    //   materialNumber: undefined,
+    //   materialName: undefined,
+    //   modelNumber: undefined,
+    //   exceptedWeight: undefined,
+    //   weight: undefined,
+    //   limitedProportion: undefined,
+    //   rangeValue: 3,
+    //   equipmentId: undefined,
+    //   equipmentNumber: undefined,
+    //   qualityReport: undefined,
+    //   // operatorNumber: undefined,
+    //   // tenantId: undefined,
+    //   endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), // 或者设置为 undefined
+    // });
+    // //重置子表数据源
+    // mesProductPickDetailTable.dataSource = [];
+    // // 清空选中行
+    // selectedRows.value = [];
+    // // 清空打印数据
+    // printCoilNumbers.value = [];
+    // 清空请求成功后的打印按钮状态
+    // showPrintButtonAfterSubmit.value = false;
+    allRowsCoilNumbers.value = [];
+    // // 更新表格数据
+    // updateTableData();
+    // //重置时间字段
+    // setTimeout(() => {
+    //   setFieldsValue({
+    //     endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+    //   });
+    // }, 100);
     //刷新列表
     emit('success');
   } catch (error) {
@@ -153,6 +227,7 @@ async function requestAddOrEdit(values) {
 
 //新增按钮点击事件
 function handleAddDetail() {
+
   // 获取表单数据中的钢卷号
   const formData = getFieldsValue();
   if (!formData.oldCoilNo) {
@@ -167,16 +242,133 @@ function handleAddDetail() {
   // 拼接新的钢卷号
   const newCoilNo = currentIndex > 10? `10-${coilNo}-${currentIndex}` : `10-${coilNo}-0${currentIndex}`;
 
-  // const newCoilNo = `10-${coilNo}-${currentIndex}`;
+  // 设置为新增模式
+  isEditMode.value = false;
+  editingRowId.value = '';
+  
   // 先打开弹框
   openModal(true, {});
   // 延迟设置值，确保弹框已打开并且表单已初始化
   setTimeout(() => {
     setExtendedFieldsValue({
       newCoilNo: newCoilNo,
+      qualityReport: lastQualityReport.value, // 恢复上次输入的质量汇报
     });
   }, 100);
 }
+
+//编辑按钮点击事件
+function handleEditDetail() {
+  if (!mesProductPickDetail.value) {
+    $message.createMessage.warning('表格未初始化');
+    return;
+  }
+  
+  // 优先使用已保存的选中行数据
+  let currentSelectedRows = selectedRows.value;
+  
+  // 如果保存的选中行为空，尝试从表格获取
+  if (!currentSelectedRows || currentSelectedRows.length === 0) {
+    try {
+      // 尝试使用 getSelectionData 方法
+      if (typeof mesProductPickDetail.value.getSelectionData === 'function') {
+        currentSelectedRows = mesProductPickDetail.value.getSelectionData();
+      } else if (typeof mesProductPickDetail.value.getSelectRows === 'function') {
+        currentSelectedRows = mesProductPickDetail.value.getSelectRows();
+      }
+    } catch (e) {
+      console.error('获取选中行失败:', e);
+    }
+  }
+  
+  if (!currentSelectedRows || currentSelectedRows.length === 0) {
+    $message.createMessage.warning('请先选择要编辑的行');
+    return;
+  }
+  if (currentSelectedRows.length > 1) {
+    $message.createMessage.warning('只能选择一行进行编辑');
+    return;
+  }
+  
+  const selectedRow = currentSelectedRows[0];
+  if (!selectedRow) {
+    $message.createMessage.warning('选中的行数据无效');
+    return;
+  }
+  
+  // 如果没有id，尝试使用rowKey或其他唯一标识
+  const rowId = selectedRow.id || selectedRow.rowKey || selectedRow._rowKey;
+  if (!rowId) {
+    $message.createMessage.warning('选中的行缺少唯一标识');
+    return;
+  }
+  
+  // 设置为编辑模式
+  isEditMode.value = true;
+  editingRowId.value = rowId;
+  
+  // 先重置表单，确保表单是干净的状态
+  resetFields();
+  
+  // 打开弹框
+  openModal(true, {});
+  
+  // 延迟填充数据，确保弹框和表单都已完全初始化
+  setTimeout(() => {
+    try {
+      setExtendedFieldsValue({
+        newCoilNo: selectedRow.newCoilNo || '',
+        weight: selectedRow.weight || '',
+        destination: selectedRow.destination || '',
+        qualityReport: selectedRow.qualityReport || '',
+      });
+    } catch (e) {
+      console.error('填充编辑数据失败:', e);
+      $message.createMessage.error('填充编辑数据失败，请重试');
+    }
+  }, 200);
+}
+
+// 监听表格选中行变化
+function handleSelectRowChange(event: any) {
+  // 确保正确获取选中行数据
+  if (event && event.selectedRows) {
+    selectedRows.value = event.selectedRows;
+  } else if (event && Array.isArray(event)) {
+    // 如果 event 本身就是数组
+    selectedRows.value = event;
+  } else {
+    selectedRows.value = [];
+  }
+  // 同时更新表格数据，确保数据同步
+  updateTableData();
+}
+
+// 更新表格数据
+function updateTableData() {
+  if (mesProductPickDetail.value) {
+    try {
+      const data = mesProductPickDetail.value.getTableData();
+      if (data && Array.isArray(data)) {
+        tableData.value = data;
+      }
+    } catch (e) {
+      // 如果获取失败，使用 dataSource
+      tableData.value = mesProductPickDetailTable.dataSource || [];
+    }
+  } else {
+    tableData.value = mesProductPickDetailTable.dataSource || [];
+  }
+}
+
+// 监听表格数据源变化
+watch(
+  () => mesProductPickDetailTable.dataSource,
+  () => {
+    updateTableData();
+  },
+  { deep: true, immediate: true }
+);
 
 //子表单弹框确定按钮点击事件
 async function handleModalOk() {
@@ -193,38 +385,72 @@ async function handleModalOk() {
     }
     // 获取字典标签（如果需要显示中文）
     let destinationLabel = values.destination;
-    // 如果需要转换为中文标签，可以在这里处理
-    // 字段映射（根据实际需求调整）
-    const rowData = {
-      id: buildUUID(),
-      newCoilNo: values.newCoilNo || '',   // 钢卷号
-      weight: values.weight || '',   // 重量
-      destination: destinationLabel || values.destination || '',   // 流转去向
-      qualityReport: values.qualityReport || '',   // 质检报告
-      // warehouseId: values.warehouseId || '',   // 仓库id
-      // warehouseName: values.warehouseName || '',   // 仓库名称
-    };
-    // 添加到表格
-    mesProductPickDetail.value.addRows([rowData]);
+    
+    if (isEditMode.value) {
+      // 编辑模式：更新现有行
+      if (mesProductPickDetail.value && editingRowId.value) {
+        // 使用 getIfRowById 方法查找行（更可靠，可以同时查找已存在的行和新增的行）
+        const { row: targetRow } = mesProductPickDetail.value.getIfRowById(editingRowId.value);
+        
+        if (targetRow) {
+          // 使用行的实际 rowKey（优先使用 rowKey，如果没有则使用 id）
+          const actualRowKey = targetRow.rowKey || targetRow._rowKey || targetRow.id || editingRowId.value;
+          
+          // 使用 setValues 方法更新行数据
+          // 确保 weight 是数字类型（因为列类型是 inputNumber）
+          const weightValue = values.weight ? (typeof values.weight === 'number' ? values.weight : parseFloat(values.weight)) : '';
+          
+          const updateResult = mesProductPickDetail.value.setValues([{
+            rowKey: actualRowKey,
+            values: {
+              newCoilNo: values.newCoilNo || '',
+              weight: weightValue,
+              destination: destinationLabel || values.destination || '',
+              qualityReport: values.qualityReport || '',
+            }
+          }]);
+          
+          if (updateResult > 0) {
+            $message.createMessage.success('修改成功');
+          } else {
+            $message.createMessage.warning('修改失败，请检查数据');
+          }
+        } else {
+          $message.createMessage.warning('未找到要编辑的行');
+        }
+      }
+    } else {
+      // 新增模式：添加新行
+      const rowData = {
+        id: buildUUID(),
+        newCoilNo: values.newCoilNo || '',   // 钢卷号
+        weight: values.weight || '',   // 重量
+        destination: destinationLabel || values.destination || '',   // 流转去向
+        qualityReport: values.qualityReport || '',   // 质检报告
+      };
+      // 添加到表格
+      mesProductPickDetail.value.addRows([rowData]);
+    }
+    
+    // 保存当前输入的质量汇报值
+    lastQualityReport.value = values.qualityReport || '';
+    
+    // 更新表格数据
+    setTimeout(() => {
+      updateTableData();
+    }, 100);
+    
     // 关闭弹窗并重置表单
     closeModal();
     resetFields();
+    // 重置编辑模式
+    isEditMode.value = false;
+    editingRowId.value = '';
+    
     setFieldsValue({
-      // flowCardId: undefined,
-      // materialId: undefined,
-      // materialNumber: undefined,
-      // materialName: undefined,
-      // modelNumber: undefined,
-      // exceptedWeight: undefined,
-      // weight: undefined,
-      // limitedProportion: undefined,
-      // rangeValue: 3,
       equipmentId: undefined,
       equipmentNumber: undefined,
-      // qualityReport: undefined,
-      // operatorNumber: undefined,
-      // tenantId: undefined,
-      endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), // 或者设置为 undefined
+      endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     });
   } catch (error) {
     console.log('表单验证失败:', error);
@@ -232,28 +458,27 @@ async function handleModalOk() {
 }
 // 弹框取消事件处理
 function handleModalCancel() {
+  // 在重置前保存当前输入的质量汇报值
+  const currentValues = getExtendedFieldsValue();
+  if (currentValues && currentValues.qualityReport) {
+    lastQualityReport.value = currentValues.qualityReport;
+  }
   // 重置表单数据
   resetFields();
+  // 重置编辑模式
+  isEditMode.value = false;
+  editingRowId.value = '';
+  
   setFieldsValue({
-    // flowCardId: undefined,
-    // materialId: undefined,
-    // materialNumber: undefined,
-    // materialName: undefined,
-    // modelNumber: undefined,
-    // exceptedWeight: undefined,
-    // weight: undefined,
-    // limitedProportion: undefined,
-    // rangeValue: 3,
     equipmentId: undefined,
     equipmentNumber: undefined,
     qualityReport: undefined,
-    // operatorNumber: undefined,
-    // tenantId: undefined,
-    endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), // 或者设置为 undefined
+    endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
   });
   // 关闭弹窗
   closeModal();
 }
+
 onMounted(() => {
   // 延迟一点时间确保表单完全初始化
   setTimeout(() => {
@@ -263,68 +488,116 @@ onMounted(() => {
   }, 100);
 });
 
+// 存储待打印的钢卷号数组
+const printCoilNumbers = ref<string[]>([]);
+
 /**
- * 新增打印提交
+ * 新增打印提交（参考冷轧页面的实现）
  */
 async function handleSubmitdy() {
-  setModalProps({ loading: true });
-  let values = await validate();
-  const printPackCodes = [];
-  /*selectedRows.value.map((item) => {
-      if (item.code && item.code != null && item.code != '') {
-        printPackCodes.push(item.code);
-      }
-    });*/
-  // 获取选中的行数据
-  if (mesProductPickDetail.value) {
-    const selectedRows = mesProductPickDetail.value.getSelectRows();
-    selectedRows.map((item) => {
-      if (item.newCoilNo && item.newCoilNo != null && item.newCoilNo != '') {
-        printPackCodes.push(item.newCoilNo);
-      }
-    });
-  }
-
-  // 如果没有选中的行，可以添加提示
-  if (printPackCodes.length === 0) {
-    $message.createMessage.warning('请至少选择一条数据进行打印');
-    setModalProps({ loading: false });
-    return;
-  }
   try {
+    setModalProps({ loading: true });
+    const values = await validatePrintForm();
+    
+    // 获取选中的行数据（参考冷轧页面的实现）
+    if (!mesProductPickDetail.value) {
+      $message.createMessage.warning('表格未初始化!');
+      setModalProps({ loading: false });
+      return;
+    }
+    
+    // 优先尝试从表格获取选中行（参考冷轧页面的实现）
+    let currentSelectedRows: any[] | null = null;
+    try {
+      if (typeof mesProductPickDetail.value.getSelectRows === 'function') {
+        currentSelectedRows = mesProductPickDetail.value.getSelectRows();
+      } else if (typeof mesProductPickDetail.value.getSelectionData === 'function') {
+        currentSelectedRows = mesProductPickDetail.value.getSelectionData();
+      }
+    } catch (e) {
+      console.error('获取选中行失败:', e);
+    }
+    
+    // 如果表格中没有选中行，使用已保存的选中行数据
+    if (!currentSelectedRows || currentSelectedRows.length === 0) {
+      currentSelectedRows = selectedRows.value;
+    }
+    
+    // 如果还是没有选中行，尝试使用存储的钢卷号（用于请求成功后的打印）
+    let coilNumbers: string[] = [];
+    if (currentSelectedRows && currentSelectedRows.length > 0) {
+      // 从选中行提取钢卷号（参考冷轧页面的实现）
+      currentSelectedRows.forEach((row: any) => {
+        if (row.newCoilNo && row.newCoilNo !== null && row.newCoilNo !== '') {
+          coilNumbers.push(row.newCoilNo);
+        }
+      });
+    } else {
+      // 使用存储的钢卷号数组（用于请求成功后的打印）
+      const storedCoilNumbers = printCoilNumbers.value;
+      if (Array.isArray(storedCoilNumbers) && storedCoilNumbers.length > 0) {
+        coilNumbers = storedCoilNumbers;
+      }
+    }
+
+    if (!coilNumbers || coilNumbers.length === 0) {
+      $message.createMessage.warning('请选择待打印的记录!');
+      setModalProps({ loading: false });
+      return;
+    }
+
+    // 获取报表ID
     defHttp
       .get({
         url: '/template/basTemplate/getReportIdByIds',
-        params: { ids: values.templateId, type: 'pack_sn' },
-      })
-      .then(async (reportRs) => {
+        params: { ids: values.templateId, type: 'gx_sn' },
+      }).then(async (reportRs) => {
         setModalProps({ loading: false });
-        // 打印数据集 { reportId, parameters }
+        // 打印数据集 { reportId, parameters }，使用钢卷号作为参数（参考收料页面的实现）
         const printSet: any = {};
 
         const templateIds = Object.keys(reportRs);
         for (const templateId of templateIds) {
           const reportId = reportRs[templateId];
-          printSet[reportId] = { id: `${printPackCodes.join(',')}` };
+          printSet[reportId] = { id: `${coilNumbers.join(',')}`};
         }
 
+        // 调用打印功能，会显示浏览器打印对话框（参考收料页面的实现）
         loopPrintJimuReport(printSet, getToken, () => {
           closeDyModal();
           $message.createMessage.success('打印成功!');
+          // 清空打印数据
+          printCoilNumbers.value = [];
         });
+      }).catch((error) => {
+        setModalProps({ loading: false });
+        console.error('获取报表ID失败:', error);
+        $message.createMessage.error('获取报表ID失败，请重试!');
       });
   } catch (error) {
     console.log(error);
+    setModalProps({ loading: false });
   }
 }
+
 /**
- * 打印-弹出选择打印模板
+ * 打印-弹出选择打印模板（参考冷轧页面的实现）
+ * @param coilNumbers 可选参数，如果传入则使用传入的钢卷号数组（用于请求成功后的打印）
  */
-function handlePrint() {
+function handlePrint(coilNumbers?: string[]) {
+  // 如果传入了钢卷号数组（用于请求成功后的打印），直接存储并打开弹窗
+  if (coilNumbers && Array.isArray(coilNumbers) && coilNumbers.length > 0) {
+    printCoilNumbers.value = coilNumbers;
+    openDyModal(true, {});
+    return;
+  }
+  
+  // 否则直接打开打印模板选择弹窗（参考冷轧页面的实现）
   openDyModal(true, {});
 }
-function clearTableDate() {
-  resetFields();
+
+
+function clearFormAndTableData() {
   setFieldsValue({
     flowCardId: undefined,
     oldCoilNo: undefined,
@@ -339,8 +612,8 @@ function clearTableDate() {
     equipmentId: undefined,
     equipmentNumber: undefined,
     qualityReport: undefined,
-    // operatorNumber: undefined,
-    // tenantId: undefined,
+    // operatorNumber: undefined,  // 不清空操作员编码
+    // tenantId: undefined,      // 不清空租户 id
     endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), // 或者设置为 undefined
   });
   // 清空子表数据源
@@ -350,6 +623,29 @@ function clearTableDate() {
   if (mesProductPickDetail.value) {
     mesProductPickDetail.value.reload([]);
   }
+  
+  // 清空选中行
+  selectedRows.value = [];
+  // 清空打印数据
+  printCoilNumbers.value = [];
+  // 清空请求成功后的打印按钮状态
+  showPrintButtonAfterSubmit.value = false;
+  allRowsCoilNumbers.value = [];
+  // 重置"打码完工"按钮的禁用状态，允许再次提交
+  submitDisabled.value = false;
+  // 确保提交加载状态复位
+  submitLoading.value = false;
+  // 显式清空本地表格数据缓存与选择状态
+  tableData.value = [];
+  try {
+    if (mesProductPickDetail.value && typeof mesProductPickDetail.value.clearSelection === 'function') {
+      mesProductPickDetail.value.clearSelection();
+    }
+  } catch (e) {}
+  // 更新表格数据
+  updateTableData();
+  // 确保表单未被禁用
+  formDisabled.value = false;
 }
 </script>
 <template>
@@ -369,28 +665,31 @@ function clearTableDate() {
           :disabled="formDisabled"
           :rowNumber="true"
           :rowSelection="!formDisabled"
-          :toolbar="!formDisabled"
-          :toolbar-config="{ slot: ['prefix', 'suffix'], btn: ['remove', 'clearSelection'] }"
+          :toolbar="!formDisabled && !submitDisabled"
+          :toolbar-config="{ slot: ['prefix', 'suffix'], btn: submitDisabled ? [] : ['remove', 'clearSelection'] }"
+          @selectRowChange="handleSelectRowChange"
         >
           <template #toolbarPrefix>
             <a-button type="primary" @click="handleAddDetail" preIcon="ant-design:plus-outlined"> 新增</a-button>
+            <a-button v-if="showEditButton" type="primary" @click="handleEditDetail" preIcon="ant-design:edit-outlined" style="margin-left: 8px;"> 编辑</a-button>
           </template>
         </JVxeTable>
         <!-- 将按钮放在表格容器内右下角 -->
         <div class="button-wrapper">
           <div class="button-group">
-            <a-button type="primary" preIcon="ant-design:" @click="clearTableDate">清空数据</a-button>
-            <a-button type="primary" preIcon="ant-design:printer-outlined" @click="handlePrint">打印</a-button>
-            <a-button @click="handleSubmit" type="primary" class="submit-button" style="background-color: red">扫码完工</a-button>
+            <a-button v-if="false" type="primary" class="clear-button" @click="clearFormAndTableData">清空数据</a-button>
+<!--            <a-button  type="primary" preIcon="ant-design:printer-outlined" @click="handlePrintAfterSubmit">打印标签</a-button>-->
+            <a-button v-if="showPrintButtonAfterSubmit" type="primary" preIcon="ant-design:printer-outlined" :disabled="!enablePrintButton" @click="handlePrint">打印</a-button>
+            <a-button @click="handleSubmit" type="primary" class="submit-button" :loading="submitLoading" :disabled="submitDisabled" style="background-color: red">打码完工</a-button>
           </div>
         </div>
       </a-tab-pane>
     </a-tabs>
-    <!--新增选择产品弹框-->
+    <!--新增/编辑选择产品弹框-->
     <BasicModal
       v-bind="$attrs"
       @register="registerModal"
-      title="添加产出品明细"
+      :title="isEditMode ? '编辑产出品明细' : '添加产出品明细'"
       :width="800"
       @ok="handleModalOk"
       @cancel="handleModalCancel"
@@ -430,6 +729,12 @@ function clearTableDate() {
 
 .submit-button {
   margin-left: 0; /* 覆盖可能存在的默认左边距 */
+}
+
+.clear-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
 
