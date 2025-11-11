@@ -1,6 +1,5 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
-import { rules } from '/@/utils/helper/validator';
 import { render } from '/@/utils/common/renderUtils';
 //列表数据
 export const columns: BasicColumn[] = [
@@ -76,7 +75,7 @@ export const searchFormSchema: FormSchema[] = [
         setFieldsValue: setFieldsValue,
         getFieldsValue: getFieldsValue,
         method: 'get',
-        url: '/equipmenttype/basEquipmentType/list',
+        url: '/basic/basEquipmentType/list',
         params: { column: 'code', order: 'asc', searchFields: 'code,name' /*, code: '${code}'*/ },
         columns: [
           {
@@ -131,7 +130,7 @@ export const searchFormSchema: FormSchema[] = [
         setFieldsValue: setFieldsValue,
         getFieldsValue: getFieldsValue,
         method: 'get',
-        url: '/supplier/basSupplier/list',
+        url: '/basic/basSupplier/list',
         params: { column: 'code', order: 'asc', searchFields: 'code,name' /*, code: '${code}'*/ },
         columns: [
           {
@@ -165,7 +164,7 @@ export const searchFormSchema: FormSchema[] = [
         setFieldsValue: setFieldsValue,
         getFieldsValue: getFieldsValue,
         method: 'get',
-        url: '/workshop/basWorkShop/list',
+        url: '/basic/basWorkShop/list',
         params: { column: 'code', order: 'asc', searchFields: 'code,name' /*, code: '${code}'*/ },
         columns: [
           {
@@ -202,7 +201,7 @@ export const formSchema: FormSchema[] = [
         setFieldsValue: setFieldsValue,
         getFieldsValue: getFieldsValue,
         method: 'get',
-        url: '/equipmenttype/basEquipmentType/list',
+        url: '/basic/basEquipmentType/list',
         params: { column: 'code', order: 'asc', searchFields: 'code,name' /*, code: '${code}'*/ },
         columns: [
           {
@@ -224,7 +223,7 @@ export const formSchema: FormSchema[] = [
         //maxTagCount: 2,
       };
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请选择设备分类!' }];
     },
   },
@@ -232,7 +231,7 @@ export const formSchema: FormSchema[] = [
     label: '设备编码',
     field: 'code',
     component: 'Input',
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请输入设备编码!' }];
     },
   },
@@ -240,7 +239,7 @@ export const formSchema: FormSchema[] = [
     label: '设备名称',
     field: 'name',
     component: 'Input',
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请输入设备名称!' }];
     },
   },
@@ -263,7 +262,7 @@ export const formSchema: FormSchema[] = [
         setFieldsValue: setFieldsValue,
         getFieldsValue: getFieldsValue,
         method: 'get',
-        url: '/supplier/basSupplier/list',
+        url: '/basic/basSupplier/list',
         params: {
           /*code: '${code}'*/
         },
@@ -304,7 +303,7 @@ export const formSchema: FormSchema[] = [
         placeholder: '请选择',
       };
     },
-    dynamicRules: ({ model, schema }) => {
+    dynamicRules: () => {
       return [{ required: true, message: '请选择供应商!' }];
     },
   },
@@ -329,7 +328,7 @@ export const formSchema: FormSchema[] = [
         setFieldsValue: setFieldsValue,
         getFieldsValue: getFieldsValue,
         method: 'get',
-        url: '/workshop/basWorkShop/list',
+        url: '/basic/basWorkShop/list',
         params: { column: 'code', order: 'asc', searchFields: 'code,name' /*, code: '${code}'*/ },
         columns: [
           {

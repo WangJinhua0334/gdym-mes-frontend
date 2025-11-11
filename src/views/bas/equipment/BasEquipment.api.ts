@@ -4,13 +4,13 @@ import { useMessage } from "/@/hooks/web/useMessage";
 const { createConfirm } = useMessage();
 
 enum Api {
-  list = '/equipment/basEquipment/list',
-  save='/equipment/basEquipment/add',
-  edit='/equipment/basEquipment/edit',
-  deleteOne = '/equipment/basEquipment/delete',
-  deleteBatch = '/equipment/basEquipment/deleteBatch',
-  importExcel = '/equipment/basEquipment/importExcel',
-  exportXls = '/equipment/basEquipment/exportXls',
+  list = '/basic/basEquipment/list',
+  save='/basic/basEquipment/add',
+  edit='/basic/basEquipment/edit',
+  deleteOne = '/basic/basEquipment/delete',
+  deleteBatch = '/basic/basEquipment/deleteBatch',
+  importExcel = '/basic/basEquipment/importExcel',
+  exportXls = '/basic/basEquipment/exportXls',
 }
 /**
  * 导出api
