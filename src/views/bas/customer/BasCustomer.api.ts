@@ -4,14 +4,14 @@ import { useMessage } from "/@/hooks/web/useMessage";
 const { createConfirm } = useMessage();
 
 enum Api {
-  list = '/customer/basCustomer/list',
-  save='/customer/basCustomer/add',
-  edit='/customer/basCustomer/edit',
-  deleteOne = '/customer/basCustomer/delete',
-  deleteBatch = '/customer/basCustomer/deleteBatch',
-  importExcel = '/customer/basCustomer/importExcel',
-  exportXls = '/customer/basCustomer/exportXls',
-  basCustomerProductList = '/customer/basCustomer/queryBasCustomerProductByMainId',
+  list = '/basic/basCustomer/list',
+  save='/basic/basCustomer/add',
+  edit='/basic/basCustomer/edit',
+  deleteOne = '/basic/basCustomer/delete',
+  deleteBatch = '/basic/basCustomer/deleteBatch',
+  importExcel = '/basic/basCustomer/importExcel',
+  exportXls = '/basic/basCustomer/exportXls',
+  basCustomerProductList = '/basic/basCustomer/queryBasCustomerProductByMainId',
 }
 /**
  * 导出api

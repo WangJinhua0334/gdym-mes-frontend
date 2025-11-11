@@ -24,31 +24,31 @@ export const columns: BasicColumn[] = [
     sorter: true,
     dataIndex: 'fullName',
   },
-  {
-    title: '负责人',
-    align: 'center',
-    dataIndex: 'principal',
-    width: 150,
-  },
-  {
-    title: '电话号码',
-    align: 'center',
-    dataIndex: 'telephone',
-    width: 200,
-  },
-  {
-    title: '是否锁定',
-    align: 'center',
-    sorter: true,
-    dataIndex: 'isLock',
-    width: 150,
-    customRender: ({ text }) => {
-      return render.renderSwitch(text, [
-        { text: '是', value: 'Y', isChecked: true },
-        { text: '否', value: 'N', isChecked: false },
-      ]);
-    },
-  },
+  // {
+  //   title: '负责人',
+  //   align: 'center',
+  //   dataIndex: 'principal',
+  //   width: 150,
+  // },
+  // {
+  //   title: '电话号码',
+  //   align: 'center',
+  //   dataIndex: 'telephone',
+  //   width: 200,
+  // },
+  // {
+  //   title: '是否锁定',
+  //   align: 'center',
+  //   sorter: true,
+  //   dataIndex: 'isLock',
+  //   width: 150,
+  //   customRender: ({ text }) => {
+  //     return render.renderSwitch(text, [
+  //       { text: '是', value: 'Y', isChecked: true },
+  //       { text: '否', value: 'N', isChecked: false },
+  //     ]);
+  //   },
+  // },
 ];
 //查询数据
 export const searchFormSchema: FormSchema[] = [
@@ -64,15 +64,15 @@ export const searchFormSchema: FormSchema[] = [
     component: 'JInput',
     colProps: { span: 6 },
   },
-  {
-    label: '是否锁定',
-    field: 'isLock',
-    defaultValue: 'N',
-    component: 'JSwitch',
-    componentProps: {
-      dictCode: 'is_open',
-    },
-  },
+  // {
+  //   label: '是否锁定',
+  //   field: 'isLock',
+  //   defaultValue: 'N',
+  //   component: 'JSwitch',
+  //   componentProps: {
+  //     dictCode: 'is_open',
+  //   },
+  // },
 ];
 //表单数据
 export const formSchema: FormSchema[] = [
