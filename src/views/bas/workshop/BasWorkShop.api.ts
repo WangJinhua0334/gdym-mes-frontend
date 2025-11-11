@@ -4,13 +4,13 @@ import { useMessage } from "/@/hooks/web/useMessage";
 const { createConfirm } = useMessage();
 
 enum Api {
-  list = '/workshop/basWorkShop/list',
-  save='/workshop/basWorkShop/add',
-  edit='/workshop/basWorkShop/edit',
-  deleteOne = '/workshop/basWorkShop/delete',
-  deleteBatch = '/workshop/basWorkShop/deleteBatch',
-  importExcel = '/workshop/basWorkShop/importExcel',
-  exportXls = '/workshop/basWorkShop/exportXls',
+  list = '/basic/basWorkShop/list',
+  save='/basic/basWorkShop/add',
+  edit='/basic/basWorkShop/edit',
+  deleteOne = '/basic/basWorkShop/delete',
+  deleteBatch = '/basic/basWorkShop/deleteBatch',
+  importExcel = '/basic/basWorkShop/importExcel',
+  exportXls = '/basic/basWorkShop/exportXls',
 }
 /**
  * 导出api

@@ -5,6 +5,7 @@
       <!--插槽:table标题-->
       <template #tableTitle>
         <a-button type="primary" @click="handleAdd" preIcon="ant-design:plus-outlined" v-auth="'bas:bas_work_shop:add'"> 新增</a-button>
+        <a-button type="primary" @click="handleGetFromK3Cloud" preIcon="ant-design:import-outlined" v-auth="'bas:bas_customer:edit'">同步金蝶车间信息</a-button>
         <a-button type="primary" preIcon="ant-design:export-outlined" @click="onExportXls" v-auth="'bas:bas_work_shop:exportXls'"> 导出</a-button>
         <j-upload-button type="primary" preIcon="ant-design:import-outlined" @click="onImportXls" v-auth="'bas:bas_work_shop:importExcel'"
           >导入</j-upload-button
@@ -56,6 +57,9 @@
   import { list, deleteOne, batchDelete, getImportUrl, getExportUrl } from './BasWorkShop.api';
   import { downloadFile } from '/@/utils/common/renderUtils';
   import { usePermission } from '/@/hooks/web/usePermission';
+  import { useMessage } from "@/hooks/web/useMessage";
+  import { defHttp } from "@/utils/http/axios";
+  import { useUserStore } from "@/store/modules/user";
   const { hasPermission } = usePermission();
 
   const checkedKeys = ref<Array<string | number>>([]);
@@ -102,6 +106,25 @@
       showFooter: true,
     });
   }
+  /**
+   * 同步金蝶客户信息
+   */
+  function handleGetFromK3Cloud() {
+    const { createMessage } = useMessage();
+
+    // 显示加载提示
+    // const hide = createMessage.loading('正在同步金蝶客户信息...', 0);
+
+    // 调用接口
+    defHttp.get({
+      url: '/apiService/k3cloudApi/basic/importAllWorkShops',
+      params: {
+        tenantId: useUserStore().getTenant,
+      }
+      // hide();
+    });
+  }
+
   /**
    * 编辑事件
    */
