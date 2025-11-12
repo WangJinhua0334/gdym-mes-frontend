@@ -146,9 +146,9 @@ async function handleSubmit() {
       // 提交成功后，禁用"打码完工"按钮
       submitDisabled.value = true;
       showPrintButton.value = true;
-      $message.createMessage.success('提交成功');
+      // $message.createMessage.success('提交成功');
     } else {
-      $message.createMessage.error('提交失败，请重试');
+      // $message.createMessage.error('提交失败，请重试');
     }
   } catch (error) {
     // 处理验证错误

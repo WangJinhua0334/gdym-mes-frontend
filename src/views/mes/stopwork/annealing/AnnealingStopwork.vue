@@ -38,6 +38,12 @@ const showEditButton = computed(() => {
   return tableData.value.length > 0 && selectedRows.value.length === 1 && !submitDisabled.value;
 });
 
+// 计算属性：打印按钮是否禁用（没有选中行时禁用）
+const printButtonDisabled = computed(() => {
+  // 如果没有选中任何行，则禁用按钮
+  return !selectedRows.value || selectedRows.value.length === 0;
+});
+
 const activeKey = ref('mesProductPickDetail');
 const mesProductPickDetail = ref();
 const mesProductPickDetailTable = reactive({
@@ -172,9 +178,9 @@ async function handleSubmit() {
       // 提交成功后，禁用"打码完工"按钮
       submitDisabled.value = true;
       showPrintButton.value = true;
-      $message.createMessage.success('提交成功');
+      // $message.createMessage.success('提交成功');
     } else {
-      $message.createMessage.error('提交失败，请重试');
+      // $message.createMessage.error('提交失败，请重试');
     }
   } catch (error) {
     // 处理验证错误
@@ -540,7 +546,36 @@ async function handleSubmitdy() {
  * 打印-弹出选择打印模板
  */
 function handlePrint() {
-  // 打开弹窗
+  // 获取选中的行数据
+  if (!mesProductPickDetail.value) {
+    $message.createMessage.warning('表格未初始化!');
+    return;
+  }
+  
+  // 优先使用已保存的选中行数据
+  let currentSelectedRows = selectedRows.value;
+  
+  // 如果保存的选中行为空，尝试从表格获取
+  if (!currentSelectedRows || currentSelectedRows.length === 0) {
+    try {
+      // 尝试使用 getSelectionData 方法（JVxeTable 的标准方法）
+      if (typeof mesProductPickDetail.value.getSelectionData === 'function') {
+        currentSelectedRows = mesProductPickDetail.value.getSelectionData();
+      } else if (typeof mesProductPickDetail.value.getSelectRows === 'function') {
+        currentSelectedRows = mesProductPickDetail.value.getSelectRows();
+      }
+    } catch (e) {
+      console.error('获取选中行失败:', e);
+    }
+  }
+  
+  // 校验是否选择了一条或者多条表格数据
+  if (!currentSelectedRows || currentSelectedRows.length === 0) {
+    $message.createMessage.warning('请先选择表格中待打印的记录!');
+    return;
+  }
+  
+  // 校验通过，打开弹窗
   openDyModal(true, {});
   // 确保 confirmLoading 初始化为 false
   setTimeout(() => {
@@ -626,7 +661,7 @@ function clearTableDate() {
         <div class="button-wrapper">
           <div class="button-group">
             <a-button v-if="false" type="primary" @click="clearTableDate" class="clear-button">清空数据</a-button>
-            <a-button v-if="showPrintButton" type="primary" preIcon="ant-design:printer-outlined" @click="handlePrint">打印</a-button>
+            <a-button v-if="showPrintButton" type="primary" preIcon="ant-design:printer-outlined" @click="handlePrint" :disabled="printButtonDisabled">打印</a-button>
             <a-button @click="handleSubmit" type="primary" class="submit-button" :loading="submitLoading" :disabled="submitDisabled || submitLoading" style="background-color: red">打码完工</a-button>
           </div>
         </div>

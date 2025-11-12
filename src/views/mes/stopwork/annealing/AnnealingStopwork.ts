@@ -143,7 +143,7 @@ export const formSchema: FormSchema[] = [
         ],
         //pageSize: 10,
         multi: false,
-        maxTagCount: 2,
+        maxTagCount: 1,
         placeholder: '请选择',
         // // 启用滚动分页
         // scroll: {

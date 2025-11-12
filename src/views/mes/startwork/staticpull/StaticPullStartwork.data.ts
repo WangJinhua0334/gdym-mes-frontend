@@ -55,7 +55,7 @@ export function getFormSchema(): FormSchema[] {
           ],
         };
       },
-      dynamicRules: ({ model, schema, values }) => {
+      dynamicRules: () => {
         return [{ required: true, message: '请选择钢卷!' }];
       },
     },
@@ -147,9 +147,9 @@ export function getFormSchema(): FormSchema[] {
       componentProps: {
         showTime: true,
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
-        getPopupContainer: (node) => document.body
+        getPopupContainer: () => document.body
       },
-      dynamicRules: ({ model, schema, values }) => {
+      dynamicRules: ({ model }) => {
         if (model.planStartTime) planStartTime.value = model.planStartTime;
         else planStartTime.value = null;
         return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];
