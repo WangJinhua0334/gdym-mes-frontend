@@ -1,12 +1,5 @@
 <template>
-  <a-input
-    :disabled="disabled"
-    :style="{ width }"
-    readOnly
-    :placeholder="t('component.icon.placeholder')"
-    :class="prefixCls"
-    v-model:value="currentSelect"
-  >
+  <a-input :style="{ width }" :placeholder="t('component.icon.placeholder')" :class="prefixCls" v-model:value="currentSelect">
     <template #addonAfter>
       <span class="cursor-pointer px-2 py-1 flex items-center" v-if="isSvgShow && currentSelect">
         <SvgIcon :name="currentSelect" @click="currentSelectClick" />
