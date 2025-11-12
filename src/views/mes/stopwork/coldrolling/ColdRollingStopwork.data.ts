@@ -5,7 +5,7 @@ import {planStartTime} from "@/views/mes/mo/components/MesMoPlanCreateSn.data";
 import {rules} from "@/utils/helper/validator";
 import {useUserStore} from "@/store/modules/user";
 import { getTenantId } from "/@/utils/auth";
-import { getUserInfo } from '@/api/sys/user';
+// import { getUserInfo } from '@/api/sys/user';
 //冷轧扫码完工新增弹框页面表单配置
 export const formSchema: FormSchema[] = [
   {
@@ -282,9 +282,9 @@ export function getFormSchema(): FormSchema[] {
       componentProps: {
         showTime: true,
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
-        getPopupContainer: (node) => document.body
+        getPopupContainer: () => document.body
       },
-      dynamicRules: ({ model, schema, values }) => {
+      dynamicRules: ({ model}) => {
         if (model.planStartTime) planStartTime.value = model.planStartTime;
         else planStartTime.value = null;
         return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];

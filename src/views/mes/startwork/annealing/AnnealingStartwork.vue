@@ -260,25 +260,18 @@
     }
     // 将范围值转换为小数（千分比转小数）
     const rangeDecimal = rangeValue / 1000;
-    // 计算限定占比：标签重 × (1 - 范围值)
-    const limitedProportion = Math.round(exceptedWeight * (1 - rangeDecimal) * 100) / 100;
-    // 将限定占比保留两位小数（用于显示）
-    const limitedProportionRounded = parseFloat(limitedProportion.toFixed(2));
+    // 计算限定占比：标签重 × (1 - 范围值)，只保留两位小数
+    const limitedProportion = parseFloat((exceptedWeight * (1 - rangeDecimal)).toFixed(2));
+
     // 设置限定占比字段的值
     setFieldsValue({
-      limitedProportion: limitedProportionRounded,
+      limitedProportion: limitedProportion,
     });
     // 使用精度比较浮点数，处理浮点数精度问题
     // 校验规则：限定占比 <= 实际重量（包括等于的情况）
-    // 将实际重量也四舍五入到两位小数，确保比较的一致性
-    const actualWeightRounded = Math.round(actualWeight * 100) / 100;
-    // 浮点容差（用于处理浮点数精度问题，0.001即千分之一）
-    const tolerance = 0.001;
-    // 校验条件：实际重量应该 >= 限定占比（允许小的精度误差）
-    // 即：actualWeightRounded >= limitedProportion - tolerance
-    const isWeightValid = actualWeightRounded + tolerance >= limitedProportion;
+
     // 比较实际重量和限定占比，如果实际重量 >= 限定占比，则提示通过，否则提示警告
-    if (isWeightValid) {
+    if (limitedProportion <= actualWeight) {
       // 校验通过，设置标志位
       isWeightVerified.value = true;
       // 使用 createSuccessModal 替代 createConfirm
