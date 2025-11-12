@@ -319,6 +319,17 @@ export const formSchema: FormSchema[] = [
     ifShow: ({ values }) => !isButton(values.menuType),
   },
   {
+    field: 'appRute',
+    label: 'APP路由',
+    component: 'Switch',
+    defaultValue: false,
+    componentProps: {
+      checkedChildren: '是',
+      unCheckedChildren: '否',
+    },
+    ifShow: ({ values }) => !isButton(values.menuType),
+  },
+  {
     field: 'internalOrExternal',
     label: '打开方式',
     component: 'Switch',
