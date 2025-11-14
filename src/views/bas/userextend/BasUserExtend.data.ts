@@ -107,8 +107,8 @@ export const columns: BasicColumn[] = [
     width: 150,
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
-        { text: '是', value: '1', isChecked: true },
-        { text: '否', value: '0', isChecked: false },
+        { text: '是', value: 1, isChecked: true },
+        { text: '否', value: 0, isChecked: false },
       ]);
     },
   },
@@ -492,13 +492,13 @@ export const formSchema: FormSchema[] = [
       //非选中时的内容
       unCheckedChildren:'否',
       //非选中时的值
-      unCheckedValue:'0',
+      unCheckedValue: 0,
       //选中时的内容
       checkedChildren:'是',
       //选中时的值
-      checkedValue:'1',
+      checkedValue: 1,
       //是否禁用
-      disabled: false
+      disabled: false,
     },
   },
   {
