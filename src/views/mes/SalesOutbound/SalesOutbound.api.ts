@@ -1,38 +1,29 @@
-import {defHttp} from "@/utils/http/axios";
-
-
+import { defHttp } from '@/utils/http/axios';
 
 enum Api {
-  list = '/mo/mesMoPlan/list',
-  save = '/temporarywork/mesTemporaryWork/add',
-  edit = '/temporarywork/mesTemporaryWork/edit',
-  deleteOne = '/temporarywork/mesTemporaryWork/delete',
-  deleteBatch = '/temporarywork/mesTemporaryWork/deleteBatch',
-  exportXls = '/temporarywork/mesTemporaryWork/exportXls',
-  confirm = '/temporarywork/mesTemporaryWork/confirm',
-  audit = '/temporarywork/mesTemporaryWork/audit',
-  cancelAudit = '/temporarywork/mesTemporaryWork/cancelAudit',
-  close = '/temporarywork/mesTemporaryWork/close',
-
-  /**编辑界面工序任务列表查询 */
-  listMoPlanTaskByMoPlanId = '/mo/mesMoPlan/listMoPlanTaskByMoPlanId',
-
-  /**编辑界面数据查询 */
-  getEditData = '/mo/mesMoPlan/getEditData',
+  list = '/etl/deliveryNotice/getAllNotOutboundDeliveryNoticeBill',
+  billList = '/mes/deliveryNoticeBill/list',
+  billDetailList = '/mes/deliveryNoticeBillDetail/list',
+  fallbackSave = '/temporarywork/mesTemporaryWork/add',
+  fallbackEdit = '/temporarywork/mesTemporaryWork/edit',
+  fallbackListTask = '/mo/mesMoPlan/listMoPlanTaskByMoPlanId',
+  fallbackGetEditData = '/mo/mesMoPlan/getEditData',
 }
 
-//销售发货列表查询接口
+// 销售发货列表查询接口
 export const list = (params) => defHttp.get({ url: Api.list, params });
 
+// 根据发货通知单号查询主表信息
+export const getBillByBillNo = (params) => defHttp.get({ url: Api.billList, params });
 
-/**
- * 保存或者更新
- * @param params
- */
+// 查询发货通知单明细
+export const getBillDetailList = (params) => defHttp.get({ url: Api.billDetailList, params });
+
+// 兼容旧逻辑：保留原有导出，避免热更新缓存报错
 export const saveOrUpdate = (params, isUpdate) => {
-  const url = isUpdate ? Api.edit : Api.save;
-  return defHttp.post({ url: url, params });
+  const url = isUpdate ? Api.fallbackEdit : Api.fallbackSave;
+  return defHttp.post({ url, params });
 };
 
-export const getEditData = (params) => defHttp.get({ url: Api.getEditData, params });
-export const listMoPlanTaskByMoPlanId = Api.listMoPlanTaskByMoPlanId;
+export const listMoPlanTaskByMoPlanId = Api.fallbackListTask;
+export const getEditData = (params) => defHttp.get({ url: Api.fallbackGetEditData, params });

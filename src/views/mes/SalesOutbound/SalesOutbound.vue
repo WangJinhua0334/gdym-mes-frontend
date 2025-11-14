@@ -1,11 +1,21 @@
 <script setup lang="ts" name="mo-SalesOutbound">
 
-import {BasicTable, TableAction} from "@/components/Table";
-import {useListPage} from "@/hooks/system/useListPage";
-import {list} from './SalesOutbound.api'
-import {columns, searchFormSchema} from './SalesOutbound.data';
-import { useModal } from "@/components/Modal";
-import SalesOutboundModal from './SalesOutboundModal.vue';
+import { defineAsyncComponent } from 'vue';
+import { BasicTable, TableAction } from '@/components/Table';
+import { useListPage } from '@/hooks/system/useListPage';
+import { list } from './SalesOutbound.api';
+import { columns, searchFormSchema } from './SalesOutbound.data';
+import { useModal } from '@/components/Modal';
+import { getTenantId } from '/@/utils/auth';
+
+const SalesOutboundModal = defineAsyncComponent(() => import('./SalesOutboundModal.vue'));
+
+defineOptions({
+  components: {
+    BasicTable,
+    TableAction,
+  },
+});
 
 /**
  * 销售发货编辑事件
@@ -17,7 +27,7 @@ function handleEdit(record: Recordable) {
 // 使用 useModal 获取注册函数和打开方法
 const [registerModal, { openModal }] = useModal();
 //注册销售发货table数据
-const { prefixCls, tableContext, onExportXls } = useListPage({
+const { tableContext } = useListPage({
   tableProps: {
     title: '销售发货',
     api: list,
@@ -34,13 +44,17 @@ const { prefixCls, tableContext, onExportXls } = useListPage({
       fieldMapToTime: [],
     },
     actionColumn: {
+      title: '操作',
       width: 160,
       fixed: 'right',
+    },
+    beforeFetch(params) {
+      return Object.assign(params || {}, { tenantId: getTenantId() });
     },
   },
 });
 
-const [registerTable, { reload, getForm }, { rowSelection, selectedRowKeys, selectedRows }] = tableContext;
+const [registerTable, { reload }, { rowSelection, selectedRowKeys }] = tableContext;
 /**
  * 操作栏
  */
@@ -49,7 +63,7 @@ function getTableAction(record) {
   arr.push({
     label: '备料',
     onClick: handleEdit.bind(null, record),
-    auth: 'mes:mes_SalesOutbound:edit',
+    // auth: 'mes:mes_SalesOutbound:edit',
   });
   return arr; // 添加返回语句
 }
