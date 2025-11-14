@@ -90,7 +90,7 @@
       actionColumn: {
         width: 120,
         fixed: 'right',
-      },
+      }
     },
     exportConfig: {
       name: '仓库',

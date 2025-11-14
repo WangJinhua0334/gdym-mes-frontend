@@ -1,157 +1,185 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
-import { render } from '/@/utils/common/renderUtils';
 import {JVxeColumn, JVxeTypes} from "@/components/jeecg/JVxeTable/src/types";
 //销售发货列表数据
 export const columns: BasicColumn[] = [
   {
-    title: '任务单号',
+    title: '单据编号',
     align: 'center',
     sorter: true,
-    dataIndex: 'code',
+    dataIndex: 'billNo',
     width: 160,
   },
   {
-    title: '车间',
+    title: '销售组织',
     align: 'center',
-    dataIndex: 'workShopId_dictText',
+    dataIndex: 'saleOrgId_dictText',
     width: 140,
   },
   {
-    title: '工作中心',
+    title: '日期',
     align: 'center',
     sorter: true,
-    dataIndex: 'wkcIds_dictText',
+    dataIndex: 'date',
     width: 130,
   },
   {
-    title: '产品编码',
+    title: '客户',
     align: 'center',
-    dataIndex: 'prodId_dictText',
+    dataIndex: 'customerId_dictText',
     width: 160,
   },
   {
-    title: '产品名称',
+    title: '发货组织',
     align: 'center',
-    dataIndex: 'prodName_dictText',
+    dataIndex: 'deliveryOrgId_dictText',
+    width: 160,
+  },
+  {
+    title: '发货部门',
+    align: 'center',
+    dataIndex: 'deliveryDeptId_dictText',
+    width: 160,
+  },
+  {
+    title: '库存组',
+    align: 'center',
+    dataIndex: 'stockerGroupId_dictText',
+    width: 140,
+  },
+  {
+    title: '仓管员',
+    align: 'center',
+    dataIndex: 'stockerId_dictText',
+    width: 140,
+  },
+  {
+    title: '销售部门',
+    align: 'center',
+    dataIndex: 'saleDeptId_dictText',
+    width: 140,
+  },
+  {
+    title: '销售组',
+    align: 'center',
+    dataIndex: 'saleGroupId_dictText',
+    width: 140,
+  },
+  {
+    title: '销售员',
+    align: 'center',
+    dataIndex: 'salesManId_dictText',
+    width: 140,
+  },
+  {
+    title: '承运商',
+    align: 'center',
+    dataIndex: 'carrierId_dictText',
+    width: 140,
+  },
+  {
+    title: '运输单号',
+    align: 'center',
+    dataIndex: 'carriageNo',
+    width: 160,
+  },
+  {
+    title: '单据类型',
+    align: 'center',
+    dataIndex: 'billTypeId_dictText',
+    width: 140,
+  },
+  {
+    title: '货主类型',
+    align: 'center',
+    dataIndex: 'ownerTypeIdHead',
+    width: 140,
+  },
+  {
+    title: '货主',
+    align: 'center',
+    dataIndex: 'ownerIdHead_dictText',
+    width: 140,
+  },
+  {
+    title: '交货方式',
+    align: 'center',
+    dataIndex: 'headDeliveryWay',
+    width: 140,
+  },
+  {
+    title: '交货地点',
+    align: 'center',
+    dataIndex: 'headLocId',
+    width: 160,
+  },
+  {
+    title: '交货明细地址',
+    align: 'center',
+    dataIndex: 'planRecAddress',
     width: 200,
   },
   {
-    title: '状态',
-    sorter: true,
+    title: '交货方式说明',
     align: 'center',
-    dataIndex: 'status',
-    width: 100,
-    customRender: ({ text }) => {
-      return render.renderDict(text, 'mo_plan_status', true);
-    },
+    dataIndex: 'oraRemarks',
+    width: 200,
   },
   {
-    title: '数量',
+    title: '包装方式',
     align: 'center',
-    sorter: true,
-    dataIndex: 'qty',
-    width: 100,
-  },
-  {
-    title: '投入数量',
-    align: 'center',
-    dataIndex: 'inputedQty',
-    width: 100,
-    format(text) {
-      return text ?? '0';
-    },
-    ifShow: false,
-  },
-  {
-    title: '产出数量',
-    align: 'center',
-    dataIndex: 'completedQty',
-    width: 100,
-    format(text) {
-      return text ?? '0';
-    },
-    ifShow: false,
-  },
-  {
-    title: '报废数量',
-    align: 'center',
-    dataIndex: 'scrapedQty',
-    width: 100,
-    format(text) {
-      return text ?? '0';
-    },
-    ifShow: false,
-  },
-  {
-    title: '备注',
-    align: 'center',
-    sorter: true,
-    dataIndex: 'remark',
-    width: 150,
-  },
-
-  /*{
-    title: '发货通知单号',
-    dataIndex: 'code',
-    sorter: true,
+    dataIndex: 'oraBase',
     width: 160,
   },
   {
-    title: '仓库',
-    dataIndex: 'type_dictText',
-    sorter: true,
-    width: 120,
+    title: '送货地址',
+    align: 'center',
+    dataIndex: 'oraBaseProperty',
+    width: 200,
   },
   {
-    title: '发货日期',
-    dataIndex: 'startTime',
-    sorter: true,
-    width: 160,
-  },
-  {
-    title: '客户',
-    dataIndex: 'type_dictText',
-    sorter: true,
-    width: 120,
-  },
-
-  {
-    title: '销售员',
-    dataIndex: 'operateBy_dictText',
-    sorter: true,
+    title: '租户ID',
+    align: 'center',
+    dataIndex: 'tenantId',
     width: 100,
   },
-  {
-    title: '备注',
-    dataIndex: 'description',
-    width: 160,
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    sorter: true,
-    width: 100,
-    customRender: ({ text }) => {
-      return render.renderDict(text, 'temporary_work_status', true);
-    },
-  },*/
 ];
 //销售发货查询数据
 export const searchFormSchema: FormSchema[] = [
   {
-    label: '发货通知单号',
-    field: 'code',
+    label: '单据编号',
+    field: 'billNo',
     component: 'Input',
-    colProps: { span: 7 },
+    colProps: { span: 6 },
   },
   {
-    label: '状态',
-    field: 'status',
-    component: 'JSelectMultiple',
-    componentProps: {
-      dictCode: 'mo_plan_status',
-    },
+    label: '销售组织',
+    field: 'saleOrgId',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: '客户',
+    field: 'customerId',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: '发货组织',
+    field: 'deliveryOrgId',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: '承运商',
+    field: 'carrierId',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: '运输单号',
+    field: 'carriageNo',
+    component: 'Input',
     colProps: { span: 6 },
   },
 ];
@@ -160,47 +188,85 @@ export const searchFormSchema: FormSchema[] = [
 export function getFormSchema(): FormSchema[] {
   return [
     {
-      label: '',
-      field: 'id',
-      component: 'Input',
-      show: false,
-    },
-    {
-      label: '车间',
-      field: 'workShopId_dictText',
+      label: '单据编号',
+      field: 'billNo',
       component: 'Input',
       dynamicDisabled: true,
     },
     {
-      label: '产品编码',
-      field: 'prodId_dictText',
+      label: '销售组织',
+      field: 'saleOrgId_dictText',
       component: 'Input',
       dynamicDisabled: true,
     },
     {
-      label: '产品名称',
-      field: 'prodName_dictText',
+      label: '客户',
+      field: 'customerId_dictText',
       component: 'Input',
       dynamicDisabled: true,
     },
     {
-      label: '计划数量',
-      field: 'moQty',
+      label: '发货组织',
+      field: 'deliveryOrgId_dictText',
       component: 'Input',
       dynamicDisabled: true,
     },
     {
-      label: '工单报废数量',
-      field: 'moScrapedQty',
+      label: '发货部门',
+      field: 'deliveryDeptId_dictText',
       component: 'Input',
       dynamicDisabled: true,
-      show: false,
+    },
+    {
+      label: '销售员',
+      field: 'salesManId_dictText',
+      component: 'Input',
+      dynamicDisabled: true,
     },
     {
       label: '备注',
-      field: 'remark',
+      field: 'oraRemarks',
       component: 'InputTextArea',
-      colProps: { span: 24 },
+      dynamicDisabled: true,
+      colProps: { span: 16 },
+    },
+    {
+      label: '送货地址',
+      field: 'oraBaseProperty',
+      component: 'InputTextArea',
+      dynamicDisabled: true,
+      colProps: { span: 16 },
+    },
+    {
+      label: '承运商',
+      field: 'carrierId_dictText',
+      component: 'Input',
+      dynamicDisabled: true,
+    },
+    {
+      label: '运输单号',
+      field: 'carriageNo',
+      component: 'Input',
+      dynamicDisabled: true,
+    },
+    {
+      label: '交货方式',
+      field: 'headDeliveryWay',
+      component: 'Input',
+      dynamicDisabled: true,
+    },
+    {
+      label: '交货地点',
+      field: 'headLocId',
+      component: 'Input',
+      dynamicDisabled: true,
+    },
+    {
+      label: '交货明细地址',
+      field: 'planRecAddress',
+      component: 'InputTextArea',
+      dynamicDisabled: true,
+      colProps: { span: 16 },
     },
   ];
 }
@@ -208,83 +274,66 @@ export function getFormSchema(): FormSchema[] {
 /**销售发货 选择产品 */
 export const mesSalesOutboundTaskJVxeColumns: JVxeColumn[] = [
   {
-    title: '',
-    key: 'id',
-    type: JVxeTypes.input,
-    disabled: true,
-    visible: false,
-  },
-  {
-    title: '分条码',
-    key: 'wfsId_dictText',
-    type: JVxeTypes.input,
-    width: 160,
-  },
-  {
     title: '物料编码',
-    key: 'prodId_dictText',
+    key: 'materialId',
     type: JVxeTypes.input,
     disabled: true,
     width: 160,
   },
   {
     title: '物料名称',
-    key: 'prodName_dictText',
+    key: 'materialName',
     type: JVxeTypes.input,
     disabled: true,
+    minWidth: 180,
   },
   {
     title: '规格型号',
-    key: 'prodId_dictText',
+    key: 'materialModel',
     type: JVxeTypes.input,
     disabled: true,
     width: 160,
   },
   {
-    title: '仓库',
-    key: 'prodName_dictText',
-    type: JVxeTypes.input,
-  },
-  {
-    title: '应发数量',
-    key: 'prodId_dictText',
+    title: '销售数量',
+    key: 'qty',
     type: JVxeTypes.input,
     disabled: true,
+    width: 120,
   },
   {
-    title: '实发数量',
-    key: 'prodName_dictText',
+    title: '出货仓库',
+    key: 'stockId',
     type: JVxeTypes.input,
+    disabled: true,
+    width: 160,
   },
   {
-    title: '托盘码',
-    key: 'prodName_dictText',
+    title: '出货仓位',
+    key: 'stockLocId',
     type: JVxeTypes.input,
+    disabled: true,
+    width: 160,
   },
   {
-    title: '库管员',
-    key: 'operateBys',
-    type: JVxeTypes.selectDictCustomSearch,
-    method: 'get',
-    url: '/sys/user/list',
-    params: { column: 'username', order: 'asc', searchFields: 'username,realname' },
-    columns: [
-      {
-        name: '账号',
-        code: 'username',
-      },
-      {
-        name: '姓名',
-        code: 'realname',
-      },
-    ],
-    rowKey: 'username',
-    labelKey: 'realname',
-    multi: true,
-    placeholder: '请输入${title}',
-    formatter: ({ cellValue, row, column }) => {
-      return row[column.params.key + '_dictText'] || cellValue;
-    },
-    width: 240,
+    title: '未出库数量',
+    key: 'remainOutQty',
+    type: JVxeTypes.input,
+    disabled: true,
+    width: 140,
+  },
+  {
+    title: '备注',
+    key: 'noteEntry',
+    type: JVxeTypes.input,
+    disabled: true,
+    minWidth: 200,
+  },
+  {
+    title: '要货日期',
+    key: 'deliveryDate',
+    type: JVxeTypes.input,
+    disabled: true,
+    width: 160,
   },
 ];
