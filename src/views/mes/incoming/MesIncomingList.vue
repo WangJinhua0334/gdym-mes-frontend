@@ -69,7 +69,7 @@
 </template>
 
 <script lang="ts" name="incoming-mesIncoming" setup>
-import { reactive, unref, onMounted } from 'vue';
+import { reactive, unref, ref } from 'vue';
 import { BasicTable } from '/@/components/Table';
 import { BasicModal, useModal } from "/@/components/Modal";
 import { useListPage } from '/@/hooks/system/useListPage';
@@ -93,6 +93,8 @@ import { getToken } from '@/utils/auth';
 
 const queryParam = reactive<any>({});
 const $message = useMessage();
+// 保存待打印的钢卷号（用于收料成功后的自动打印）
+const autoPrintCoilNumber = ref<string | null>(null);
 
   //注册model
   const [registerModal, { openModal }] = useModal();
@@ -114,7 +116,7 @@ const $message = useMessage();
       title: '来料单',
       api: list,
       //api: "/mes/inComing/purchaseReceiptBillDetail/list",
-      immediate: false, // 👈 添加此行，禁止初始化时立即请求数据
+      immediate: false, // 页面加载时不自动请求，需手动查询
       //来料单表格列表数据
       columns,
       canResize: false,
@@ -161,11 +163,6 @@ const $message = useMessage();
   });
 
 const [registerTable, { reload, getSelectRows }, { rowSelection, selectedRowKeys }] = tableContext;
-
-// 页面打开时刷新表格
-onMounted(() => {
-  reload();
-});
 
 // 高级查询配置（已注释，保留以备后用）
 // const superQueryConfig = reactive(superQuerySchema);
@@ -299,9 +296,27 @@ async function handleDelete(record) {
 // }
 /**
  * 成功回调
+ * @param printData 打印数据，包含钢卷号
  */
-function handleSuccess() {
-  (selectedRowKeys.value = []) && reload();
+async function handleSuccess(printData?: { coilNumber: string }) {
+  // 清空选中项，但不刷新列表
+  selectedRowKeys.value = [];
+  
+  // 在所有操作完成后，最后弹出打印模板选择弹窗（仅新增模式下）
+  if (printData?.coilNumber) {
+    console.log('准备自动打印，钢卷号:', printData.coilNumber);
+    // 保存待打印的钢卷号
+    autoPrintCoilNumber.value = printData.coilNumber;
+    // 使用 setTimeout 确保在所有操作完成后打开打印弹窗
+    setTimeout(() => {
+      resetPrintFields();
+      openPrintModal(true, {});
+    }, 300); // 延迟300ms确保所有操作完成
+  } else {
+    console.log('未提供钢卷号，跳过自动打印');
+    // 清空待打印的钢卷号
+    autoPrintCoilNumber.value = null;
+  }
 }
 /**
  * 操作栏（已注释，保留以备后用）
@@ -386,26 +401,33 @@ async function handlePrintSubmit() {
     setPrintModalProps({ confirmLoading: true });
     const values = await validatePrintForm();
     
-    // 获取选中的行数据
-    const selectedRows = getSelectRows();
-    if (!selectedRows || selectedRows.length === 0) {
-      $message.createMessage.warning('请选择待打印的记录!');
-      setPrintModalProps({ confirmLoading: false });
-      return;
-    }
-
-    // 提取选中行的钢卷号
-    const coilNumbers: string[] = [];
-    selectedRows.forEach((row: any) => {
-      if (row.internalCoilNumber && row.internalCoilNumber !== null && row.internalCoilNumber !== '') {
-        coilNumbers.push(row.internalCoilNumber);
+    let coilNumbers: string[] = [];
+    
+    // 优先使用自动打印保存的钢卷号（收料成功后自动打印）
+    if (autoPrintCoilNumber.value) {
+      coilNumbers = [autoPrintCoilNumber.value];
+      console.log('使用自动打印的钢卷号:', autoPrintCoilNumber.value);
+    } else {
+      // 否则从选中的行数据中获取钢卷号
+      const selectedRows = getSelectRows();
+      if (!selectedRows || selectedRows.length === 0) {
+        $message.createMessage.warning('请选择待打印的记录!');
+        setPrintModalProps({ confirmLoading: false });
+        return;
       }
-    });
 
-    if (coilNumbers.length === 0) {
-      $message.createMessage.warning('选中的记录中没有有效的钢卷号!');
-      setPrintModalProps({ confirmLoading: false });
-      return;
+      // 提取选中行的钢卷号
+      selectedRows.forEach((row: any) => {
+        if (row.internalCoilNumber && row.internalCoilNumber !== null && row.internalCoilNumber !== '') {
+          coilNumbers.push(row.internalCoilNumber);
+        }
+      });
+
+      if (coilNumbers.length === 0) {
+        $message.createMessage.warning('选中的记录中没有有效的钢卷号!');
+        setPrintModalProps({ confirmLoading: false });
+        return;
+      }
     }
 
     // 获取报表ID
@@ -428,11 +450,15 @@ async function handlePrintSubmit() {
         loopPrintJimuReport(printSet, getToken, () => {
           closePrintModal();
           $message.createMessage.success('打印成功!');
+          // 清空自动打印的钢卷号
+          autoPrintCoilNumber.value = null;
         });
       });
   } catch (error) {
     console.log(error);
     setPrintModalProps({ confirmLoading: false });
+    // 清空自动打印的钢卷号
+    autoPrintCoilNumber.value = null;
   }
 }
 </script>

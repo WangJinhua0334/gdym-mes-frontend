@@ -367,18 +367,23 @@ export function getFormSchema(): FormSchema[] {
 
 
 //冷轧扫码完工页面产品表格字段
-export const getDetailJVxeColumns = function () {
+export const getDetailJVxeColumns = function (showCoilNo = false) {
   const arr: any[] = [];
+  // 只有在 showCoilNo 为 true 时才添加钢卷号列
+  if (showCoilNo) {
+    arr.push(
+      {
+        title: '钢卷号',
+        key: 'newCoilNo',
+        align: 'center',
+        type: JVxeTypes.input,
+        // width: auto,
+        fixed: true,
+        disabled: true,   // 禁止编辑
+      },
+    );
+  }
   arr.push(
-    {
-      title: '钢卷号',
-      key: 'newCoilNo',
-      align: 'center',
-      type: JVxeTypes.input,
-      // width: auto,
-      fixed: true,
-      disabled: true,   // 禁止编辑
-    },
     {
       title: '重量',
       key: 'weight',

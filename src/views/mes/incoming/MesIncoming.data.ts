@@ -226,48 +226,6 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
-    label: '物料编号',
-    field: 'materialId',
-    component: 'Input',
-    dynamicDisabled: true,
-    show: false,
-  },
-  {
-    label: '物料编码',
-    field: 'materialNumber',
-    component: 'Input',
-    dynamicDisabled: true,
-    show: false,
-  },
-  {
-    label: '物料名称',
-    field: 'materialName',
-    component: 'Input',
-    dynamicDisabled: true,
-    show: false,
-  },
-  {
-    label: '规格型号',
-    field: 'modelNumber',
-    component: 'Input',
-    dynamicDisabled: true,
-    show: false,
-  },
-  {
-    label: '牌号',
-    field: 'brand',
-    component: 'Input',
-    dynamicDisabled: true,
-    show: false,
-  },
-  {
-    label: '重量',
-    field: 'weight',
-    component: 'InputNumber',
-    dynamicDisabled: true,
-    show: false,
-  },
-  {
     label: '车牌号',
     field: 'licensePlateNumber',
     component: 'Input',
@@ -275,6 +233,49 @@ export const formSchema: FormSchema[] = [
       return [{ required: true, message: '请输入车牌号!' }];
     },
   },
+  {
+    label: '物料编号',
+    field: 'materialId',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: true,
+  },
+  {
+    label: '物料编码',
+    field: 'materialNumber',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: true,
+  },
+  {
+    label: '物料名称',
+    field: 'materialName',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: true,
+  },
+  {
+    label: '规格型号',
+    field: 'modelNumber',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: true,
+  },
+  {
+    label: '牌号',
+    field: 'brand',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: true,
+  },
+  {
+    label: '重量',
+    field: 'weight',
+    component: 'InputNumber',
+    dynamicDisabled: true,
+    show: true,
+  },
+
   // {
   //   label: '收料组织',
   //   field: 'stockOrgId',
@@ -486,44 +487,44 @@ export const formSchema: FormSchema[] = [
   //   dynamicDisabled: true,
   //   show: false,
   // },
-  {
-    label: '供应商',
-    field: 'supplierId',
-    component: 'JSearchSelectCustom',
-    componentProps: ({ formActionType }) => {
-      const { setFieldsValue, getFieldsValue } = formActionType;
-
-      return {
-        setFieldsValue: setFieldsValue,
-        getFieldsValue: getFieldsValue,
-        method: 'get',
-        url: '/basic/basSupplier/list',
-        params: { column: 'id', order: 'asc', searchFields: 'code,name' /*, code: '${code}'*/ },
-        columns: [
-          {
-            name: '名称',
-            code: 'name',
-          },
-        ],
-        isShowNum: false,
-        rowKey: 'id',
-        labelKey: ['name'],
-        linkmap: [
-          {
-            code: 'supplierNumber',
-          },
-        ],
-        // pageSize: 10,
-        multi: false,
-        maxTagCount: 2,
-        placeholder: '请输入',
-        getPopupContainer: () => document.body,
-      };
-    },
-    dynamicRules: () => {
-      return [{ required: true, message: '请选择供应商!' }];
-    },
-  },
+  // {
+  //   label: '供应商',
+  //   field: 'supplierId',
+  //   component: 'JSearchSelectCustom',
+  //   componentProps: ({ formActionType }) => {
+  //     const { setFieldsValue, getFieldsValue } = formActionType;
+  //
+  //     return {
+  //       setFieldsValue: setFieldsValue,
+  //       getFieldsValue: getFieldsValue,
+  //       method: 'get',
+  //       url: '/basic/basSupplier/list',
+  //       params: { column: 'id', order: 'asc', searchFields: 'code,name' /*, code: '${code}'*/ },
+  //       columns: [
+  //         {
+  //           name: '名称',
+  //           code: 'name',
+  //         },
+  //       ],
+  //       isShowNum: false,
+  //       rowKey: 'id',
+  //       labelKey: ['name'],
+  //       linkmap: [
+  //         {
+  //           code: 'supplierNumber',
+  //         },
+  //       ],
+  //       // pageSize: 10,
+  //       multi: false,
+  //       maxTagCount: 2,
+  //       placeholder: '请输入',
+  //       getPopupContainer: () => document.body,
+  //     };
+  //   },
+  //   dynamicRules: () => {
+  //     return [{ required: true, message: '请选择供应商!' }];
+  //   },
+  // },
   {
     label: '供应商编码',
     field: 'supplierNumber',
@@ -546,9 +547,9 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
-    label: '物料说明',
-    field: 'materialDesc',
-    component: 'InputTextArea',
+    label: '生产编号',
+    field: 'productNumber',
+    component: 'Input',
   },
   {
     label: '租户编号',

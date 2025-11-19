@@ -107,8 +107,12 @@
       
       //关闭弹窗
       closeModal();
-      //刷新列表
-      emit('success');
+      //刷新列表，并传递钢卷号用于自动打印（仅新增模式下）
+      const coilNumber = values?.coilNo || values?.internalCoilNumber;
+      console.log('收料提交成功，表单数据:', values);
+      console.log('提取的钢卷号:', coilNumber);
+      console.log('是否为新增模式:', !unref(isUpdate));
+      emit('success', !unref(isUpdate) && coilNumber ? { coilNumber } : null);
     } catch (error: any) {
       const errorFields = error?.errorFields;
       if (errorFields) {

@@ -6,16 +6,21 @@ import {rules} from "@/utils/helper/validator";
 import {useUserStore} from "@/store/modules/user";
 import { getTenantId } from "/@/utils/auth";
 //酸洗扫码完工页面产品表格字段
-export const getDetailJVxeColumns = function () {
+export const getDetailJVxeColumns = function (showCoilNo = false) {
   const arr: any[] = [];
+  // 只有在 showCoilNo 为 true 时才添加钢卷号列
+  if (showCoilNo) {
+    arr.push(
+      {
+        title: '钢卷号',
+        key: 'newCoilNo',
+        align: 'center',
+        type: JVxeTypes.input,
+        disabled: true,   // 禁止编辑
+      },
+    );
+  }
   arr.push(
-    {
-      title: '钢卷号',
-      key: 'newCoilNo',
-      align: 'center',
-      type: JVxeTypes.input,
-      disabled: true,   // 禁止编辑
-    },
     {
       title: '重量',
       key: 'weight',
@@ -139,12 +144,7 @@ export const getDetailJVxeColumns = function () {
 };
 //酸洗扫码完工新增弹框页面表单配置
 export const formSchema: FormSchema[] = [
-  {
-    label: '钢卷号',
-    field: 'newCoilNo',
-    component: 'Input',
-    dynamicDisabled: true, // 设置为禁用状态，只能通过程序设置
-  },
+  // 移除钢卷号字段，不在弹窗中显示
   {
     label: '重量',
     field: 'weight',

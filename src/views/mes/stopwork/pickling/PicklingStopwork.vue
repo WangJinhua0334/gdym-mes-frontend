@@ -16,13 +16,15 @@ const $message = useMessage();
 // Emits声明
 const emit = defineEmits(['register', 'success']);
 const formDisabled = ref(false);
-const detailJVxeColumns = computed(() => getDetailJVxeColumns());
+// 控制是否显示钢卷号列（打码完工后显示）
+const showCoilNoColumn = ref(false);
+const detailJVxeColumns = computed(() => getDetailJVxeColumns(showCoilNoColumn.value));
 
 const activeKey = ref('mesProductPickDetail');
 const mesProductPickDetail = ref();
 const mesProductPickDetailTable = reactive({
   loading: false,
-  dataSource: [],
+  dataSource: [] as any[],
   columns: detailJVxeColumns,
 });
 // 保存上次输入的质量汇报信息
@@ -156,7 +158,7 @@ async function handleSubmit() {
     // 提交成功后，禁用"打码完工"按钮
     submitDisabled.value = true;
     
-    // 获取所有行的钢卷号用于打印
+    // 获取所有行的钢卷号用于打印（如果有的话）
     const allCoilNumbers: string[] = [];
     detailData.forEach((row: any) => {
       if (row.newCoilNo && row.newCoilNo !== null && row.newCoilNo !== '') {
@@ -164,14 +166,26 @@ async function handleSubmit() {
       }
     });
     
-    // 保存所有行的钢卷号，并显示打印按钮
-    if (allCoilNumbers.length > 0) {
-      allRowsCoilNumbers.value = allCoilNumbers;
+    // 保存所有行的钢卷号
+    allRowsCoilNumbers.value = allCoilNumbers;
+    
+    // 提交成功后，显示打印按钮（只要有表格数据就显示）
+    if (detailData && detailData.length > 0) {
       showPrintButtonAfterSubmit.value = true;
+    }
+    
+    // 清空选中行，确保打印按钮默认禁用（需要重新选中行才能打印）
+    selectedRows.value = [];
+    // 清空表格选中状态
+    if (mesProductPickDetail.value && typeof mesProductPickDetail.value.clearSelection === 'function') {
+      mesProductPickDetail.value.clearSelection();
     }
   } catch (error) {
     // 处理验证错误
     console.log('表单验证失败:', error);
+    // 确保按钮可以再次点击
+    submitDisabled.value = false;
+    $message.createMessage.error('提交失败，请检查数据');
   } finally {
     // 无论成功还是失败，都要清除加载状态
     submitLoading.value = false;
@@ -182,42 +196,7 @@ async function requestAddOrEdit(values) {
   try {
     //提交表单
     await saveOrUpdate(values);
-    // //清空主表数据
-    // setFieldsValue({
-    //   flowCardId: undefined,
-    //   oldCoilNo: undefined,
-    //   materialId: undefined,
-    //   materialNumber: undefined,
-    //   materialName: undefined,
-    //   modelNumber: undefined,
-    //   exceptedWeight: undefined,
-    //   weight: undefined,
-    //   limitedProportion: undefined,
-    //   rangeValue: 3,
-    //   equipmentId: undefined,
-    //   equipmentNumber: undefined,
-    //   qualityReport: undefined,
-    //   // operatorNumber: undefined,
-    //   // tenantId: undefined,
-    //   endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), // 或者设置为 undefined
-    // });
-    // //重置子表数据源
-    // mesProductPickDetailTable.dataSource = [];
-    // // 清空选中行
-    // selectedRows.value = [];
-    // // 清空打印数据
-    // printCoilNumbers.value = [];
-    // 清空请求成功后的打印按钮状态
-    // showPrintButtonAfterSubmit.value = false;
     allRowsCoilNumbers.value = [];
-    // // 更新表格数据
-    // updateTableData();
-    // //重置时间字段
-    // setTimeout(() => {
-    //   setFieldsValue({
-    //     endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-    //   });
-    // }, 100);
     //刷新列表
     emit('success');
   } catch (error) {
@@ -227,21 +206,10 @@ async function requestAddOrEdit(values) {
 
 //新增按钮点击事件
 function handleAddDetail() {
-
-  // 获取表单数据中的钢卷号
+  // 获取表单数据中的重量
   const formData = getFieldsValue();
-  if (!formData.oldCoilNo) {
-    $message.createMessage.warning('请先输入钢卷号');
-    return;
-  }
-
-  const coilNo = formData.oldCoilNo
-  // 获取当前子表的数据源长度作为序号（确保每次都获取最新的数据长度）
-  const currentDataSource = mesProductPickDetail.value ? mesProductPickDetail.value.getTableData() : mesProductPickDetailTable.dataSource;
-  const currentIndex = Array.isArray(currentDataSource) ? currentDataSource.length + 1 : 1;
-  // 拼接新的钢卷号
-  const newCoilNo = currentIndex > 10? `10-${coilNo}-${currentIndex}` : `10-${coilNo}-0${currentIndex}`;
-
+  const formWeight = formData.weight || '';
+  
   // 设置为新增模式
   isEditMode.value = false;
   editingRowId.value = '';
@@ -251,7 +219,7 @@ function handleAddDetail() {
   // 延迟设置值，确保弹框已打开并且表单已初始化
   setTimeout(() => {
     setExtendedFieldsValue({
-      newCoilNo: newCoilNo,
+      weight: formWeight, // 设置重量默认值为表单中的重量
       qualityReport: lastQualityReport.value, // 恢复上次输入的质量汇报
     });
   }, 100);
@@ -317,7 +285,6 @@ function handleEditDetail() {
   setTimeout(() => {
     try {
       setExtendedFieldsValue({
-        newCoilNo: selectedRow.newCoilNo || '',
         weight: selectedRow.weight || '',
         destination: selectedRow.destination || '',
         qualityReport: selectedRow.qualityReport || '',
@@ -403,7 +370,6 @@ async function handleModalOk() {
           const updateResult = mesProductPickDetail.value.setValues([{
             rowKey: actualRowKey,
             values: {
-              newCoilNo: values.newCoilNo || '',
               weight: weightValue,
               destination: destinationLabel || values.destination || '',
               qualityReport: values.qualityReport || '',
@@ -420,10 +386,9 @@ async function handleModalOk() {
         }
       }
     } else {
-      // 新增模式：添加新行
+      // 新增模式：添加新行（不包含钢卷号，打码完工后再获取）
       const rowData = {
         id: buildUUID(),
-        newCoilNo: values.newCoilNo || '',   // 钢卷号
         weight: values.weight || '',   // 重量
         destination: destinationLabel || values.destination || '',   // 流转去向
         qualityReport: values.qualityReport || '',   // 质检报告
@@ -532,11 +497,26 @@ async function handleSubmitdy() {
           coilNumbers.push(row.newCoilNo);
         }
       });
+      
+      // 如果选中行中没有 newCoilNo，使用主表单的 oldCoilNo（扫码的钢卷号）
+      if (coilNumbers.length === 0) {
+        const mainFormValues = getFieldsValue();
+        if (mainFormValues.oldCoilNo && mainFormValues.oldCoilNo !== null && mainFormValues.oldCoilNo !== '') {
+          // 如果选中了多行，使用主表单的钢卷号（因为表格数据中没有 newCoilNo）
+          coilNumbers = [mainFormValues.oldCoilNo];
+        }
+      }
     } else {
       // 使用存储的钢卷号数组（用于请求成功后的打印）
       const storedCoilNumbers = printCoilNumbers.value;
       if (Array.isArray(storedCoilNumbers) && storedCoilNumbers.length > 0) {
         coilNumbers = storedCoilNumbers;
+      } else {
+        // 如果存储的钢卷号也为空，尝试使用主表单的 oldCoilNo
+        const mainFormValues = getFieldsValue();
+        if (mainFormValues.oldCoilNo && mainFormValues.oldCoilNo !== null && mainFormValues.oldCoilNo !== '') {
+          coilNumbers = [mainFormValues.oldCoilNo];
+        }
       }
     }
 
@@ -631,6 +611,8 @@ function clearFormAndTableData() {
   // 清空请求成功后的打印按钮状态
   showPrintButtonAfterSubmit.value = false;
   allRowsCoilNumbers.value = [];
+  // 隐藏钢卷号列
+  showCoilNoColumn.value = false;
   // 重置"打码完工"按钮的禁用状态，允许再次提交
   submitDisabled.value = false;
   // 确保提交加载状态复位
@@ -659,7 +641,7 @@ function clearFormAndTableData() {
           resizable
           ref="mesProductPickDetail"
           :loading="mesProductPickDetailTable.loading"
-          :columns="mesProductPickDetailTable.columns"
+          :columns="detailJVxeColumns"
           :dataSource="mesProductPickDetailTable.dataSource"
           :height="250"
           :disabled="formDisabled"

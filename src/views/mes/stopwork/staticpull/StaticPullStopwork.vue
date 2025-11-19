@@ -17,7 +17,9 @@ const $message = useMessage();
 // Emits声明
 const emit = defineEmits(['register', 'success']);
 const formDisabled = ref(false);
-const detailJVxeColumns = computed(() => getDetailJVxeColumns());
+// 控制是否显示钢卷号列
+const showCoilNoColumn = ref(false);
+const detailJVxeColumns = computed(() => getDetailJVxeColumns(showCoilNoColumn.value));
 // 编辑模式标识
 const isEditMode = ref(false);
 // 当前编辑的行ID
@@ -148,8 +150,16 @@ async function handleSubmit() {
       // 提交成功后，禁用"打码完工"按钮
       submitDisabled.value = true;
       showPrintButton.value = true;
+      // 清空选中行，确保打印按钮默认禁用（需要重新选中行才能打印）
+      selectedRows.value = [];
+      // 清空表格选中状态
+      if (mesProductPickDetail.value && typeof mesProductPickDetail.value.clearSelection === 'function') {
+        mesProductPickDetail.value.clearSelection();
+      }
       $message.createMessage.success('提交成功');
     } else {
+      // 提交失败时，确保按钮可以再次点击
+      submitDisabled.value = false;
       $message.createMessage.error('提交失败，请重试');
     }
   } catch (error) {
@@ -157,6 +167,8 @@ async function handleSubmit() {
     console.log('表单验证失败:', error);
     // 请求失败时不显示打印按钮
     showPrintButton.value = false;
+    // 确保按钮可以再次点击
+    submitDisabled.value = false;
     $message.createMessage.error('提交失败，请检查数据');
   } finally {
     // 无论成功或失败，都要重置加载状态
@@ -209,6 +221,7 @@ function handleAddDetail() {
     setExtendedFieldsValue({
       newCoilNo: newCoilNo,
       flowCardId: flowCardId,
+      weight: formData.weight || '', // 设置重量默认值为表单中的重量
     });
   }, 100);
 }
@@ -560,6 +573,8 @@ function clearTableDate() {
   submitLoading.value = false;
   // 确保表单未被禁用
   formDisabled.value = false;
+  // 隐藏钢卷号列
+  showCoilNoColumn.value = false;
 }
 </script>
 <template>
@@ -573,7 +588,7 @@ function clearTableDate() {
           resizable
           ref="mesProductPickDetail"
           :loading="mesProductPickDetailTable.loading"
-          :columns="mesProductPickDetailTable.columns"
+          :columns="detailJVxeColumns"
           :dataSource="mesProductPickDetailTable.dataSource"
           :height="250"
           :disabled="formDisabled"
