@@ -460,19 +460,22 @@ async function handleSubmitdy() {
       return;
     }
 
-    // 提取选中行的钢卷号
-    const coilNumbers: string[] = [];
-    currentSelectedRows.forEach((row: any) => {
-      if (row.newCoilNo && row.newCoilNo !== null && row.newCoilNo !== '') {
-        coilNumbers.push(row.newCoilNo);
-      }
-    });
-
-    if (coilNumbers.length === 0) {
-      $message.createMessage.warning('选中的记录中没有有效的钢卷号!');
+    // 检查是否选中了行
+    if (!currentSelectedRows || currentSelectedRows.length === 0) {
+      $message.createMessage.warning('请选择待打印的记录!');
       setModalProps({ confirmLoading: false });
       return;
     }
+
+    // 获取主表单的 oldCoilNo（旧钢卷号）作为打印参数
+    const mainFormValues = getFieldsValue();
+    if (!mainFormValues.oldCoilNo || mainFormValues.oldCoilNo === null || mainFormValues.oldCoilNo === '') {
+      $message.createMessage.warning('主表单中缺少旧钢卷号，无法打印!');
+      setModalProps({ confirmLoading: false });
+      return;
+    }
+
+    const oldCoilNo = mainFormValues.oldCoilNo;
 
     // 获取报表ID
     const reportRs = await defHttp.get({
@@ -480,24 +483,34 @@ async function handleSubmitdy() {
       params: { ids: values.templateId, type: 'gx_sn' },
     });
     
-    // 打印数据集 { reportId, parameters }，使用钢卷号作为参数
+    console.log('获取报表ID成功:', reportRs);
+    console.log('打印参数 - 旧钢卷号:', oldCoilNo);
+    
+    // 检查报表ID是否为空
+    if (!reportRs || Object.keys(reportRs).length === 0) {
+      $message.createMessage.error('获取报表ID失败，请检查打印模板配置!');
+      setModalProps({ confirmLoading: false });
+      return;
+    }
+    
+    // 打印数据集 { reportId, parameters }，使用旧钢卷号作为参数
     const printSet: any = {};
 
     const templateIds = Object.keys(reportRs);
     for (const templateId of templateIds) {
       const reportId = reportRs[templateId];
-      printSet[reportId] = { id: `${coilNumbers.join(',')}` };
+      printSet[reportId] = { id: oldCoilNo };
     }
 
+    console.log('打印数据集:', printSet);
+    
     // 调用打印功能，等待打印完成
     await loopPrintJimuReport(printSet, getToken, () => {
       // 打印完成后的回调
+      setModalProps({ confirmLoading: false });
+      closeDyModal();
+      $message.createMessage.success('打印成功!');
     });
-    
-    // 打印完成后，关闭弹窗并显示成功消息
-    setModalProps({ confirmLoading: false });
-    closeDyModal();
-    $message.createMessage.success('打印成功!');
   } catch (error: any) {
     // 重置加载状态
     setModalProps({ confirmLoading: false });

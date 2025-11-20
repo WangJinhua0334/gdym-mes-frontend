@@ -488,43 +488,22 @@ async function handleSubmitdy() {
       currentSelectedRows = selectedRows.value;
     }
     
-    // 如果还是没有选中行，尝试使用存储的钢卷号（用于请求成功后的打印）
-    let coilNumbers: string[] = [];
-    if (currentSelectedRows && currentSelectedRows.length > 0) {
-      // 从选中行提取钢卷号（参考冷轧页面的实现）
-      currentSelectedRows.forEach((row: any) => {
-        if (row.newCoilNo && row.newCoilNo !== null && row.newCoilNo !== '') {
-          coilNumbers.push(row.newCoilNo);
-        }
-      });
-      
-      // 如果选中行中没有 newCoilNo，使用主表单的 oldCoilNo（扫码的钢卷号）
-      if (coilNumbers.length === 0) {
-        const mainFormValues = getFieldsValue();
-        if (mainFormValues.oldCoilNo && mainFormValues.oldCoilNo !== null && mainFormValues.oldCoilNo !== '') {
-          // 如果选中了多行，使用主表单的钢卷号（因为表格数据中没有 newCoilNo）
-          coilNumbers = [mainFormValues.oldCoilNo];
-        }
-      }
-    } else {
-      // 使用存储的钢卷号数组（用于请求成功后的打印）
-      const storedCoilNumbers = printCoilNumbers.value;
-      if (Array.isArray(storedCoilNumbers) && storedCoilNumbers.length > 0) {
-        coilNumbers = storedCoilNumbers;
-      } else {
-        // 如果存储的钢卷号也为空，尝试使用主表单的 oldCoilNo
-        const mainFormValues = getFieldsValue();
-        if (mainFormValues.oldCoilNo && mainFormValues.oldCoilNo !== null && mainFormValues.oldCoilNo !== '') {
-          coilNumbers = [mainFormValues.oldCoilNo];
-        }
-      }
-    }
-
-    if (!coilNumbers || coilNumbers.length === 0) {
+    // 检查是否选中了行
+    if (!currentSelectedRows || currentSelectedRows.length === 0) {
       $message.createMessage.warning('请选择待打印的记录!');
       setModalProps({ loading: false });
       return;
     }
+
+    // 获取主表单的 oldCoilNo（旧钢卷号）作为打印参数
+    const mainFormValues = getFieldsValue();
+    if (!mainFormValues.oldCoilNo || mainFormValues.oldCoilNo === null || mainFormValues.oldCoilNo === '') {
+      $message.createMessage.warning('主表单中缺少旧钢卷号，无法打印!');
+      setModalProps({ loading: false });
+      return;
+    }
+
+    const oldCoilNo = mainFormValues.oldCoilNo;
 
     // 获取报表ID
     defHttp
@@ -532,16 +511,27 @@ async function handleSubmitdy() {
         url: '/template/basTemplate/getReportIdByIds',
         params: { ids: values.templateId, type: 'gx_sn' },
       }).then(async (reportRs) => {
+        console.log('获取报表ID成功:', reportRs);
+        console.log('打印参数 - 旧钢卷号:', oldCoilNo);
         setModalProps({ loading: false });
-        // 打印数据集 { reportId, parameters }，使用钢卷号作为参数（参考收料页面的实现）
+        
+        // 检查报表ID是否为空
+        if (!reportRs || Object.keys(reportRs).length === 0) {
+          $message.createMessage.error('获取报表ID失败，请检查打印模板配置!');
+          return;
+        }
+        
+        // 打印数据集 { reportId, parameters }，使用旧钢卷号作为参数
         const printSet: any = {};
 
         const templateIds = Object.keys(reportRs);
         for (const templateId of templateIds) {
           const reportId = reportRs[templateId];
-          printSet[reportId] = { id: `${coilNumbers.join(',')}`};
+          printSet[reportId] = { id: oldCoilNo };
         }
 
+        console.log('打印数据集:', printSet);
+        
         // 调用打印功能，会显示浏览器打印对话框（参考收料页面的实现）
         loopPrintJimuReport(printSet, getToken, () => {
           closeDyModal();
