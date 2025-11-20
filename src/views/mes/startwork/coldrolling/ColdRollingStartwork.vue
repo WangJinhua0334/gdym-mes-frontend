@@ -1,5 +1,5 @@
 <script setup lang="ts" name="mo-ColdRollingStartwork">
-  import { getFormSchema } from './ColdRollingStartwork.data.ts';
+  import { getFormSchema } from './ColdRollingStartwork.data';
   import { BasicForm, useForm } from '@/components/Form';
   import { saveOrUpdate } from '@/views/mes/startwork/coldrolling/ColdRollingStartwork.api';
   import { useMessage } from '@/hooks/web/useMessage';
@@ -117,6 +117,8 @@ function verification() {
       await resetFields();
       //刷新列表
       emit('success');
+      // 添加开工成功提示
+      $message.createMessage.success('开工成功');
     } catch (error) {
       console.log(error);
     }
