@@ -406,19 +406,6 @@
         loading.value = false;
         return; // 阻止继续执行
       }
-      
-      // 添加设备校验
-      if (!values.equipmentId) {
-        $message.createWarningModal({
-          title: '提示',
-          content: '请选择设备',
-          onOk: () => {
-            console.log('请先选择设备确认');
-          },
-        });
-        loading.value = false;
-        return; // 阻止继续执行
-      }
       // 确保 weight 字段在提交前转换为数字类型（如果后端需要数字类型）
       const submitValues = {
         ...values,

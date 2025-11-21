@@ -95,9 +95,9 @@ export const columns: BasicColumn[] = [
     width: 150,
   },
   {
-    title: '设备分类',
+    title: '设备',
     align: 'center',
-    dataIndex: 'equipmentTypeName',
+    dataIndex: 'equipmentName',
     width: 150,
   },
   {
@@ -436,9 +436,9 @@ export const formSchema: FormSchema[] = [
     show: false,
   },
   {
-    label: '设备分组',
+    label: '设备',
     // label: '设备分类编号',
-    field: 'equipmentTypeId',
+    field: 'equipmentId',
     component: 'JSearchSelectCustom',
     componentProps: ({ formActionType }) => {
       const { setFieldsValue, getFieldsValue } = formActionType;
@@ -446,7 +446,7 @@ export const formSchema: FormSchema[] = [
         setFieldsValue: setFieldsValue,
         getFieldsValue: getFieldsValue,
         method: 'get',
-        url: '/basic/basEquipmentType/list',
+        url: '/basic/basEquipment/list',
         params: { column: 'createTime', order: 'desc', searchFields: 'id,name,code' },
         columns: [
           { name: '编号', code: 'id' },
@@ -458,25 +458,25 @@ export const formSchema: FormSchema[] = [
         labelKey: ['name'],
         linkmap: [{
           // id:'equipmentTypeId',//设备分类编号
-          code:'equipmentTypeNumber',//设备分类编号
-          name:'equipmentTypeName',//设备分类名称
+          code:'equipmentNumber',//设备分类编号
+          name:'equipmentName',//设备分类名称
         }]
       }
     },
     dynamicRules: () => {
-      return [{ required: true, message: '请选择设备分组' }];
+      return [{ required: true, message: '请选择设备' }];
     },
   },
   {
-    label: '设备分类编码',
-    field: 'equipmentTypeNumber',
+    label: '设备编码',
+    field: 'equipmentNumber',
     component: 'Input',
     dynamicDisabled: true,
     show: false,
   },
   {
-    label: '设备分类名称',
-    field: 'equipmentTypeName',
+    label: '设备名称',
+    field: 'equipmentName',
     component: 'Input',
     dynamicDisabled: true,
     show: false,

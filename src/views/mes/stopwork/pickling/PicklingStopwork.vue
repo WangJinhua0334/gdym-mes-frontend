@@ -220,6 +220,7 @@ function handleAddDetail() {
   setTimeout(() => {
     setExtendedFieldsValue({
       weight: formWeight, // 设置重量默认值为表单中的重量
+      destination: '1', // 设置流转去向默认值为入库
       qualityReport: lastQualityReport.value, // 恢复上次输入的质量汇报
     });
   }, 100);

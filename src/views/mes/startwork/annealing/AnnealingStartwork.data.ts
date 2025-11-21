@@ -270,6 +270,7 @@ export function getFormSchema(): FormSchema[] {
       label: '设备',
       field: 'equipmentId',
       component: 'JSearchSelectCustom',
+      show: false,//禁止显示
       componentProps: ({ formActionType }) => {
         const { setFieldsValue, getFieldsValue } = formActionType;
         return {
@@ -304,9 +305,6 @@ export function getFormSchema(): FormSchema[] {
           labelKey: ['name'],
           placeholder: '请输入',
         };
-      },
-      dynamicRules: () => {
-        return [{ required: true, message: '请选择设备!' }];
       },
     },
     {

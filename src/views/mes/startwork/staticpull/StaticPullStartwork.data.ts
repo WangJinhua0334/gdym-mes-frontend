@@ -154,7 +154,7 @@ export function getFormSchema(): FormSchema[] {
         else planStartTime.value = null;
         return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];
       },
-    },
+    } as FormSchema,
     {
       label: '重量',
       field: 'weight',
@@ -195,6 +195,7 @@ export function getFormSchema(): FormSchema[] {
       label: '设备',
       field: 'equipmentId',
       component: 'JSearchSelectCustom',
+      show: false,//禁止显示
       componentProps: ({ formActionType }) => {
         const { setFieldsValue, getFieldsValue } = formActionType;
         return {
@@ -230,9 +231,6 @@ export function getFormSchema(): FormSchema[] {
           placeholder: '请输入',
         };
       },
-      dynamicRules: ({ model, schema, values }) => {
-        return [{ required: true, message: '请选择设备!' }];
-      },
     },
     {
       label: '设备编码',
@@ -247,7 +245,7 @@ export function getFormSchema(): FormSchema[] {
       component:'Input',
       defaultValue:useUserStore().getUserInfo.username,
       dynamicDisabled: true,//禁用
-      show: false,//默认隐藏
+      show: true,//显示
       componentProps: {
         style: { width: '100%' }
       }

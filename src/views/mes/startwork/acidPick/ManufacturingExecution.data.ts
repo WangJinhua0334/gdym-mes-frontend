@@ -294,56 +294,56 @@ export function getFormSchema(): FormSchema[] {
         style: { width: '100%' }
       }
     },
-    {
-      label: '设备',
-      field: 'equipmentId',
-      component: 'JSearchSelectCustom',
-      componentProps: ({ formActionType }) => {
-        const { setFieldsValue, getFieldsValue } = formActionType;
-        return {
-          setFieldsValue: setFieldsValue,
-          getFieldsValue: getFieldsValue,
-          method: 'get',
-          url: '/etl/picking/getEquipment',
-          params: {
-            column: 'createTime',
-            order: 'desc',
-            searchFields: 'code,name',
-            code: '${code}'
-          },
-          columns: [
-            {
-              name: '编码',
-              code: 'code',
-            },
-            {
-              name: '名称',
-              code: 'name',
-            },
-          ],
-          linkmap: [{
-            // equipmentId:'equipmentId',//设备编号
-            code:'equipmentNumber',//设备编号
-            // equipmentName:'equipmentName',//设备名称
-          }],
-          // 是否显示序号
-          isShowNum: false,
-          rowKey: 'id',
-          labelKey: ['name'],
-          placeholder: '请输入',
-        };
-      },
-      dynamicRules: () => {
-        return [{ required: true, message: '请选择设备!' }];
-      },
-    },
-    {
-      label: '设备 number',
-      field: 'equipmentNumber',
-      component: 'Input',
-      dynamicDisabled: true,//禁用
-      show: false,//禁止显示
-    },
+    // {
+    //   label: '设备',
+    //   field: 'equipmentId',
+    //   component: 'JSearchSelectCustom',
+    //   componentProps: ({ formActionType }) => {
+    //     const { setFieldsValue, getFieldsValue } = formActionType;
+    //     return {
+    //       setFieldsValue: setFieldsValue,
+    //       getFieldsValue: getFieldsValue,
+    //       method: 'get',
+    //       url: '/etl/picking/getEquipment',
+    //       params: {
+    //         column: 'createTime',
+    //         order: 'desc',
+    //         searchFields: 'code,name',
+    //         code: '${code}'
+    //       },
+    //       columns: [
+    //         {
+    //           name: '编码',
+    //           code: 'code',
+    //         },
+    //         {
+    //           name: '名称',
+    //           code: 'name',
+    //         },
+    //       ],
+    //       linkmap: [{
+    //         // equipmentId:'equipmentId',//设备编号
+    //         code:'equipmentNumber',//设备编号
+    //         // equipmentName:'equipmentName',//设备名称
+    //       }],
+    //       // 是否显示序号
+    //       isShowNum: false,
+    //       rowKey: 'id',
+    //       labelKey: ['name'],
+    //       placeholder: '请输入',
+    //     };
+    //   },
+    //   dynamicRules: () => {
+    //     return [{ required: true, message: '请选择设备!' }];
+    //   },
+    // },
+    // {
+    //   label: '设备 number',
+    //   field: 'equipmentNumber',
+    //   component: 'Input',
+    //   dynamicDisabled: true,//禁用
+    //   show: false,//禁止显示
+    // },
     {
       label:'操作员',
       field: 'operatorNumber',

@@ -252,6 +252,7 @@ function handleAddDetail() {
       newCoilNo: newCoilNo,
       flowCardId: flowCardId,
       weight: formData.weight || '', // 设置重量默认值为表单中的重量
+      destination: '1', // 设置流转去向默认值为入库
     });
   }, 100);
 }
