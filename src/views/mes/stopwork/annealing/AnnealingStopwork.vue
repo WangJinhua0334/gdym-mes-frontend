@@ -573,7 +573,8 @@ async function handleSubmitdy() {
  * 打印-弹出选择打印模板
  */
 function handlePrint() {
-  // 获取选中的行数据
+  try {
+    // 获取选中的行数据
   if (!mesProductPickDetail.value) {
     $message.createMessage.warning('表格未初始化!');
     return;
@@ -594,20 +595,65 @@ function handlePrint() {
     } catch (e) {
       console.error('获取选中行失败:', e);
     }
+    
+    // 如果表格中没有选中行，使用已保存的选中行数据
+    if (!currentSelectedRows || currentSelectedRows.length === 0) {
+      currentSelectedRows = selectedRows.value;
+    }
+    
+    // 检查是否选中了行
+    if (!currentSelectedRows || currentSelectedRows.length === 0) {
+      $message.createMessage.warning('请选择待打印的记录!');
+      return;
+    }
+
+    // 获取主表单的 oldCoilNo（旧钢卷号）作为打印参数
+    const mainFormValues = getFieldsValue();
+    if (!mainFormValues.oldCoilNo || mainFormValues.oldCoilNo === null || mainFormValues.oldCoilNo === '') {
+      $message.createMessage.warning('主表单中缺少旧钢卷号，无法打印!');
+      return;
+    }
+
+    const oldCoilNo = mainFormValues.oldCoilNo;
+    const templateId = '1986615937373085698'; // 固定模板 ID
+
+    // 获取报表ID
+    defHttp
+      .get({
+        url: '/template/basTemplate/getReportIdByIds',
+        params: { ids: templateId, type: 'gx_sn' },
+      }).then(async (reportRs) => {
+        console.log('获取报表ID成功:', reportRs);
+        console.log('打印参数 - 旧钢卷号:', oldCoilNo);
+        
+        // 检查报表ID是否为空
+        if (!reportRs || Object.keys(reportRs).length === 0) {
+          $message.createMessage.error('获取报表ID失败，请检查打印模板配置!');
+          return;
+        }
+        
+        // 打印数据集 { reportId, parameters }，使用旧钢卷号作为参数
+        const printSet: any = {};
+
+        const templateIds = Object.keys(reportRs);
+        for (const templateId of templateIds) {
+          const reportId = reportRs[templateId];
+          printSet[reportId] = { id: oldCoilNo };
+        }
+
+        console.log('打印数据集:', printSet);
+        
+        // 调用打印功能，会显示浏览器打印对话框
+        loopPrintJimuReport(printSet, getToken, () => {
+          $message.createMessage.success('打印成功!');
+        });
+      }).catch((error) => {
+        console.error('获取报表ID失败:', error);
+        $message.createMessage.error('获取报表ID失败，请重试!');
+      });
+  } catch (error) {
+    console.log(error);
   }
-  
-  // 校验是否选择了一条或者多条表格数据
-  if (!currentSelectedRows || currentSelectedRows.length === 0) {
-    $message.createMessage.warning('请先选择表格中待打印的记录!');
-    return;
-  }
-  
-  // 校验通过，打开弹窗
-  openDyModal(true, {});
-  // 确保 confirmLoading 初始化为 false
-  setTimeout(() => {
-    setModalProps({ confirmLoading: false });
-  }, 0);
 }
 function clearTableDate() {
   resetFields();

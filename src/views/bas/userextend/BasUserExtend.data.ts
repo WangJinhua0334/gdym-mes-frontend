@@ -101,6 +101,12 @@ export const columns: BasicColumn[] = [
     width: 150,
   },
   {
+    title: '打印模板',
+    align: 'center',
+    dataIndex: 'printTemplateName',
+    width: 150,
+  },
+  {
     title: '称重放行权限',
     align: 'center',
     dataIndex: 'hasPermission',
@@ -477,6 +483,42 @@ export const formSchema: FormSchema[] = [
   {
     label: '设备名称',
     field: 'equipmentName',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: false,
+  },
+  {
+    label: '打印模板',
+    // label: '仓库编号',
+    field: 'printTemplateId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/template/basTemplate/list',
+        params: { column: 'createTime', order: 'desc', searchFields: 'id,name' },
+        columns: [
+          { name: 'id', code: 'id' },
+          { name: '名称', code: 'name' },
+        ],
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        linkmap: [{
+          name:'printTemplateName',//仓库名称
+        }]
+      }
+    },
+    dynamicRules: () => {
+      return [{ required: true, message: '请选择打印模板' }];
+    },
+  },
+  {
+    label: '打印模板名称',
+    field: 'printTemplateName',
     component: 'Input',
     dynamicDisabled: true,
     show: false,

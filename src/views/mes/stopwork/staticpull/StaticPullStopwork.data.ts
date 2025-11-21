@@ -12,6 +12,7 @@ export const formSchema: FormSchema[] = [
     field: 'newCoilNo',
     component: 'Input',
     dynamicDisabled: true, // 设置为禁用状态，只能通过程序设置
+    show: false,//禁止显示
   },
   {
     label: '流转卡卡号',//用来过滤物料编码信息
@@ -293,9 +294,9 @@ export function getFormSchema(): FormSchema[] {
       componentProps: {
         showTime: true,
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
-        getPopupContainer: (node) => document.body
+        getPopupContainer: () => document.body
       },
-      dynamicRules: ({ model, schema, values }) => {
+      dynamicRules: ({ model}) => {
         if (model.planStartTime) planStartTime.value = model.planStartTime;
         else planStartTime.value = null;
         return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }];
@@ -427,3 +428,36 @@ export const getDetailJVxeColumns = function (showCoilNo = false) {
   );
   return arr;
 };
+
+
+//打印模板
+export const printFormSchema: FormSchema[] = [
+  {
+    label: '打印模板',
+    field: 'templateId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/template/basTemplate/list',
+        params: { column: 'code', order: 'asc' },
+        columns: [
+          { name: '编码', code: 'code' },
+          { name: '名称', code: 'name' },
+        ],
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        placeholder: '请选择',
+        getPopupContainer: () => document.body,
+      };
+    },
+    defaultValue: '1986615937373085698',
+    dynamicRules: () => {
+      return [{ required: true, message: '请选择打印模板!' }];
+    },
+  },
+];

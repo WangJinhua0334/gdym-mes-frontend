@@ -853,6 +853,7 @@ export const printFormSchema: FormSchema[] = [
         getPopupContainer: () => document.body,
       };
     },
+    defaultValue: '1986615937373085698',
     dynamicRules: () => {
       return [{ required: true, message: '请选择打印模板!' }];
     },
