@@ -41,11 +41,11 @@
   const queryParam = reactive<any>({});
   const $message = useMessage();
 
-  // 注册打印弹窗
-  const [registerPrintModal, { openModal: openPrintModal, closeModal: closePrintModal, setModalProps: setPrintModalProps }] = useModal();
+  // 注册打印弹窗（保留代码结构，但当前不使用）
+  const [registerPrintModal] = useModal();
 
-  // 注册打印表单
-  const [registerPrintForm, { validate: validatePrintForm, resetFields: resetPrintFields }] = useForm({
+  // 注册打印表单（保留代码结构，但当前不使用）
+  const [registerPrintForm] = useForm({
     labelWidth: 100,
     schemas: printFormSchema,
     showActionButtonGroup: false,
@@ -81,10 +81,10 @@
     },
   });
 
-  const [registerTable, { reload, getSelectRows }, { rowSelection, selectedRowKeys }] = tableContext;
+  const [registerTable, { getSelectRows }, { rowSelection, selectedRowKeys }] = tableContext;
 
   /**
-   * 打印-直接打印（跳过模板选择）
+   * 打印-直接打印（使用指定模板）
    */
   async function handlePrint() {
     try {
@@ -138,6 +138,14 @@
     } catch (error) {
       console.log(error);
     }
+  }
+
+  /**
+   * 打印弹窗提交（保留以保持代码完整性）
+   */
+  async function handlePrintSubmit() {
+    // 当前直接打印，不使用弹窗
+    // 此函数保留以避免模板引用错误
   }
 </script>
 

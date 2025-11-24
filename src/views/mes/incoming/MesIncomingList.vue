@@ -47,31 +47,22 @@
         <a-button v-else :ghost="true" type="primary" preIcon="ant-design:download-outlined" size="small" @click="downloadFile(text)">下载</a-button>
       </template>
     </BasicTable>
-    <!-- 表单区域 -->
+
+    <!-- 点击收料按钮弹出的弹窗 -->
     <MesIncomingModal @register="registerModal" @success="handleSuccess" />
-    <IncomingInspect @register="registerInspModal" @success="handleSuccess" />
-    <MesReturnModal @register="registerReturnModal" @success="handleSuccess" />
-    <MesStockModal @register="registerStockModal" @success="handleSuccess" />
-    
-    <!-- 打印弹窗 -->
-    <BasicModal 
-      v-bind="$attrs" 
-      @register="registerPrintModal" 
-      destroyOnClose 
-      :title="'选择打印标签'" 
-      :centered="true" 
-      :width="600" 
-      @ok="handlePrintSubmit"
-    >
-      <BasicForm @register="registerPrintForm" style="padding: 3%" />
-    </BasicModal>
+    <!-- 点击IQC按钮弹出的弹窗 -->
+    <!-- <IncomingInspect @register="registerInspModal" @success="handleSuccess" /> -->
+    <!-- 点击退货按钮弹出的弹窗 -->
+    <!-- <MesReturnModal @register="registerReturnModal" @success="handleSuccess" /> -->
+    <!-- 点击库存按钮弹出的弹窗 -->
+    <!-- <MesStockModal @register="registerStockModal" @success="handleSuccess" /> -->
   </div>
 </template>
 
 <script lang="ts" name="incoming-mesIncoming" setup>
-import { reactive, unref, ref } from 'vue';
+import { reactive, unref } from 'vue';
 import { BasicTable } from '/@/components/Table';
-import { BasicModal, useModal } from "/@/components/Modal";
+import { useModal } from "/@/components/Modal";
 import { useListPage } from '/@/hooks/system/useListPage';
 // @ts-ignore
 import MesIncomingModal from './components/MesIncomingModal.vue';
@@ -81,11 +72,10 @@ import IncomingInspect from './components/insp/IncomingInspect.vue';
 import MesReturnModal from './components/MesReturnModal.vue';
 // @ts-ignore
 import MesStockModal from './components/MesStockModal.vue';
-import { columns, searchFormSchema, printFormSchema } from './MesIncoming.data';
+import { columns, searchFormSchema } from './MesIncoming.data';
 import { list, deleteOne, getImportUrl, getExportUrl } from './MesIncoming.api';
 import { downloadFile } from '/@/utils/common/renderUtils';
 import { useMessage } from '/@/hooks/web/useMessage';
-import { BasicForm, useForm } from "@/components/Form";
 import { defHttp } from "@/utils/http/axios";
 import { useUserStore } from "@/store/modules/user";
 import { loopPrintJimuReport } from '/@/utils';
@@ -93,23 +83,12 @@ import { getToken } from '@/utils/auth';
 
 const queryParam = reactive<any>({});
 const $message = useMessage();
-// 保存待打印的钢卷号（用于收料成功后的自动打印）
-const autoPrintCoilNumber = ref<string | null>(null);
 
   //注册model
   const [registerModal, { openModal }] = useModal();
   const [registerInspModal, { openModal: openInspModal }] = useModal();
   const [registerStockModal, { openModal: openStockModal }] = useModal();
   const [registerReturnModal, { openModal: openReturnModal }] = useModal();
-  const [registerPrintModal, { openModal: openPrintModal, closeModal: closePrintModal, setModalProps: setPrintModalProps }] = useModal();
-  
-  //注册打印表单
-  const [registerPrintForm, { validate: validatePrintForm, resetFields: resetPrintFields }] = useForm({
-    labelWidth: 100,
-    schemas: printFormSchema,
-    showActionButtonGroup: false,
-    baseColProps: { span: 24 },
-  });
   //注册table数据
   const { tableContext} = useListPage({
     tableProps: {
@@ -177,13 +156,16 @@ const [registerTable, { reload, getSelectRows }, { rowSelection, selectedRowKeys
 //   reload();
 // }
 /**
- * 新增事件
+ * 打印弹窗提交事件
  */
 function handleAdd() {
-  openModal(true, {
-    isUpdate: false,
-    showFooter: true,
-  });
+  openModal(
+      true,  // 显示弹窗
+      {
+        isUpdate: false,  // 标记为新增模式，非编辑模式
+        showFooter: true,  // 显示底部操作栏
+      }
+  );
 }
 
 /**
@@ -210,7 +192,9 @@ function handleGetFromK3Cloud() {
  */
 // @ts-ignore
 function handleEdit(record: Recordable) {
-  openModal(true, {
+  openModal(
+    true, 
+    {
     record,
     isUpdate: true,
     showFooter: true,
@@ -231,7 +215,9 @@ function handleEdit(record: Recordable) {
  */
 // @ts-ignore
 function handleReturn(record: Recordable) {
-  openReturnModal(true, {
+  openReturnModal(
+    true, 
+    {
     record,
     isUpdate: true,
     showFooter: true,
@@ -302,20 +288,15 @@ async function handleSuccess(printData?: { coilNumber: string }) {
   // 清空选中项，但不刷新列表
   selectedRowKeys.value = [];
   
-  // 在所有操作完成后，最后弹出打印模板选择弹窗（仅新增模式下）
+  // 收料成功后直接打印，不弹窗
   if (printData?.coilNumber) {
     console.log('准备自动打印，钢卷号:', printData.coilNumber);
-    // 保存待打印的钢卷号
-    autoPrintCoilNumber.value = printData.coilNumber;
-    // 使用 setTimeout 确保在所有操作完成后打开打印弹窗
+    // 使用 setTimeout 确保在所有操作完成后执行打印
     setTimeout(() => {
-      resetPrintFields();
-      openPrintModal(true, {});
+      executePrint(printData.coilNumber);
     }, 300); // 延迟300ms确保所有操作完成
   } else {
     console.log('未提供钢卷号，跳过自动打印');
-    // 清空待打印的钢卷号
-    autoPrintCoilNumber.value = null;
   }
 }
 /**
@@ -382,62 +363,54 @@ async function handleSuccess(printData?: { coilNumber: string }) {
 // }
 
 /**
- * 打印-弹出选择打印模板
+ * 打印-直接打印（使用固定模板）
  */
-function handlePrint() {
-  if (!unref(selectedRowKeys) || unref(selectedRowKeys).length <= 0) {
-    $message.createMessage.warning('请选择待打印的记录!');
-    return;
-  }
-  resetPrintFields();
-  openPrintModal(true, {});
-}
-
-/**
- * 打印提交
- */
-async function handlePrintSubmit() {
+async function handlePrint() {
   try {
-    setPrintModalProps({ confirmLoading: true });
-    const values = await validatePrintForm();
-    
-    let coilNumbers: string[] = [];
-    
-    // 优先使用自动打印保存的钢卷号（收料成功后自动打印）
-    if (autoPrintCoilNumber.value) {
-      coilNumbers = [autoPrintCoilNumber.value];
-      console.log('使用自动打印的钢卷号:', autoPrintCoilNumber.value);
-    } else {
-      // 否则从选中的行数据中获取钢卷号
-      const selectedRows = getSelectRows();
-      if (!selectedRows || selectedRows.length === 0) {
-        $message.createMessage.warning('请选择待打印的记录!');
-        setPrintModalProps({ confirmLoading: false });
-        return;
-      }
-
-      // 提取选中行的钢卷号
-      selectedRows.forEach((row: any) => {
-        if (row.internalCoilNumber && row.internalCoilNumber !== null && row.internalCoilNumber !== '') {
-          coilNumbers.push(row.internalCoilNumber);
-        }
-      });
-
-      if (coilNumbers.length === 0) {
-        $message.createMessage.warning('选中的记录中没有有效的钢卷号!');
-        setPrintModalProps({ confirmLoading: false });
-        return;
-      }
+    if (!unref(selectedRowKeys) || unref(selectedRowKeys).length <= 0) {
+      $message.createMessage.warning('请选择待打印的记录!');
+      return;
     }
+
+    // 获取选中的行数据
+    const selectedRows = getSelectRows();
+    if (!selectedRows || selectedRows.length === 0) {
+      $message.createMessage.warning('请选择待打印的记录!');
+      return;
+    }
+
+    // 提取选中行的钢卷号
+    const coilNumbers: string[] = [];
+    selectedRows.forEach((row: any) => {
+      if (row.internalCoilNumber && row.internalCoilNumber !== null && row.internalCoilNumber !== '') {
+        coilNumbers.push(row.internalCoilNumber);
+      }
+    });
+
+    if (coilNumbers.length === 0) {
+      $message.createMessage.warning('选中的记录中没有有效的钢卷号!');
+      return;
+    }
+
+    const templateId = '1986615937373085698'; // 固定模板 ID
+    console.log('开始打印，钢卷号:', coilNumbers);
+    console.log('模板ID:', templateId);
 
     // 获取报表ID
     defHttp
       .get({
         url: '/template/basTemplate/getReportIdByIds',
-        params: { ids: values.templateId, type: 'pick_material_sn' },
+        params: { ids: templateId, type: 'pick_material_sn' },
       })
       .then(async (reportRs) => {
-        setPrintModalProps({ confirmLoading: false });
+        console.log('获取报表ID成功:', reportRs);
+
+        // 检查报表ID是否为空
+        if (!reportRs || Object.keys(reportRs).length === 0) {
+          $message.createMessage.error('获取报表ID失败，请检查打印模板配置!');
+          return;
+        }
+
         // 打印数据集 { reportId, parameters }，使用钢卷号作为参数
         const printSet: any = {};
 
@@ -447,18 +420,67 @@ async function handlePrintSubmit() {
           printSet[reportId] = { id: `${coilNumbers.join(',')}` };
         }
 
+        console.log('打印数据集:', printSet);
+
         loopPrintJimuReport(printSet, getToken, () => {
-          closePrintModal();
           $message.createMessage.success('打印成功!');
-          // 清空自动打印的钢卷号
-          autoPrintCoilNumber.value = null;
         });
+      })
+      .catch((error) => {
+        console.error('获取报表ID失败:', error);
+        $message.createMessage.error('获取报表ID失败: ' + (error.message || '请重试!'));
       });
   } catch (error) {
     console.log(error);
-    setPrintModalProps({ confirmLoading: false });
-    // 清空自动打印的钢卷号
-    autoPrintCoilNumber.value = null;
+  }
+}
+
+/**
+ * 执行打印（收料成功后自动调用）
+ */
+function executePrint(coilNumber: string) {
+  try {
+    const templateId = '1986615937373085698'; // 固定模板 ID
+    console.log('执行自动打印，钢卷号:', coilNumber);
+    console.log('模板ID:', templateId);
+
+    // 获取报表ID
+    defHttp
+      .get({
+        url: '/template/basTemplate/getReportIdByIds',
+        params: { ids: templateId, type: 'pick_material_sn' },
+      })
+      .then(async (reportRs) => {
+        console.log('获取报表ID成功:', reportRs);
+
+        // 检查报表ID是否为空
+        if (!reportRs || Object.keys(reportRs).length === 0) {
+          $message.createMessage.error('获取报表ID失败，请检查打印模板配置!');
+          return;
+        }
+
+        // 打印数据集 { reportId, parameters }，使用钢卷号作为参数
+        const printSet: any = {};
+
+        const templateIds = Object.keys(reportRs);
+        for (const templateId of templateIds) {
+          const reportId = reportRs[templateId];
+          printSet[reportId] = { id: coilNumber };
+        }
+
+        console.log('打印数据集:', printSet);
+
+        loopPrintJimuReport(printSet, getToken, () => {
+          $message.createMessage.success('打印成功!');
+        });
+      })
+      .catch((error) => {
+        console.error('获取报表ID失败:', error);
+        $message.createMessage.error('获取报表ID失败: ' + (error.message || '请重试!'));
+      });
+  } catch (error) {
+    console.error('打印异常:', error);
+    $message.createMessage.error('打印异常: ' + (error.message || '请重试!'));
   }
 }
 </script>

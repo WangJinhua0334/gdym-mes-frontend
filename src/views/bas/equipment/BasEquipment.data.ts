@@ -1,6 +1,5 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
-import { render } from '/@/utils/common/renderUtils';
 //列表数据
 export const columns: BasicColumn[] = [
   {
@@ -28,11 +27,8 @@ export const columns: BasicColumn[] = [
     title: '设备状态',
     align: 'center',
     sorter: true,
-    dataIndex: 'status',
+    dataIndex: 'status_dictText',
     width: 150,
-    customRender: ({ text }) => {
-      return render.renderDict(text, 'equipment_status', true);
-    },
   },
   {
     title: '供应商',
