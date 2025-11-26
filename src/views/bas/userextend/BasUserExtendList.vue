@@ -9,6 +9,7 @@
         <j-upload-button type="primary" preIcon="ant-design:import-outlined" @click="onImportXls" v-auth="'bas:bas_user_extend:importExcel'"
           >导入</j-upload-button
         >
+        <a-button type="primary" @click="handleSyncK3CloudUsers" preIcon="ant-design:import-outlined">同步金蝶员工信息</a-button>
         <a-dropdown v-if="selectedRowKeys.length > 0">
           <template #overlay>
             <a-menu>
@@ -56,7 +57,12 @@
   import { list, deleteOne, batchDelete, getImportUrl, getExportUrl } from './BasUserExtend.api';
   import { downloadFile } from '/@/utils/common/renderUtils';
   import { usePermission } from '/@/hooks/web/usePermission';
+  import { useMessage } from '/@/hooks/web/useMessage';
+  import { defHttp } from '@/utils/http/axios';
+  import { useUserStore } from '@/store/modules/user';
+  
   const { hasPermission } = usePermission();
+  const { createMessage } = useMessage();
 
   const checkedKeys = ref<Array<string | number>>([]);
   //注册model
@@ -170,6 +176,28 @@
         auth: 'bas:bas_user_extend:delete',
       },
     ];
+  }
+
+  /**
+   * 同步金蝶员工信息
+   */
+  function handleSyncK3CloudUsers() {
+    // 显示加载提示
+    const hide = createMessage.loading('正在同步金蝶员工信息...', 0);
+
+    // 调用接口
+    defHttp.get({
+      url: '/apiService/k3cloudApi/basic/importAllBasUsers',
+      params: {
+        tenantId: useUserStore().getTenant,
+      },
+    }).then(() => {
+      hide();
+      createMessage.success('同步金蝶员工信息成功!');
+      reload();
+    }).catch(() => {
+      hide();
+    });
   }
 </script>
 

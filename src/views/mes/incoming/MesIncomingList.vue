@@ -392,7 +392,7 @@ async function handlePrint() {
       return;
     }
 
-    const templateId = '1986615937373085698'; // 固定模板 ID
+    const templateId = await getPrintTemplate(); // 固定模板 ID
     console.log('开始打印，钢卷号:', coilNumbers);
     console.log('模板ID:', templateId);
 
@@ -432,6 +432,18 @@ async function handlePrint() {
       });
   } catch (error) {
     console.log(error);
+  }
+}
+
+async function getPrintTemplate() {
+  try {
+    const data = await defHttp.get({
+      url: '/userextend/basUserExtend/queryByUsername',
+      params: { username: useUserStore().getUserInfo.username },
+    });
+    return data.printTemplateId; // 返回模板ID
+  } catch (error) {
+    console.error('获取用户拓展信息中的模板失败: ', error);
   }
 }
 

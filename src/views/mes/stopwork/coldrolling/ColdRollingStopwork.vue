@@ -11,6 +11,7 @@
   import { defHttp } from '@/utils/http/axios';
   import { loopPrintJimuReport } from '@/utils';
   import { getToken } from '@/utils/auth';
+  import { useUserStore } from '@/store/modules/user';
   // 提示方法声明
   const $message = useMessage();
   // Emits声明
@@ -548,7 +549,7 @@ async function handleSubmit() {
   /**
    * 打印-直接打印（跳过模板选择）
    */
-  function handlePrint() {
+  async function handlePrint() {
     try {
       // 设置加载状态（虽然没有弹窗，但为了防止重复点击，可以使用 submitLoading 或其他 loading）
       // 这里暂时不需要额外的 loading 变量，因为 loopPrintJimuReport 会处理打印
@@ -559,21 +560,21 @@ async function handleSubmit() {
         return;
       }
 
-      // 优先尝试从表格获取选中行
-      let currentSelectedRows: any[] | null = null;
-      try {
-        if (typeof mesProductPickDetail.value.getSelectRows === 'function') {
-          currentSelectedRows = mesProductPickDetail.value.getSelectRows();
-        } else if (typeof mesProductPickDetail.value.getSelectionData === 'function') {
-          currentSelectedRows = mesProductPickDetail.value.getSelectionData();
-        }
-      } catch (e) {
-        console.error('获取选中行失败:', e);
-      }
+      // 优先使用已保存的选中行数据
+      let currentSelectedRows = selectedRows.value;
 
-      // 如果表格中没有选中行，使用已保存的选中行数据
+      // 如果保存的选中行为空，尝试从表格获取
       if (!currentSelectedRows || currentSelectedRows.length === 0) {
-        currentSelectedRows = selectedRows.value;
+        try {
+          // 尝试使用 getSelectionData 方法（JVxeTable 的标准方法）
+          if (typeof mesProductPickDetail.value.getSelectionData === 'function') {
+            currentSelectedRows = mesProductPickDetail.value.getSelectionData();
+          } else if (typeof mesProductPickDetail.value.getSelectRows === 'function') {
+            currentSelectedRows = mesProductPickDetail.value.getSelectRows();
+          }
+        } catch (e) {
+          console.error('获取选中行失败:', e);
+        }
       }
 
       // 检查是否选中了行
@@ -590,7 +591,7 @@ async function handleSubmit() {
       }
 
       const oldCoilNo = mainFormValues.oldCoilNo;
-      const templateId = '1986615937373085698'; // 固定模板 ID
+      const templateId = await getPrintTemplate(); // 固定模板 ID
 
       // 获取报表ID
       defHttp
@@ -632,6 +633,7 @@ async function handleSubmit() {
       console.log(error);
     }
   }
+
   function clearTableDate() {
     setFieldsValue({
       flowCardId: undefined,
@@ -684,6 +686,18 @@ async function handleSubmit() {
     formDisabled.value = false;
     // 隐藏钢卷号列
     showCoilNoColumn.value = false;
+  }
+
+  async function getPrintTemplate() {
+    try {
+      const data = await defHttp.get({
+        url: '/userextend/basUserExtend/queryByUsername',
+        params: { username: useUserStore().getUserInfo.username },
+      });
+      return data.printTemplateId; // 返回模板ID
+    } catch (error) {
+      console.error('获取用户拓展信息中的模板失败: ', error);
+    }
   }
 </script>
 <template>

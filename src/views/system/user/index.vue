@@ -7,6 +7,7 @@
         <a-button type="primary" preIcon="ant-design:plus-outlined" @click="handleCreate"> 新增</a-button>
         <a-button type="primary" preIcon="ant-design:export-outlined" @click="onExportXls" :disabled="isDisabledAuth('system:user:export')"> 导出</a-button>
         <j-upload-button type="primary" preIcon="ant-design:import-outlined" @click="onImportXls">导入</j-upload-button>
+        <a-button type="primary" @click="handleSyncK3CloudUsers" preIcon="ant-design:import-outlined">同步金蝶员工信息</a-button>
         <a-button type="primary" @click="openModal(true, {})" preIcon="ant-design:hdd-outlined"> 回收站</a-button>
         <a-dropdown v-if="selectedRowKeys.length > 0">
           <template #overlay>
@@ -69,6 +70,8 @@
   import { columns, searchFormSchema } from './user.data';
   import { listNoCareTenant, deleteUser, batchDeleteUser, getImportUrl, getExportUrl, frozenBatch } from './user.api';
   import {usePermission} from "/@/hooks/web/usePermission";
+  import { defHttp } from "@/utils/http/axios";
+  import { useUserStore } from "@/store/modules/user";
 
   const { createMessage, createConfirm } = useMessage();
   const { isDisabledAuth } = usePermission();
@@ -293,6 +296,28 @@
   function handleQuit(userName) {
     //打开离职代理人弹窗
     openQuitAgentModal(true, { userName });
+  }
+
+  /**
+   * 同步金蝶员工信息
+   */
+  function handleSyncK3CloudUsers() {
+    // 显示加载提示
+    const hide = createMessage.loading('正在同步金蝶员工信息...', 0);
+
+    // 调用接口
+    defHttp.get({
+      url: '/apiService/k3cloudApi/basic/importAllBasUsers',
+      params: {
+        tenantId: useUserStore().getTenant,
+      },
+    }).then(() => {
+      hide();
+      createMessage.success('同步金蝶员工信息成功!');
+      reload();
+    }).catch(() => {
+      hide();
+    });
   }
 </script>
 

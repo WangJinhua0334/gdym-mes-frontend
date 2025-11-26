@@ -11,6 +11,7 @@
   import { defHttp } from '@/utils/http/axios';
   import { loopPrintJimuReport } from '@/utils';
   import { getToken } from '@/utils/auth';
+  import { useUserStore } from '@/store/modules/user';
   // 提示方法声明
   const $message = useMessage();
   // Emits声明
@@ -562,45 +563,35 @@ async function handleSubmit() {
    * 打印-直接打印（跳过模板选择）
    * @param coilNumbers 可选参数，如果传入则使用传入的钢卷号数组（用于请求成功后的打印）
    */
-  async function handlePrint(coilNumbers?: string[]) {
+  async function handlePrint() {
     try {
-      // 设置加载状态（虽然没有弹窗，但为了防止重复点击，可以使用 submitLoading 或其他 loading）
-      // 这里暂时不需要额外的 loading 变量，因为 loopPrintJimuReport 会处理打印
+      // 获取选中的行数据
+      if (!mesProductPickDetail.value) {
+        $message.createMessage.warning('表格未初始化!');
+        return;
+      }
 
-      // 如果传入了钢卷号数组（用于请求成功后的打印），使用传入的钢卷号
-      let targetCoilNumbers: string[] = [];
-      if (coilNumbers && Array.isArray(coilNumbers) && coilNumbers.length > 0) {
-        targetCoilNumbers = coilNumbers;
-      } else {
-        // 否则尝试从表格获取选中行
-        // 获取选中的行数据（参考冷轧页面的实现）
-        if (!mesProductPickDetail.value) {
-          $message.createMessage.warning('表格未初始化!');
-          return;
-        }
+      // 优先使用已保存的选中行数据
+      let currentSelectedRows = selectedRows.value;
 
-        // 优先尝试从表格获取选中行（参考冷轧页面的实现）
-        let currentSelectedRows: any[] | null = null;
+      // 如果保存的选中行为空，尝试从表格获取
+      if (!currentSelectedRows || currentSelectedRows.length === 0) {
         try {
-          if (typeof mesProductPickDetail.value.getSelectRows === 'function') {
-            currentSelectedRows = mesProductPickDetail.value.getSelectRows();
-          } else if (typeof mesProductPickDetail.value.getSelectionData === 'function') {
+          // 尝试使用 getSelectionData 方法（JVxeTable 的标准方法）
+          if (typeof mesProductPickDetail.value.getSelectionData === 'function') {
             currentSelectedRows = mesProductPickDetail.value.getSelectionData();
+          } else if (typeof mesProductPickDetail.value.getSelectRows === 'function') {
+            currentSelectedRows = mesProductPickDetail.value.getSelectRows();
           }
         } catch (e) {
           console.error('获取选中行失败:', e);
         }
+      }
 
-        // 如果表格中没有选中行，使用已保存的选中行数据
-        if (!currentSelectedRows || currentSelectedRows.length === 0) {
-          currentSelectedRows = selectedRows.value;
-        }
-
-        // 检查是否选中了行
-        if (!currentSelectedRows || currentSelectedRows.length === 0) {
-          $message.createMessage.warning('请选择待打印的记录!');
-          return;
-        }
+      // 检查是否选中了行
+      if (!currentSelectedRows || currentSelectedRows.length === 0) {
+        $message.createMessage.warning('请选择待打印的记录!');
+        return;
       }
 
       // 获取主表单的 oldCoilNo（旧钢卷号）作为打印参数
@@ -611,7 +602,7 @@ async function handleSubmit() {
       }
 
       const oldCoilNo = mainFormValues.oldCoilNo;
-      const templateId = '1986615937373085698'; // 固定模板 ID
+      const templateId = await getPrintTemplate(); // 固定模板 ID
 
       // 获取报表ID
       defHttp
@@ -707,6 +698,18 @@ async function handleSubmit() {
     updateTableData();
     // 确保表单未被禁用
     formDisabled.value = false;
+  }
+
+  async function getPrintTemplate() {
+    try {
+      const data = await defHttp.get({
+        url: '/userextend/basUserExtend/queryByUsername',
+        params: { username: useUserStore().getUserInfo.username },
+      });
+      return data.printTemplateId; // 返回模板ID
+    } catch (error) {
+      console.error('获取用户拓展信息中的模板失败: ', error);
+    }
   }
 </script>
 <template>

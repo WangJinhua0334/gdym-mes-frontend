@@ -140,7 +140,7 @@ export const abnormalreportSearchFormSchema: FormSchema[] = [
       //   // 不可选择未来时间
       //   return current && current > Date.now() + 1;
       // },
-      getPopupContainer: (node) => document.body,
+      getPopupContainer: () => document.body,
     },
   },
 ];

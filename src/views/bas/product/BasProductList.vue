@@ -156,7 +156,7 @@
 
     // 调用接口
     defHttp.get({
-      url: '/etl/preDeliveryBill/importAllPreDeliveryBills',
+      url: '/apiService/k3cloudApi/basic/importAllMaterialsAndMaterialMapping',
       params: {
         tenantId: useUserStore().getTenant,
       }

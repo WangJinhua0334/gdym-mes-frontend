@@ -37,6 +37,7 @@
   import { defHttp } from '@/utils/http/axios';
   import { loopPrintJimuReport } from '/@/utils';
   import { getToken } from '@/utils/auth';
+  import { useUserStore } from '@/store/modules/user';
 
   const queryParam = reactive<any>({});
   const $message = useMessage();
@@ -113,7 +114,8 @@
         return;
       }
 
-      const templateId = '1986615937373085698'; // 固定模板 ID
+      const templateId = await getPrintTemplate();
+      // const templateId = '1986615937373085698'; // 固定模板 ID
 
       // 获取报表ID
       defHttp
@@ -147,6 +149,19 @@
     // 当前直接打印，不使用弹窗
     // 此函数保留以避免模板引用错误
   }
+
+  async function getPrintTemplate() {
+    try {
+      const data = await defHttp.get({
+        url: '/userextend/basUserExtend/queryByUsername',
+        params: { username: useUserStore().getUserInfo.username },
+      });
+      return data.printTemplateId; // 返回模板ID
+    } catch (error) {
+      console.error('获取用户拓展信息中的模板失败: ', error);
+    }
+  }
+
 </script>
 
 <style lang="less" scoped>
