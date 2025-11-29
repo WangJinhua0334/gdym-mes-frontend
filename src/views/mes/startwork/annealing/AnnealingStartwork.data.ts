@@ -60,7 +60,7 @@ export function getFormSchema(): FormSchema[] {
           getFieldsValue: getFieldsValue,
           method: 'get',
           url: '/etl/annealing/start/list',
-          params: { column: 'endTime', order: 'asc', searchFields: 'id,oldCoilNo'},
+          params: { column: 'endTime', order: 'asc', searchFields: 'oldCoilNo,newCoilNo'},
           columns: [
             {
               name: '钢卷号',
