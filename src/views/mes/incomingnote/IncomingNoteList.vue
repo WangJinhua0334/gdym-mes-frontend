@@ -156,12 +156,14 @@
         url: '/userextend/basUserExtend/queryByUsername',
         params: { username: useUserStore().getUserInfo.username },
       });
+      if (data.printTemplateId == null){
+        return '1986615937373085698';
+      }
       return data.printTemplateId; // 返回模板ID
     } catch (error) {
-      console.error('获取用户拓展信息中的模板失败: ', error);
+      return '1986615937373085698';
     }
   }
-
 </script>
 
 <style lang="less" scoped>

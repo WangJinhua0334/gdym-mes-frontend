@@ -1,8 +1,8 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { ref } from 'vue';
-import dayjs from "dayjs";
-import {useUserStore} from "/@/store/modules/user";
+import dayjs from 'dayjs';
+import { useUserStore } from '/@/store/modules/user';
 
 export const doQrCode = ref();
 //来料单列表数据
