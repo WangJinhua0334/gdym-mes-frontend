@@ -53,12 +53,12 @@ export const columns: BasicColumn[] = [
     dataIndex: 'firstOperationNumber_dictText',
   },
   {
-    title: "入库时间",
+    title: '入库时间',
     align: 'center',
     dataIndex: 'productionDate',
   },
   {
-    title: "收料员工",
+    title: '收料员工',
     align: 'center',
     dataIndex: 'createBy_dictText',
   },
@@ -213,16 +213,24 @@ export const formSchema: FormSchema[] = [
         },
       ],
     },
-    defaultValue: "sx",
+    defaultValue: 'sx',
     // 不设置默认值，确保用户必须选择，验证规则才能生效
     dynamicRules: () => {
       return [
-        { 
-          required: true, 
+        {
+          required: true,
           message: '请选择钢卷的第一道工序!',
           trigger: 'change',
         },
       ];
+    },
+  },
+  {
+    label: '生产编号',
+    field: 'productNumber',
+    component: 'Input',
+    dynamicRules: () => {
+      return [{ required: true, message: '请输入车牌号!' }];
     },
   },
   {
@@ -231,6 +239,20 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
     dynamicRules: () => {
       return [{ required: true, message: '请输入车牌号!' }];
+    },
+  },
+  {
+    label: '入库时间',
+    field: 'inStockTime',
+    component: 'DatePicker',
+    defaultValue: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+    componentProps: {
+      showTime: true,
+      valueFormat: 'YYYY-MM-DD HH:mm:ss',
+      getPopupContainer: () => document.body,
+    },
+    dynamicRules: () => {
+      return [{ required: true, message: '请选择生产日期!' }];
     },
   },
   {
@@ -533,33 +555,13 @@ export const formSchema: FormSchema[] = [
     show: false,
   },
   {
-    label: '入库时间',
-    field: 'inStockTime',
-    component: 'DatePicker',
-    defaultValue: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-    componentProps: {
-      showTime: true,
-      valueFormat: 'YYYY-MM-DD HH:mm:ss',
-      getPopupContainer: () => document.body,
-    },
-    dynamicRules: () => {
-      return [{ required: true, message: '请选择生产日期!' }];
-    },
-  },
-  {
-    label: '生产编号',
-    field: 'productNumber',
-    component: 'Input',
-  },
-  {
     label: '租户编号',
     field: 'tenantId',
     component: 'Input',
     defaultValue: useUserStore().getTenant,
     show: false,
-  }
+  },
 ];
-
 
 //查询数据-来料单查询条件
 export const searchFormSchema: FormSchema[] = [
@@ -581,7 +583,7 @@ export const searchFormSchema: FormSchema[] = [
         methods: 'get',
         url: '/basic/basSupplier/getAllSupplier',
         //url: '/workshop/basWorkShop/list',
-        params: { column: 'createTime', order: 'desc', searchFields: 'id,name', code: '${code}'},
+        params: { column: 'createTime', order: 'desc', searchFields: 'id,name', code: '${code}' },
         columns: [
           {
             name: '编码',
@@ -600,7 +602,7 @@ export const searchFormSchema: FormSchema[] = [
         maxTagCount: 2,
         placeholder: '请选择',
         // 启用滚动分页
-       /* scroll: {
+        /* scroll: {
           pageSize: 10
         }*/
       };
@@ -630,13 +632,13 @@ export const searchFormSchema: FormSchema[] = [
     field: 'prodTimeRange',
     component: 'RangePicker',
     // colProps: { span: 10 },
-    defaultValue: [dayjs().subtract(0, 'day').startOf('day').format("YYYY-MM-DD HH:mm:ss"), dayjs().endOf('day').format("YYYY-MM-DD HH:mm:ss")],
+    defaultValue: [dayjs().subtract(0, 'day').startOf('day').format('YYYY-MM-DD HH:mm:ss'), dayjs().endOf('day').format('YYYY-MM-DD HH:mm:ss')],
     componentProps: {
       showTime: true,
       format: 'YYYY-MM-DD HH:mm:ss',
       placeholder: ['请选择开始时间', '请选择结束时间'],
       // 传给后端的时间格式
-      valueFormat: "YYYY-MM-DD HH:mm:ss",
+      valueFormat: 'YYYY-MM-DD HH:mm:ss',
       getPopupContainer: () => document.body,
     },
   },
@@ -683,8 +685,6 @@ export const searchFormSchema: FormSchema[] = [
   //   component: 'JInput',
   // },
 ];
-
-
 
 //退货
 export const returnFormSchema: FormSchema[] = [
@@ -821,7 +821,7 @@ export const superQuerySchema = {
   remark: { title: '备注', order: 12, view: 'text', type: 'string' },
   whBinId: { title: '库位', order: 13, view: 'text', type: 'string' },
   attachments: { title: '附件', order: 14, view: 'text', type: 'string' },
-}
+};
 
 export function getBpmFormSchema(): FormSchema[] {
   // 默认和原始表单保持一致 如果流程中配置了权限数据，这里需要单独处理formSchema
