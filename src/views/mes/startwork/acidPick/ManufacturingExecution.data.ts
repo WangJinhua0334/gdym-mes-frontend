@@ -56,7 +56,7 @@ export function getFormSchema(): FormSchema[] {
           getFieldsValue: getFieldsValue,
           method: 'get',
           //url: '/mes/picking/list',
-          url: '/etl/picking/start/list',  // 返回的是流转卡记录
+          url: '/etl/picking/start/list', // 返回的是流转卡记录
           params: {
             column: 'createTime',
             order: 'asc',

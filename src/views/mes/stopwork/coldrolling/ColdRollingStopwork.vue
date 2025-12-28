@@ -621,7 +621,7 @@ async function handleSubmit() {
           console.log('打印数据集:', printSet);
 
           // 调用打印功能，会显示浏览器打印对话框
-          loopPrintJimuReport(printSet, getToken, () => {
+          await loopPrintJimuReport(printSet, getToken, () => {
             $message.createMessage.success('打印成功!');
           });
         })

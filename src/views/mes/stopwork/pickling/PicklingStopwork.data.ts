@@ -1,10 +1,10 @@
-import {FormSchema} from "@/components/Form";
-import {JVxeTypes} from "@/components/jeecg/JVxeTable/types";
-import dayjs from "dayjs";
-import {planStartTime} from "@/views/mes/mo/components/MesMoPlanCreateSn.data";
-import {rules} from "@/utils/helper/validator";
-import {useUserStore} from "@/store/modules/user";
-import { getTenantId } from "/@/utils/auth";
+import { FormSchema } from '@/components/Form';
+import { JVxeTypes } from '@/components/jeecg/JVxeTable/types';
+import dayjs from 'dayjs';
+import { planStartTime } from '@/views/mes/mo/components/MesMoPlanCreateSn.data';
+import { rules } from '@/utils/helper/validator';
+import { useUserStore } from '@/store/modules/user';
+import { getTenantId } from '/@/utils/auth';
 //酸洗扫码完工页面产品表格字段
 export const getDetailJVxeColumns = function (showCoilNo = false) {
   const arr: any[] = [];
@@ -26,10 +26,10 @@ export const getDetailJVxeColumns = function (showCoilNo = false) {
       type: JVxeTypes.inputNumber,
       componentProps: {
         style: { width: '100%' },
-        precision: 2,        // 设置小数点后两位
-        step: 0.01,          // 设置步进值为0.01
+        precision: 2, // 设置小数点后两位
+        step: 0.01, // 设置步进值为0.01
       },
-      disabled: true,   // 禁止编辑
+      disabled: true, // 禁止编辑
     },
     // {
     //   label: '物料编码',
@@ -112,9 +112,9 @@ export const getDetailJVxeColumns = function (showCoilNo = false) {
       title: '流传去向',
       key: 'destination',
       align: 'center',
-      type: JVxeTypes.select,// 使用 select 类型
-      dictCode: 'gxlzqx',// 指定字典编码
-      disabled: true,   // 禁止编辑
+      type: JVxeTypes.select, // 使用 select 类型
+      dictCode: 'gxlzqx', // 指定字典编码
+      disabled: true, // 禁止编辑
     },
     {
       title: '质量汇报',
@@ -156,7 +156,7 @@ export const formSchema: FormSchema[] = [
           // 失去焦点时，格式化数字（保留两位小数）
           const target = e.target as HTMLInputElement;
           const currentValue = target.value;
-          
+
           if (currentValue !== null && currentValue !== undefined && currentValue !== '') {
             let strValue = String(currentValue).trim();
             // 处理以小数点结尾的情况，如 "10." -> "10"
@@ -308,7 +308,7 @@ export function getFormSchema(): FormSchema[] {
       label: '流转卡号',
       field: 'flowCardId',
       component: 'Input',
-      show: false,//禁止显示
+      show: false, //禁止显示
     },
     {
       label: '钢卷号',
@@ -341,13 +341,13 @@ export function getFormSchema(): FormSchema[] {
           placeholder: '请输入',
           linkmap: [
             {
-              id:'flowCardId', //钢卷号
-              materialId:'materialId',//物料编号
-              materialNumber:'materialNumber',//物料编码
-              materialName:'materialName',//物料名称
-              modelNumber: 'modelNumber',//规格型号
-              exceptedWeight: 'exceptedWeight',//标签重
-              actualWeight: 'weight',//重量
+              id: 'flowCardId', //钢卷号
+              materialId: 'materialId', //物料编号
+              materialNumber: 'materialNumber', //物料编码
+              materialName: 'materialName', //物料名称
+              modelNumber: 'modelNumber', //规格型号
+              exceptedWeight: 'exceptedWeight', //标签重
+              actualWeight: 'weight', //重量
             },
           ],
         };
@@ -357,26 +357,26 @@ export function getFormSchema(): FormSchema[] {
       label: '物料编号',
       field: 'materialId',
       component: 'Input',
-      dynamicDisabled: true,//禁用
-      show: false,//禁止显示
+      dynamicDisabled: true, //禁用
+      show: false, //禁止显示
     },
     {
-       label: '物料名称',
-       field: 'materialName',
-       component: 'Input',
-       dynamicDisabled: true,//禁用
-     },
+      label: '物料名称',
+      field: 'materialName',
+      component: 'Input',
+      dynamicDisabled: true, //禁用
+    },
     {
       label: '物料编码',
       field: 'materialNumber',
       component: 'Input',
-      dynamicDisabled: true,//禁用
+      dynamicDisabled: true, //禁用
     },
     {
       label: '规格型号',
       field: 'modelNumber',
       component: 'Input',
-      dynamicDisabled: true,//禁用
+      dynamicDisabled: true, //禁用
     },
     /*{
       label: '生产厂区',
@@ -443,7 +443,7 @@ export function getFormSchema(): FormSchema[] {
         valueFormat: 'YYYY-MM-DD HH:mm:ss',
         getPopupContainer: () => document.body
       },
-      dynamicRules: ({ model}) => {
+      dynamicRules: ({ model }) => {
         if (model.planStartTime) planStartTime.value = model.planStartTime;
         else planStartTime.value = null;
         return [{ required: true, message: '请选择计划开始日期!' }, { ...rules.startTime(model.planCompleteTime, true)[0] }] as any;
@@ -453,17 +453,17 @@ export function getFormSchema(): FormSchema[] {
       label: '重量',
       field: 'weight',
       component: 'InputNumber',
-      dynamicDisabled: true,//禁用
+      dynamicDisabled: true, //禁用
       componentProps: {
         style: { width: '100%' }
       }
     },
     {
-      label:'操作员',
+      label: '操作员',
       field: 'operatorNumber',
-      component:'Input',
+      component: 'Input',
       defaultValue: useUserStore().getUserInfo.username,
-      dynamicDisabled: true,//禁用
+      dynamicDisabled: true, //禁用
       //show: false,//默认隐藏
       componentProps: {
         style: { width: '100%' }
@@ -486,12 +486,12 @@ export function getFormSchema(): FormSchema[] {
       },
     },
     {
-      label:'租户 ID',
+      label: '租户 ID',
       field: 'tenantId',
-      component:'Input',
-      defaultValue:getTenantId(),
-      dynamicDisabled: true,//禁用
-      show: false,//默认隐藏
+      component: 'Input',
+      defaultValue: getTenantId(),
+      dynamicDisabled: true, //禁用
+      show: false, //默认隐藏
       componentProps: {
         style: { width: '100%' }
       }
