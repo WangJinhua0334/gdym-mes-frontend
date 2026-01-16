@@ -509,6 +509,7 @@ export const formSchema: FormSchema[] = [
         labelKey: ['name'],
         linkmap: [{
           name:'printTemplateName',//仓库名称
+          code: 'printTemplateNumber', // 仓库编码
         }]
       }
     },
@@ -519,6 +520,13 @@ export const formSchema: FormSchema[] = [
   {
     label: '打印模板名称',
     field: 'printTemplateName',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: false,
+  },
+  {
+    label: '打印模板编码',
+    field: 'printTemplateNumber',
     component: 'Input',
     dynamicDisabled: true,
     show: false,

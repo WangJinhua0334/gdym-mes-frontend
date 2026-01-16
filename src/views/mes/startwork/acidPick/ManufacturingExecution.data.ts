@@ -39,7 +39,7 @@ export function getFormSchema(): FormSchema[] {
                   // 将范围值转换为小数（千分比转小数）
                   const rangeDecimal = rangeValue / 1000;
                   // 计算限定占比：标签重 × (1 - 范围值)
-                  const limitedProportion = (exceptedWeight * (1 - rangeDecimal)).toFixed(2);
+                  const limitedProportion = (exceptedWeight * (1 - rangeDecimal)).toFixed(3);
                   // 设置限定占比字段的值（使用原始的 setFieldsValue）
                   originalSetFieldsValue({
                     limitedProportion: limitedProportion, // 保留两位小数
@@ -60,29 +60,28 @@ export function getFormSchema(): FormSchema[] {
           params: {
             column: 'createTime',
             order: 'asc',
-            searchFields: 'id',
-            // steelId: '${steelId}'
+            searchFields: 'newCoilNo',
           },
           columns: [
             {
               name: '钢卷号',
-              code: 'steelId',
+              code: 'newCoilNo',
             },
           ],
           // 是否显示序号
           isShowNum: false,
-          rowKey: 'id', // 流转卡对象中的 id 和 steelId 是一样的值
-          labelKey: ['steelId'],
+          rowKey: 'newCoilNo', // 流转卡对象中的 id 和 steelId 是一样的值
+          labelKey: ['newCoilNo'],
           placeholder: '请输入',
           linkmap: [
             {
-              id: 'flowCardId',
-              materialId:'materialId',//物料编号
-              materialNumber:'materialNumber',//物料编码
-              materialName:'materialName',//物料名称
-              modelNumber: 'modelNumber',//规格型号
-              exceptedWeight: 'exceptedWeight',//标签重
-              weight: 'weight',//重量
+              cardId: 'flowCardId',
+              newMaterialId:'materialId',//物料编号
+              newMaterialNumber:'materialNumber',//物料编码
+              newMaterialName:'materialName',//物料名称
+              newModelNumber: 'modelNumber',//规格型号
+              startWeight: 'exceptedWeight',//标签重
+              // weight: 'weight',//重量
             },
           ],
         };

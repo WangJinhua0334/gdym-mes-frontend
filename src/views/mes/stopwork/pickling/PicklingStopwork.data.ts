@@ -325,29 +325,27 @@ export function getFormSchema(): FormSchema[] {
           params: {
             column: 'createTime',
             order: 'asc',
-            searchFields: 'id',
-            // steelId: '${steelId}'
+            searchFields: 'oldCoilNo',
           },
           columns: [
             {
               name: '钢卷号',
-              code: 'steelId',
+              code: 'oldCoilNo',
             },
           ],
           // 是否显示序号
           isShowNum: false,
-          rowKey: 'id',
-          labelKey: ['id'],
+          rowKey: 'oldCoilNo',
+          labelKey: ['oldCoilNo'],
           placeholder: '请输入',
           linkmap: [
             {
-              id: 'flowCardId', //钢卷号
-              materialId: 'materialId', //物料编号
-              materialNumber: 'materialNumber', //物料编码
-              materialName: 'materialName', //物料名称
-              modelNumber: 'modelNumber', //规格型号
-              exceptedWeight: 'exceptedWeight', //标签重
-              actualWeight: 'weight', //重量
+              cardId: 'flowCardId', //钢卷号
+              oldMaterialId: 'materialId', //物料编号
+              oldMaterialNumber: 'materialNumber', //物料编码
+              oldMaterialName: 'materialName', //物料名称
+              oldModelNumber: 'modelNumber', //规格型号
+              startWeight: 'weight', //重量
             },
           ],
         };

@@ -430,15 +430,18 @@
 
   async function getPrintTemplate() {
     try {
-      const data = await defHttp.get({
+      const res = await defHttp.get({
         url: '/userextend/basUserExtend/queryByUsername',
         params: { username: useUserStore().getUserInfo.username },
       });
-      if(data.printTemplateId == null){
-        return '1986615937373085698';
+      if(res.success && res.result){
+        // return res.result.printTemplateNumber;
+        return res.result.printTemplateId;
       }
-      return data.printTemplateId; // 返回模板ID
+      return '1986615937373085698';
+      // return 'SystemDefaultTemplate'; // 返回模板ID
     } catch (error) {
+      // return 'SystemDefaultTemplate';
       return '1986615937373085698';
     }
   }
@@ -446,7 +449,7 @@
   /**
    * 执行打印（收料成功后自动调用）
    */
-  function executePrint(coilNumber: string) {
+  async function executePrint(coilNumber: string) {
     try {
       const templateId = '1986615937373085698'; // 固定模板 ID
       console.log('执行自动打印，钢卷号:', coilNumber);
