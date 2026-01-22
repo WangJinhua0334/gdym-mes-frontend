@@ -31,80 +31,80 @@ export const getDetailJVxeColumns = function (showCoilNo = false) {
       },
       disabled: true, // 禁止编辑
     },
-    // {
-    //   label: '物料编码',
-    //   field: 'materialNumber',
-    //   component: 'JSearchSelectCustom',
-    //   show: false,//禁止显示
-    //   componentProps: ({ formActionType }) => {
-    //     const { setFieldsValue, getFieldsValue } = formActionType;
-    //     return {
-    //       setFieldsValue: setFieldsValue,
-    //       getFieldsValue: getFieldsValue,
-    //       method: 'get',
-    //       url: '/etl/rolling/materialMappingInfo',
-    //       params: {
-    //         column: 'createTime',
-    //         order: 'desc',
-    //         flowCardId: '${flowCardId}',
-    //         searchFields: 'old_name,old_model_number'
-    //       },
-    //       columns: [
-    //         {name: '物料编码', code: 'number'},
-    //         {name: '物料名称', code: 'name'},
-    //         {name: '规格型号', code: 'materialModelNumber'},
-    //       ],
-    //       isShowNum: false,
-    //       rowKey: 'number',
-    //       labelKey: ['name'],
-    //       linkmap: [
-    //         {
-    //           id:'newMaterialId',//物料编号
-    //           number:'newMaterialNumber',//物料编码
-    //           name:'newMaterialName',//物料名称
-    //           materialModelNumber:'newModelNumber',//规格型号
-    //         },
-    //       ],
-    //       //pageSize: 10,
-    //       multi: false,
-    //       maxTagCount: 2,
-    //       placeholder: '请选择',
-    //       // 启用滚动分页
-    //       scroll: {
-    //         pageSize: 10
-    //       },
-    //     };
-    //   },
-    // },
-    // {
-    //   label: "物料编号",
-    //   field: 'newMaterialId',
-    //   component: 'Input',
-    //   show: false,//禁止显示
-    //   dynamicDisabled : true,
-    // },
-    //
-    // {
-    //   label: '物料编码',
-    //   field: 'newMaterialNumber',
-    //   component: 'Input',
-    //   show: true,//禁止显示
-    //   dynamicDisabled : true,
-    // },
-    // {
-    //   label: '物料名称',
-    //   field: 'newMaterialName',
-    //   component: 'Input',
-    //   show: true,//禁止显示
-    //   dynamicDisabled : true,
-    // },
-    // {
-    //   label: '规格型号',
-    //   field: 'newModelNumber',
-    //   component: 'Input',
-    //   show: true,//禁止显示
-    //   dynamicDisabled : true,
-    // },
+    {
+      label: '物料编码',
+      field: 'materialNumber',
+      component: 'JSearchSelectCustom',
+      show: false,//禁止显示
+      componentProps: ({ formActionType }) => {
+        const { setFieldsValue, getFieldsValue } = formActionType;
+        return {
+          setFieldsValue: setFieldsValue,
+          getFieldsValue: getFieldsValue,
+          method: 'get',
+          url: '/basic/basProductMapping/getNewMaterialInfo',
+          params: {
+            column: 'createTime',
+            order: 'desc',
+            flowCardId: '${flowCardId}',
+            searchFields: 'old_name,old_model_number'
+          },
+          columns: [
+            {name: '物料编码', code: 'number'},
+            {name: '物料名称', code: 'name'},
+            {name: '规格型号', code: 'materialModelNumber'},
+          ],
+          isShowNum: false,
+          rowKey: 'number',
+          labelKey: ['name'],
+          linkmap: [
+            {
+              id:'newMaterialId',//物料编号
+              number:'newMaterialNumber',//物料编码
+              name:'newMaterialName',//物料名称
+              materialModelNumber:'newModelNumber',//规格型号
+            },
+          ],
+          //pageSize: 10,
+          multi: false,
+          maxTagCount: 2,
+          placeholder: '请选择',
+          // 启用滚动分页
+          scroll: {
+            pageSize: 10
+          },
+        };
+      },
+    },
+    {
+      label: "物料编号",
+      field: 'newMaterialId',
+      component: 'Input',
+      show: false,//禁止显示
+      dynamicDisabled : true,
+    },
+
+    {
+      label: '物料编码',
+      field: 'newMaterialNumber',
+      component: 'Input',
+      show: true,//禁止显示
+      dynamicDisabled : true,
+    },
+    {
+      label: '物料名称',
+      field: 'newMaterialName',
+      component: 'Input',
+      show: true,//禁止显示
+      dynamicDisabled : true,
+    },
+    {
+      label: '规格型号',
+      field: 'newModelNumber',
+      component: 'Input',
+      show: true,//禁止显示
+      dynamicDisabled : true,
+    },
     /**
      * 流转去向: 1入库、2退料
      */
