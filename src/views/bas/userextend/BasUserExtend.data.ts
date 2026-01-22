@@ -2,6 +2,7 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { render } from '@/utils/common/renderUtils';
 import { useUserStore } from '@/store/modules/user';
+import {getTenantId} from "@/utils/auth";
 //列表数据
 export const columns: BasicColumn[] = [
   {
@@ -405,12 +406,19 @@ export const formSchema: FormSchema[] = [
         getFieldsValue: getFieldsValue,
         method: 'get',
         url: '/basic/operation/list',
-        params: { column: 'createTime', order: 'desc', searchFields: 'id,,operationName,operationNumber' },
+        params: {
+          column: 'createTime', order: 'desc',
+          searchFields: 'id,,operationName,operationNumber',
+        },
         columns: [
           { name: '编号', code: 'id' },
           { name: '编码', code: 'operationNumber' },
           { name: '名称', code: 'operationName' },
         ],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
         isShowNum: false,
         rowKey: 'id',
         labelKey: ['operationName'],
@@ -459,6 +467,10 @@ export const formSchema: FormSchema[] = [
           { name: '编码', code: 'code' },
           { name: '名称', code: 'name' },
         ],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
         isShowNum: false,
         rowKey: 'id',
         labelKey: ['name'],
