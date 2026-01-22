@@ -163,10 +163,10 @@ export const formSchema: FormSchema[] = [
             title: '重量',
             align: 'center',
             dataIndex: 'weight',
-            customRender: ({ text }) => {
-              // 保留 4 位小数
-              return parseFloat(text).toFixed(4);
-            },
+            // customRender: ({ text }) => {
+            //   // 保留 4 位小数
+            //   return parseFloat(text).toFixed(4);
+            // },
           },
         ],
         queryInfo: [
