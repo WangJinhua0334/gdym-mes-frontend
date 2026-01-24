@@ -1,125 +1,185 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import dayjs from 'dayjs';
+import { render } from '@/utils/common/renderUtils';
+import { getTenantId } from '@/utils/auth';
 
 //列表数据
 export const columns: BasicColumn[] = [
   {
     title: '生产厂区',
     align: 'center',
-    dataIndex: 'plantNumber_dictText',
+    dataIndex: 'plantNumber',
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'plant_name', true);
+    },
+    resizable: true,
     width: 150,
   },
   {
     title: '生产车间',
     align: 'center',
     dataIndex: 'workshopId_dictText',
+    resizable: true,
     width: 150,
   },
   {
     title: '工序号',
     align: 'center',
-    dataIndex: 'operationNumber_dictText',
+    dataIndex: 'operationId_dictText',
+    resizable: true,
     width: 150,
+    colSpan: 2,
   },
   {
     title: '流转卡号',
     align: 'center',
-    dataIndex: 'flowCardId',
+    dataIndex: 'cardId',
+    resizable: true,
     width: 150,
   },
   {
-    title: '旧钢卷号',
-    align: 'center',
-    dataIndex: 'oldCoilNo',
+    title: '领料信息',
     width: 200,
+    children: [
+      {
+        title: '领料钢卷',
+        align: 'center',
+        dataIndex: 'oldCoilNo',
+        resizable: true,
+        width: 200,
+      },
+      {
+        title: '领料钢卷的物料编码',
+        align: 'center',
+        dataIndex: 'oldMaterialNumber',
+        resizable: true,
+        width: 200,
+      },
+      {
+        title: '领料钢卷的物料名称',
+        align: 'center',
+        dataIndex: 'oldMaterialName',
+        resizable: true,
+        width: 200,
+      },
+      {
+        title: '领料钢卷的规格型号',
+        align: 'center',
+        dataIndex: 'oldModelNumber',
+        resizable: true,
+        width: 200,
+      },
+      {
+        title: '领料钢卷重量',
+        align: 'center',
+        dataIndex: 'startWeight',
+        resizable: true,
+        width: 200,
+      },
+      {
+        title: '开工班组',
+        align: 'center',
+        dataIndex: 'startTeamId_dictText',
+        resizable: true,
+        width: 150,
+      },
+      {
+        title: '开工时间',
+        align: 'center',
+        dataIndex: 'startTime',
+        resizable: true,
+        width: 150,
+      },
+    ]
   },
   {
-    title: '旧物料编码',
-    align: 'center',
-    dataIndex: 'oldMaterialNumber',
+    title: '入库信息',
     width: 200,
+    children: [
+      {
+        title: '入库钢卷',
+        align: 'center',
+        dataIndex: 'newCoilNo',
+        resizable: true,
+        width: 200,
+        colSpan: 2,
+        customCell: (record, index,  column) =>{
+          if(!record.newCoilNo){
+            return {
+              colSpan: 0
+            }
+          }
+        }
+      },
+      {
+        title: '入库钢卷物料编码',
+        align: 'center',
+        dataIndex: 'newMaterialNumber',
+        resizable: true,
+        width: 200,
+      },
+      {
+        title: '入库钢卷物料名称',
+        align: 'center',
+        dataIndex: 'newMaterialName',
+        resizable: true,
+        width: 200,
+      },
+      {
+        title: '入库钢卷规格型号',
+        align: 'center',
+        dataIndex: 'newModelNumber',
+        resizable: true,
+        width: 200,
+      },
+      {
+        title: '入库钢卷重量',
+        align: 'center',
+        dataIndex: 'endWeight',
+        resizable: true,
+        width: 200,
+      },
+      {
+        title: '入库班组',
+        align: 'center',
+        dataIndex: 'endTeamId_dictText',
+        resizable: true,
+        width: 200,
+      },
+      {
+        title: '入库时间',
+        align: 'center',
+        dataIndex: 'endTime',
+        resizable: true,
+        width: 200,
+      },
+    ]
   },
   {
-    title: '旧物料名称',
+    title: '状态',
     align: 'center',
-    dataIndex: 'oldMaterialName',
+    dataIndex: 'status',
+    resizable: true,
+    customRender: ({ text }) => {
+      return render.renderDict(text, 'operation_status', true);
+    },
     width: 200,
-  },
-  {
-    title: '旧规格型号',
-    align: 'center',
-    dataIndex: 'oldSpecification',
-    width: 200,
-  },
-  {
-    title: '旧钢卷重量',
-    align: 'center',
-    dataIndex: 'oldCoilWeight',
-    width: 200,
-  },
-  {
-    title: '开工班组',
-    align: 'center',
-    dataIndex: 'startTeamName_dictText',
-    width: 150,
-  },
-  {
-    title: '开工时间',
-    align: 'center',
-    dataIndex: 'startTime',
-    width: 150,
-  },
-  {
-    title: '新钢卷号',
-    align: 'center',
-    dataIndex: 'newCoilNo',
-    width: 200,
-  },
-  {
-    title: '新物料编码',
-    align: 'center',
-    dataIndex: 'newMaterialNumber',
-    width: 200,
-  },
-  {
-    title: '新物料名称',
-    align: 'center',
-    dataIndex: 'newMaterialName',
-    width: 200,
-  },
-  {
-    title: '新规格型号',
-    align: 'center',
-    dataIndex: 'newSpecification',
-    width: 200,
-  },
-  {
-    title: '新钢卷重量',
-    align: 'center',
-    dataIndex: 'newCoilWeight',
-    width: 200,
-  },
-  {
-    title: '完工班组',
-    align: 'center',
-    dataIndex: 'endTeam_dictText',
-    width: 200,
-  },
-  {
-    title: '完工时间',
-    align: 'center',
-    dataIndex: 'endTime',
-    width: 200,
-  },
-  {
-    title: '工序状态',
-    align: 'center',
-    dataIndex: 'status_dictText',
-    width: 100,
   },
 ];
 //查询数据
 export const formSchema: FormSchema[] = [
+  {
+    label: '领料钢卷号',
+    field: 'oldCoilNo',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
+  {
+    label: '入库钢卷号',
+    field: 'newCoilNo',
+    component: 'Input',
+    colProps: { span: 6 },
+  },
   {
     label: '生产车间',
     field: 'workShopId',
@@ -143,6 +203,10 @@ export const formSchema: FormSchema[] = [
             code: 'name',
           },
         ],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
         isShowNum: false,
         rowKey: 'id',
         labelKey: ['name'],
@@ -177,6 +241,10 @@ export const formSchema: FormSchema[] = [
             code: 'operationName',
           },
         ],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
         isShowNum: false,
         rowKey: 'id',
         labelKey: ['operationName'],
@@ -188,17 +256,11 @@ export const formSchema: FormSchema[] = [
     colProps: { span: 6 },
   },
   {
-    label: '旧钢卷号',
-    field: 'oldCoilNo',
-    component: 'Input',
-    colProps: { span: 6 },
-  },
-  {
     label: '开工时间',
     field: 'startTimeRange',
     component: 'RangePicker',
     // colProps: { span: 10 },
-    defaultValue: [dayjs().subtract(0, 'day').startOf('day').format("YYYY-MM-DD HH:mm:ss"), dayjs().endOf('day').format("YYYY-MM-DD HH:mm:ss")],
+    defaultValue: [dayjs().subtract(30, 'day').startOf('day').format("YYYY-MM-DD HH:mm:ss"), dayjs().endOf('day').format("YYYY-MM-DD HH:mm:ss")],
     componentProps: {
       showTime: true,
       format: 'YYYY-MM-DD HH:mm:ss',

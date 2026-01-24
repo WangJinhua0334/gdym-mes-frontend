@@ -19,6 +19,38 @@
   import { useListPage } from '/@/hooks/system/useListPage';
   import { coilprodreport, coilprodreportExportUrl } from './CoilProdReport.api';
   import { columns, formSchema } from './CoilProdReport.data';
+  // import { computed } from 'vue';
+  // import { mostationtaskColumns } from '@/views/bi/report/mostationtasksearchlist.data';
+  // import { getSpanArr } from '@/utils/loms';
+
+  // // 表格列设置行合并
+  // const newColumns = computed(() => {
+  //   // 获取表格数据
+  //   const tableDataSource = getDataSource();
+  //   // 设置需要合并的列
+  //   const needTomergeColumnsIndex = [
+  //     'newCoilNo',
+  //     'newMaterialNumber',
+  //     'newMaterialName',
+  //     'newModelNumber',
+  //     'endWeight',
+  //     'endTeamId_dictText',
+  //     'endTime',
+  //     'status'
+  //   ];
+  //   let newColumnsData = mostationtaskColumns.map((item) => {
+  //     if (needTomergeColumnsIndex.includes(item.dataIndex)) {
+  //       // 计算合并单元格数量
+  //       const spanArr = getSpanArr(tableDataSource, item.dataIndex);
+  //       item.customCell = (record, rowIndex, column) => {
+  //         // 设置单元格合并数量
+  //         return { rowSpan: spanArr[rowIndex] };
+  //       };
+  //     }
+  //     return item;
+  //   });
+  //   return newColumnsData;
+  // });
 
   //注册table数据
   const { prefixCls, tableContext, onExportXls } = useListPage({
@@ -42,7 +74,7 @@
     },
   });
 
-  const [registerTable, { reload }, { rowSelection, selectedRowKeys }] = tableContext;
+  const [registerTable, { reload,getDataSource }, { rowSelection, selectedRowKeys }] = tableContext;
 </script>
 
 <style scoped></style>

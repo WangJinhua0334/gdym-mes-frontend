@@ -162,6 +162,10 @@ export const formSchema: FormSchema[] = [
             code: 'workNo',
           },
         ],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
         isShowNum: false,
         rowKey: 'id',
         labelKey: ['realname'],
@@ -171,9 +175,6 @@ export const formSchema: FormSchema[] = [
           { realname: 'realName' },
           { username: 'userName' }
         ],
-        queryBefore: (params) => {
-          return params;
-        },
         getPopupContainer: () => document.body,
       };
     },
@@ -227,6 +228,10 @@ export const formSchema: FormSchema[] = [
           { name: '编码', code: 'orgCode'},
           { name: '名称', code: 'departName'},
         ],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
         isShowNum: false,
         rowKey: 'id',
         labelKey: ['departName'],
@@ -274,6 +279,10 @@ export const formSchema: FormSchema[] = [
           { name: '编码', code: 'code'},
           { name: '名称', code: 'name'},
         ],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
         isShowNum: false,
         rowKey: 'id',
         labelKey: ['name'],
@@ -321,6 +330,10 @@ export const formSchema: FormSchema[] = [
           { name: '编码', code: 'code' },
           { name: '名称', code: 'name' },
         ],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
         isShowNum: false,
         rowKey: 'id',
         labelKey: ['name'],
@@ -366,6 +379,10 @@ export const formSchema: FormSchema[] = [
           { name: '编码', code: 'code' },
           { name: '名称', code: 'name' },
         ],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
         isShowNum: false,
         rowKey: 'id',
         labelKey: ['name'],
@@ -516,6 +533,10 @@ export const formSchema: FormSchema[] = [
           { name: 'id', code: 'id' },
           { name: '名称', code: 'name' },
         ],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
         isShowNum: false,
         rowKey: 'id',
         labelKey: ['name'],

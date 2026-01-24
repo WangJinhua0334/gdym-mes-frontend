@@ -1,8 +1,8 @@
 import { defHttp } from '/@/utils/http/axios';
 
 enum Api {
-  coilprodreport = '/bi/report/coilProductReport', //工序加工的钢卷记录报表
-  coilprodreportExportUrl = '/bi/report/coilProductReportExportXls',     // 工序加工的钢卷记录报表
+  coilprodreport = '/bi/report/mesFlowCardDetailReport', //工序加工的钢卷记录报表
+  coilprodreportExportUrl = '/bi/report/mesFlowCardDetailReportExportXls',     // 工序加工的钢卷记录报表
 }
 
 export const coilprodreport = (params) => defHttp.get({ url: Api.coilprodreport, params });
