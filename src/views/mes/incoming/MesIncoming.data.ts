@@ -213,8 +213,8 @@ export const formSchema: FormSchema[] = [
         },
       ],
     },
-    defaultValue: 'sx',
-    // 不设置默认值，确保用户必须选择，验证规则才能生效
+    //中晟组织下收的卷是只需要经过退火工序，星圣组织下收的卷是从酸洗工序开始的 中晟：1003、星圣：1005
+    defaultValue: useUserStore().getTenant == '1003' ? 'th' : 'sx',
     dynamicRules: () => {
       return [
         {
@@ -229,6 +229,10 @@ export const formSchema: FormSchema[] = [
     label: '生产编号',
     field: 'productNumber',
     component: 'Input',
+    componentProps: {
+      // 添加 data-field 属性以便于查找
+      'data-field': 'productNumber',
+    },
     dynamicRules: () => {
       return [{ required: true, message: '请输入车牌号!' }];
     },
@@ -570,7 +574,7 @@ export const searchFormSchema: FormSchema[] = [
     field: 'originalCoilNumber',
     component: 'JInput',
   },
-  {
+  /*{
     label: '供应商',
     // field: 'wksId',
     field: 'supplierId',
@@ -602,12 +606,12 @@ export const searchFormSchema: FormSchema[] = [
         maxTagCount: 2,
         placeholder: '请选择',
         // 启用滚动分页
-        /* scroll: {
+        /!* scroll: {
           pageSize: 10
-        }*/
+        }*!/
       };
     },
-  },
+  },*/
   {
     label: '车牌号',
     field: 'licensePlateNumber',
