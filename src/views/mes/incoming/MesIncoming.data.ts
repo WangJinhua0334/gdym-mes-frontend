@@ -120,6 +120,63 @@ export const formSchema: FormSchema[] = [
     component: 'JPopupCustom',
     componentProps: ({ formActionType }) => {
       const { setFieldsValue, getFieldsValue } = formActionType;
+      // 创建防抖函数
+      const debounceFocus = (func, wait) => {
+        let timeout;
+        return function executedFunction(...args) {
+          const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+        };
+      };
+      // 聚焦函数
+      const focusProductNumber = debounceFocus(() => {
+        console.log('触发聚焦到生产编号');
+        // 多次尝试，确保成功
+        let attempts = 0;
+        const maxAttempts = 8;
+        const tryFocus = () => {
+          attempts++;
+          const input = document.getElementById('productNumberInput') ||
+            document.querySelector('input[data-field="productNumber"]');
+          if (input) {
+            console.log(`尝试聚焦 (${attempts}/${maxAttempts})`);
+
+            // 确保输入框完全渲染
+            if (input.offsetParent !== null) {
+              input.focus();
+
+              // 使用多种方式确保选中文本
+              if (input.tagName === 'INPUT') {
+                setTimeout(() => {
+                  input.select();
+                  // 如果 select() 不生效，使用 setSelectionRange
+                  const length = input.value.length;
+                  input.setSelectionRange(length, length);
+                }, 10);
+              }
+              // 验证焦点是否成功
+              setTimeout(() => {
+                if (document.activeElement !== input && attempts < maxAttempts) {
+                  console.log('焦点未保持，重新尝试');
+                  setTimeout(tryFocus, 100);
+                }
+              }, 50);
+            } else if (attempts < maxAttempts) {
+              setTimeout(tryFocus, 150);
+            }
+          } else if (attempts < maxAttempts) {
+            setTimeout(tryFocus, 150);
+          }
+        };
+        // 延迟开始，确保 JPopupCustom 弹窗已关闭
+        setTimeout(() => {
+          tryFocus();
+        }, 200);
+      }, 100);
       return {
         setFieldsValue: setFieldsValue,
         getFieldsValue: getFieldsValue,
@@ -163,10 +220,6 @@ export const formSchema: FormSchema[] = [
             title: '重量',
             align: 'center',
             dataIndex: 'weight',
-            // customRender: ({ text }) => {
-            //   // 保留 4 位小数
-            //   return parseFloat(text).toFixed(4);
-            // },
           },
         ],
         queryInfo: [
@@ -191,6 +244,43 @@ export const formSchema: FormSchema[] = [
           },
         ],
         placeholder: '请选择钢卷号',
+        // 添加多个事件监听，确保能捕获到变化
+        onChange: (value) => {
+          console.log('onChange 事件:', value);
+          if (value) {
+            // 清空生产编号（可选）
+            setFieldsValue({ productNumber: '' });
+            focusProductNumber();
+          }
+        },
+        onSelect: (record) => {
+          console.log('onSelect 事件:', record);
+          if (record?.coilNo) {
+            // 延迟执行，确保表单值已更新
+            setTimeout(() => {
+              focusProductNumber();
+            }, 250);
+          }
+        },
+        onOk: (value) => {
+          console.log('onOk 事件:', value);
+          if (value) {
+            // 延迟更长一些，确保弹窗完全关闭
+            setTimeout(() => {
+              focusProductNumber();
+            }, 300);
+          }
+        },
+        // 如果 JPopupCustom 支持更多事件
+        onPopupClose: () => {
+          console.log('弹窗关闭事件');
+          const coilNoValue = getFieldsValue()?.coilNo;
+          if (coilNoValue) {
+            setTimeout(() => {
+              focusProductNumber();
+            }, 200);
+          }
+        },
       };
     },
     dynamicRules: () => {
@@ -230,17 +320,53 @@ export const formSchema: FormSchema[] = [
     field: 'productNumber',
     component: 'Input',
     componentProps: {
-      // 添加 data-field 属性以便于查找
       'data-field': 'productNumber',
+      id: 'productNumberInput', // 添加 ID 便于查找
+      onKeyup: (e) => {
+        if (e.keyCode === 13) {
+          const inputs = document.querySelectorAll('input[data-field]');
+          const currentIndex = Array.from(inputs).findIndex((input) => input.getAttribute('data-field') === 'productNumber'
+          );
+          if (currentIndex >= 0 && currentIndex < inputs.length - 1) {
+            inputs[currentIndex + 1].focus();
+          }
+        }
+      },
     },
     dynamicRules: () => {
-      return [{ required: true, message: '请输入车牌号!' }];
+      return [{ required: true, message: '请输入生产编号!' }];
     },
   },
+  /*{
+    label: '生产编号',
+    field: 'productNumber',
+    component: 'Input',
+    componentProps: {
+      'data-field': 'productNumber',
+      // 添加回车键监听
+      onKeyup: (e) => {
+        if (e.keyCode === 13) {
+          // 回车键的 keyCode 是 13
+          // 查找下一个输入框并聚焦
+          const inputs = document.querySelectorAll('input[data-field]');
+          const currentIndex = Array.from(inputs).findIndex((input) => input.getAttribute('data-field') === 'productNumber');
+          if (currentIndex >= 0 && currentIndex < inputs.length - 1) {
+            inputs[currentIndex + 1].focus();
+          }
+        }
+      },
+    },
+    dynamicRules: () => {
+      return [{ required: true, message: '请输入生产编号!' }];
+    },
+  },*/
   {
     label: '车牌号',
     field: 'licensePlateNumber',
     component: 'Input',
+    componentProps: {
+      'data-field': 'licensePlateNumber',
+    },
     dynamicRules: () => {
       return [{ required: true, message: '请输入车牌号!' }];
     },
