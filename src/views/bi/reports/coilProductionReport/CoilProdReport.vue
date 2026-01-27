@@ -110,6 +110,7 @@
       {
         label: '编辑',
         onClick: handleEdit.bind(null, record),
+        auth: 'mes_flow_card_detail:edit' // 通过权限指令控制显示
       },
     ];
   }
