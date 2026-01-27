@@ -12,29 +12,24 @@ export const columns: BasicColumn[] = [
     customRender: ({ text }) => {
       return render.renderDict(text, 'plant_name', true);
     },
-    resizable: true,
     width: 150,
   },
   {
     title: '生产车间',
     align: 'center',
     dataIndex: 'workshopId_dictText',
-    resizable: true,
     width: 150,
   },
   {
     title: '工序号',
     align: 'center',
     dataIndex: 'operationId_dictText',
-    resizable: true,
     width: 150,
-    colSpan: 2,
   },
   {
     title: '流转卡号',
     align: 'center',
     dataIndex: 'cardId',
-    resizable: true,
     width: 150,
   },
   {
@@ -102,14 +97,14 @@ export const columns: BasicColumn[] = [
         dataIndex: 'newCoilNo',
         resizable: true,
         width: 200,
-        colSpan: 2,
-        customCell: (record, index,  column) =>{
-          if(!record.newCoilNo){
-            return {
-              colSpan: 0
-            }
-          }
-        }
+        // colSpan: 2,
+        // customCell: (record, index,  column) =>{
+        //   if(!record.newCoilNo){
+        //     return {
+        //       colSpan: 0
+        //     }
+        //   }
+        // }
       },
       {
         title: '入库钢卷物料编码',
@@ -153,15 +148,21 @@ export const columns: BasicColumn[] = [
         resizable: true,
         width: 200,
       },
+      {
+        title: '入库仓库',
+        align: 'center',
+        dataIndex: 'warehouseId_dictText',
+        resizable: true,
+        width: 150,
+      },
     ]
   },
   {
     title: '状态',
     align: 'center',
     dataIndex: 'status',
-    resizable: true,
-    customRender: ({ text }) => {
-      return render.renderDict(text, 'operation_status', true);
+    customRender: ( {text} ) => {
+      return render.renderDict(String( text), 'operation_status', true);
     },
     width: 200,
   },
@@ -268,6 +269,183 @@ export const formSchema: FormSchema[] = [
       // 传给后端的时间格式
       valueFormat: "YYYY-MM-DD HH:mm:ss",
       getPopupContainer: () => document.body,
+    },
+  },
+];
+
+// 编辑弹窗表单配置
+export const editFormSchema: FormSchema[] = [
+  { field: 'id', label: 'id', component: 'Input', show: false },
+  {
+    label: '流转卡号',
+    field: 'cardId',
+    component: 'Input',
+    componentProps: { disabled: true },
+    colProps: { span: 12 },
+  },
+  {
+    label: '领料钢卷',
+    field: 'oldCoilNo',
+    component: 'Input',
+    colProps: { span: 12 },
+  },
+  {
+    label: '领料钢卷重量',
+    field: 'startWeight',
+    component: 'InputNumber',
+    componentProps: { min: 0, style: { width: '100%' } },
+    colProps: { span: 12 },
+  },
+  {
+    label: '开工班组',
+    field: 'startTeamId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue,
+        getFieldsValue,
+        methods: 'get',
+        url: '/basic/basWorkTeam/list',
+        params: { column: 'createTime', order: 'desc', searchFields: 'id,name,code' },
+        columns: [{ name: '编码', code: 'code' }, { name: '名称', code: 'name' }],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        pageSize: 10,
+        multi: false,
+        placeholder: '请选择',
+      };
+    },
+    colProps: { span: 12 },
+  },
+  {
+    label: '开工时间',
+    field: 'startTime',
+    component: 'DatePicker',
+    componentProps: { showTime: true, format: 'YYYY-MM-DD HH:mm:ss', valueFormat: 'YYYY-MM-DD HH:mm:ss', style: { width: '100%' } },
+    colProps: { span: 12 },
+  },
+  {
+    label: '入库钢卷',
+    field: 'newCoilNo',
+    component: 'Input',
+    colProps: { span: 12 },
+  },
+  {
+    label: '入库钢卷重量',
+    field: 'endWeight',
+    component: 'InputNumber',
+    componentProps: { min: 0, style: { width: '100%' } },
+    colProps: { span: 12 },
+  },
+  {
+    label: '入库班组',
+    field: 'endTeamId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue,
+        getFieldsValue,
+        methods: 'get',
+        url: '/basic/basWorkTeam/list',
+        params: { column: 'createTime', order: 'desc', searchFields: 'id,name,code' },
+        columns: [{ name: '编码', code: 'code' }, { name: '名称', code: 'name' }],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        pageSize: 10,
+        multi: false,
+        placeholder: '请选择',
+      };
+    },
+    colProps: { span: 12 },
+  },
+  {
+    label: '入库时间',
+    field: 'endTime',
+    component: 'DatePicker',
+    componentProps: { showTime: true, format: 'YYYY-MM-DD HH:mm:ss', valueFormat: 'YYYY-MM-DD HH:mm:ss', style: { width: '100%' } },
+    colProps: { span: 12 },
+  },
+  {
+    label: '入库仓库',
+    field: 'warehouseId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue,
+        getFieldsValue,
+        methods: 'get',
+        url: '/basic/wareHouse/list',
+        params: { column: 'createTime', order: 'desc', searchFields: 'id,name,code' },
+        columns: [{ name: '编码', code: 'code' }, { name: '名称', code: 'name' }],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        pageSize: 10,
+        multi: false,
+        placeholder: '请选择仓库',
+      };
+    },
+    colProps: { span: 12 },
+  },
+  {
+    label: '状态',
+    field: 'status',
+    component: 'JDictSelectTag',
+    componentProps: { 
+      dictCode: 'operation_status', 
+      placeholder: '请选择',
+      stringToNumber: true, // 将字典值转换为数字，以匹配后端返回的数字类型
+    },
+    colProps: { span: 12 },
+  },
+];
+
+
+// 打印模板表单配置
+export const printFormSchema: FormSchema[] = [
+  {
+    label: '打印模板',
+    field: 'templateId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/template/basTemplate/list',
+        params: { column: 'code', order: 'asc' },
+        columns: [
+          { name: '编码', code: 'code' },
+          { name: '名称', code: 'name' },
+        ],
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        placeholder: '请选择',
+        getPopupContainer: () => document.body,
+      };
+    },
+    defaultValue: '1986615937373085698',
+    dynamicRules: () => {
+      return [{ required: true, message: '请选择打印模板!' }];
     },
   },
 ];

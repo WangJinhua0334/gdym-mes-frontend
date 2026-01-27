@@ -85,38 +85,38 @@ export const searchFormSchema: FormSchema[] = [
     component: 'JInput',
     colProps: { span: 6 },
   },
-  {
-    label: '供应商',
-    field: 'supplierId',
-    component: 'JSearchSelectCustom',
-    componentProps: ({ formActionType }) => {
-      const { setFieldsValue, getFieldsValue } = formActionType;
-      return {
-        setFieldsValue: setFieldsValue,
-        getFieldsValue: getFieldsValue,
-        methods: 'get',
-        url: '/basic/basSupplier/getAllSupplier',
-        params: { column: 'createTime', order: 'desc', searchFields: 'id,name', code: '${code}' },
-        columns: [
-          {
-            name: '编码',
-            code: 'id',
-          },
-          {
-            name: '供应商名称',
-            code: 'name',
-          },
-        ],
-        isShowNum: false,
-        rowKey: 'id',
-        labelKey: ['name'],
-        multi: true,
-        maxTagCount: 2,
-        placeholder: '请选择供应商',
-      };
-    },
-    colProps: { span: 6 },
-  },
+  // {
+  //   label: '供应商',
+  //   field: 'supplierId',
+  //   component: 'JSearchSelectCustom',
+  //   componentProps: ({ formActionType }) => {
+  //     const { setFieldsValue, getFieldsValue } = formActionType;
+  //     return {
+  //       setFieldsValue: setFieldsValue,
+  //       getFieldsValue: getFieldsValue,
+  //       methods: 'get',
+  //       url: '/basic/basSupplier/getAllSupplier',
+  //       params: { column: 'createTime', order: 'desc', searchFields: 'id,name', code: '${code}' },
+  //       columns: [
+  //         {
+  //           name: '编码',
+  //           code: 'id',
+  //         },
+  //         {
+  //           name: '供应商名称',
+  //           code: 'name',
+  //         },
+  //       ],
+  //       isShowNum: false,
+  //       rowKey: 'id',
+  //       labelKey: ['name'],
+  //       multi: true,
+  //       maxTagCount: 2,
+  //       placeholder: '请选择供应商',
+  //     };
+  //   },
+  //   colProps: { span: 6 },
+  // },
   {
     label: '车牌号',
     field: 'licensePlateNumber',
