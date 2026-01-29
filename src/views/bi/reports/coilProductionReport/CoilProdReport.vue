@@ -91,6 +91,10 @@
       rowSelection: {
         type: 'checkbox',
       },
+      actionColumn: {
+        width: 120,
+        fixed: 'right',
+      },
     },
     exportConfig: {
       name: '各个工序的钢卷加工统计报表',
