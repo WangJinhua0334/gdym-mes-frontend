@@ -8,7 +8,6 @@
       <!--      插槽:table标题-->
       <template #tableTitle>
         <a-button type="primary" v-auth="'mes:mes_incoming:add'" @click="handleAdd" preIcon="ant-design:plus-outlined">收料</a-button>
-        <a-button type="primary" @click="handleGetFromK3Cloud" preIcon="ant-design:import-outlined">同步金蝶预送货单信息</a-button>
         <!--                <a-button type="primary" v-auth="'mes:mes_incoming:waitInsp'" @click="handleWaitInsp" preIcon="ant-design:phone-outlined"> 推送IQC</a-button>-->
         <!--                <a-button type="primary" v-auth="'mes:mes_incoming:exportXls'" preIcon="ant-design:export-outlined" @click="onExportXls"> 导出</a-button>-->
         <!--                <j-upload-button type="primary" v-auth="'mes:mes_incoming:importExcel'" preIcon="ant-design:import-outlined" @click="onImportXls"-->

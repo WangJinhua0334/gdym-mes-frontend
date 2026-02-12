@@ -46,7 +46,7 @@
   import { columns, formSchema, printFormSchema } from './CoilProdReport.data';
   import { BasicModal, useModal } from '@/components/Modal';
   import { BasicForm, useForm } from '@/components/Form';
-  import { ref, unref } from 'vue';
+  import { ref, unref, onMounted, onUnmounted } from 'vue';
   import { useMessage } from '@/hooks/web/useMessage';
   import { defHttp } from '@/utils/http/axios';
   import { printJimuReport } from '@/utils';
@@ -54,9 +54,12 @@
   import { TableAction } from '@/components/Table';
   // @ts-ignore Vue SFC 默认导出，Vetur 可能误报 has no default export
   import CoilProdReportModal from './model/CoilProdReportModal.vue';
+  import { ajaxGetDictItems } from '@/utils/dict/index';
+  import { useUserStore } from '@/store/modules/user';
 
   const $message = useMessage();
   const loading = ref<boolean>(false);
+  const userStore = useUserStore();
 
   // 注册编辑弹窗
   const [registerEditModal, { openModal:openEditModal }] = useModal();
@@ -72,7 +75,6 @@
     baseColProps: { span: 24 },
   });
 
-
   //注册table数据
   const { tableContext, onExportXls } = useListPage({
     tableProps: {
@@ -84,7 +86,7 @@
       formConfig: {
         schemas: formSchema,
         autoSubmitOnEnter: true,
-        showAdvancedButton: true,
+        showAdvancedButton: false, // 不显示展开/收起按钮，所有查询输入框都显示
         fieldMapToNumber: [],
         fieldMapToTime: [],
       },
@@ -103,6 +105,43 @@
   });
 
   const [registerTable, { getSelectRows, reload }, { rowSelection, selectedRowKeys }] = tableContext;
+
+  // 页面加载时预加载字典数据
+  onMounted(() => {
+    // 预加载 operation_status 字典
+    const dictItems = userStore.getAllDictItems || {};
+    if (!dictItems['operation_status']) {
+      ajaxGetDictItems('operation_status', {}).then((result) => {
+        if (result && result.length > 0) {
+          dictItems['operation_status'] = result;
+          userStore.setAllDictItems(dictItems);
+        }
+      });
+    }
+    // 预加载 plant_name 字典
+    if (!dictItems['plant_name']) {
+      ajaxGetDictItems('plant_name', {}).then((result) => {
+        if (result && result.length > 0) {
+          dictItems['plant_name'] = result;
+          userStore.setAllDictItems(dictItems);
+        }
+      });
+    }
+
+    // 监听字典加载完成事件，触发表格重新渲染
+    const handleDictLoaded = () => {
+      // 延迟一下再刷新，确保字典数据已更新到 store
+      setTimeout(() => {
+        reload();
+      }, 100);
+    };
+    window.addEventListener('dict-loaded', handleDictLoaded);
+    
+    // 组件卸载时移除监听器
+    onUnmounted(() => {
+      window.removeEventListener('dict-loaded', handleDictLoaded);
+    });
+  });
 
   /**
    * 获取table操作列

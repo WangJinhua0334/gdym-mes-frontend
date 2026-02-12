@@ -1,8 +1,12 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
-import { ref } from 'vue';
+import { ref, h } from 'vue';
 import dayjs from 'dayjs';
 import { useUserStore } from '/@/store/modules/user';
+import { defHttp } from '/@/utils/http/axios';
+import { useMessage } from '/@/hooks/web/useMessage';
+import { Icon } from '/@/components/Icon';
+import { Button } from 'ant-design-vue';
 
 export const doQrCode = ref();
 //来料单列表数据
@@ -192,6 +196,11 @@ export const formSchema: FormSchema[] = [
             dataIndex: 'coilNo',
           },
           {
+            title: '预送货单号',
+            align: 'center',
+            dataIndex: 'billNo',
+          },
+          {
             title: '物料编号',
             align: 'center',
             dataIndex: 'materialId',
@@ -226,6 +235,12 @@ export const formSchema: FormSchema[] = [
           {
             field: 'coilNo',
             label: '钢卷号',
+            mode: 'single',
+            view: 'string',
+          },
+          {
+            field: 'billNo',
+            label: '预送货单号',
             mode: 'single',
             view: 'string',
           },
@@ -280,6 +295,41 @@ export const formSchema: FormSchema[] = [
               focusProductNumber();
             }, 200);
           }
+        },
+        // 列表上方按钮渲染函数
+        tableTitleRender: (reload) => {
+          const { createMessage } = useMessage();
+          const handleSync = () => {
+            // 显示加载提示
+            const hide = createMessage.loading('正在同步金蝶预送货单信息...', 0);
+            // 调用接口
+            defHttp.get({
+              url: '/etl/preDeliveryBill/importAllPreDeliveryBills',
+              params: {
+                tenantId: useUserStore().getTenant,
+              },
+            }).then(() => {
+              hide();
+              createMessage.success('同步成功');
+              // 刷新列表数据
+              if (reload && typeof reload === 'function') {
+                reload(1); // 传递参数1表示重置到第一页
+              }
+            }).catch(() => {
+              hide();
+              createMessage.error('同步失败');
+            });
+          };
+          return h('div', [
+            h(Button, {
+              type: 'primary',
+              onClick: handleSync,
+              style: { marginRight: '8px' },
+            }, {
+              default: () => '同步金蝶预送货单信息',
+              icon: () => h(Icon, { icon: 'ant-design:import-outlined' }),
+            }),
+          ]);
         },
       };
     },

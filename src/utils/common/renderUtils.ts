@@ -3,11 +3,14 @@ import { Avatar, Tag, Tooltip, Image, Switch } from 'ant-design-vue';
 import { getFileAccessHttpUrl } from '/@/utils/common/compUtils';
 import { Tinymce } from '/@/components/Tinymce';
 import Icon from '/@/components/Icon';
-import { getDictItemsByCode } from '/@/utils/dict/index';
+import { getDictItemsByCode, ajaxGetDictItems } from '/@/utils/dict/index';
 import { filterMultiDictText } from '/@/utils/dict/JDictSelectUtil.js';
 import { isEmpty } from '/@/utils/is';
 import { useMessage } from '/@/hooks/web/useMessage';
 const { createMessage } = useMessage();
+
+// 字典加载缓存，避免重复请求
+const dictLoadingCache = new Map<string, Promise<any[]>>();
 
 const render = {
   /**
@@ -46,7 +49,40 @@ const render = {
   renderDict: (v, code, renderTag = false) => {
     let text = '';
     let color = '';
-    const array = getDictItemsByCode(code) || [];
+    let array = getDictItemsByCode(code);
+    
+    // 如果缓存中没有字典数据，尝试异步加载（但同步返回，避免阻塞渲染）
+    if (!array || array.length === 0) {
+      // 检查是否正在加载中，避免重复请求
+      if (!dictLoadingCache.has(code)) {
+        const loadingPromise = (async () => {
+          try {
+            // 动态导入 useUserStore，避免循环依赖
+            const userModule = await import('/@/store/modules/user');
+            const userStore = userModule.useUserStore();
+            const result: any[] = await ajaxGetDictItems(code, {}, {});
+            if (result && result.length > 0) {
+              // 更新字典缓存
+              const allDictItems = userStore.getAllDictItems;
+              const dictItems: Record<string, any[]> = (allDictItems && typeof allDictItems === 'object' && !Array.isArray(allDictItems)) ? allDictItems as Record<string, any[]> : {};
+              dictItems[code] = result;
+              userStore.setAllDictItems(dictItems);
+              // 触发页面更新（通过事件通知表格重新渲染）
+              window.dispatchEvent(new CustomEvent('dict-loaded', { detail: { code } }));
+            }
+            dictLoadingCache.delete(code);
+            return result;
+          } catch (error) {
+            dictLoadingCache.delete(code);
+            return [];
+          }
+        })();
+        dictLoadingCache.set(code, loadingPromise);
+      }
+      // 返回空值，等待字典数据加载完成后，表格会重新渲染
+      return isEmpty(text) || !renderTag ? h('span', text) : h(Tag, { color }, () => text);
+    }
+    
     const obj = array.filter((item) => {
       return item.value == v;
     });

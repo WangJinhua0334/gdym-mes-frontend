@@ -6,6 +6,13 @@ import { getTenantId } from '@/utils/auth';
 //列表数据
 export const columns: BasicColumn[] = [
   {
+    title: '流转卡号',
+    align: 'center',
+    dataIndex: 'cardId',
+    width: 150,
+    fixed: 'left',
+  },
+  {
     title: '生产厂区',
     align: 'center',
     dataIndex: 'plantNumber',
@@ -24,12 +31,6 @@ export const columns: BasicColumn[] = [
     title: '工序号',
     align: 'center',
     dataIndex: 'operationId_dictText',
-    width: 150,
-  },
-  {
-    title: '流转卡号',
-    align: 'center',
-    dataIndex: 'cardId',
     width: 150,
   },
   {
@@ -169,6 +170,15 @@ export const columns: BasicColumn[] = [
 ];
 //查询数据
 export const formSchema: FormSchema[] = [
+  {
+    label: '流转卡号',
+    field: 'cardId',
+    component: 'Input',
+    colProps: { span: 6 },
+    componentProps: {
+      placeholder: '请输入流转卡号',
+    },
+  },
   {
     label: '领料钢卷号',
     field: 'oldCoilNo',

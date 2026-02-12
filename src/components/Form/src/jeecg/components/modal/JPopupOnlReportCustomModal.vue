@@ -33,10 +33,19 @@
                 <a-col :lg="6">
                   <a-button type="primary" preIcon="ant-design:reload-outlined" @click="searchReset">重置</a-button>
                   <a-button type="primary" preIcon="ant-design:search-outlined" @click="searchQuery" style="margin-left: 8px">查询</a-button>
-                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                  <a v-if="hasHiddenFields" @click="handleToggleSearch" style="margin-left: 8px">
                     {{ toggleSearchStatus ? '收起' : '展开' }}
                     <Icon :icon="toggleSearchStatus ? 'ant-design:up-outlined' : 'ant-design:down-outlined'" />
                   </a>
+                  <!-- 同步金蝶预送货单按钮 -->
+                  <a-button 
+                    type="primary" 
+                    preIcon="ant-design:import-outlined" 
+                    @click="handleSyncPreDeliveryBill"
+                    style="margin-left: 8px"
+                  >
+                    同步金蝶预送货单信息
+                  </a-button>
                 </a-col>
               </span>
             </a-col>
@@ -58,14 +67,16 @@
         @row-click="clickThenCheck"
         @change="handleChangeInTable"
       >
-        <template #tableTitle></template>
+        <template #tableTitle>
+          <slot name="tableTitle"></slot>
+        </template>
       </BasicTable>
     </BasicModal>
   </div>
 </template>
 
 <script lang="ts">
-  import { defineComponent, unref, ref, watch, watchEffect, reactive, computed, toRaw } from 'vue';
+  import { defineComponent, unref, ref, watch, watchEffect, reactive, computed, toRaw, h, Fragment } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
   import { useAttrs } from '/@/hooks/core/useAttrs';
@@ -73,6 +84,7 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { defHttp } from '/@/utils/http/axios';
   import { filterMultiDictText } from '/@/utils/dict/JDictSelectUtil.js';
+  import { useUserStore } from '/@/store/modules/user';
 
   export default defineComponent({
     name: 'JPopupOnlReportModal',
@@ -84,9 +96,10 @@
         loading: true,
       }),
     },
-    props: ['multi', 'code', 'sorter', 'groupId', 'param', 'method', 'columns', 'queryInfo', 'url', 'options', 'rowKey'],
+    props: ['multi', 'code', 'sorter', 'groupId', 'param', 'method', 'columns', 'queryInfo', 'url', 'options', 'rowKey', 'tableTitleRender'],
     emits: ['ok', 'register'],
-    setup(props, { emit, refs }) {
+    slots: ['tableTitle'],
+    setup(props, { emit, refs, slots }) {
       const { createMessage } = useMessage();
       const labelCol = reactive({
         xs: { span: 24 },
@@ -108,6 +121,12 @@
         usePopBiz(getBindValue);
 
       const showSearchFlag = computed(() => unref(props.queryInfo) && unref(props.queryInfo).length > 0);
+
+      // 判断是否有隐藏字段（hidden === '1'），如果没有隐藏字段则不显示展开/收起按钮
+      const hasHiddenFields = computed(() => {
+        const queryInfo = unref(props.queryInfo);
+        return queryInfo && queryInfo.some((item) => item.hidden === '1');
+      });
 
       const dataSource = ref([]);
       //表格加载
@@ -271,6 +290,26 @@
           setDataSource(data);
         });
       }
+
+      // 同步按钮的点击处理函数
+      const handleSyncPreDeliveryBill = () => {
+        const { createMessage } = useMessage();
+        const hide = createMessage.loading('正在同步金蝶预送货单信息...', 0);
+        defHttp.get({
+          url: '/etl/preDeliveryBill/importAllPreDeliveryBills',
+          params: {
+            tenantId: useUserStore().getTenant,
+          },
+        }).then(() => {
+          hide();
+          createMessage.success('同步成功');
+          // 刷新列表数据
+          loadData(1); // 传递参数1表示重置到第一页
+        }).catch(() => {
+          hide();
+          createMessage.error('同步失败');
+        });
+      };
       /**
        * 设置dataSource
        */
@@ -504,11 +543,14 @@
         wrapperCol,
         dictOptions,
         showSearchFlag,
+        hasHiddenFields,
         toggleSearchStatus,
         handleToggleSearch,
         searchQuery,
         searchReset,
         columns,
+        handleSyncPreDeliveryBill,
+        tableTitleRender: props.tableTitleRender,
       };
     },
   });

@@ -53,6 +53,8 @@
       @ok="callBack"
       :options="options"
       :rowKey="rowKey"
+      :tableTitleRender="tableTitleRenderValue"
+      v-bind="attrs"
     />
   </div>
 </template>
@@ -110,6 +112,10 @@
         default: () => [],
       },
       fuzzy: propTypes.bool.def(true),
+      tableTitleRender: {
+        type: Function,
+        default: null,
+      },
     },
     emits: ['change', 'update:value', 'register'],
     setup(props, { emit, refs }) {
@@ -382,6 +388,13 @@
         }
         emit('change', selectedValue.value);
       }
+      // 从 props 或 attrs 中获取 tableTitleRender（componentProps 会作为 props 或 attrs 传递）
+      const tableTitleRenderValue = computed(() => {
+        // componentProps 中的属性会通过 attrs 传递，但 tableTitleRender 也可能在 props 中
+        const value = props.tableTitleRender || (attrs as any)?.tableTitleRender;
+        return value;
+      });
+
       return {
         avalid,
         uniqGroupId,
@@ -391,6 +404,7 @@
         callBack,
         selectedValue,
         linkageselectedValue,
+        tableTitleRender: tableTitleRenderValue,
         options,
         currentParams,
         handleEmpty,

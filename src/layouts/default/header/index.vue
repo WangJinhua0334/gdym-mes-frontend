@@ -10,14 +10,15 @@
         :sider="false"
       />
       <LayoutBreadcrumb v-if="getShowContent && getShowBread" :theme="getHeaderTheme" />
-      <!-- 欢迎语 -->
+      <!-- 当前租户显示和切换 -->
       <span
         v-if="getShowContent && getShowBreadTitle && !getIsMobile"
-        :class="[prefixCls, 'headerIntroductionClass']"
-        style="background: transparent"
+        :class="[prefixCls, 'headerIntroductionClass', 'tenant-switch']"
+        style="background: transparent; cursor: pointer; display: inline-flex; align-items: center;"
+        @click="showTenantSelectModal"
       >
-        <!-- :class="[prefixCls, `${prefixCls}--${getHeaderTheme}`, 'headerIntroductionClass']" -->
-        {{ t('layout.header.welcomeIn') }} {{ title }}
+        当前租户：{{ currentTenantName || '未知' }}
+        <Icon icon="ant-design:down-outlined" style="margin-left: 4px;" />
       </span>
     </div>
     <!-- left end -->
@@ -51,6 +52,8 @@
     </div>
   </Header>
   <LoginSelect ref="loginSelectRef" @success="loginSelectOk"></LoginSelect>
+  <!-- 租户切换弹窗 -->
+  <TenantSelectModal ref="tenantSelectModalRef" @success="handleTenantSelectSuccess" />
 </template>
 <script lang="ts">
   import { defineComponent, unref, computed, ref, onMounted, toRaw } from 'vue';
@@ -75,6 +78,7 @@
   import { UserDropDown, LayoutBreadcrumb, FullScreen, Notify, ErrorAction, LockScreen } from './components';
   import { useAppInject } from '/@/hooks/web/useAppInject';
   import { useDesign } from '/@/hooks/web/useDesign';
+  import { Icon } from '/@/components/Icon';
 
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
   import { useLocale } from '/@/locales/useLocale';
@@ -85,6 +89,9 @@
   import Aide from '@/views/dashboard/ai/components/aide/index.vue';
   import { PageEnum } from '/@/enums/pageEnum';
   import { useGo } from '/@/hooks/web/usePage';
+  import { getLoginTenantName, getUserTenants } from '/@/views/system/tenant/tenant.api';
+  import { selectDepart } from '/@/views/system/depart/depart.api';
+  import { useMessage } from '/@/hooks/web/useMessage';
   const { t } = useI18n();
 
   export default defineComponent({
@@ -107,6 +114,8 @@
         loading: true,
       }),
       Aide,
+      Icon,
+      TenantSelectModal: createAsyncComponent(() => import('./components/TenantSelectModal.vue')),
     },
     props: {
       fixed: propTypes.bool,
@@ -180,6 +189,7 @@
        * 首页多租户部门弹窗逻辑
        */
       const loginSelectRef = ref();
+      const tenantSelectModalRef = ref();
 
       function showLoginSelect() {
         //update-begin---author:liusq  Date:20220101  for：判断登录进来是否需要弹窗选择租户----
@@ -203,8 +213,78 @@
         go(PageEnum.CUSTOM_HOME);
       }
 
+      // 当前租户名称
+      const currentTenantName = ref<string>('');
+      // 租户列表
+      const tenantList = ref<any[]>([]);
+      // 选中的租户ID
+      const selectedTenantId = ref<string | number>('');
+      const { createMessage } = useMessage();
+
+      // 获取当前租户名称（优化：优先从租户列表中获取，减少API调用）
+      async function loadTenantName() {
+        // 如果租户列表已加载，直接从列表中获取名称
+        if (tenantList.value.length > 0) {
+          const currentTenantId = userStore.getTenant;
+          const currentTenant = tenantList.value.find((item) => item.id == currentTenantId);
+          if (currentTenant) {
+            currentTenantName.value = currentTenant.name;
+            return;
+          }
+        }
+        // 否则调用API获取
+        try {
+          const tenantName = await getLoginTenantName();
+          currentTenantName.value = tenantName || '未知';
+        } catch (error) {
+          console.error('获取租户名称失败:', error);
+          currentTenantName.value = '未知';
+        }
+      }
+
+      // 加载租户列表（优化：只在需要时加载，并缓存结果）
+      async function loadTenantList() {
+        // 如果已经有租户列表，直接返回
+        if (tenantList.value.length > 0) {
+          return;
+        }
+        try {
+          const result = await getUserTenants();
+          if (result && result.list && result.list.length > 0) {
+            tenantList.value = result.list;
+            const currentTenantId = userStore.getTenant;
+            selectedTenantId.value = currentTenantId;
+            // 更新当前租户名称
+            const currentTenant = result.list.find((item) => item.id == currentTenantId);
+            if (currentTenant) {
+              currentTenantName.value = currentTenant.name;
+            }
+          }
+        } catch (error) {
+          console.error('获取租户列表失败:', error);
+        }
+      }
+
+      // 显示租户选择弹窗（优化：预加载租户列表）
+      async function showTenantSelectModal() {
+        // 确保租户列表已加载
+        await loadTenantList();
+        if (tenantSelectModalRef.value) {
+          tenantSelectModalRef.value.show();
+        }
+      }
+
+      // 租户选择成功回调
+      function handleTenantSelectSuccess() {
+        // 重新加载租户名称
+        loadTenantName();
+        loadTenantList();
+      }
+
       onMounted(() => {
         showLoginSelect();
+        // 优化：并行加载租户名称和列表，提升加载速度
+        Promise.all([loadTenantList(), loadTenantName()]);
       });
 
       return {
@@ -236,6 +316,12 @@
         title,
         t,
         goBack,
+        currentTenantName,
+        tenantList,
+        selectedTenantId,
+        showTenantSelectModal,
+        handleTenantSelectSuccess,
+        tenantSelectModalRef,
       };
     },
   });
@@ -259,6 +345,97 @@
       margin-bottom: 2px;
       border-bottom: 0px;
       border-left: 0px;
+      pointer-events: auto;
+    }
+
+    .tenant-select {
+      background: transparent !important;
+      cursor: pointer !important;
+      z-index: 10;
+      
+      :deep(.ant-select-selector) {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding-left: 0 !important;
+        cursor: pointer !important;
+      }
+      
+      :deep(.ant-select-selection-item) {
+        padding-right: 20px !important;
+        color: rgba(255, 255, 255, 1) !important;
+        cursor: pointer !important;
+      }
+      
+      :deep(.ant-select-selection-placeholder) {
+        color: rgba(255, 255, 255, 1) !important;
+      }
+      
+      :deep(.ant-select-arrow) {
+        color: rgba(255, 255, 255, 1) !important;
+        cursor: pointer !important;
+      }
+      
+      :deep(.ant-select-selection-search) {
+        cursor: pointer !important;
+      }
+      
+      :deep(.ant-select-selection-search-input) {
+        color: rgba(255, 255, 255, 1) !important;
+      }
+      
+      &:hover :deep(.ant-select-selector) {
+        border: none !important;
+      }
+      
+      &:focus :deep(.ant-select-selector) {
+        border: none !important;
+        box-shadow: none !important;
+      }
+      
+      :deep(.ant-select-selection) {
+        cursor: pointer !important;
+      }
+    }
+    
+    &--dark {
+      .tenant-select {
+        :deep(.ant-select-selection-item) {
+          color: rgba(255, 255, 255, 1) !important;
+        }
+        
+        :deep(.ant-select-selection-placeholder) {
+          color: rgba(255, 255, 255, 1) !important;
+        }
+        
+        :deep(.ant-select-arrow) {
+          color: rgba(255, 255, 255, 1) !important;
+        }
+        
+        :deep(.ant-select-selection-search-input) {
+          color: rgba(255, 255, 255, 1) !important;
+        }
+      }
+    }
+    
+    &--light {
+      .tenant-select {
+        :deep(.ant-select-selection-item) {
+          color: #000 !important;
+        }
+        
+        :deep(.ant-select-selection-placeholder) {
+          color: #000 !important;
+        }
+        
+        :deep(.ant-select-arrow) {
+          color: #000 !important;
+        }
+        
+        :deep(.ant-select-selection-search-input) {
+          color: #000 !important;
+        }
+      }
     }
 
     &--light {
@@ -274,6 +451,14 @@
       .anticon,
       .truncate {
         color: rgba(255, 255, 255, 1);
+      }
+      
+      .tenant-switch {
+        color: rgba(255, 255, 255, 1) !important;
+        
+        :deep(.anticon) {
+          color: rgba(255, 255, 255, 1) !important;
+        }
       }
     }
     //update-end---author:scott ---date::2022-09-30  for：默认隐藏顶部菜单面包屑--------------
