@@ -434,6 +434,7 @@
       await resetFields();
       //刷新列表
       emit('success');
+      $message.createMessage.success('开工成功');
     } catch (error) {
       console.log(error);
     }

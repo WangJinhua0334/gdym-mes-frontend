@@ -431,6 +431,7 @@
       await resetFields();
       //刷新列表
       emit('success');
+      $message.createMessage.success('开工成功');
     } catch (error) {
       console.log(error);
     }
@@ -441,7 +442,7 @@
   <div class="custom-form-wrapper">
     <BasicForm @register="registerForm" :width="896" />
     <div class="button-container">
-      <a-button @click="verification" type="primary">效验</a-button>
+      <a-button @click="verification" type="primary">校验</a-button>
       <a-button @click="handleSubmit" :loading="loading" type="primary">扫码开工</a-button>
     </div>
     

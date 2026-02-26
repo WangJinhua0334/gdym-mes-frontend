@@ -203,6 +203,7 @@ async function handleSubmit() {
       allRowsCoilNumbers.value = [];
       //刷新列表
       emit('success');
+      $message.createMessage.success('完工成功');
     } catch (error) {
       console.log(error);
     }

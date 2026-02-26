@@ -212,6 +212,7 @@
       await saveOrUpdate(values);
       //刷新列表
       emit('success');
+      $message.createMessage.success('完工成功');
       // 返回成功标识
       return true;
     } catch (error) {

@@ -105,6 +105,7 @@ async function requestAddOrEdit(values) {
     await resetFields();
     //刷新列表
     emit('success');
+    $message.createMessage.success('开工成功');
   } catch (error) {
     console.log(error);
   }
@@ -116,7 +117,7 @@ async function requestAddOrEdit(values) {
     <BasicForm @register="registerForm" :width="896" />
     <div class="button-container">
       <!--      <a-button @click="verification" type="primary">效验</a-button>-->
-      <a-button @click="handleSubmit" :loading = "loading" type="primary">打码开工</a-button>
+      <a-button @click="handleSubmit" :loading = "loading" type="primary">扫码开工</a-button>
     </div>
   </div>
 </template>
