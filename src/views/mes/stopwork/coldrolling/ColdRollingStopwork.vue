@@ -197,7 +197,7 @@ async function handleSubmit() {
     const formData = getFieldsValue();
     const flowCardId = formData.flowCardId || '';
     if (!formData.oldCoilNo) {
-      $message.createMessage.warning('请先输入钢卷号');
+      $message.createMessage.warning('请先选择钢卷号');
       return;
     }
     // 将 coilNo根据 - 只划分一次子串，只保留后面这段
@@ -221,9 +221,10 @@ async function handleSubmit() {
       setExtendedFieldsValue({
         newCoilNo: newCoilNo,
         flowCardId: flowCardId,
-        weight: formData.weight || '', // 设置重量默认值为表单中的重量
-        destination: '1', // 设置流转去向默认值为入库
-        qualityReport: lastQualityReport.value, // 恢复上一次的质量汇报值
+        weight: formData.weight || '',
+        destination: '1',
+        qualityReport: lastQualityReport.value,
+        oldMaterialNumber: formData.materialNumber || '', // 物料选择接口需要，从主表单获取
       });
     }, 100);
   }
@@ -278,11 +279,13 @@ async function handleSubmit() {
     openModal(true, {});
 
     // 延迟填充数据，确保弹框和表单都已完全初始化
+    const formData = getFieldsValue();
     setTimeout(() => {
       try {
         setExtendedFieldsValue({
           newCoilNo: selectedRow.newCoilNo || '',
           weight: selectedRow.weight || '',
+          oldMaterialNumber: formData.materialNumber || '',
           newMaterialId: selectedRow.newMaterialId || '',
           newMaterialNumber: selectedRow.newMaterialNumber || '',
           newMaterialName: selectedRow.newMaterialName || '',
@@ -340,9 +343,13 @@ async function handleSubmit() {
   async function handleModalOk() {
     try {
       const values = await validateExtendedForm();
-      // 验证必填字段
+      // 验证必填字段（与App端保持一致）
       if (!values.weight) {
         $message.createMessage.warning('请填写重量');
+        return;
+      }
+      if (!values.newMaterialName) {
+        $message.createMessage.warning('请选择物料名称');
         return;
       }
       if (!values.destination) {

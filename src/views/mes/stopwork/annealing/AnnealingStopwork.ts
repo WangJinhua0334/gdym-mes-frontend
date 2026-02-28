@@ -5,20 +5,27 @@ import {planStartTime} from "@/views/mes/mo/components/MesMoPlanCreateSn.data";
 import {rules} from "@/utils/helper/validator";
 import {useUserStore} from "@/store/modules/user";
 import { getTenantId } from "/@/utils/auth";
-//冷轧扫码完工新增弹框页面表单配置
+//退火扫码完工新增弹框页面表单配置（与App端保持一致：重量、物料名称、物料编码、规格型号、流转去向、质量汇报）
 export const formSchema: FormSchema[] = [
   {
     label: '钢卷号',
     field: 'newCoilNo',
     component: 'Input',
-    dynamicDisabled: true, // 设置为禁用状态，只能通过程序设置
+    dynamicDisabled: true,
+    show: false,
   },
   {
-    label: '流转卡卡号',//用来过滤物料编码信息
+    label: '流转卡卡号',
     field: 'flowCardId',
     component: 'Input',
-    dynamicDisabled: true, // 设置为禁用状态，只能通过程序设置
-    show: true,//禁止显示
+    dynamicDisabled: true,
+    show: false,
+  },
+  {
+    label: '原材料编码',
+    field: 'oldMaterialNumber',
+    component: 'Input',
+    show: false,
   },
   {
     label: '重量',
@@ -46,7 +53,7 @@ export const formSchema: FormSchema[] = [
               const numValue = parseFloat(strValue);
               if (!isNaN(numValue) && isFinite(numValue) && numValue >= 0) {
                 // 格式化为两位小数，直接使用 toFixed(2) 返回的字符串
-                const formattedValue = numValue.toFixed(2);
+                const formattedValue = numValue.toFixed(3);
                 // 只有当格式化后的值与当前值不同时才更新
                 if (formattedValue !== strValue) {
                   // 更新输入框的值
@@ -118,63 +125,56 @@ export const formSchema: FormSchema[] = [
         setFieldsValue: setFieldsValue,
         getFieldsValue: getFieldsValue,
         method: 'get',
-        url: '/etl/rolling/getNewMaterialInfo',
+        url: '/basic/basProductMapping/getNewMaterialInfo',
         params: {
-          column: 'createTime',
+          column: 'defaultMapping',
           order: 'desc',
-          flowCardId: '${flowCardId}',
-          searchFields: 'old_name,old_model_number'
+          oldMaterialNumber: '${oldMaterialNumber}',
+          searchFields: 'newMaterialNumber,newMaterialName',
         },
         columns: [
-          {name: '物料编码', code: 'code'},
-          {name: '物料名称', code: 'name'},
-          {name: '规格型号', code: 'modelNumber'},
+          { name: '物料编码', code: 'newMaterialNumber' },
+          { name: '物料名称', code: 'newMaterialName' },
+          { name: '规格型号', code: 'newModelNumber' },
         ],
         isShowNum: false,
-        rowKey: 'name',
-        labelKey: ['name'],
+        rowKey: 'newMaterialNumber',
+        labelKey: ['newMaterialName'],
         linkmap: [
           {
-            id:'newMaterialId',//物料编号
-            code:'newMaterialNumber',//物料编码
-            // name:'newMaterialName',//物料名称
-            modelNumber:'newModelNumber',//规格型号
+            newMaterialId: 'newMaterialId',
+            newMaterialNumber: 'newMaterialNumber',
+            newMaterialName: 'newMaterialName',
+            newModelNumber: 'newModelNumber',
           },
         ],
-        //pageSize: 10,
         multi: false,
-        maxTagCount: 1,
-        placeholder: '请选择',
-        // // 启用滚动分页
-        // scroll: {
-        //   pageSize: 10
-        // },
+        maxTagCount: 2,
+        placeholder: '请选择物料名称',
+        scroll: { pageSize: 10 },
       };
     },
-    dynamicRules: () => {
-      return [{ required: true, message: '请选择物料!' }];
-    },
+    dynamicRules: () => [{ required: true, message: '请选择物料名称!' }],
   },
   {
-    label: "物料编号",
+    label: '物料编号',
     field: 'newMaterialId',
     component: 'Input',
-    show: true,//禁止显示
-    dynamicDisabled : true,
+    show: false,
   },
   {
     label: '物料编码',
     field: 'newMaterialNumber',
     component: 'Input',
-    show: true,//禁止显示
-    dynamicDisabled : true,
+    dynamicDisabled: true,
+    componentProps: { placeholder: '自动获取' },
   },
   {
     label: '规格型号',
     field: 'newModelNumber',
     component: 'Input',
-    show: true,//禁止显示
-    dynamicDisabled : true,
+    dynamicDisabled: true,
+    componentProps: { placeholder: '自动获取' },
   },
   {
     label: '流转去向',

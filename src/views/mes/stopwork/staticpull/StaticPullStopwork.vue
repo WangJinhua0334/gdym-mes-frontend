@@ -197,7 +197,7 @@ async function handleSubmit() {
     const formData = getFieldsValue();
     const flowCardId = formData.flowCardId || '';
     if (!formData.oldCoilNo) {
-      $message.createMessage.warning('请先输入钢卷号');
+      $message.createMessage.warning('请先选择钢卷号');
       return;
     }
     // 将 coilNo根据 - 只划分一次子串，只保留后面这段
@@ -221,8 +221,9 @@ async function handleSubmit() {
       setExtendedFieldsValue({
         newCoilNo: newCoilNo,
         flowCardId: flowCardId,
-        weight: formData.weight || '', // 设置重量默认值为表单中的重量
-        destination: '1', // 设置流转去向默认值为入库
+        weight: formData.weight || '',
+        destination: '1',
+        oldMaterialNumber: formData.materialNumber || '', // 物料选择接口需要，从主表单获取
       });
     }, 100);
   }
@@ -270,6 +271,9 @@ async function handleSubmit() {
     isEditMode.value = true;
     editingRowId.value = selectedRow.id;
 
+    // 获取主表单的 materialNumber，用于物料选择接口
+    const formData = getFieldsValue();
+
     // 先重置表单，确保表单是干净的状态
     resetFields();
 
@@ -282,6 +286,11 @@ async function handleSubmit() {
         setExtendedFieldsValue({
           newCoilNo: selectedRow.newCoilNo || '',
           weight: selectedRow.weight || '',
+          oldMaterialNumber: formData.materialNumber || '',
+          newMaterialId: selectedRow.newMaterialId || '',
+          newMaterialNumber: selectedRow.newMaterialNumber || '',
+          newMaterialName: selectedRow.newMaterialName || '',
+          newModelNumber: selectedRow.newModelNumber || '',
           destination: selectedRow.destination || '',
           qualityReport: selectedRow.qualityReport || '',
         });
@@ -335,9 +344,13 @@ async function handleSubmit() {
   async function handleModalOk() {
     try {
       const values = await validateExtendedForm();
-      // 验证必填字段
+      // 验证必填字段（与App端保持一致）
       if (!values.weight) {
         $message.createMessage.warning('请填写重量');
+        return;
+      }
+      if (!values.newMaterialName) {
+        $message.createMessage.warning('请选择物料名称');
         return;
       }
       if (!values.destination) {
@@ -357,6 +370,10 @@ async function handleSubmit() {
               values: {
                 newCoilNo: values.newCoilNo || '',
                 weight: values.weight || '',
+                newMaterialId: values.newMaterialId || '',
+                newMaterialNumber: values.newMaterialNumber || '',
+                newMaterialName: values.newMaterialName || '',
+                newModelNumber: values.newModelNumber || '',
                 destination: destinationLabel || values.destination || '',
                 qualityReport: values.qualityReport || '',
               },
@@ -368,13 +385,14 @@ async function handleSubmit() {
         // 新增模式：添加新行
         const rowData = {
           id: buildUUID(),
-          newCoilNo: values.newCoilNo || '', // 钢卷号
-          weight: values.weight || '', // 重量
-          newMaterialNumber: values.newMaterialNumber || '', //物料编码
-          newMaterialName: values.newMaterialName || '', // 物料名称
-          newModelNumber: values.newModelNumber || '', // 规格型号
-          destination: destinationLabel || values.destination || '', // 流转去向
-          qualityReport: values.qualityReport || '', // 质量汇报
+          newCoilNo: values.newCoilNo || '',
+          weight: values.weight || '',
+          newMaterialId: values.newMaterialId || '',
+          newMaterialNumber: values.newMaterialNumber || '',
+          newMaterialName: values.newMaterialName || '',
+          newModelNumber: values.newModelNumber || '',
+          destination: destinationLabel || values.destination || '',
+          qualityReport: values.qualityReport || '',
         };
         // 添加到表格
         mesProductPickDetail.value.addRows([rowData]);

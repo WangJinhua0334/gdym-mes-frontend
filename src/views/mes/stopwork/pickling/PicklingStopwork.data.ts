@@ -140,9 +140,15 @@ export const getDetailJVxeColumns = function (showCoilNo = false) {
   );
   return arr;
 };
-//酸洗扫码完工新增弹框页面表单配置
+//酸洗扫码完工新增弹框页面表单配置（与App端保持一致：重量、物料名称、物料编码、规格型号、流转去向、质量汇报）
 export const formSchema: FormSchema[] = [
-  // 移除钢卷号字段，不在弹窗中显示
+  // 用于物料选择接口的隐藏参数，从主表单 materialNumber 传入
+  {
+    label: '原材料编码',
+    field: 'oldMaterialNumber',
+    component: 'Input',
+    show: false,
+  },
   {
     label: '重量',
     field: 'weight',
@@ -168,8 +174,8 @@ export const formSchema: FormSchema[] = [
             if (numberRegex.test(strValue) && strValue !== '.' && strValue !== '') {
               const numValue = parseFloat(strValue);
               if (!isNaN(numValue) && isFinite(numValue) && numValue >= 0) {
-                // 格式化为两位小数，直接使用 toFixed(2) 返回的字符串
-                const formattedValue = numValue.toFixed(2);
+                // 格式化为三位小数，与App端保持一致
+                const formattedValue = numValue.toFixed(3);
                 // 只有当格式化后的值与当前值不同时才更新
                 if (formattedValue !== strValue) {
                   // 更新输入框的值
@@ -229,6 +235,78 @@ export const formSchema: FormSchema[] = [
           trigger: ['change', 'blur'],
         },
       ];
+    },
+  },
+  {
+    label: '物料名称',
+    field: 'newMaterialName',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/basic/basProductMapping/getNewMaterialInfo',
+        params: {
+          column: 'defaultMapping',
+          order: 'desc',
+          oldMaterialNumber: '${oldMaterialNumber}',
+          searchFields: 'newMaterialNumber,newMaterialName',
+        },
+        columns: [
+          { name: '物料编码', code: 'newMaterialNumber' },
+          { name: '物料名称', code: 'newMaterialName' },
+          { name: '规格型号', code: 'newModelNumber' },
+        ],
+        isShowNum: false,
+        rowKey: 'newMaterialNumber',
+        labelKey: ['newMaterialName'],
+        linkmap: [
+          {
+            newMaterialId: 'newMaterialId',
+            newMaterialNumber: 'newMaterialNumber',
+            newMaterialName: 'newMaterialName',
+            newModelNumber: 'newModelNumber',
+          },
+        ],
+        multi: false,
+        maxTagCount: 2,
+        placeholder: '请选择物料名称',
+        scroll: {
+          pageSize: 10,
+        },
+      };
+    },
+    dynamicRules: () => [
+      {
+        required: true,
+        message: '请选择物料名称',
+      },
+    ],
+  },
+  {
+    label: '物料编号',
+    field: 'newMaterialId',
+    component: 'Input',
+    show: false,
+  },
+  {
+    label: '物料编码',
+    field: 'newMaterialNumber',
+    component: 'Input',
+    dynamicDisabled: true,
+    componentProps: {
+      placeholder: '自动获取',
+    },
+  },
+  {
+    label: '规格型号',
+    field: 'newModelNumber',
+    component: 'Input',
+    dynamicDisabled: true,
+    componentProps: {
+      placeholder: '自动获取',
     },
   },
   {
