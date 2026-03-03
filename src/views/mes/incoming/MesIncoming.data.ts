@@ -307,6 +307,7 @@ export const formSchema: FormSchema[] = [
               url: '/etl/preDeliveryBill/importAllPreDeliveryBills',
               params: {
                 tenantId: useUserStore().getTenant,
+                startDate: '2026-01-02'
               },
             }).then(() => {
               hide();

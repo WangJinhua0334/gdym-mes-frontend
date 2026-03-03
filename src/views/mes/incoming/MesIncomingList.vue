@@ -164,24 +164,25 @@
     );
   }
 
-  /**
-   * 同步金蝶客户信息
-   */
-  function handleGetFromK3Cloud() {
-    const { createMessage } = useMessage();
-
-    // 显示加载提示
-    const hide = createMessage.loading('正在同步金蝶客户信息...', 0);
-
-    // 调用接口
-    defHttp.get({
-      url: '/etl/preDeliveryBill/importAllPreDeliveryBills',
-      params: {
-        tenantId: useUserStore().getTenant,
-      },
-    });
-    hide();
-  }
+  // /**
+  //  * 同步金蝶客户信息
+  //  */
+  // function handleGetFromK3Cloud() {
+  //   const { createMessage } = useMessage();
+  //
+  //   // 显示加载提示
+  //   const hide = createMessage.loading('正在同步金蝶客户信息...', 0);
+  //
+  //   // 调用接口
+  //   defHttp.get({
+  //     url: '/etl/preDeliveryBill/importAllPreDeliveryBills',
+  //     params: {
+  //       tenantId: useUserStore().getTenant,
+  //       startDate:  '2026-01-02'
+  //     },
+  //   });
+  //   hide();
+  // }
 
   /**
    * 编辑事件（目前未使用，操作栏已注释）
