@@ -1,509 +1,341 @@
 <template>
-  <div>
-    <!--引用表格-->
-    <BasicTable @register="registerTable" :rowSelection="rowSelection">
-      <!--      <BasicModal v-bind="$attrs" @register="registerModal" destroyOnClose :title="title" :width="800" @ok="handleSubmit">-->
-      <!--        <BasicForm @register="registerForm" name="MesReceiveForm" />-->
-      <!--      </BasicModal>-->
-      <!--      插槽:table标题-->
-      <template #tableTitle>
-        <a-button type="primary" v-auth="'mes:mes_incoming:add'" @click="handleAdd" preIcon="ant-design:plus-outlined">收料</a-button>
-        <!--                <a-button type="primary" v-auth="'mes:mes_incoming:waitInsp'" @click="handleWaitInsp" preIcon="ant-design:phone-outlined"> 推送IQC</a-button>-->
-        <!--                <a-button type="primary" v-auth="'mes:mes_incoming:exportXls'" preIcon="ant-design:export-outlined" @click="onExportXls"> 导出</a-button>-->
-        <!--                <j-upload-button type="primary" v-auth="'mes:mes_incoming:importExcel'" preIcon="ant-design:import-outlined" @click="onImportXls"-->
-        <!--                  >导入</j-upload-button>-->
-        <a-button v-if="selectedRowKeys && selectedRowKeys.length > 0" type="primary" preIcon="ant-design:printer-outlined" @click="handlePrint"
-          >打印</a-button
-        >
-        <!-- <a-dropdown v-if="selectedRowKeys.length > 0">
-          <template #overlay>
-            <a-menu>
-              <a-menu-item key="1" @click="batchHandleDelete">
-                <Icon icon="ant-design:delete-outlined" />
-                删除
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button v-auth="'mes:mes_incoming:deleteBatch'"
-            >批量操作
-            <Icon icon="mdi:chevron-down" />
-          </a-button>
-        </a-dropdown> -->
-        <!-- 高级查询 -->
-        <!-- <super-query :config="superQueryConfig" @search="handleSuperQuery" /> -->
-      </template>
-      <!--操作栏-->
-      <!--      <template #action="{ record }">-->
-      <!--        <TableAction :actions="getTableAction(record)" :dropDownActions="getDropDownAction(record)" />-->
-      <!--      </template>-->
-      <!--字段回显插槽-->
-      <template #bodyCell> </template>
-      <template #fileSlot="{ text }">
-        <span v-if="!text" style="font-size: 12px; font-style: italic">无文件</span>
-        <a-button v-else :ghost="true" type="primary" preIcon="ant-design:download-outlined" size="small" @click="downloadFile(text)">下载</a-button>
+  <div class="receive-page">
+    <div class="receive-form-wrapper">
+      <BasicForm @register="registerForm" name="MesReceiveForm" />
+      <div class="form-actions">
+        <a-button type="primary" :loading="saveLoading" preIcon="ant-design:save-outlined" @click="handleSave">
+          {{ editingRowId ? '保存修改' : '保存' }}
+        </a-button>
+        <a-button v-if="editingRowId" style="margin-left: 8px" @click="cancelEdit">取消编辑</a-button>
+      </div>
+    </div>
+    <a-divider class="incoming-divider-separator" orientation="left">收料列表</a-divider>
+    <div class="incoming-table-wrapper">
+    <BasicTable
+      @register="registerTable"
+      :rowSelection="{ type: 'checkbox' }"
+    >
+      <template #action="{ record }">
+        <TableAction :actions="getTableAction(record)" />
       </template>
     </BasicTable>
-
-    <!-- 点击收料按钮弹出的弹窗 -->
-    <MesIncomingModal @register="registerModal" @success="handleSuccess" />
-    <!-- 点击IQC按钮弹出的弹窗 -->
-    <!-- <IncomingInspect @register="registerInspModal" @success="handleSuccess" /> -->
-    <!-- 点击退货按钮弹出的弹窗 -->
-    <!-- <MesReturnModal @register="registerReturnModal" @success="handleSuccess" /> -->
-    <!-- 点击库存按钮弹出的弹窗 -->
-    <!-- <MesStockModal @register="registerStockModal" @success="handleSuccess" /> -->
+    <div class="table-actions">
+      <a-button type="primary" :loading="submitLoading" preIcon="ant-design:check-outlined" @click="handleSubmit">
+        提交
+      </a-button>
+    </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts" name="incoming-mesIncoming" setup>
-  import { reactive, unref } from 'vue';
-  import { BasicTable } from '/@/components/Table';
-  import { useModal } from '/@/components/Modal';
-  import { useListPage } from '/@/hooks/system/useListPage';
-  // @ts-ignore
-  import MesIncomingModal from './components/MesIncomingModal.vue';
-  // @ts-ignore
-  import IncomingInspect from './components/insp/IncomingInspect.vue';
-  // @ts-ignore
-  import MesReturnModal from './components/MesReturnModal.vue';
-  // @ts-ignore
-  import MesStockModal from './components/MesStockModal.vue';
-  import { columns, searchFormSchema } from './MesIncoming.data';
-  import { list, deleteOne, getImportUrl, getExportUrl } from './MesIncoming.api';
-  import { downloadFile } from '/@/utils/common/renderUtils';
+  import { ref, onMounted } from 'vue';
+  import { BasicForm, useForm } from '/@/components/Form/index';
+  import { BasicTable, useTable, TableAction } from '/@/components/Table';
+  import type { BasicColumn, ActionItem } from '/@/components/Table';
+  import { formSchema } from './MesIncoming.data';
+  import dayjs from 'dayjs';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { defHttp } from '@/utils/http/axios';
-  import { useUserStore } from '@/store/modules/user';
-  import { loopPrintJimuReport } from '/@/utils';
-  import { getToken } from '@/utils/auth';
+  import { saveOrUpdate } from './MesIncoming.api';
+  import { useUserStore } from '/@/store/modules/user';
 
-  const queryParam = reactive<any>({});
   const $message = useMessage();
+  const userStore = useUserStore();
+  const MATERIAL_DESC_CACHE_KEY = 'mes_incoming_material_desc';
+  const saveLoading = ref(false);
+  const submitLoading = ref(false);
+  const editingRowId = ref<string | null>(null);
+  let rowIdCounter = 0;
 
-  //注册model
-  const [registerModal, { openModal }] = useModal();
-  const [registerInspModal, { openModal: openInspModal }] = useModal();
-  const [registerStockModal, { openModal: openStockModal }] = useModal();
-  const [registerReturnModal, { openModal: openReturnModal }] = useModal();
-  //注册table数据
-  const { tableContext } = useListPage({
-    tableProps: {
-      title: '来料单',
-      api: list,
-      //api: "/mes/inComing/purchaseReceiptBillDetail/list",
-      immediate: false, // 页面加载时不自动请求，需手动查询
-      //来料单表格列表数据
-      columns,
-      canResize: false,
-      formConfig: {
-        //labelWidth: 120,
-        schemas: searchFormSchema,
-        autoSubmitOnEnter: true,
-        // 隐藏提交按钮
-        // showSubmitButton: false,
-        //不显示所有的输入框
-        showAdvancedButton: false,
-        // 添加这一行隐藏重置按钮
-        showResetButton: false,
-        fieldMapToNumber: [],
-        fieldMapToTime: [],
-        submitButtonOptions: {
-          text: '查询', // 修改查询按钮文本
-          //preIcon: null,  // 移除放大镜图标
-        },
-      },
-      // actionColumn: {
-      //   title: '操作',
-      //   width: 180,
-      //   fixed: 'right',
-      // },
-      showActionColumn: false,
-      beforeFetch: (params) => {
-        // 如果需要精确匹配，移除通配符
-        if (params.coilNo) {
-          params.coilNo = params.coilNo.replace(/\*/g, '');
-        }
-        return Object.assign(params, queryParam);
-      },
-    },
-    exportConfig: {
-      name: '来料单',
-      url: getExportUrl,
-      params: queryParam,
-    },
-    importConfig: {
-      url: getImportUrl,
-      success: handleSuccess,
+  const tableColumns: BasicColumn[] = [
+    { title: '钢卷号', dataIndex: 'coilNo', key: 'coilNo', width: 180, align: 'center', fixed: 'left' },
+    { title: '采购订单号', dataIndex: 'purchaseOrderNo', key: 'purchaseOrderNo', width: 180, align: 'center', fixed: 'left' },
+    { title: '采购订单行号', dataIndex: 'purchaseOrderSeq', key: 'purchaseOrderSeq', width: 150, align: 'center' },
+    { title: '物料代码', dataIndex: 'materialNumber', key: 'materialNumber', width: 180, align: 'center' },
+    { title: '物料名称', dataIndex: 'materialName', key: 'materialName', width: 180, align: 'center' },
+    { title: '车牌号', dataIndex: 'licensePlateNumber', key: 'licensePlateNumber', width: 150, align: 'center' },
+    { title: '牌号', dataIndex: 'brand', key: 'brand', width: 120, align: 'center' },
+    { title: '重量', dataIndex: 'weight', key: 'weight', width: 120, align: 'center' },
+    { title: '生产编号', dataIndex: 'productNumber', key: 'productNumber', width: 150, align: 'center' },
+  ];
+
+  const [registerTable, { setTableData, getDataSource }] = useTable({
+    columns: tableColumns,
+    dataSource: [],
+    useSearchForm: false,
+    pagination: false,
+    showTableSetting: false,
+    canResize: false,
+    bordered: true,
+    striped: false,
+    scroll: { x: 1500 },
+    rowKey: 'rowId',
+    showActionColumn: true,
+    actionColumn: {
+      width: 120,
+      title: '操作',
+      dataIndex: 'action',
+      fixed: 'right',
+      slots: { customRender: 'action' },
     },
   });
 
-  const [registerTable, { reload, getSelectRows }, { rowSelection, selectedRowKeys }] = tableContext;
+  const [registerForm, { resetFields, setFieldsValue, validate, scrollToField, getFieldsValue }] = useForm({
+    labelWidth: 100,
+    schemas: formSchema,
+    showActionButtonGroup: false,
+    baseColProps: { span: 8 },
+  });
 
-  // 高级查询配置（已注释，保留以备后用）
-  // const superQueryConfig = reactive(superQuerySchema);
-
-  /**
-   * 高级查询事件（已注释，保留以备后用）
-   */
-  // function handleSuperQuery(params) {
-  //   Object.keys(params).map((k) => {
-  //     queryParam[k] = params[k];
-  //   });
-  //   reload();
-  // }
-  /**
-   * 打印弹窗提交事件
-   */
-  function handleAdd() {
-    openModal(
-      true, // 显示弹窗
-      {
-        isUpdate: false, // 标记为新增模式，非编辑模式
-        showFooter: true, // 显示底部操作栏
-      }
-    );
+  async function initForm() {
+    await resetFields();
+    const savedMaterialDesc = sessionStorage.getItem(MATERIAL_DESC_CACHE_KEY) || '';
+    await setFieldsValue({
+      inStockTime: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+      materialDesc: savedMaterialDesc,
+    });
   }
 
-  // /**
-  //  * 同步金蝶客户信息
-  //  */
-  // function handleGetFromK3Cloud() {
-  //   const { createMessage } = useMessage();
-  //
-  //   // 显示加载提示
-  //   const hide = createMessage.loading('正在同步金蝶客户信息...', 0);
-  //
-  //   // 调用接口
-  //   defHttp.get({
-  //     url: '/etl/preDeliveryBill/importAllPreDeliveryBills',
-  //     params: {
-  //       tenantId: useUserStore().getTenant,
-  //       startDate:  '2026-01-02'
-  //     },
-  //   });
-  //   hide();
-  // }
-
-  /**
-   * 编辑事件（目前未使用，操作栏已注释）
-   */
-  // @ts-ignore
-  function handleEdit(record: Recordable) {
-    openModal(true, {
-      record,
-      isUpdate: true,
-      showFooter: true,
-    });
-  }
-  /**
-   * 批量推送检验（已注释，保留以备后用）
-   */
-  // async function handleWaitInsp() {
-  //   if (!unref(selectedRowKeys) || unref(selectedRowKeys).length <= 0) {
-  //     $message.createMessage.warning('请选择需要操作的数据');
-  //     return;
-  //   }
-  //   await waitInsp({ ids: selectedRowKeys.value }, handleSuccess);
-  // }
-  /**
-   * 退货（目前未使用，操作栏已注释）
-   */
-  // @ts-ignore
-  function handleReturn(record: Recordable) {
-    openReturnModal(true, {
-      record,
-      isUpdate: true,
-      showFooter: true,
-    });
-  }
-  /**
-   * 检验（目前未使用，操作栏已注释）
-   */
-  // @ts-ignore
-  function handleInsp(record: Recordable) {
-    openInspModal(true, {
-      record,
-      isUpdate: true,
-      showFooter: true,
-    });
-  }
-  /**
-   * 检验明细（目前未使用，操作栏已注释）
-   */
-  // @ts-ignore
-  function handleInspDetail(record: Recordable) {
-    openInspModal(true, {
-      record,
-      isUpdate: true,
-      showFooter: false,
-    });
-  }
-  /**
-   * 入库（目前未使用，操作栏已注释）
-   */
-  // @ts-ignore
-  function handleStock(record: Recordable) {
-    openStockModal(true, {
-      record,
-      isUpdate: true,
-      showFooter: true,
-    });
-  }
-  /**
-   * 详情（目前未使用，操作栏已注释）
-   */
-  // @ts-ignore
-  function handleDetail(record: Recordable) {
-    openModal(true, {
-      record,
-      isUpdate: true,
-      showFooter: false,
-    });
-  }
-  /**
-   * 删除事件（目前未使用，操作栏已注释）
-   */
-  // @ts-ignore
-  async function handleDelete(record) {
-    await deleteOne({ id: record.id }, handleSuccess);
-  }
-  /**
-   * 批量删除事件（已注释，保留以备后用）
-   */
-  // async function batchHandleDelete() {
-  //   await batchDelete({ ids: selectedRowKeys.value }, handleSuccess);
-  // }
-  /**
-   * 成功回调
-   * @param printData 打印数据，包含钢卷号
-   */
-  async function handleSuccess(printData?: { coilNumber: string }) {
-    // 清空选中项，但不刷新列表
-    selectedRowKeys.value = [];
-
-    // 收料成功后直接打印，不弹窗
-    if (printData?.coilNumber) {
-      console.log('准备自动打印，钢卷号:', printData.coilNumber);
-      // 使用 setTimeout 确保在所有操作完成后执行打印
-      setTimeout(() => {
-        executePrint(printData.coilNumber);
-      }, 300); // 延迟300ms确保所有操作完成
-    } else {
-      console.log('未提供钢卷号，跳过自动打印');
+  function saveMaterialDesc() {
+    try {
+      const formValues = getFieldsValue();
+      const materialDesc = formValues?.materialDesc || '';
+      sessionStorage.setItem(MATERIAL_DESC_CACHE_KEY, materialDesc);
+    } catch (error) {
+      console.error('保存物料说明失败:', error);
     }
   }
-  /**
-   * 操作栏（已注释，保留以备后用）
-   */
-  // function getTableAction(record) {
-  //   let actionArr: ActionItem[] = [];
-  //
-  //   if (record.status == 'create') {
-  //     actionArr.push({
-  //       label: '编辑',
-  //       onClick: handleEdit.bind(null, record),
-  //       auth: 'mes:mes_incoming:edit',
-  //     });
-  //   } else if (record.status == 'wait_insp') {
-  //     actionArr.push({
-  //       label: '检验',
-  //       onClick: handleInsp.bind(null, record),
-  //       auth: 'mes:mes_incoming:insp',
-  //     });
-  //   } else if (record.status == 'wait_stock') {
-  //     actionArr.push({
-  //       label: '入库',
-  //       onClick: handleStock.bind(null, record),
-  //       auth: 'mes:mes_incoming:stock',
-  //     });
-  //   } else if (record.status == 'wait_return') {
-  //     actionArr.push({
-  //       label: '退货',
-  //       onClick: handleReturn.bind(null, record),
-  //       auth: 'mes:mes_incoming:return',
-  //     });
-  //   }
-  //   if (record.status != 'create') {
-  //     actionArr.push({
-  //       label: '检验明细',
-  //       onClick: handleInspDetail.bind(null, record),
-  //     });
-  //   }
-  //   return actionArr;
-  // }
-  /**
-   * 下拉操作栏（已注释，保留以备后用）
-   */
-  // function getDropDownAction(record) {
-  //   let actionArr: ActionItem[] = [];
-  //   actionArr.push({
-  //     label: '详情',
-  //     onClick: handleDetail.bind(null, record),
-  //   });
-  //   if (record.status == 'create') {
-  //     actionArr.push({
-  //       label: '删除',
-  //       popConfirm: {
-  //         title: '是否确认删除',
-  //         confirm: handleDelete.bind(null, record),
-  //         placement: 'topLeft',
-  //         getPopupContainer: () => document.body,
-  //       },
-  //       auth: 'mes:mes_incoming:delete',
-  //     });
-  //   }
-  //   return actionArr;
-  // }
 
-  /**
-   * 打印-直接打印（使用固定模板）
-   */
-  async function handlePrint() {
+  async function handleSave() {
     try {
-      if (!unref(selectedRowKeys) || unref(selectedRowKeys).length <= 0) {
-        $message.createMessage.warning('请选择待打印的记录!');
-        return;
-      }
+      const values = await validate();
+      const currentData = getDataSource();
+      const newPurchaseOrderNo = values?.purchaseOrderNo ?? '';
 
-      // 获取选中的行数据
-      const selectedRows = getSelectRows();
-      if (!selectedRows || selectedRows.length === 0) {
-        $message.createMessage.warning('请选择待打印的记录!');
-        return;
-      }
-
-      // 提取选中行的钢卷号
-      const coilNumbers: string[] = [];
-      selectedRows.forEach((row: any) => {
-        if (row.internalCoilNumber && row.internalCoilNumber !== null && row.internalCoilNumber !== '') {
-          coilNumbers.push(row.internalCoilNumber);
+      // 表格中已有记录时，校验采购订单号是否一致
+      const recordsToCheck = editingRowId.value
+        ? currentData.filter((r) => r.rowId !== editingRowId.value)
+        : currentData;
+      if (recordsToCheck.length > 0) {
+        const existingPurchaseOrderNo = recordsToCheck[0]?.purchaseOrderNo ?? '';
+        if (newPurchaseOrderNo !== existingPurchaseOrderNo) {
+          $message.createMessage.warning('当前钢卷和表格中的钢卷属于不同的采购订单，请先提交表格中的钢卷数据');
+          return;
         }
-      });
-
-      if (coilNumbers.length === 0) {
-        $message.createMessage.warning('选中的记录中没有有效的钢卷号!');
-        return;
       }
 
-      const templateId = await getPrintTemplate(); // 固定模板 ID
-      console.log('开始打印，钢卷号:', coilNumbers);
-      console.log('模板ID:', templateId);
+      saveLoading.value = true;
 
-      // 获取报表ID
-      defHttp
-        .get({
-          url: '/template/basTemplate/getReportIdByIds',
-          params: { ids: templateId, type: 'pick_material_sn' },
-        })
-        .then(async (reportRs) => {
-          console.log('获取报表ID成功:', reportRs);
-
-          // 检查报表ID是否为空
-          if (!reportRs || Object.keys(reportRs).length === 0) {
-            $message.createMessage.error('获取报表ID失败，请检查打印模板配置!');
-            return;
-          }
-
-          // 打印数据集 { reportId, parameters }，使用钢卷号作为参数
-          const printSet: any = {};
-
-          const templateIds = Object.keys(reportRs);
-          for (const templateId of templateIds) {
-            const reportId = reportRs[templateId];
-            printSet[reportId] = { id: `${coilNumbers.join(',')}` };
-          }
-
-          console.log('打印数据集:', printSet);
-
-          loopPrintJimuReport(printSet, getToken, () => {
-            $message.createMessage.success('打印成功!');
-          });
-        })
-        .catch((error) => {
-          console.error('获取报表ID失败:', error);
-          $message.createMessage.error('获取报表ID失败: ' + (error.message || '请重试!'));
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function getPrintTemplate() {
-    try {
-      const res = await defHttp.get({
-        url: '/userextend/basUserExtend/queryByUsername',
-        params: { username: useUserStore().getUserInfo.username },
-      });
-      if(res.success && res.result){
-        // return res.result.printTemplateNumber;
-        return res.result.printTemplateId;
+      const row = {
+        rowId: editingRowId.value || `row_${++rowIdCounter}_${Date.now()}`,
+        coilNo: values?.coilNo ?? '',
+        purchaseOrderNo: values?.purchaseOrderNo ?? '',
+        purchaseOrderSeq: values?.purchaseOrderSeq != null ? String(values.purchaseOrderSeq) : '',
+        purchaseOrderFId: values?.purchaseOrderFId != null ? String(values.purchaseOrderFId) : '',
+        purchaseOrderEntryId: values?.purchaseOrderEntryId != null ? String(values.purchaseOrderEntryId) : '',
+        materialId: values?.materialId ?? '',
+        materialNumber: values?.materialNumber ?? '',
+        materialName: values?.materialName ?? '',
+        modelNumber: values?.modelNumber ?? '',
+        brand: values?.brand ?? '',
+        weight: values?.weight != null ? String(values.weight) : '',
+        supplierId: values?.supplierId ?? '',
+        supplierNumber: values?.supplierNumber ?? '',
+        stockUnitNumber: values?.stockUnitNumber ?? '',
+        priceUnitNumber: values?.priceUnitNumber ?? '',
+        purchaseUnitNumber: values?.purchaseUnitNumber ?? '',
+        entryTaxRate: values?.entryTaxRate ?? '',
+        licensePlateNumber: values?.licensePlateNumber ?? '',
+        productNumber: values?.productNumber ?? '',
+      };
+      if (editingRowId.value) {
+        const idx = currentData.findIndex((r) => r.rowId === editingRowId.value);
+        if (idx >= 0) {
+          const newData = [...currentData];
+          newData[idx] = row;
+          setTableData(newData);
+        }
+        editingRowId.value = null;
+      } else {
+        setTableData([...currentData, row]);
       }
-      return '1986615937373085698';
-      // return 'SystemDefaultTemplate'; // 返回模板ID
-    } catch (error) {
-      // return 'SystemDefaultTemplate';
-      return '1986615937373085698';
+      saveMaterialDesc();
+      $message.createMessage.success('保存成功!');
+      await initForm();
+    } catch (error: unknown) {
+      const err = error as { errorFields?: Array<{ name: string }> };
+      const errorFields = err?.errorFields;
+      if (errorFields) {
+        const firstField = errorFields[0];
+        if (firstField) {
+          scrollToField(firstField.name, { behavior: 'smooth' });
+        }
+      }
+      return Promise.reject(error);
+    } finally {
+      saveLoading.value = false;
     }
   }
 
-  /**
-   * 执行打印（收料成功后自动调用）
-   */
-  async function executePrint(coilNumber: string) {
+  function getTableAction(record): ActionItem[] {
+    return [
+      {
+        label: '编辑',
+        onClick: handleEdit.bind(null, record),
+      },
+      {
+        label: '删除',
+        color: 'error',
+        popConfirm: {
+          title: '是否确认删除该记录?',
+          confirm: handleDelete.bind(null, record),
+        },
+      },
+    ];
+  }
+
+  function handleEdit(record: Recordable) {
+    setFieldsValue({
+      coilNo: record.coilNo,
+      purchaseOrderNo: record.purchaseOrderNo,
+      purchaseOrderSeq: record.purchaseOrderSeq,
+      purchaseOrderFId: record.purchaseOrderFId,
+      purchaseOrderEntryId: record.purchaseOrderEntryId,
+      materialId: record.materialId,
+      materialNumber: record.materialNumber,
+      materialName: record.materialName,
+      modelNumber: record.modelNumber,
+      brand: record.brand,
+      weight: record.weight,
+      supplierId: record.supplierId,
+      supplierNumber: record.supplierNumber,
+      stockUnitNumber: record.stockUnitNumber,
+      priceUnitNumber: record.priceUnitNumber,
+      purchaseUnitNumber: record.purchaseUnitNumber,
+      entryTaxRate: record.entryTaxRate,
+      licensePlateNumber: record.licensePlateNumber,
+      productNumber: record.productNumber,
+    });
+    editingRowId.value = record.rowId;
+  }
+
+  function handleDelete(record: Recordable) {
+    const currentData = getDataSource();
+    setTableData(currentData.filter((r) => r.rowId !== record.rowId));
+    if (editingRowId.value === record.rowId) {
+      editingRowId.value = null;
+      initForm();
+    }
+    $message.createMessage.success('删除成功!');
+  }
+
+  function cancelEdit() {
+    editingRowId.value = null;
+    initForm();
+  }
+
+  async function handleSubmit() {
+    if (submitLoading.value) return; // 防止重复提交
+    submitLoading.value = true;
+    const currentData = getDataSource();
+    if (!currentData || currentData.length === 0) {
+      $message.createMessage.warning('请先保存至少一条记录后再提交!');
+      submitLoading.value = false;
+      return;
+    }
     try {
-      const templateId = '1986615937373085698'; // 固定模板 ID
-      console.log('执行自动打印，钢卷号:', coilNumber);
-      console.log('模板ID:', templateId);
-
-      // 获取报表ID
-      defHttp
-        .get({
-          url: '/template/basTemplate/getReportIdByIds',
-          params: { ids: templateId, type: 'pick_material_sn' },
-        })
-        .then(async (reportRs) => {
-          console.log('获取报表ID成功:', reportRs);
-
-          // 检查报表ID是否为空
-          if (!reportRs || Object.keys(reportRs).length === 0) {
-            $message.createMessage.error('获取报表ID失败，请检查打印模板配置!');
-            return;
-          }
-
-          // 打印数据集 { reportId, parameters }，使用钢卷号作为参数
-          const printSet: any = {};
-
-          const templateIds = Object.keys(reportRs);
-          for (const templateId of templateIds) {
-            const reportId = reportRs[templateId];
-            printSet[reportId] = { id: coilNumber };
-          }
-
-          console.log('打印数据集:', printSet);
-
-          loopPrintJimuReport(printSet, getToken, () => {
-            $message.createMessage.success('打印成功!');
-          });
-        })
-        .catch((error) => {
-          console.error('获取报表ID失败:', error);
-          $message.createMessage.error('获取报表ID失败: ' + (error.message || '请重试!'));
-        });
+      const formValues = getFieldsValue();
+      const firstOperation = formValues?.firstOperation ?? (userStore.getTenant === '1003' ? 'th' : 'sx');
+      const productionTimeStr = formValues?.inStockTime ?? dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
+      const items = currentData.map((r) => ({
+        coilNo: r.coilNo,
+        purchaseOrderNo: r.purchaseOrderNo ?? '',
+        purchaseOrderFId: r.purchaseOrderFId ?? '',
+        purchaseOrderSeq: r.purchaseOrderSeq ?? '',
+        purchaseOrderEntryId: r.purchaseOrderEntryId ?? '',
+        materialId: r.materialId ?? '',
+        materialNumber: r.materialNumber ?? '',
+        materialName: r.materialName ?? '',
+        modelNumber: r.modelNumber ?? '',
+        brand: r.brand ?? '',
+        weight: r.weight ?? '',
+        supplierId: r.supplierId ?? '',
+        supplierNumber: r.supplierNumber ?? '',
+        stockUnitNumber: r.stockUnitNumber ?? '',
+        priceUnitNumber: r.priceUnitNumber ?? '',
+        purchaseUnitNumber: r.purchaseUnitNumber ?? '',
+        entryTaxRate: r.entryTaxRate ?? '',
+        licensePlateNumber: r.licensePlateNumber ?? '',
+        productNumber: r.productNumber ?? '',
+        productionTime: productionTimeStr,
+        firstOperation,
+      }));
+      const params = {
+        items,
+        operatorNumber: formValues?.operatorNumber ?? userStore.getUserInfo?.username ?? '',
+        tenantId: Number(formValues?.tenantId ?? userStore.getTenant ?? 0),
+      };
+      await saveOrUpdate(params, false);
+      setTableData([]);
+      await initForm();
+      $message.createMessage.success('提交成功!');
     } catch (error) {
-      console.error('打印异常:', error);
-      $message.createMessage.error('打印异常: ' + (error.message || '请重试!'));
+      $message.createMessage.error('提交失败，请重试!');
+      return Promise.reject(error);
+    } finally {
+      submitLoading.value = false;
     }
   }
+
+  onMounted(() => {
+    initForm();
+  });
 </script>
 
 <style lang="less" scoped>
+  .receive-page {
+    padding: 16px;
+    background: #fff;
+    min-height: 400px;
+  }
+
+  .receive-form-wrapper {
+    width: 100%;
+  }
+
+  .form-actions {
+    margin-top: 24px;
+    text-align: center;
+  }
+
   :deep(.ant-picker),
   :deep(.ant-input-number) {
     width: 100%;
   }
-  .search-box {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+
+  :deep(.ant-calendar-picker) {
+    width: 100%;
+  }
+
+  .incoming-table-wrapper {
+    margin-top: 16px;
+  }
+
+  .table-actions {
+    margin-top: 24px;
+    text-align: center;
+  }
+
+  /* 分隔线加粗，颜色与表单标签一致 */
+  :deep(.incoming-divider-separator) {
+    &.ant-divider-horizontal.ant-divider-with-text::before,
+    &.ant-divider-horizontal.ant-divider-with-text::after {
+      border-top-width: 2px;
+      border-top-color: rgba(0, 0, 0, 0.88);
+    }
+    .ant-divider-inner-text {
+      color: rgba(0, 0, 0, 0.88);
+      font-weight: 500;
+    }
   }
 </style>

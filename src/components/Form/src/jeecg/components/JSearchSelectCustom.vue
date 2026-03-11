@@ -85,6 +85,7 @@ export default defineComponent({
     const pageNum = ref(1); //页码
     const totalCount = ref(props.dictOptions.length); //总数
     const options = ref<any[]>([...props.dictOptions]); //下拉选项
+    const currentSearchValue = ref(''); // 当前搜索关键词，用于滚动加载时保持模糊查询条件
     const attrs = useAttrs();
 
     watch(
@@ -228,10 +229,15 @@ export default defineComponent({
     }
     function loadData() {
       const currentParams = deepParams();
+      const params: Record<string, any> = { ...currentParams, pageNo: pageNum.value, pageSize: props.pageSize };
+      // 滚动加载时需携带搜索关键词，否则会返回不符合模糊匹配的结果
+      if (currentSearchValue.value) {
+        params.searchValue = currentSearchValue.value;
+      }
       return defHttp[props.method](
         {
           url: props.url,
-          params: { ...currentParams, pageNo: pageNum.value, pageSize: props.pageSize },
+          params,
         },
         { isTransformResponse: false }
       );
@@ -301,6 +307,7 @@ export default defineComponent({
       } else {
         pageNum.value = 1;
         options.value = [];
+        currentSearchValue.value = val || ''; // 保存当前搜索关键词，供滚动加载时使用
         const currentParams = deepParams();
         defHttp[props.method]({
           url: props.url,
@@ -322,6 +329,7 @@ export default defineComponent({
         if (!!props.async) {
           pageNum.value = 1;
           options.value = [];
+          currentSearchValue.value = ''; // 下拉打开时清空搜索关键词，避免使用过期值
           loadData().then((res) => {
             let data = res.result.records;
             if (res.result && data.length > 0) {
