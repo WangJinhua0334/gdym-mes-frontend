@@ -11,19 +11,14 @@
     </div>
     <a-divider class="incoming-divider-separator" orientation="left">收料列表</a-divider>
     <div class="incoming-table-wrapper">
-    <BasicTable
-      @register="registerTable"
-      :rowSelection="{ type: 'checkbox' }"
-    >
-      <template #action="{ record }">
-        <TableAction :actions="getTableAction(record)" />
-      </template>
-    </BasicTable>
-    <div class="table-actions">
-      <a-button type="primary" :loading="submitLoading" preIcon="ant-design:check-outlined" @click="handleSubmit">
-        提交
-      </a-button>
-    </div>
+      <BasicTable @register="registerTable" :rowSelection="{ type: 'checkbox' }">
+        <template #action="{ record }">
+          <TableAction :actions="getTableAction(record)" />
+        </template>
+      </BasicTable>
+      <div class="table-actions">
+        <a-button type="primary" :loading="submitLoading" preIcon="ant-design:check-outlined" @click="handleSubmit"> 提交 </a-button>
+      </div>
     </div>
   </div>
 </template>
@@ -38,6 +33,9 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { saveOrUpdate } from './MesIncoming.api';
   import { useUserStore } from '/@/store/modules/user';
+  import { defHttp } from '/@/utils/http/axios';
+  import { loopPrintJimuReport } from '/@/utils';
+  import { getToken } from '/@/utils/auth';
 
   const $message = useMessage();
   const userStore = useUserStore();
@@ -113,9 +111,7 @@
       const newPurchaseOrderNo = values?.purchaseOrderNo ?? '';
 
       // 表格中已有记录时，校验采购订单号是否一致
-      const recordsToCheck = editingRowId.value
-        ? currentData.filter((r) => r.rowId !== editingRowId.value)
-        : currentData;
+      const recordsToCheck = editingRowId.value ? currentData.filter((r) => r.rowId !== editingRowId.value) : currentData;
       if (recordsToCheck.length > 0) {
         const existingPurchaseOrderNo = recordsToCheck[0]?.purchaseOrderNo ?? '';
         if (newPurchaseOrderNo !== existingPurchaseOrderNo) {
@@ -234,6 +230,21 @@
     initForm();
   }
 
+  async function getPrintTemplate(): Promise<string> {
+    try {
+      const data = await defHttp.get({
+        url: '/userextend/basUserExtend/queryByUsername',
+        params: { username: userStore.getUserInfo?.username },
+      });
+      if (data?.printTemplateId == null) {
+        return '1986615937373085698';
+      }
+      return data.printTemplateId;
+    } catch (error) {
+      return '1986615937373085698';
+    }
+  }
+
   async function handleSubmit() {
     if (submitLoading.value) return; // 防止重复提交
     submitLoading.value = true;
@@ -279,6 +290,32 @@
       setTableData([]);
       await initForm();
       $message.createMessage.success('提交成功!');
+
+      // 提交成功后自动打印标签（参考收料模块打印功能）
+      const coilNumbers = currentData.map((r) => r.coilNo).filter((v) => v);
+      if (coilNumbers.length > 0) {
+        try {
+          const templateId = await getPrintTemplate();
+          const reportRs = await defHttp.get({
+            url: '/template/basTemplate/getReportIdByIds',
+            params: { ids: templateId, type: 'pick_material_sn' },
+          });
+          const resultMap = reportRs?.result ?? reportRs;
+          if (resultMap && Object.keys(resultMap).length > 0) {
+            const printSet: Record<string, { id: string }> = {};
+            for (const tid of Object.keys(resultMap)) {
+              const reportId = resultMap[tid];
+              printSet[reportId] = { id: coilNumbers.join(',') };
+            }
+            loopPrintJimuReport(printSet, getToken, () => {
+              $message.createMessage.success('标签打印成功!');
+            });
+          }
+        } catch (printErr) {
+          console.error('自动打印标签失败:', printErr);
+          $message.createMessage.warning('提交成功，但自动打印标签失败，请手动打印!');
+        }
+      }
     } catch (error) {
       $message.createMessage.error('提交失败，请重试!');
       return Promise.reject(error);

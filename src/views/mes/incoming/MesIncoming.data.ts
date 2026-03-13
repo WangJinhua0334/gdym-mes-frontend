@@ -31,7 +31,7 @@ export const formSchema: FormSchema[] = [
         },
         columns: [
           { name: '钢卷号', code: 'coilNo' },
-          { name: '预送货单号', code: 'billNo' }
+          { name: '采购订单号', code: 'purchaseOrderNo' }
         ],
         isShowNum: false,
         rowKey: 'coilNo',
