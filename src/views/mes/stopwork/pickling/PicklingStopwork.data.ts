@@ -42,12 +42,15 @@ export const getDetailJVxeColumns = function (showCoilNo = false) {
           setFieldsValue: setFieldsValue,
           getFieldsValue: getFieldsValue,
           method: 'get',
-          url: '/basic/basProductMapping/getNewMaterialInfo',
+          url: '/etl/basProductMapping2/listByMaterialNumber',
           params: {
-            column: 'createTime',
+            column: 'defaultMapping',
             order: 'desc',
-            flowCardId: '${flowCardId}',
-            searchFields: 'old_name,old_model_number'
+            oldMaterialNumber: '${oldMaterialNumber}',
+            tenantId: getTenantId?.() || useUserStore().getUserInfo?.tenantId || '',
+            searchFields: 'newMaterialNumber,newMaterialName',
+            pageNo: 1,
+            pageSize: 20,
           },
           columns: [
             {name: '物料编码', code: 'number'},
@@ -247,12 +250,15 @@ export const formSchema: FormSchema[] = [
         setFieldsValue: setFieldsValue,
         getFieldsValue: getFieldsValue,
         method: 'get',
-        url: '/basic/basProductMapping/getNewMaterialInfo',
+        url: '/etl/basProductMapping2/listByMaterialNumber',
         params: {
           column: 'defaultMapping',
           order: 'desc',
           oldMaterialNumber: '${oldMaterialNumber}',
+          tenantId: getTenantId?.() || useUserStore().getUserInfo?.tenantId || '',
           searchFields: 'newMaterialNumber,newMaterialName',
+          pageNo: 1,
+          pageSize: 10,
         },
         columns: [
           { name: '物料编码', code: 'newMaterialNumber' },

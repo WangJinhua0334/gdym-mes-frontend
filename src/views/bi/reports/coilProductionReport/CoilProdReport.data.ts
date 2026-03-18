@@ -300,6 +300,66 @@ export const editFormSchema: FormSchema[] = [
     colProps: { span: 12 },
   },
   {
+    label: '领料钢卷物料',
+    field: 'oldMaterialId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue,
+        getFieldsValue,
+        method: 'get',
+        url: '/product/basProduct/list',
+        params: { column: 'createTime', order: 'desc', searchFields: 'code,name,modelNumber', status: 'enable' },
+        columns: [
+          { name: '物料编码', code: 'code' },
+          { name: '物料名称', code: 'name' },
+          { name: '规格型号', code: 'modelNumber' },
+        ],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['code', 'name'],
+        pageSize: 10,
+        multi: false,
+        placeholder: '请选择领料钢卷物料',
+        linkmap: [
+          {
+            id: 'oldMaterialId',
+            code: 'oldMaterialNumber',
+            name: 'oldMaterialName',
+            modelNumber: 'oldModelNumber',
+          },
+        ],
+      };
+    },
+    colProps: { span: 12 },
+  },
+  {
+    label: '领料物料编码',
+    field: 'oldMaterialNumber',
+    component: 'Input',
+    componentProps: { disabled: true },
+    colProps: { span: 12 },
+  },
+  {
+    label: '领料物料名称',
+    field: 'oldMaterialName',
+    component: 'Input',
+    componentProps: { disabled: true },
+    colProps: { span: 12 },
+  },
+  {
+    label: '领料规格型号',
+    field: 'oldModelNumber',
+    component: 'Input',
+    componentProps: { disabled: true },
+    colProps: { span: 12 },
+  },
+  {
     label: '领料钢卷重量',
     field: 'startWeight',
     component: 'InputNumber',
@@ -344,6 +404,69 @@ export const editFormSchema: FormSchema[] = [
     label: '入库钢卷',
     field: 'newCoilNo',
     component: 'Input',
+    colProps: { span: 12 },
+  },
+  {
+    label: '入库钢卷物料',
+    field: 'newMaterialId',
+    component: 'JSearchSelectCustom',
+    dynamicDisabled: ({ values }) => !values?.oldMaterialNumber,
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue,
+        getFieldsValue,
+        method: 'get',
+        url: '/etl/basProductMapping2/listByMaterialNumber',
+        params: {
+          column: 'defaultMapping',
+          order: 'desc',
+          oldMaterialNumber: '${oldMaterialNumber}',
+          tenantId: getTenantId(),
+          searchFields: 'newMaterialNumber,newMaterialName',
+        },
+        columns: [
+          { name: '物料编码', code: 'newMaterialNumber' },
+          { name: '物料名称', code: 'newMaterialName' },
+          { name: '规格型号', code: 'newModelNumber' },
+        ],
+        isShowNum: false,
+        rowKey: 'newMaterialId',
+        labelKey: ['newMaterialNumber', 'newMaterialName'],
+        pageSize: 10,
+        multi: false,
+        placeholder: '请选择入库钢卷物料',
+        linkmap: [
+          {
+            newMaterialId: 'newMaterialId',
+            newMaterialNumber: 'newMaterialNumber',
+            newMaterialName: 'newMaterialName',
+            newModelNumber: 'newModelNumber',
+          },
+        ],
+      };
+    },
+    colProps: { span: 12 },
+  },
+  {
+    label: '入库物料编码',
+    field: 'newMaterialNumber',
+    component: 'Input',
+    componentProps: { disabled: true },
+    colProps: { span: 12 },
+  },
+  {
+    label: '入库物料名称',
+    field: 'newMaterialName',
+    component: 'Input',
+    componentProps: { disabled: true },
+    colProps: { span: 12 },
+  },
+  {
+    label: '入库规格型号',
+    field: 'newModelNumber',
+    component: 'Input',
+    componentProps: { disabled: true },
     colProps: { span: 12 },
   },
   {

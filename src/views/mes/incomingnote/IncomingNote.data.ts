@@ -8,6 +8,7 @@ export const columns: BasicColumn[] = [
     align: 'center',
     dataIndex: 'internalCoilNumber',
     width: 150,
+    fixed: 'left',
   },
   {
     title: '物料名称',
@@ -134,6 +135,74 @@ export const searchFormSchema: FormSchema[] = [
     field: 'materialName',
     component: 'JInput',
     colProps: { span: 6 },
+  },
+];
+
+// 编辑弹窗表单配置
+export const editFormSchema: FormSchema[] = [
+  { field: 'id', label: 'id', component: 'Input', show: false },
+  {
+    label: '钢卷号',
+    field: 'internalCoilNumber',
+    component: 'Input',
+    componentProps: { disabled: true },
+    colProps: { span: 12 },
+  },
+  {
+    label: '重量',
+    field: 'weight',
+    component: 'Input',
+    componentProps: { placeholder: '请输入重量' },
+    colProps: { span: 12 },
+  },
+  {
+    label: '车牌号',
+    field: 'licensePlateNumber',
+    component: 'Input',
+    componentProps: { placeholder: '请输入车牌号' },
+    colProps: { span: 12 },
+  },
+  {
+    label: '入库时间',
+    field: 'productionDate',
+    component: 'DatePicker',
+    componentProps: {
+      showTime: true,
+      format: 'YYYY-MM-DD HH:mm:ss',
+      valueFormat: 'YYYY-MM-DD HH:mm:ss',
+      style: { width: '100%' },
+    },
+    colProps: { span: 12 },
+  },
+  {
+    label: '供应商',
+    field: 'supplierId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue,
+        getFieldsValue,
+        methods: 'get',
+        url: '/basic/basSupplier/getAllSupplier',
+        params: { column: 'createTime', order: 'desc', searchFields: 'id,name' },
+        columns: [{ name: '编码', code: 'id' }, { name: '名称', code: 'name' }],
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        pageSize: 10,
+        multi: false,
+        placeholder: '请选择供应商',
+      };
+    },
+    colProps: { span: 12 },
+  },
+  {
+    label: '备注',
+    field: 'materialDesc',
+    component: 'InputTextArea',
+    componentProps: { placeholder: '请输入备注', rows: 3 },
+    colProps: { span: 24 },
   },
 ];
 

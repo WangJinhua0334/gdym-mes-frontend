@@ -211,6 +211,7 @@ async function handleSubmit() {
 
   //新增按钮点击事件
   function handleAddDetail() {
+    if (submitDisabled.value) return;
     // 获取主表单数据
     const formData = getFieldsValue();
     if (!formData.oldCoilNo) {
@@ -764,7 +765,7 @@ async function handleSubmit() {
           @select-row-change="handleSelectRowChange"
         >
           <template #toolbarPrefix>
-            <a-button type="primary" @click="handleAddDetail" preIcon="ant-design:plus-outlined"> 新增</a-button>
+            <a-button type="primary" @click="handleAddDetail" :disabled="submitDisabled" preIcon="ant-design:plus-outlined"> 新增</a-button>
             <a-button v-if="showEditButton" type="primary" @click="handleEditDetail" preIcon="ant-design:edit-outlined" style="margin-left: 8px">
               编辑</a-button
             >

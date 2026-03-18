@@ -52,6 +52,12 @@
         if (record.warehouseId != null) {
           record.warehouseId = String(record.warehouseId);
         }
+        if (record.oldMaterialId != null) {
+          record.oldMaterialId = String(record.oldMaterialId);
+        }
+        if (record.newMaterialId != null) {
+          record.newMaterialId = String(record.newMaterialId);
+        }
         await setFieldsValue(record);
       }
       console.log('Modal opened successfully');
