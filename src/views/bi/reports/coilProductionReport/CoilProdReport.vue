@@ -42,7 +42,7 @@
 <script lang="ts" name="bi-reports-coilprodreport" setup>
   import { ActionItem, BasicTable } from '/@/components/Table';
   import { useListPage } from '/@/hooks/system/useListPage';
-  import { coilProdReport, coilProdReportExportUrl } from './CoilProdReport.api';
+  import { coilProdReport, coilProdReportExportUrl, mesFlowCardDetailDelete } from './CoilProdReport.api';
   import { columns, formSchema, printFormSchema } from './CoilProdReport.data';
   import { BasicModal, useModal } from '@/components/Modal';
   import { BasicForm, useForm } from '@/components/Form';
@@ -94,7 +94,7 @@
         type: 'checkbox',
       },
       actionColumn: {
-        width: 120,
+        width: 160,
         fixed: 'right',
       },
     },
@@ -153,9 +153,32 @@
       {
         label: '编辑',
         onClick: handleEdit.bind(null, record),
-        auth: 'mes_flow_card_detail:edit' // 通过权限指令控制显示
+        auth: 'mes_flow_card_detail:edit', // 通过权限指令控制显示
+      },
+      {
+        label: '删除',
+        color: 'error',
+        auth: 'mes_flow_card_detail:delete',
+        popConfirm: {
+          title: '是否确认删除该条工序加工记录？',
+          confirm: handleDelete.bind(null, record),
+        },
       },
     ];
+  }
+
+  async function handleDelete(record: any) {
+    if (record?.id == null || record.id === '') {
+      $message.createMessage.warning('无法删除：缺少主键');
+      return;
+    }
+    try {
+      await mesFlowCardDetailDelete({ id: record.id });
+      $message.createMessage.success('删除成功');
+      reload();
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   function handleEdit(record: Recordable) {

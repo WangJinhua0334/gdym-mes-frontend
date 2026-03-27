@@ -1,6 +1,8 @@
 import { FormSchema } from '/@/components/Table';
 import dayjs from 'dayjs';
+import { nextTick } from 'vue';
 import { useUserStore } from '/@/store/modules/user';
+import { message } from 'ant-design-vue';
 
 // 收料表单数据
 export const formSchema: FormSchema[] = [
@@ -14,79 +16,134 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
+    label: '钢卷号排除列表',
+    field: 'existCoilNoList',
+    component: 'Input',
+    show: false,
+    defaultValue: [],
+  },
+  {
     label: '钢卷号',
     field: 'coilNo',
-    component: 'JSearchSelectCustom',
+    component: 'Input',
+    colProps: { span: 6 },
     componentProps: ({ formActionType }) => {
       const { setFieldsValue, getFieldsValue } = formActionType;
       return {
         setFieldsValue,
         getFieldsValue,
-        method: 'get',
-        url: '/mes/incoming/preDeliveryBillDetail/list',
-        params: {
-          column: 'coilNo',
-          order: 'asc',
-          searchFields: 'coilNo',
+        'data-field': 'coilNo',
+        allowClear: true,
+        onChange: (e: Event) => {
+          // 监听清空事件（当值被清空时触发）
+          const target = e.target as HTMLInputElement;
+          if (!target.value) {
+            console.log('[钢卷号] 被清空');
+            // 清空所有关联字段
+            setFieldsValue({
+              materialId: '',
+              materialName: '',
+              materialNumber: '',
+              modelNumber: '',
+              brand: '',
+              weight: '',
+              purchaseOrderNo: '',
+              purchaseOrderSeq: '',
+              purchaseOrderFId: '',
+              purchaseOrderEntryId: '',
+              supplierId: '',
+              supplierNumber: '',
+              stockUnitNumber: '',
+              priceUnitNumber: '',
+              purchaseUnitNumber: '',
+              entryTaxRate: '',
+              billNo: '',
+              taxPrice: '',
+              price: '',
+              amount: '',
+              amountLc: '',
+              entryTaxAmount: '',
+              taxAmountLc: '',
+              allAmount: '',
+              allAmountLc: '',
+            });
+          }
         },
-        columns: [
-          { name: '钢卷号', code: 'coilNo' },
-          { name: '采购订单号', code: 'purchaseOrderNo' }
-        ],
-        isShowNum: false,
-        rowKey: 'coilNo',
-        labelKey: ['coilNo'],
-        pageSize: 10,
-        placeholder: '钢卷号模糊查询',
-        linkmap: [
-          {
-            materialId: 'materialId',
-            materialNumber: 'materialNumber',
-            materialName: 'materialName',
-            modelNumber: 'modelNumber',
-            brand: 'brand',
-            weight: 'weight',
-            purchaseOrderNo: 'purchaseOrderNo',
-            purchaseOrderSeq: 'purchaseOrderSeq',
-            purchaseOrderFId: 'purchaseOrderFId',
-            purchaseOrderEntryId: 'purchaseOrderEntryId',
-            supplierId: 'supplierId',
-            supplierNumber: 'supplierNumber',
-            stockUnitNumber: 'stockUnitNumber',
-            priceUnitNumber: 'priceUnitNumber',
-            purchaseUnitNumber: 'purchaseUnitNumber',
-            entryTaxRate: 'entryTaxRate',
-          },
-        ],
+        onKeyup: async (e) => {
+          // 监听回车键
+          if (e.keyCode === 13) {
+            const coilNoValue = e.target.value;
+            if (!coilNoValue) {
+              return;
+            }
+            // 安全获取 existCoilNoList，避免 undefined
+            const allValues = getFieldsValue();
+            const existCoilNoList1 = Array.isArray(allValues.existCoilNoList) ? allValues.existCoilNoList : [];
+            if (existCoilNoList1.includes(coilNoValue)) {
+              message.warn(`钢卷号 ${coilNoValue} 已存在于收料列表中`);
+              return; // 如果已存在，则不执行后续查询
+            }
+            try {
+              // 调用 API 获取数据
+              const { defHttp } = await import('/@/utils/http/axios');
+
+              console.log('[WebSocket] 获取钢卷号:', existCoilNoList1);
+
+              const result = await defHttp.get({
+                url: '/etl/preDeliveryBill/getDetailByCoilNo',
+                params: {
+                  coilNo: coilNoValue,
+                  tenantId: useUserStore().getTenant,
+                },
+              });
+              console.log('返回的数据：', result);
+              const detail = result?.result ?? result;
+              // 获取返回的第一条数据（与 MesPreDeliveryBillDetail 一致，提交时携带以免后端查库）
+              if (detail) {
+                setFieldsValue({
+                  coilNo: detail.coilNo,
+                  materialId: detail.materialId,
+                  materialName: detail.materialName,
+                  materialNumber: detail.materialNumber,
+                  modelNumber: detail.modelNumber,
+                  brand: detail.brand,
+                  weight: detail.weight,
+                  purchaseOrderNo: detail.purchaseOrderNo,
+                  purchaseOrderSeq: detail.purchaseOrderSeq,
+                  purchaseOrderFId: detail.purchaseOrderFId,
+                  purchaseOrderEntryId: detail.purchaseOrderEntryId,
+                  supplierId: detail.supplierId,
+                  supplierNumber: detail.supplierNumber,
+                  stockUnitNumber: detail.stockUnitNumber,
+                  priceUnitNumber: detail.priceUnitNumber,
+                  purchaseUnitNumber: detail.purchaseUnitNumber,
+                  entryTaxRate: detail.entryTaxRate,
+                  billNo: detail.billNo,
+                  taxPrice: detail.taxPrice,
+                  price: detail.price,
+                  amount: detail.amount,
+                  amountLc: detail.amountLc,
+                  entryTaxAmount: detail.entryTaxAmount,
+                  taxAmountLc: detail.taxAmountLc,
+                  allAmount: detail.allAmount,
+                  allAmountLc: detail.allAmountLc,
+                });
+                nextTick(() => {
+                  const nextInput = document.querySelector('input[data-field="licensePlateNumber"]') as HTMLInputElement | null;
+                  if (nextInput) nextInput.focus();
+                });
+              }
+            } catch (error) {
+              console.error('查询钢卷号失败:', error);
+            }
+          }
+        },
       };
     },
     dynamicRules: () => {
       return [{ required: true, message: '请选择钢卷号!' }];
     },
   },
-  /*{
-    label: '生产编号',
-    field: 'productNumber',
-    component: 'Input',
-    componentProps: {
-      'data-field': 'productNumber',
-      // 添加回车键监听
-      onKeyup: (e) => {
-        if (e.keyCode === 13) {
-          // 回车键的 keyCode 是 13
-          // 查找下一个输入框并聚焦
-          const inputs = document.querySelectorAll('input[data-field]');
-          const currentIndex = Array.from(inputs).findIndex((input) => input.getAttribute('data-field') === 'productNumber');
-          if (currentIndex >= 0 && currentIndex < inputs.length - 1) {
-            inputs[currentIndex + 1].focus();
-          }
-        }
-      },
-    },
-    dynamicRules: () => {
-      return [{ required: true, message: '请输入生产编号!' }];
-    },
-  },*/
   {
     label: '车牌号',
     field: 'licensePlateNumber',
@@ -111,14 +168,12 @@ export const formSchema: FormSchema[] = [
     componentProps: {
       'data-field': 'productNumber',
       id: 'productNumberInput', // 添加 ID 便于查找
-      onKeyup: (e) => {
-        if (e.keyCode === 13) {
-          const inputs = document.querySelectorAll('input[data-field]');
-          const currentIndex = Array.from(inputs).findIndex((input) => input.getAttribute('data-field') === 'productNumber'
-          );
-          if (currentIndex >= 0 && currentIndex < inputs.length - 1) {
-            (inputs[currentIndex + 1] as HTMLElement).focus();
-          }
+      // 回车触发与「确认」按钮相同的提交逻辑（与收料页 .form-actions 内主按钮一致）
+      onPressEnter: (e: KeyboardEvent) => {
+        e?.preventDefault?.();
+        const btn = document.querySelector('.receive-page .form-actions .ant-btn.ant-btn-primary') as HTMLButtonElement | null;
+        if (btn && !btn.disabled) {
+          btn.click();
         }
       },
     },
@@ -127,25 +182,35 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
-    label: '规格型号',
-    field: 'modelNumber',
-    component: 'Input',
-    dynamicDisabled: true,
-    show: true,
-  },
-  {
     label: '牌号',
     field: 'brand',
     component: 'Input',
     dynamicDisabled: true,
     show: true,
+    dynamicRules: () => {
+      return [{ required: true, message: '请输入信息' }];
+    },
   },
   {
     label: '重量',
     field: 'weight',
     component: 'InputNumber',
+    colProps: { span: 6 },
     dynamicDisabled: true,
     show: true,
+    dynamicRules: () => {
+      return [{ required: true, message: '请输入信息' }];
+    },
+  },
+  {
+    label: '规格型号',
+    field: 'modelNumber',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: true,
+    dynamicRules: () => {
+      return [{ required: true, message: '请输入信息' }];
+    },
   },
   {
     label: '入库时间',
@@ -193,22 +258,32 @@ export const formSchema: FormSchema[] = [
     label: '物料名称',
     field: 'materialName',
     component: 'Input',
+    colProps: { span: 6 },
     dynamicDisabled: true,
     show: true,
+    dynamicRules: () => {
+      return [{ required: true, message: '请输入信息' }];
+    },
   },
   {
     label: '物料编号',
     field: 'materialId',
     component: 'Input',
     dynamicDisabled: true,
-    show: true,
+    show: false,
+    dynamicRules: () => {
+      return [{ required: true, message: '请输入信息' }];
+    },
   },
   {
     label: '物料编码',
     field: 'materialNumber',
     component: 'Input',
     dynamicDisabled: true,
-    show: true,
+    show: false,
+    dynamicRules: () => {
+      return [{ required: true, message: '请输入信息' }];
+    },
   },
   {
     label: '采购订单号',
@@ -241,6 +316,13 @@ export const formSchema: FormSchema[] = [
     show: false,
   },
   {
+    label: '供应商编码',
+    field: 'supplierNumber',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: false,
+  },
+  {
     label: '库存单位',
     field: 'stockUnitNumber',
     component: 'Input',
@@ -264,106 +346,60 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
     show: false,
   },
-
-  // {
-  //   label: '收料组织',
-  //   field: 'stockOrgId',
-  //   component: 'JSearchSelectCustom',
-  //   componentProps: ({ formActionType }) => {
-  //     const { setFieldsValue, getFieldsValue } = formActionType;
-  //     return {
-  //       setFieldsValue: setFieldsValue,
-  //       getFieldsValue: getFieldsValue,
-  //       method: 'get',
-  //       url: '/basic/basOrganization/list',
-  //       params: { column: 'id', order: 'asc', searchFields: 'id,name,number' },
-  //       columns: [
-  //         {
-  //           name: '名称',
-  //           code: 'name',
-  //         },
-  //       ],
-  //       isShowNum: false,
-  //       rowKey: 'id',
-  //       labelKey: ['name'],
-  //       linkmap: [
-  //         {
-  //           number: 'stockOrgNumber',
-  //         },
-  //       ],
-  //       // pageSize: 10,
-  //       multi: false,
-  //       maxTagCount: 2,
-  //       placeholder: '请输入',
-  //       getPopupContainer: () => document.body,
-  //     };
-  //   },
-  //   dynamicRules: () => {
-  //     return [{ required: true, message: '请选择收料组织!' }];
-  //   },
-  // },
-  // {
-  //   label: '收料组织编码',
-  //   field: 'stockOrgNumber',
-  //   component: 'Input',
-  //   dynamicDisabled: true,
-  //   show: false,
-  // },
-  // {
-  //   label: '收料部门',
-  //   field: 'stockDeptId',
-  //   component: 'JSearchSelectCustom',
-  //   componentProps: ({ formActionType }) => {
-  //     const { setFieldsValue, getFieldsValue } = formActionType;
-  //     return {
-  //       setFieldsValue: setFieldsValue,
-  //       getFieldsValue: getFieldsValue,
-  //       method: 'get',
-  //       url: '/sys/sysDepart/list',
-  //       params: {
-  //         status: '1',
-  //         orgCategory: '2',
-  //         column: 'id',
-  //         order: 'asc',
-  //         searchFields: 'id,departNameAbbr,orgCode',
-  //       },
-  //       columns: [
-  //         {
-  //           name: '名称',
-  //           code: 'departNameAbbr',
-  //         },
-  //       ],
-  //       isShowNum: true,
-  //       rowKey: 'id',
-  //       labelKey: ['departNameAbbr'],
-  //       linkmap: [
-  //         {
-  //           orgCode: 'stockDeptNumber',
-  //         },
-  //       ],
-  //       // pageSize: 10,
-  //       multi: false,
-  //       maxTagCount: 2,
-  //       placeholder: '请输入',
-  //       getPopupContainer: () => document.body,
-  //       // queryBefore: (params) => {
-  //       //   params.status = "1";
-  //       //   params.orgCategory = "2";
-  //       //   return params;
-  //       // }
-  //     };
-  //   },
-  //   dynamicRules: () => {
-  //     return [{ required: true, message: '请选择收料组织!' }];
-  //   },
-  // },
-  // {
-  //   label: '收料部门编码',
-  //   field: 'stockDeptNumber',
-  //   component: 'Input',
-  //   dynamicDisabled: true,
-  //   show: false,
-  // },
+  {
+    label: '预送货单单号',
+    field: 'billNo',
+    component: 'Input',
+    show: false,
+  },
+  {
+    label: '含税单价',
+    field: 'taxPrice',
+    component: 'Input',
+    show: false,
+  },
+  {
+    label: '不含税单价',
+    field: 'price',
+    component: 'Input',
+    show: false,
+  },
+  {
+    label: '金额',
+    field: 'amount',
+    component: 'Input',
+    show: false,
+  },
+  {
+    label: '金额本位币',
+    field: 'amountLc',
+    component: 'Input',
+    show: false,
+  },
+  {
+    label: '税额',
+    field: 'entryTaxAmount',
+    component: 'Input',
+    show: false,
+  },
+  {
+    label: '税额本位币',
+    field: 'taxAmountLc',
+    component: 'Input',
+    show: false,
+  },
+  {
+    label: '价税合计',
+    field: 'allAmount',
+    component: 'Input',
+    show: false,
+  },
+  {
+    label: '价税合计本位币',
+    field: 'allAmountLc',
+    component: 'Input',
+    show: false,
+  },
   {
     label: '收料员',
     field: 'operatorNumber',
@@ -371,155 +407,9 @@ export const formSchema: FormSchema[] = [
     defaultValue: useUserStore().getUserInfo.username,
     dynamicDisabled: true,
     show: true,
-  },
-  // {
-  //   label: '收料员的 id',
-  //   field: 'stockEmpId',
-  //   component: 'InputNumber',
-  //   defaultValue: useUserStore().getUserInfo.id,
-  //   dynamicDisabled: true,
-  //   show: false,
-  // },
-  // {
-  //   label: '仓库',
-  //   // field: 'wksId',
-  //   field: 'warehouseId',
-  //   component: 'JSearchSelectCustom',
-  //   componentProps: ({ formActionType }) => {
-  //     const { setFieldsValue, getFieldsValue } = formActionType;
-  //     return {
-  //       setFieldsValue: setFieldsValue,
-  //       getFieldsValue: getFieldsValue,
-  //       methods: 'get',
-  //       url: '/basic/wareHouse/list',
-  //       params: { column: 'id', order: 'asc', searchFields: 'id,name,code' /** code: '${code}' */ },
-  //       columns: [
-  //         {
-  //           name: '仓库编码',
-  //           code: 'id',
-  //         },
-  //         {
-  //           name: '仓库名称',
-  //           code: 'name',
-  //         },
-  //       ],
-  //       isShowNum: false,
-  //       rowKey: 'id',
-  //       labelKey: ['name'],
-  //       linkmap: [
-  //         {
-  //           code: 'warehouseNumber',
-  //         },
-  //       ],
-  //       pageSize: 10,
-  //       multi: false,
-  //       maxTagCount: 2,
-  //       placeholder: '请选择仓库',
-  //       // 启用滚动分页
-  //       scroll: {
-  //         pageSize: 10,
-  //       },
-  //     };
-  //   },
-  //   dynamicRules: () => {
-  //     return [{ required: true, message: '请选择仓库!' }];
-  //   },
-  // },
-  // {
-  //   label: '仓库编码',
-  //   field: 'warehouseNumber',
-  //   component: 'Input',
-  //   dynamicDisabled: true,
-  //   show: false,
-  // },
-  // {
-  //   label: '采购组织',
-  //   field: 'purchaseOrgId',
-  //   component: 'JSearchSelectCustom',
-  //   componentProps: ({ formActionType }) => {
-  //     const { setFieldsValue, getFieldsValue } = formActionType;
-  //     return {
-  //       setFieldsValue: setFieldsValue,
-  //       getFieldsValue: getFieldsValue,
-  //       method: 'get',
-  //       url: '/basic/basOrganization/list',
-  //       params: { column: 'id', order: 'asc', searchFields: 'id,name,number' },
-  //       columns: [
-  //         {
-  //           name: '名称',
-  //           code: 'name',
-  //         },
-  //       ],
-  //       isShowNum: false,
-  //       rowKey: 'id',
-  //       labelKey: ['name'],
-  //       linkmap: [
-  //         {
-  //           number: 'purchaseOrgNumber',
-  //         },
-  //       ], //关联字段
-  //       // pageSize: 10,
-  //       multi: false,
-  //       maxTagCount: 2,
-  //       placeholder: '请输入',
-  //       getPopupContainer: () => document.body,
-  //     };
-  //   },
-  //   dynamicRules: () => {
-  //     return [{ required: true, message: '请选择采购组织!' }];
-  //   },
-  // },
-  // {
-  //   label: '采购组织编码',
-  //   field: 'purchaseOrgNumber',
-  //   component: 'Input',
-  //   dynamicDisabled: true,
-  //   show: false,
-  // },
-  // {
-  //   label: '供应商',
-  //   field: 'supplierId',
-  //   component: 'JSearchSelectCustom',
-  //   componentProps: ({ formActionType }) => {
-  //     const { setFieldsValue, getFieldsValue } = formActionType;
-  //
-  //     return {
-  //       setFieldsValue: setFieldsValue,
-  //       getFieldsValue: getFieldsValue,
-  //       method: 'get',
-  //       url: '/basic/basSupplier/list',
-  //       params: { column: 'id', order: 'asc', searchFields: 'code,name' /*, code: '${code}'*/ },
-  //       columns: [
-  //         {
-  //           name: '名称',
-  //           code: 'name',
-  //         },
-  //       ],
-  //       isShowNum: false,
-  //       rowKey: 'id',
-  //       labelKey: ['name'],
-  //       linkmap: [
-  //         {
-  //           code: 'supplierNumber',
-  //         },
-  //       ],
-  //       // pageSize: 10,
-  //       multi: false,
-  //       maxTagCount: 2,
-  //       placeholder: '请输入',
-  //       getPopupContainer: () => document.body,
-  //     };
-  //   },
-  //   dynamicRules: () => {
-  //     return [{ required: true, message: '请选择供应商!' }];
-  //   },
-  // },
-  {
-    label: '供应商编码',
-    field: 'supplierNumber',
-    component: 'Input',
-    dynamicDisabled: true,
-    show: false,
+    dynamicRules: () => {
+      return [{ required: true, message: '请输入信息' }];
+    },
   },
   {
     label: '租户编号',
