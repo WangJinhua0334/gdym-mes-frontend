@@ -4,7 +4,7 @@
   import {saveOrUpdate} from "./AnnealingStopwork.api";
   import {useMessage} from "@/hooks/web/useMessage";
   import {JVxeTable} from "@/components/jeecg/JVxeTable";
-  import {computed, onMounted, reactive, ref, watch, nextTick} from "vue";
+  import {computed, onMounted, onUnmounted, reactive, ref, watch, nextTick} from "vue";
   import { BasicModal, useModal } from '@/components/Modal';
   import {buildUUID} from "@/utils/uuid";
   import dayjs from "dayjs";
@@ -34,6 +34,26 @@
   const submitLoading = ref(false);
   // 打码完工按钮禁用状态（成功后禁用）
   const submitDisabled = ref(false);
+  const remainingWeight = ref('0.000');
+  const remainingWeightValue = computed(() => {
+    const n = parseFloat(remainingWeight.value);
+    return Number.isFinite(n) ? n : 0;
+  });
+  let remainingWeightTimer: ReturnType<typeof setInterval> | null = null;
+
+  function updateRemainingWeight() {
+    try {
+      const main = parseFloat(String(getFieldsValue()?.weight ?? '0')) || 0;
+      let detailSum = 0;
+      if (mesProductPickDetail.value?.getTableData) {
+        const rows = mesProductPickDetail.value.getTableData() || [];
+        detailSum = rows.reduce((acc, r: any) => acc + parseFloat(String(r?.weight ?? '0')), 0);
+      }
+      remainingWeight.value = (main - detailSum).toFixed(3);
+    } catch {
+      remainingWeight.value = '0.000';
+    }
+  }
 
   // 计算属性：是否显示编辑按钮（表格有数据且选中了一行，且未提交成功）
   const showEditButton = computed(() => {
@@ -55,7 +75,7 @@
   });
 
   //表单配置 退火扫码完工表单
-  const [registerForm,{validate,setFieldsValue,getFieldsValue,resetFields}] = useForm({
+  const [registerForm,{validate,setFieldsValue,getFieldsValue,resetFields,updateSchema}] = useForm({
     labelWidth: 160,
     schemas: getFormSchema(),
     showActionButtonGroup: false,
@@ -169,8 +189,9 @@
       submitLoading.value = true;
 
       // 组装完整数据 - 将主表数据和子表数据平级合并，包含表格中所有的行数据
+      const { remainingWeightDisplay: _rw, ...mainRest } = mainFormValues as Record<string, unknown>;
       const submitData = {
-        ...mainFormValues,
+        ...mainRest,
         productInfoList: detailData  // 包含表格中所有的行数据
       };
       // 调用提交方法
@@ -361,6 +382,7 @@
     } else {
       tableData.value = mesProductPickDetailTable.dataSource || [];
     }
+    updateRemainingWeight();
   }
 
   // 监听表格数据源变化
@@ -454,12 +476,25 @@
     closeModal();
   }
   onMounted(() => {
-    // 延迟一点时间确保表单完全初始化
+    updateSchema({
+      field: 'weight',
+      componentProps: {
+        onChange: () => updateRemainingWeight(),
+      },
+    });
     setTimeout(() => {
       setFieldsValue({
         endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       });
+      updateRemainingWeight();
     }, 100);
+    remainingWeightTimer = setInterval(updateRemainingWeight, 400);
+  });
+  onUnmounted(() => {
+    if (remainingWeightTimer) {
+      clearInterval(remainingWeightTimer);
+      remainingWeightTimer = null;
+    }
   });
 
   /**
@@ -734,8 +769,19 @@
   }
 </script>
 <template>
-  <div class="custom-form-wrapper">
-    <BasicForm @register="registerForm" :width="896" />
+  <div class="custom-form-wrapper mes-process-page-bold">
+    <BasicForm @register="registerForm" :width="896">
+      <template #remainingWeight>
+        <a-input-number
+          :value="remainingWeightValue"
+          :precision="3"
+          :controls="false"
+          disabled
+          class="remaining-input"
+          :class="{ 'remaining-negative': remainingWeightValue < 0 }"
+        />
+      </template>
+    </BasicForm>
     <!-- 子表单区域 -->
     <a-tabs v-model:activeKey="activeKey">
       <a-tab-pane tab="产出品明细" key="mesProductPickDetail" :forceRender="true">
@@ -775,8 +821,7 @@
               class="submit-button"
               :loading="submitLoading"
               :disabled="submitDisabled || submitLoading"
-              style="background-color: red"
-              >打码完工</a-button
+              >完工</a-button
             >
           </div>
         </div>
@@ -786,7 +831,7 @@
     <BasicModal
       v-bind="$attrs"
       @register="registerModal"
-      :title="isEditMode ? '编辑产出品明细' : '添加产出品明细'"
+      :title="isEditMode ? '编辑产出品' : '添加产出品'"
       :width="800"
       @ok="handleModalOk"
       @cancel="handleModalCancel"
@@ -799,7 +844,8 @@
   </BasicModal>
 </template>
 
-<style scoped>
+<style scoped lang="less">
+  @import url('../../styles/mesProcessPageBold.less');
   .custom-form-wrapper {
     background-color: white;
     padding: 20px;
@@ -807,6 +853,10 @@
     height: calc(100vh - 40px); /* 使用固定高度而不是 min-height */
     box-sizing: border-box;
     overflow: hidden; /* 隐藏溢出内容 */
+  }
+
+  .remaining-input {
+    width: 100%;
   }
 
   /* 修改样式部分 */

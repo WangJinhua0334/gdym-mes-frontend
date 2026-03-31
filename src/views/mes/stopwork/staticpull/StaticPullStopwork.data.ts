@@ -305,27 +305,30 @@ export function getFormSchema(): FormSchema[] {
       label: '重量',
       field: 'weight',
       component: 'InputNumber',
-      dynamicDisabled: true,//禁用
+      /** 与 App 精拉完工一致：领料重量可改；剩余重量 = 本字段 − 产出品明细合计 */
+      dynamicDisabled: false,
       componentProps: {
         style: { width: '100%' },
-        precision: 2,        // 设置小数点后两位，会自动格式化为两位小数（如 5 显示为 5.00）
-        step: 0.01,          // 设置步进值为0.01
-        min: 0,              // 最小值为0
-        // 控制输入：只允许输入数字和小数点
-        keyboard: true,      // 允许键盘输入
+        precision: 3,
+        step: 0.001,
+        min: 0,
+        keyboard: true,
       },
       dynamicRules: () => {
         return [
           {
-            required: false,
+            required: true,
+            message: '请填写重量',
+          },
+          {
             validator: (_, value) => {
-              // 检查是否为有效数字
+              if (value === null || value === undefined || value === '') {
+                return Promise.reject(new Error('请填写重量'));
+              }
               if (typeof value === 'number' && !isNaN(value) && isFinite(value) && value >= 0) {
                 return Promise.resolve();
               }
-              // 如果输入的不是合法数字或者为空值，返回错误
-              // 注意：InputNumber 组件本身已经限制了只能输入数字，这个验证主要用于处理边界情况
-              return Promise.reject(new Error('输入的不是合法数字'));
+              return Promise.reject(new Error('请输入合法数字'));
             },
             trigger: ['change', 'blur'],
           },
@@ -342,6 +345,13 @@ export function getFormSchema(): FormSchema[] {
       componentProps: {
         style: { width: '100%' }
       }
+    },
+    {
+      label: '剩余重量',
+      field: 'remainingWeightDisplay',
+      component: 'Input',
+      slot: 'remainingWeight',
+      colProps: { span: 8 },
     },
     {
       label:'租户 ID',
