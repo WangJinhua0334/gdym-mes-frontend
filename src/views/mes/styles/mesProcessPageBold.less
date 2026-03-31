@@ -1,0 +1,70 @@
+/**
+ * 酸洗 / 冷轧 / 精拉 / 退火 — 开工、完工页：正文加粗、深色（含 JVxe 表格单元格）
+ * 主色按钮保持白字，仅加粗；剩余重量为负时保留红色
+ */
+.mes-process-page-bold {
+  --mes-text-color: rgba(0, 0, 0, 0.88);
+  font-weight: 600;
+  color: var(--mes-text-color);
+
+  :deep(.ant-form-item-label > label),
+  :deep(.ant-form-item-extra) {
+    font-weight: 600 !important;
+    color: var(--mes-text-color) !important;
+  }
+
+  :deep(.ant-input),
+  :deep(.ant-input-number-input),
+  :deep(.ant-picker-input > input),
+  :deep(textarea.ant-input),
+  :deep(.ant-select-selection-item),
+  :deep(.ant-select-selection-placeholder),
+  :deep(.ant-select-selection-search-input) {
+    font-weight: 600 !important;
+    color: var(--mes-text-color) !important;
+  }
+
+  :deep(.ant-input[disabled]),
+  :deep(.ant-input-number-disabled .ant-input-number-input) {
+    font-weight: 600 !important;
+    color: var(--mes-text-color) !important;
+  }
+
+  /* JVxe / vxe-table */
+  :deep(.vxe-table),
+  :deep(.vxe-header--column),
+  :deep(.vxe-body--column),
+  :deep(.vxe-cell),
+  :deep(.vxe-cell--label),
+  :deep(.col--seq),
+  :deep(.vxe-body--row) {
+    font-weight: 600 !important;
+    color: var(--mes-text-color) !important;
+  }
+
+  :deep(.ant-tabs-tab),
+  :deep(.ant-tabs-tab-btn) {
+    font-weight: 600 !important;
+    color: var(--mes-text-color) !important;
+  }
+
+  :deep(.ant-tabs-tab-active .ant-tabs-tab-btn) {
+    font-weight: 600 !important;
+    color: var(--mes-text-color) !important;
+  }
+
+  :deep(.ant-btn-default),
+  :deep(.ant-btn-link:not(.ant-btn-dangerous)) {
+    font-weight: 600 !important;
+    color: var(--mes-text-color) !important;
+  }
+
+  :deep(.ant-btn-primary),
+  :deep(.ant-btn-primary span) {
+    font-weight: 600 !important;
+  }
+
+  :deep(.remaining-input.remaining-negative .ant-input-number-input) {
+    color: #ff4d4f !important;
+  }
+}

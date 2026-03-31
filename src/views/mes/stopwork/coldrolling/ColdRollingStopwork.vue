@@ -4,7 +4,7 @@
   import { saveOrUpdate } from '@/views/mes/stopwork/coldrolling/ColdRollingStopwork.api';
   import { useMessage } from '@/hooks/web/useMessage';
   import { JVxeTable } from '@/components/jeecg/JVxeTable';
-  import { computed, onMounted, reactive, ref, watch, nextTick } from 'vue';
+  import { computed, onMounted, onUnmounted, reactive, ref, watch, nextTick } from 'vue';
   import { BasicModal, useModal } from '@/components/Modal';
   import { buildUUID } from '@/utils/uuid';
   import dayjs from 'dayjs';
@@ -40,6 +40,27 @@
   const tableData = ref<any[]>([]);
   // 控制打印按钮显示（只有请求成功后才显示）
   const showPrintButton = ref(false);
+  /** 与 App 冷轧完工一致：主表重量 − 产出品明细重量合计 */
+  const remainingWeight = ref('0.000');
+  const remainingWeightValue = computed(() => {
+    const n = parseFloat(remainingWeight.value);
+    return Number.isFinite(n) ? n : 0;
+  });
+  let remainingWeightTimer: ReturnType<typeof setInterval> | null = null;
+
+  function updateRemainingWeight() {
+    try {
+      const main = parseFloat(String(getFieldsValue()?.weight ?? '0')) || 0;
+      let detailSum = 0;
+      if (mesProductPickDetail.value?.getTableData) {
+        const rows = mesProductPickDetail.value.getTableData() || [];
+        detailSum = rows.reduce((acc, r: any) => acc + parseFloat(String(r?.weight ?? '0')), 0);
+      }
+      remainingWeight.value = (main - detailSum).toFixed(3);
+    } catch {
+      remainingWeight.value = '0.000';
+    }
+  }
   // 控制提交按钮加载状态
   const submitLoading = ref(false);
   // 打码完工按钮禁用状态（成功后禁用）
@@ -55,7 +76,7 @@
     return selectedRows.value && selectedRows.value.length > 0;
   });
   //表单配置 冷轧扫码完工表单
-  const [registerForm, { validate, setFieldsValue, getFieldsValue }] = useForm({
+  const [registerForm, { validate, setFieldsValue, getFieldsValue, updateSchema }] = useForm({
     labelWidth: 160,
     schemas: getFormSchema(),
     showActionButtonGroup: false,
@@ -136,9 +157,10 @@ async function handleSubmit() {
       // 验证通过后，开始提交请求，此时显示 loading
       submitLoading.value = true;
 
-      // 组装完整数据 - 将主表数据和子表数据平级合并
+      // 组装完整数据 - 将主表数据和子表数据平级合并（剩余重量为展示字段，不提交）
+      const { remainingWeightDisplay: _rw, ...mainRest } = mainFormValues as Record<string, unknown>;
       const submitData = {
-        ...mainFormValues,
+        ...mainRest,
         productInfoList: detailData,
       };
       // 调用提交方法
@@ -329,6 +351,7 @@ async function handleSubmit() {
     } else {
       tableData.value = mesProductPickDetailTable.dataSource || [];
     }
+    updateRemainingWeight();
   }
 
   // 监听表格数据源变化
@@ -429,12 +452,25 @@ async function handleSubmit() {
     closeModal();
   }
   onMounted(() => {
-    // 延迟一点时间确保表单完全初始化
+    updateSchema({
+      field: 'weight',
+      componentProps: {
+        onChange: () => updateRemainingWeight(),
+      },
+    });
     setTimeout(() => {
       setFieldsValue({
         endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       });
+      updateRemainingWeight();
     }, 100);
+    remainingWeightTimer = setInterval(updateRemainingWeight, 400);
+  });
+  onUnmounted(() => {
+    if (remainingWeightTimer) {
+      clearInterval(remainingWeightTimer);
+      remainingWeightTimer = null;
+    }
   });
 
   /**
@@ -712,8 +748,19 @@ async function handleSubmit() {
   }
 </script>
 <template>
-  <div class="custom-form-wrapper">
-    <BasicForm @register="registerForm" :width="896" />
+  <div class="custom-form-wrapper mes-process-page-bold">
+    <BasicForm @register="registerForm" :width="896">
+      <template #remainingWeight>
+        <a-input-number
+          :value="remainingWeightValue"
+          :precision="3"
+          :controls="false"
+          disabled
+          class="remaining-input"
+          :class="{ 'remaining-negative': remainingWeightValue < 0 }"
+        />
+      </template>
+    </BasicForm>
     <!-- 子表单区域 -->
     <a-tabs v-model:activeKey="activeKey">
       <a-tab-pane tab="产出品明细" key="mesProductPickDetail" :forceRender="true">
@@ -753,8 +800,7 @@ async function handleSubmit() {
               class="submit-button"
               :loading="submitLoading"
               :disabled="submitDisabled || submitLoading"
-              style="background-color: red"
-              >打码完工</a-button
+              >完工</a-button
             >
           </div>
         </div>
@@ -764,7 +810,7 @@ async function handleSubmit() {
     <BasicModal
       v-bind="$attrs"
       @register="registerModal"
-      :title="isEditMode ? '编辑产出品明细' : '添加产出品明细'"
+      :title="isEditMode ? '编辑产出品' : '添加产出品'"
       :width="800"
       @ok="handleModalOk"
       @cancel="handleModalCancel"
@@ -777,7 +823,8 @@ async function handleSubmit() {
   </BasicModal>
 </template>
 
-<style scoped>
+<style scoped lang="less">
+  @import url('../../styles/mesProcessPageBold.less');
   .custom-form-wrapper {
     background-color: white;
     padding: 20px;
@@ -785,6 +832,10 @@ async function handleSubmit() {
     height: calc(100vh - 40px); /* 使用固定高度而不是 min-height */
     box-sizing: border-box;
     overflow: hidden; /* 隐藏溢出内容 */
+  }
+
+  .remaining-input {
+    width: 100%;
   }
 
   /* 修改样式部分 */

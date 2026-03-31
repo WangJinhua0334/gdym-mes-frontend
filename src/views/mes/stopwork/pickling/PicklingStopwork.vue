@@ -744,7 +744,7 @@ async function handleSubmit() {
   }
 </script>
 <template>
-  <div class="custom-form-wrapper">
+  <div class="custom-form-wrapper mes-process-page-bold">
     <BasicForm @register="registerForm" :width="896" />
     <!-- 子表单区域 -->
     <a-tabs v-model:activeKey="activeKey">
@@ -790,8 +790,7 @@ async function handleSubmit() {
               class="submit-button"
               :loading="submitLoading"
               :disabled="submitDisabled"
-              style="background-color: red"
-              >打码完工</a-button
+              >完工</a-button
             >
           </div>
         </div>
@@ -801,7 +800,7 @@ async function handleSubmit() {
     <BasicModal
       v-bind="$attrs"
       @register="registerModal"
-      :title="isEditMode ? '编辑产出品明细' : '添加产出品明细'"
+      :title="isEditMode ? '编辑产出品' : '添加产出品'"
       :width="800"
       @ok="handleModalOk"
       @cancel="handleModalCancel"
@@ -815,7 +814,8 @@ async function handleSubmit() {
   </BasicModal>
 </template>
 
-<style scoped>
+<style scoped lang="less">
+  @import url('../../styles/mesProcessPageBold.less');
   .custom-form-wrapper {
     background-color: white;
     padding: 20px;

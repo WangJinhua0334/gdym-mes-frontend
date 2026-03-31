@@ -1,5 +1,12 @@
 <template>
   <div class="receive-page">
+    <!-- 与车牌/生产编号 Input 的 list 属性配合，提供历史候选（不依赖 AutoComplete，避免 reset 后值被清空） -->
+    <datalist id="mes-incoming-dl-license">
+      <option v-for="(v, i) in licenseHistoryList" :key="'lp-' + i + '-' + v" :value="v" />
+    </datalist>
+    <datalist id="mes-incoming-dl-product">
+      <option v-for="(v, i) in productHistoryList" :key="'pn-' + i + '-' + v" :value="v" />
+    </datalist>
     <div class="receive-form-wrapper">
       <BasicForm @register="registerForm" name="MesReceiveForm" />
       <div class="form-actions">
@@ -22,7 +29,7 @@
 </template>
 
 <script lang="ts" name="incoming-mesIncoming" setup>
-  import { ref, onMounted, nextTick } from 'vue';
+  import { ref, onMounted, nextTick, computed } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import type { BasicColumn, ActionItem } from '/@/components/Table';
