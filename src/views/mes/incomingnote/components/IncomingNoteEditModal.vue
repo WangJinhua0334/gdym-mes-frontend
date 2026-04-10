@@ -4,7 +4,8 @@
     @register="registerModal"
     destroyOnClose
     :title="'编辑收料记录'"
-    :width="600"
+    :width="800"
+    :height="400"
     wrapClassName="incoming-note-edit-modal"
     @ok="handleSubmit"
     @cancel="handleCancel"
@@ -23,7 +24,7 @@
   const emit = defineEmits(['register', 'success']);
 
   const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
-    labelWidth: 100,
+    labelWidth: 200,
     schemas: editFormSchema,
     showActionButtonGroup: false,
     baseColProps: { span: 24 },
@@ -41,6 +42,9 @@
         const record = { ...data.record };
         if (record.supplierId != null) {
           record.supplierId = String(record.supplierId);
+        }
+        if (record.firstOperationNumber != null && record.firstOperationNumber !== '') {
+          record.firstOperationNumber = String(record.firstOperationNumber);
         }
         await setFieldsValue(record);
       }
@@ -74,9 +78,16 @@
 <!-- 弹窗内容通过 teleport 渲染，需用非 scoped 样式 + wrapClassName 限定作用域 -->
 <style lang="less">
   .incoming-note-edit-modal {
+    /* 长标签（如「收料后的第一道工序」）可换行，避免与控件横向挤压重叠 */
+    .ant-form-item-label {
+      white-space: normal;
+      line-height: 1.45;
+    }
     .ant-form-item-label > label {
       color: rgba(0, 0, 0, 0.88);
       font-weight: 500;
+      height: auto;
+      white-space: normal;
     }
     .ant-input,
     .ant-input-number-input,

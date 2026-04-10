@@ -26,7 +26,7 @@ export const formSchema: FormSchema[] = [
     label: '钢卷号',
     field: 'coilNo',
     component: 'Input',
-    colProps: { span: 6 },
+    colProps: { span: 7 },
     componentProps: ({ formActionType }) => {
       const { setFieldsValue, getFieldsValue } = formActionType;
       return {
@@ -148,6 +148,7 @@ export const formSchema: FormSchema[] = [
     label: '车牌号',
     field: 'licensePlateNumber',
     component: 'Input',
+    colProps: { span: 4},
     componentProps: {
       'data-field': 'licensePlateNumber',
       onKeyup: (e) => {
@@ -164,6 +165,7 @@ export const formSchema: FormSchema[] = [
   {
     label: '生产编号',
     field: 'productNumber',
+    colProps: { span: 4},
     component: 'Input',
     componentProps: {
       'data-field': 'productNumber',
@@ -184,6 +186,7 @@ export const formSchema: FormSchema[] = [
   {
     label: '牌号',
     field: 'brand',
+    colProps: { span: 5},
     component: 'Input',
     dynamicDisabled: true,
     show: true,
@@ -195,7 +198,7 @@ export const formSchema: FormSchema[] = [
     label: '重量',
     field: 'weight',
     component: 'InputNumber',
-    colProps: { span: 6 },
+    colProps: { span: 4 },
     dynamicDisabled: true,
     show: true,
     dynamicRules: () => {
@@ -206,6 +209,7 @@ export const formSchema: FormSchema[] = [
     label: '规格型号',
     field: 'modelNumber',
     component: 'Input',
+    colProps: { span: 4},
     dynamicDisabled: true,
     show: true,
     dynamicRules: () => {
@@ -216,6 +220,7 @@ export const formSchema: FormSchema[] = [
     label: '入库时间',
     field: 'inStockTime',
     component: 'DatePicker',
+    colProps: { span: 5},
     defaultValue: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
     componentProps: {
       showTime: true,
@@ -230,6 +235,7 @@ export const formSchema: FormSchema[] = [
     label: '第一道工序',
     field: 'firstOperation',
     component: 'RadioButtonGroup',
+    colProps: { span: 4},
     componentProps: {
       options: [
         {
@@ -258,7 +264,7 @@ export const formSchema: FormSchema[] = [
     label: '物料名称',
     field: 'materialName',
     component: 'Input',
-    colProps: { span: 6 },
+    colProps: { span: 5 },
     dynamicDisabled: true,
     show: true,
     dynamicRules: () => {

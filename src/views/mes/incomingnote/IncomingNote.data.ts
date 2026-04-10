@@ -71,7 +71,7 @@ export const columns: BasicColumn[] = [
     width: 120,
   },
   {
-    title: '备注',
+    title: '生产编号',
     align: 'center',
     dataIndex: 'materialDesc',
     width: 200,
@@ -149,17 +149,32 @@ export const editFormSchema: FormSchema[] = [
     colProps: { span: 12 },
   },
   {
-    label: '重量',
-    field: 'weight',
-    component: 'Input',
-    componentProps: { placeholder: '请输入重量' },
+    label: '收料后的第一道工序',
+    field: 'firstOperationNumber',
+    component: 'RadioButtonGroup',
     colProps: { span: 12 },
+    componentProps: {
+      options: [
+        { label: '酸洗', value: '10' },
+        { label: '退火', value: '40' },
+      ],
+    },
+    dynamicRules: () => [
+      { required: true, message: '请选择钢卷的第一道工序!', trigger: 'change' },
+    ],
   },
   {
     label: '车牌号',
     field: 'licensePlateNumber',
     component: 'Input',
     componentProps: { placeholder: '请输入车牌号' },
+    colProps: { span: 12 },
+  },
+  {
+    label: '生产编号',
+    field: 'materialDesc',
+    component: 'Input',
+    componentProps: { placeholder: '请输入生产编号'},
     colProps: { span: 12 },
   },
   {
@@ -173,36 +188,6 @@ export const editFormSchema: FormSchema[] = [
       style: { width: '100%' },
     },
     colProps: { span: 12 },
-  },
-  {
-    label: '供应商',
-    field: 'supplierId',
-    component: 'JSearchSelectCustom',
-    componentProps: ({ formActionType }) => {
-      const { setFieldsValue, getFieldsValue } = formActionType;
-      return {
-        setFieldsValue,
-        getFieldsValue,
-        methods: 'get',
-        url: '/basic/basSupplier/getAllSupplier',
-        params: { column: 'createTime', order: 'desc', searchFields: 'id,name' },
-        columns: [{ name: '编码', code: 'id' }, { name: '名称', code: 'name' }],
-        isShowNum: false,
-        rowKey: 'id',
-        labelKey: ['name'],
-        pageSize: 10,
-        multi: false,
-        placeholder: '请选择供应商',
-      };
-    },
-    colProps: { span: 12 },
-  },
-  {
-    label: '备注',
-    field: 'materialDesc',
-    component: 'InputTextArea',
-    componentProps: { placeholder: '请输入备注', rows: 3 },
-    colProps: { span: 24 },
   },
 ];
 
