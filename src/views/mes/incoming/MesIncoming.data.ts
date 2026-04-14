@@ -188,7 +188,7 @@ export const formSchema: FormSchema[] = [
     field: 'brand',
     colProps: { span: 5},
     component: 'Input',
-    dynamicDisabled: true,
+    dynamicDisabled: false,
     show: true,
     dynamicRules: () => {
       return [{ required: true, message: '请输入信息' }];
