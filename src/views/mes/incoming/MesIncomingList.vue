@@ -38,17 +38,70 @@
   import { useMessage } from '/@/hooks/web/useMessage';
   import { saveOrUpdate } from './MesIncoming.api';
   import { useUserStore } from '/@/store/modules/user';
-  import { defHttp } from '/@/utils/http/axios';
   import { loopPrintJimuReport } from '/@/utils';
+  import { getPrintTemplateCode, getReportIdByTemplateCode } from '/@/utils/printTemplate';
   import { getToken } from '/@/utils/auth';
 
   const $message = useMessage();
   const userStore = useUserStore();
   const MATERIAL_DESC_CACHE_KEY = 'mes_incoming_material_desc';
+  const INPUT_CACHE_KEY = 'mes_incoming_last_input';
   const saveLoading = ref(false);
   const submitLoading = ref(false);
   const editingRowId = ref<string | null>(null);
+  const licenseHistoryList = ref<string[]>([]);
+  const productHistoryList = ref<string[]>([]);
   let rowIdCounter = 0;
+
+  function getInputCacheKey() {
+    return `${INPUT_CACHE_KEY}:${String(userStore.getTenant || 'default')}`;
+  }
+
+  function loadInputCache() {
+    licenseHistoryList.value = [];
+    productHistoryList.value = [];
+    try {
+      const raw = localStorage.getItem(getInputCacheKey());
+      if (!raw) return;
+      const cached = JSON.parse(raw) as { licensePlateNumber?: unknown; productNumber?: unknown };
+      const licensePlateNumber = String(cached?.licensePlateNumber ?? '').trim();
+      const productNumber = String(cached?.productNumber ?? '').trim();
+      if (licensePlateNumber) licenseHistoryList.value = [licensePlateNumber];
+      if (productNumber) productHistoryList.value = [productNumber];
+    } catch (error) {
+      console.warn('读取来料单输入缓存失败:', error);
+    }
+  }
+
+  function cacheInputField(field: 'licensePlateNumber' | 'productNumber', value: unknown) {
+    const inputValue = String(value ?? '').trim();
+    if (!inputValue) return;
+    const cached = {
+      licensePlateNumber: licenseHistoryList.value[0] ?? '',
+      productNumber: productHistoryList.value[0] ?? '',
+    };
+    cached[field] = inputValue;
+    try {
+      localStorage.setItem(getInputCacheKey(), JSON.stringify(cached));
+    } catch (error) {
+      console.warn('保存来料单输入缓存失败:', error);
+    }
+    licenseHistoryList.value = cached.licensePlateNumber ? [cached.licensePlateNumber] : [];
+    productHistoryList.value = cached.productNumber ? [cached.productNumber] : [];
+  }
+
+  const formSchemaWithCache = formSchema.map((schema) => {
+    if (schema.field !== 'licensePlateNumber' && schema.field !== 'productNumber') return schema;
+    const field = schema.field as 'licensePlateNumber' | 'productNumber';
+    const componentProps = (schema.componentProps || {}) as Record<string, unknown>;
+    return {
+      ...schema,
+      componentProps: {
+        ...componentProps,
+        onBlur: (event: FocusEvent) => cacheInputField(field, (event.target as HTMLInputElement)?.value),
+      },
+    };
+  });
 
   const tableColumns: BasicColumn[] = [
     { title: '物料名称', dataIndex: 'materialName', key: 'materialName', width: 260, align: 'center', fixed: 'left' },
@@ -85,7 +138,7 @@
 
   const [registerForm, { resetFields, setFieldsValue, validate, scrollToField, getFieldsValue }] = useForm({
     labelWidth: 100,
-    schemas: formSchema,
+    schemas: formSchemaWithCache,
     showActionButtonGroup: false,
     baseColProps: { span: 5 },
   });
@@ -269,21 +322,6 @@
     initForm();
   }
 
-  async function getPrintTemplate(): Promise<string> {
-    try {
-      const data = await defHttp.get({
-        url: '/userextend/basUserExtend/queryByUsername',
-        params: { username: userStore.getUserInfo?.username },
-      });
-      if (data?.printTemplateId == null) {
-        return '1986615937373085698';
-      }
-      return data.printTemplateId;
-    } catch (error) {
-      return '1986615937373085698';
-    }
-  }
-
   async function handleSubmit() {
     if (submitLoading.value) return; // 防止重复提交
     submitLoading.value = true;
@@ -343,18 +381,10 @@
       const coilNumbers = currentData.map((r) => r.coilNo).filter((v) => v);
       if (coilNumbers.length > 0) {
         try {
-          const templateId = await getPrintTemplate();
-          const reportRs = await defHttp.get({
-            url: '/template/basTemplate/getReportIdByIds',
-            params: { ids: templateId, type: 'pick_material_sn' },
-          });
-          const resultMap = reportRs?.result ?? reportRs;
-          if (resultMap && Object.keys(resultMap).length > 0) {
-            const printSet: Record<string, { id: string }> = {};
-            for (const tid of Object.keys(resultMap)) {
-              const reportId = resultMap[tid];
-              printSet[reportId] = { id: coilNumbers.join(',') };
-            }
+          const templateCode = await getPrintTemplateCode();
+          const reportId = await getReportIdByTemplateCode(templateCode, 'pick_material_sn');
+          if (reportId) {
+            const printSet: Record<string, { id: string }> = { [reportId]: { id: coilNumbers.join(',') } };
             loopPrintJimuReport(printSet, getToken, () => {
               $message.createMessage.success('标签打印成功!');
             });
@@ -373,6 +403,7 @@
   }
 
   onMounted(() => {
+    loadInputCache();
     initForm();
   });
 </script>
@@ -389,6 +420,14 @@
 
   .receive-form-wrapper {
     width: 100%;
+
+    /* 保留输入建议，但隐藏 datalist 自带的下拉箭头 */
+    :deep(input[list='mes-incoming-dl-license']::-webkit-calendar-picker-indicator),
+    :deep(input[list='mes-incoming-dl-product']::-webkit-calendar-picker-indicator),
+    :deep(input[list='mes-incoming-dl-license']::-webkit-list-button),
+    :deep(input[list='mes-incoming-dl-product']::-webkit-list-button) {
+      display: none !important;
+    }
 
     /* 表单标题和内容样式与"信息输入"分隔栏一致 */
     :deep(.ant-form-item-label > label) {

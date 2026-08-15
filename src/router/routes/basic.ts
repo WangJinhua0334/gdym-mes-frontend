@@ -15,7 +15,9 @@ export const PAGE_NOT_FOUND_ROUTE: AppRouteRecordRaw = {
   children: [
     {
       path: '/:path(.*)*',
-      name: PAGE_NOT_FOUND_NAME,
+      // Vue Router requires every route name to be globally unique, including
+      // a parent route and its child route.
+      name: `${PAGE_NOT_FOUND_NAME}Child`,
       component: EXCEPTION_COMPONENT,
       meta: {
         title: 'ErrorPage',

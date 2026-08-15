@@ -151,6 +151,8 @@ export const formSchema: FormSchema[] = [
     colProps: { span: 4},
     componentProps: {
       'data-field': 'licensePlateNumber',
+      autocomplete: 'off',
+      list: 'mes-incoming-dl-license',
       onKeyup: (e) => {
         if (e.keyCode === 13) {
           const input = document.getElementById('productNumberInput') as HTMLInputElement | null;
@@ -170,6 +172,8 @@ export const formSchema: FormSchema[] = [
     componentProps: {
       'data-field': 'productNumber',
       id: 'productNumberInput', // 添加 ID 便于查找
+      autocomplete: 'off',
+      list: 'mes-incoming-dl-product',
       // 回车触发与「确认」按钮相同的提交逻辑（与收料页 .form-actions 内主按钮一致）
       onPressEnter: (e: KeyboardEvent) => {
         e?.preventDefault?.();
@@ -425,4 +429,3 @@ export const formSchema: FormSchema[] = [
     show: false,
   },
 ];
-

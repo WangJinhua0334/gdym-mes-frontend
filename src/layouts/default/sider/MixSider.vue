@@ -14,7 +14,7 @@
     ]"
     v-bind="getMenuEvents"
   >
-    <AppLogo :showTitle="false" :class="`${prefixCls}-logo`" />
+    <AppLogo :showTitle="true" :class="`${prefixCls}-logo`" />
 
     <LayoutTrigger :class="`${prefixCls}-trigger`" />
 

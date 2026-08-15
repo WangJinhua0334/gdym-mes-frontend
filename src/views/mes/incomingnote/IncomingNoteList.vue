@@ -41,8 +41,8 @@
   import { list, deleteOne } from './IncomingNote.api';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { BasicForm, useForm } from '@/components/Form';
-  import { defHttp } from '@/utils/http/axios';
   import { loopPrintJimuReport } from '/@/utils';
+  import { getPrintTemplateCode, getReportIdByTemplateCode } from '/@/utils/printTemplate';
   import { getToken } from '@/utils/auth';
   import { useUserStore } from '@/store/modules/user';
   import IncomingNoteEditModal from './components/IncomingNoteEditModal.vue';
@@ -184,29 +184,17 @@
         return;
       }
 
-      const templateId = await getPrintTemplate();
-      // const templateId = '1986615937373085698'; // 固定模板 ID
+      const templateCode = await getPrintTemplateCode();
 
-      // 获取报表ID
-      defHttp
-        .get({
-          url: '/template/basTemplate/getReportIdByIds',
-          params: { ids: templateId, type: 'pick_material_sn' },
-        })
-        .then(async (reportRs) => {
-          // 打印数据集 { reportId, parameters }，使用钢卷号作为参数
-          const printSet: any = {};
+      // 按模板方案编码获取报表ID
+      getReportIdByTemplateCode(templateCode, 'pick_material_sn').then(async (reportId) => {
+        // 打印数据集 { reportId, parameters }，使用钢卷号作为参数
+        const printSet: any = { [reportId]: { id: `${coilNumbers.join(',')}` } };
 
-          const templateIds = Object.keys(reportRs);
-          for (const templateId of templateIds) {
-            const reportId = reportRs[templateId];
-            printSet[reportId] = { id: `${coilNumbers.join(',')}` };
-          }
-
-          loopPrintJimuReport(printSet, getToken, () => {
-            $message.createMessage.success('打印成功!');
-          });
+        loopPrintJimuReport(printSet, getToken, () => {
+          $message.createMessage.success('打印成功!');
         });
+      });
     } catch (error) {
       console.log(error);
     }
@@ -218,21 +206,6 @@
   async function handlePrintSubmit() {
     // 当前直接打印，不使用弹窗
     // 此函数保留以避免模板引用错误
-  }
-
-  async function getPrintTemplate() {
-    try {
-      const data = await defHttp.get({
-        url: '/userextend/basUserExtend/queryByUsername',
-        params: { username: useUserStore().getUserInfo.username },
-      });
-      if (data.printTemplateId == null){
-        return '1986615937373085698';
-      }
-      return data.printTemplateId; // 返回模板ID
-    } catch (error) {
-      return '1986615937373085698';
-    }
   }
 </script>
 

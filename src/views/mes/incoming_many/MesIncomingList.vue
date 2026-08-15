@@ -8,8 +8,8 @@ import {computed, onMounted, reactive, ref, unref} from "vue";
 import { BasicModal, useModal, useModalInner } from '@/components/Modal';
 import {buildUUID} from "@/utils/uuid";
 import dayjs from "dayjs";
-import {defHttp} from "@/utils/http/axios";
 import {loopPrintJimuReport} from "@/utils";
+import { getReportIdByTemplateCode } from '@/utils/printTemplate';
 import {getToken} from "@/utils/auth";
 // 提示方法声明
 const $message = useMessage();
@@ -226,27 +226,16 @@ async function handleSubmitdy() {
       }
     });*/
   try {
-    defHttp
-      .get({
-        url: '/template/basTemplate/getReportIdByIds',
-        params: { ids: values.templateId, type: 'pack_sn' },
-      })
-      .then(async (reportRs) => {
-        setModalProps({ loading: false });
-        // 打印数据集 { reportId, parameters }
-        const printSet: any = {};
+    getReportIdByTemplateCode(values.templateCode, 'pack_sn').then(async (reportId) => {
+      setModalProps({ loading: false });
+      // 打印数据集 { reportId, parameters }
+      const printSet: any = { [reportId]: { id: `${printPackCodes.join(',')}` } };
 
-        const templateIds = Object.keys(reportRs);
-        for (const templateId of templateIds) {
-          const reportId = reportRs[templateId];
-          printSet[reportId] = { id: `${printPackCodes.join(',')}` };
-        }
-
-        loopPrintJimuReport(printSet, getToken, () => {
-          closeDyModal();
-          $message.createMessage.success('打印成功!');
-        });
+      loopPrintJimuReport(printSet, getToken, () => {
+        closeDyModal();
+        $message.createMessage.success('打印成功!');
       });
+    });
   } catch (error) {
     console.log(error);
   }

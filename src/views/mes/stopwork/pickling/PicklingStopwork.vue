@@ -8,10 +8,9 @@
   import { BasicModal, useModal } from '@/components/Modal';
   import { buildUUID } from '@/utils/uuid';
   import dayjs from 'dayjs';
-  import { defHttp } from '@/utils/http/axios';
   import { loopPrintJimuReport } from '@/utils';
+  import { getPrintTemplateCode, getReportIdByTemplateCode } from '@/utils/printTemplate';
   import { getToken } from '@/utils/auth';
-  import { useUserStore } from '@/store/modules/user';
   // 提示方法声明
   const $message = useMessage();
   // Emits声明
@@ -540,31 +539,21 @@ async function handleSubmit() {
 
       const oldCoilNo = mainFormValues.oldCoilNo;
 
-      // 获取报表ID
-      defHttp
-        .get({
-          url: '/template/basTemplate/getReportIdByIds',
-          params: { ids: values.templateId, type: 'gx_sn' },
-        })
-        .then(async (reportRs) => {
-          console.log('获取报表ID成功:', reportRs);
+      // 按模板方案编码获取报表ID
+      getReportIdByTemplateCode(values.templateCode, 'gx_sn')
+        .then(async (reportId) => {
+          console.log('获取报表ID成功:', reportId);
           console.log('打印参数 - 旧钢卷号:', oldCoilNo);
           setModalProps({ loading: false });
 
           // 检查报表ID是否为空
-          if (!reportRs || Object.keys(reportRs).length === 0) {
+          if (!reportId) {
             $message.createMessage.error('获取报表ID失败，请检查打印模板配置!');
             return;
           }
 
           // 打印数据集 { reportId, parameters }，使用旧钢卷号作为参数
-          const printSet: any = {};
-
-          const templateIds = Object.keys(reportRs);
-          for (const templateId of templateIds) {
-            const reportId = reportRs[templateId];
-            printSet[reportId] = { id: oldCoilNo };
-          }
+          const printSet: any = { [reportId]: { id: oldCoilNo } };
 
           console.log('打印数据集:', printSet);
 
@@ -630,32 +619,22 @@ async function handleSubmit() {
       }
 
       const oldCoilNo = mainFormValues.oldCoilNo;
-      const templateId = await getPrintTemplate(); // 固定模板 ID
+      const templateCode = await getPrintTemplateCode(); // 用户配置的模板方案编码
 
-      // 获取报表ID
-      defHttp
-        .get({
-          url: '/template/basTemplate/getReportIdByIds',
-          params: { ids: templateId, type: 'gx_sn' },
-        })
-        .then(async (reportRs) => {
-          console.log('获取报表ID成功:', reportRs);
+      // 按模板方案编码获取报表ID
+      getReportIdByTemplateCode(templateCode, 'gx_sn')
+        .then(async (reportId) => {
+          console.log('获取报表ID成功:', reportId);
           console.log('打印参数 - 旧钢卷号:', oldCoilNo);
 
           // 检查报表ID是否为空
-          if (!reportRs || Object.keys(reportRs).length === 0) {
+          if (!reportId) {
             $message.createMessage.error('获取报表ID失败，请检查打印模板配置!');
             return;
           }
 
           // 打印数据集 { reportId, parameters }，使用旧钢卷号作为参数
-          const printSet: any = {};
-
-          const templateIds = Object.keys(reportRs);
-          for (const templateId of templateIds) {
-            const reportId = reportRs[templateId];
-            printSet[reportId] = { id: oldCoilNo };
-          }
+          const printSet: any = { [reportId]: { id: oldCoilNo } };
 
           console.log('打印数据集:', printSet);
 
@@ -728,20 +707,6 @@ async function handleSubmit() {
     formDisabled.value = false;
   }
 
-  async function getPrintTemplate() {
-    try {
-      const data = await defHttp.get({
-        url: '/userextend/basUserExtend/queryByUsername',
-        params: { username: useUserStore().getUserInfo.username },
-      });
-      if (data.printTemplateId == null) {
-        return '1986615937373085698';
-      }
-      return data.printTemplateId; // 返回模板ID
-    } catch (error) {
-      return '1986615937373085698';
-    }
-  }
 </script>
 <template>
   <div class="custom-form-wrapper mes-process-page-bold">

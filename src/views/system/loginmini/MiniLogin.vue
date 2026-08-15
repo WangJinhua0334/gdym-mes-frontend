@@ -17,9 +17,7 @@
         <div class="aui-container">
           <div class="aui-form">
             <div class="aui-image">
-              <div class="aui-image-text">
-                <img :src="adTextImg" />
-              </div>
+              <!-- 左侧仅保留背景图，不再展示 LOMS 宣传文字图 -->
             </div>
             <div class="aui-formBox">
               <div class="aui-formWell">
@@ -165,8 +163,7 @@
   import MiniForgotpad from './MiniForgotpad.vue';
   import MiniRegister from './MiniRegister.vue';
   import MiniCodelogin from './MiniCodelogin.vue';
-  import logoImg from '/@/assets/loginmini/icon/jeecg_logo.png';
-  import adTextImg from '/@/assets/loginmini/icon/jeecg_ad_text.png';
+  import logoImg from '/@/assets/images/unionware-logo-login.png';
   import { AppLocalePicker, AppDarkModeToggle } from '/@/components/Application';
   import { useLocaleStore } from '/@/store/modules/locale';
   import { useDesign } from '/@/hooks/web/useDesign';
@@ -515,9 +512,26 @@
   .aui-phone-logo {
     position: absolute;
     margin-left: 10px;
-    width: 60px;
+    width: auto;
+    max-width: 200px;
     top: 2px;
     z-index: 4;
+  }
+
+  .aui-logo {
+    width: auto;
+    max-width: 280px;
+    height: auto;
+    min-height: 48px;
+  }
+
+  .aui-logo img,
+  .aui-phone-logo img {
+    max-width: 220px;
+    width: auto;
+    height: auto;
+    max-height: 72px;
+    object-fit: contain;
   }
   .top-3 {
     top: 0.45rem;

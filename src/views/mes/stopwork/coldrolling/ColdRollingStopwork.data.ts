@@ -5,6 +5,7 @@ import { planStartTime } from '@/views/mes/mo/components/MesMoPlanCreateSn.data'
 import { rules } from '@/utils/helper/validator';
 import { useUserStore } from '@/store/modules/user';
 import { getTenantId } from '/@/utils/auth';
+import { SYSTEM_DEFAULT_TEMPLATE_CODE } from '/@/enums/printTemplateEnum';
 // import { getUserInfo } from '@/api/sys/user';
 //冷轧扫码完工新增弹框页面表单配置（与App端保持一致：重量、物料名称、物料编码、规格型号、流转去向、质量汇报）
 export const formSchema: FormSchema[] = [
@@ -454,7 +455,7 @@ export const getDetailJVxeColumns = function (showCoilNo = false) {
 export const printFormSchema: FormSchema[] = [
   {
     label: '打印模板',
-    field: 'templateId',
+    field: 'templateCode',
     component: 'JSearchSelectCustom',
     componentProps: ({ formActionType }) => {
       const { setFieldsValue, getFieldsValue } = formActionType;
@@ -469,13 +470,13 @@ export const printFormSchema: FormSchema[] = [
           { name: '名称', code: 'name' },
         ],
         isShowNum: false,
-        rowKey: 'id',
+        rowKey: 'code',
         labelKey: ['name'],
         placeholder: '请选择',
         getPopupContainer: () => document.body,
       };
     },
-    defaultValue: '1986615937373085698',
+    defaultValue: SYSTEM_DEFAULT_TEMPLATE_CODE,
     dynamicRules: () => {
       return [{ required: true, message: '请选择打印模板!' }];
     },

@@ -541,8 +541,8 @@ export const formSchema: FormSchema[] = [
         rowKey: 'id',
         labelKey: ['name'],
         linkmap: [{
-          name:'printTemplateName',//仓库名称
-          code: 'printTemplateNumber', // 仓库编码
+          name:'printTemplateName',
+          code: 'printTemplateNumber',
         }]
       }
     },

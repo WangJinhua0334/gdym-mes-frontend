@@ -10,28 +10,95 @@
     @ok="handleSubmit"
     @cancel="handleCancel"
   >
+    <datalist id="incoming-note-license-datalist">
+      <option v-for="value in licenseHistoryList" :key="`license-${value}`" :value="value" />
+    </datalist>
+    <datalist id="incoming-note-product-datalist">
+      <option v-for="value in productHistoryList" :key="`product-${value}`" :value="value" />
+    </datalist>
     <BasicForm @register="registerForm" />
   </BasicModal>
 </template>
 
 <script lang="ts" setup>
-  import { unref } from 'vue';
+  import { ref, unref } from 'vue';
   import { BasicForm, useForm } from '@/components/Form';
   import { BasicModal, useModalInner } from '@/components/Modal';
   import { editFormSchema } from '../IncomingNote.data';
   import { edit } from '../IncomingNote.api';
+  import { useUserStore } from '@/store/modules/user';
 
   const emit = defineEmits(['register', 'success']);
+  const userStore = useUserStore();
+  const INPUT_CACHE_KEY = 'incoming_note_last_input';
+  const licenseHistoryList = ref<string[]>([]);
+  const productHistoryList = ref<string[]>([]);
+
+  function getInputCacheKey() {
+    const tenant = String(userStore.getTenant || 'default');
+    return `${INPUT_CACHE_KEY}:${tenant}`;
+  }
+
+  function loadInputCache() {
+    licenseHistoryList.value = [];
+    productHistoryList.value = [];
+    try {
+      const raw = localStorage.getItem(getInputCacheKey());
+      if (!raw) return;
+      const cached = JSON.parse(raw) as { licensePlateNumber?: unknown; materialDesc?: unknown };
+      const licensePlateNumber = String(cached?.licensePlateNumber ?? '').trim();
+      const materialDesc = String(cached?.materialDesc ?? '').trim();
+      if (licensePlateNumber) licenseHistoryList.value = [licensePlateNumber];
+      if (materialDesc) productHistoryList.value = [materialDesc];
+    } catch (error) {
+      console.warn('读取收料单输入缓存失败:', error);
+    }
+  }
+
+  function cacheInputField(field: 'licensePlateNumber' | 'materialDesc', value: unknown) {
+    const inputValue = String(value ?? '').trim();
+    if (!inputValue) return;
+    const cached = {
+      licensePlateNumber: licenseHistoryList.value[0] ?? '',
+      materialDesc: productHistoryList.value[0] ?? '',
+    };
+    cached[field] = inputValue;
+    persistInputCache(cached);
+  }
+
+  function persistInputCache(cached: { licensePlateNumber: string; materialDesc: string }) {
+    try {
+      localStorage.setItem(getInputCacheKey(), JSON.stringify(cached));
+    } catch (error) {
+      console.warn('保存收料单输入缓存失败:', error);
+    }
+    licenseHistoryList.value = cached.licensePlateNumber ? [cached.licensePlateNumber] : [];
+    productHistoryList.value = cached.materialDesc ? [cached.materialDesc] : [];
+  }
+
+  const formSchemaWithCache = editFormSchema.map((schema) => {
+    if (schema.field !== 'licensePlateNumber' && schema.field !== 'materialDesc') return schema;
+    const field = schema.field as 'licensePlateNumber' | 'materialDesc';
+    const componentProps = (schema.componentProps || {}) as Record<string, unknown>;
+    return {
+      ...schema,
+      componentProps: {
+        ...componentProps,
+        onBlur: (event: FocusEvent) => cacheInputField(field, (event.target as HTMLInputElement)?.value),
+      },
+    };
+  });
 
   const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
     labelWidth: 200,
-    schemas: editFormSchema,
+    schemas: formSchemaWithCache,
     showActionButtonGroup: false,
     baseColProps: { span: 24 },
   });
 
   const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
     try {
+      loadInputCache();
       await resetFields();
       setModalProps({
         confirmLoading: false,
@@ -99,6 +166,12 @@
     }
     .ant-input-number.ant-input-number-disabled .ant-input-number-input {
       -webkit-text-fill-color: rgba(0, 0, 0, 0.88);
+    }
+    input[list='incoming-note-license-datalist']::-webkit-calendar-picker-indicator,
+    input[list='incoming-note-product-datalist']::-webkit-calendar-picker-indicator,
+    input[list='incoming-note-license-datalist']::-webkit-list-button,
+    input[list='incoming-note-product-datalist']::-webkit-list-button {
+      display: none !important;
     }
   }
 </style>

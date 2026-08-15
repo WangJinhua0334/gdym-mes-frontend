@@ -45,6 +45,7 @@
   import { defHttp } from '/@/utils/http/axios';
   import { getToken } from '/@/utils/auth';
   import { loopPrintJimuReport } from '/@/utils';
+  import { getTemplateIdByCode } from '/@/utils/printTemplate';
   import { BasicForm, useForm } from '/@/components/Form/index';
 
   //表单配置
@@ -122,7 +123,9 @@
     setModalProps({ loading: true });
     let values = await validate();
     try {
-      await queryMoSnPrintMapByIds({ ids: unref(selectedRowKeys).join(','), templateId: values.templateId }).then(async (res) => {
+      // 表单存的是模板方案编码，分组接口仍要求模板 ID，运行时换取（不落库、不硬编码）
+      const templateId = await getTemplateIdByCode(values.templateCode);
+      await queryMoSnPrintMapByIds({ ids: unref(selectedRowKeys).join(','), templateId }).then(async (res) => {
         const ids = Object.keys(res);
 
         defHttp

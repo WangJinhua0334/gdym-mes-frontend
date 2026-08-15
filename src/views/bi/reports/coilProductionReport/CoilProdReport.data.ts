@@ -2,6 +2,7 @@ import { BasicColumn, FormSchema } from '/@/components/Table';
 import dayjs from 'dayjs';
 import { render } from '@/utils/common/renderUtils';
 import { getTenantId } from '@/utils/auth';
+import { SYSTEM_DEFAULT_TEMPLATE_CODE } from '/@/enums/printTemplateEnum';
 
 //列表数据
 export const columns: BasicColumn[] = [
@@ -555,7 +556,7 @@ export const editFormSchema: FormSchema[] = [
 export const printFormSchema: FormSchema[] = [
   {
     label: '打印模板',
-    field: 'templateId',
+    field: 'templateCode',
     component: 'JSearchSelectCustom',
     componentProps: ({ formActionType }) => {
       const { setFieldsValue, getFieldsValue } = formActionType;
@@ -570,13 +571,13 @@ export const printFormSchema: FormSchema[] = [
           { name: '名称', code: 'name' },
         ],
         isShowNum: false,
-        rowKey: 'id',
+        rowKey: 'code',
         labelKey: ['name'],
         placeholder: '请选择',
         getPopupContainer: () => document.body,
       };
     },
-    defaultValue: '1986615937373085698',
+    defaultValue: SYSTEM_DEFAULT_TEMPLATE_CODE,
     dynamicRules: () => {
       return [{ required: true, message: '请选择打印模板!' }];
     },

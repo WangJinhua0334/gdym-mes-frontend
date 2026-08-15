@@ -31,7 +31,7 @@
   import { listColumns, listSearchFormSchema, printFormSchema } from './MesLotWoke.data';
   import { list, exportUrl } from './MesLotWoke.api';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { defHttp } from '/@/utils/http/axios';
+  import { getReportIdByTemplateCode } from '/@/utils/printTemplate';
   import { loopPrintJimuReport } from '/@/utils';
   import { getToken } from '/@/utils/auth';
 
@@ -102,27 +102,16 @@
       }
     });
     try {
-      defHttp
-        .get({
-          url: '/template/basTemplate/getReportIdByIds',
-          params: { ids: values.templateId, type: 'woke_sn' },
-        })
-        .then(async (reportRs) => {
-          setModalProps({ loading: false });
-          // 打印数据集 { reportId, parameters }
-          const printSet: any = {};
+      getReportIdByTemplateCode(values.templateCode, 'woke_sn').then(async (reportId) => {
+        setModalProps({ loading: false });
+        // 打印数据集 { reportId, parameters }
+        const printSet: any = { [reportId]: { id: `${printPackCodes.join(',')}` } };
 
-          const templateIds = Object.keys(reportRs);
-          for (const templateId of templateIds) {
-            const reportId = reportRs[templateId];
-            printSet[reportId] = { id: `${printPackCodes.join(',')}` };
-          }
-
-          loopPrintJimuReport(printSet, getToken, () => {
-            closeModal();
-            $message.createMessage.success('打印成功!');
-          });
+        loopPrintJimuReport(printSet, getToken, () => {
+          closeModal();
+          $message.createMessage.success('打印成功!');
         });
+      });
     } catch (error) {
       console.log(error);
     }

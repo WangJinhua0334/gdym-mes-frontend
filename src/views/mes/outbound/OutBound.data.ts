@@ -335,7 +335,7 @@ export const getDetailJVxeColumns = function () {
 export const printFormSchema: FormSchema[] = [
   {
     label: '打印模板',
-    field: 'templateId',
+    field: 'templateCode',
     component: 'JSearchSelectCustom',
     componentProps: ({ formActionType }) => {
       const { setFieldsValue, getFieldsValue } = formActionType;
@@ -350,7 +350,7 @@ export const printFormSchema: FormSchema[] = [
           { name: '名称', code: 'name' },
         ],
         isShowNum: false,
-        rowKey: 'id',
+        rowKey: 'code',
         labelKey: ['name'],
         placeholder: '请选择',
         getPopupContainer: () => document.body,

@@ -1,5 +1,6 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
+import { SYSTEM_DEFAULT_TEMPLATE_CODE } from '/@/enums/printTemplateEnum';
 
 // 收料记录列表数据
 export const columns: BasicColumn[] = [
@@ -167,14 +168,22 @@ export const editFormSchema: FormSchema[] = [
     label: '车牌号',
     field: 'licensePlateNumber',
     component: 'Input',
-    componentProps: { placeholder: '请输入车牌号' },
+    componentProps: {
+      placeholder: '请输入车牌号',
+      autocomplete: 'off',
+      list: 'incoming-note-license-datalist',
+    },
     colProps: { span: 12 },
   },
   {
     label: '生产编号',
     field: 'materialDesc',
     component: 'Input',
-    componentProps: { placeholder: '请输入生产编号'},
+    componentProps: {
+      placeholder: '请输入生产编号',
+      autocomplete: 'off',
+      list: 'incoming-note-product-datalist',
+    },
     colProps: { span: 12 },
   },
   {
@@ -195,7 +204,7 @@ export const editFormSchema: FormSchema[] = [
 export const printFormSchema: FormSchema[] = [
   {
     label: '打印模板',
-    field: 'templateId',
+    field: 'templateCode',
     component: 'JSearchSelectCustom',
     componentProps: ({ formActionType }) => {
       const { setFieldsValue, getFieldsValue } = formActionType;
@@ -210,16 +219,15 @@ export const printFormSchema: FormSchema[] = [
           { name: '名称', code: 'name' },
         ],
         isShowNum: false,
-        rowKey: 'id',
+        rowKey: 'code',
         labelKey: ['name'],
         placeholder: '请选择',
         getPopupContainer: () => document.body,
       };
     },
-    defaultValue: '1986615937373085698',
+    defaultValue: SYSTEM_DEFAULT_TEMPLATE_CODE,
     dynamicRules: () => {
       return [{ required: true, message: '请选择打印模板!' }];
     },
   },
 ];
-

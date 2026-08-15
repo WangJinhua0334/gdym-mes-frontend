@@ -8,8 +8,8 @@ import {computed, onMounted, reactive, ref, watch} from "vue";
 import { BasicModal, useModal } from '@/components/Modal';
 import {buildUUID} from "@/utils/uuid";
 import dayjs from "dayjs";
-import {defHttp} from "@/utils/http/axios";
 import {loopPrintJimuReport} from "@/utils";
+import { getReportIdByTemplateCode } from '@/utils/printTemplate';
 import {getToken, getTenantId} from "@/utils/auth";
 import {useUserStore} from "@/store/modules/user";
 // 提示方法声明
@@ -428,22 +428,12 @@ async function handleSubmitdy() {
       return;
     }
 
-    // 获取报表ID
-    defHttp
-      .get({
-        url: '/template/basTemplate/getReportIdByIds',
-        params: { ids: values.templateId, type: 'pack_sn' },
-      })
-      .then(async (reportRs) => {
+    // 按模板方案编码获取报表ID
+    getReportIdByTemplateCode(values.templateCode, 'pack_sn')
+      .then(async (reportId) => {
         setModalProps({ loading: false });
         // 打印数据集 { reportId, parameters }，使用钢卷号作为参数
-        const printSet: any = {};
-
-        const templateIds = Object.keys(reportRs);
-        for (const templateId of templateIds) {
-          const reportId = reportRs[templateId];
-          printSet[reportId] = { id: `${coilNumbers.join(',')}` };
-        }
+        const printSet: any = { [reportId]: { id: `${coilNumbers.join(',')}` } };
 
         loopPrintJimuReport(printSet, getToken, () => {
           closeDyModal();
