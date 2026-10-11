@@ -4,7 +4,7 @@
       <!-- left start -->
       <div :class="`${prefixCls}-left`">
         <!-- logo -->
-        <div class="header-logo"><img src="../../assets/images/index/logo.png" alt="" /></div>
+        <div class="header-logo"><img :src="homeBrandLogo" alt="优联软件" /></div>
       </div>
       <!-- left end -->
 
@@ -102,6 +102,7 @@
   import { useMultipleTabStore } from '/@/store/modules/multipleTab';
   import { useUserStore } from '/@/store/modules/user';
   import { Icon } from '@/components/Icon';
+  import homeBrandLogo from '/@/assets/images/unionware-logo-home.png';
 
   export default defineComponent({
     name: 'DefaultIndex',
@@ -332,6 +333,7 @@
       });
 
       return {
+        homeBrandLogo,
         themeColor,
         prefixCls,
         getShowSearch,
@@ -391,10 +393,16 @@
     overflow: auto;
 
     .header-logo {
-      width: 165px;
+      width: auto;
+      max-width: min(280px, 42vw);
       margin-left: 25px;
       img {
-        width: 100%;
+        display: block;
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        max-height: 40px;
+        object-fit: contain;
       }
     }
 

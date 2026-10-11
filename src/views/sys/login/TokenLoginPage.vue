@@ -5,7 +5,7 @@
       <div class="app-loading-dots">
         <span class="dot dot-spin"><i></i><i></i><i></i><i></i></span>
       </div>
-      <div class="app-loading-title">LOMS精益运营管理系统</div>
+      <div class="app-loading-title">{{ appTitle }}</div>
     </div>
   </div>
 </template>
@@ -22,6 +22,7 @@
   export default {
     name: 'TokenLogin',
     setup() {
+      const appTitle = import.meta.env.VITE_GLOB_APP_TITLE || '优联软件';
       const route = useRoute();
       let router = useRouter();
       const { createMessage, notification } = useMessage();
@@ -82,6 +83,7 @@
           });
         }
       }
+      return { appTitle };
     },
   };
 </script>
@@ -135,9 +137,13 @@
 
   .app-loading .app-loading-logo {
     display: block;
-    width: 90px;
+    width: auto;
+    max-width: min(280px, 85vw);
+    height: auto;
+    max-height: 56px;
     margin: 0 auto;
     margin-bottom: 20px;
+    object-fit: contain;
   }
 
   .dot {

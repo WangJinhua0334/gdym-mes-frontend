@@ -4,7 +4,7 @@
 -->
 <template>
   <div class="anticon" :class="getAppLogoClass" @click="goHome">
-    <img src="../../../assets/images/logo.png" />
+    <img :src="logoImageSrc" :class="logoImgClass" alt="" />
     <div class="ml-2 truncate md:opacity-100" :class="getTitleClass" v-show="showTitle">
       {{ shortTitle }}
     </div>
@@ -12,6 +12,7 @@
 </template>
 <script lang="ts" setup>
   import { computed, unref } from 'vue';
+  import defaultAppLogo from '/@/assets/images/app-logo-mark.png';
   import { useGlobSetting } from '/@/hooks/setting';
   import { useGo } from '/@/hooks/web/usePage';
   import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
@@ -32,12 +33,18 @@
      * The title is also displayed when the menu is collapsed
      */
     alwaysShowTitle: { type: Boolean },
+    /** 自定义左上角图标；不传则使用默认红色 U 标 */
+    logoSrc: { type: String, default: '' },
+    /** 绑定到 <img> 的 class，用于登录页等场景单独控制尺寸 */
+    logoImgClass: { type: String, default: '' },
   });
 
   const { prefixCls } = useDesign('app-logo');
   const { getCollapsedShowTitle } = useMenuSetting();
   const userStore = useUserStore();
-  const { title, shortTitle } = useGlobSetting();
+  const { shortTitle } = useGlobSetting();
+
+  const logoImageSrc = computed(() => props.logoSrc || defaultAppLogo);
 
   const go = useGo();
 
@@ -89,6 +96,12 @@
       font-weight: 600;
       transition: all 0.5s;
       line-height: normal;
+    }
+
+    img {
+      width: @logo-width;
+      height: @logo-width;
+      object-fit: contain;
     }
   }
 </style>

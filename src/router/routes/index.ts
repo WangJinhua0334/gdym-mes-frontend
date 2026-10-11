@@ -92,7 +92,6 @@ export const basicRoutes = [
   RootRoute,
   ...mainOutRoutes,
   REDIRECT_ROUTE,
-  PAGE_NOT_FOUND_ROUTE,
   TokenLoginRoute,
   Oauth2LoginRoute,
   BiIndex,

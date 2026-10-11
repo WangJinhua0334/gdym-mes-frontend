@@ -7,6 +7,7 @@ export const useGlobSetting = (): Readonly<GlobConfig> => {
     VITE_GLOB_APP_TITLE,
     VITE_GLOB_API_URL,
     VITE_GLOB_APP_SHORT_NAME,
+    VITE_GLOB_APP_SHORT_TITLE,
     VITE_GLOB_API_URL_PREFIX,
     VITE_GLOB_APP_CAS_BASE_URL,
     VITE_GLOB_APP_OPEN_SSO,
@@ -21,8 +22,10 @@ export const useGlobSetting = (): Readonly<GlobConfig> => {
   //   );
   // }
 
-  // 短标题：替换shortName的下划线为空格
-  const shortTitle = VITE_GLOB_APP_SHORT_NAME.replace(/_/g, " ");
+  // 短标题：优先使用 VITE_GLOB_APP_SHORT_TITLE（可中文），否则由 SHORT_NAME 推导
+  const shortTitle =
+    (typeof VITE_GLOB_APP_SHORT_TITLE === 'string' && VITE_GLOB_APP_SHORT_TITLE.trim()) ||
+    VITE_GLOB_APP_SHORT_NAME.replace(/_/g, ' ');
   // Take global configuration
   const glob: Readonly<GlobConfig> = {
     title: VITE_GLOB_APP_TITLE,

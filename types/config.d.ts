@@ -171,6 +171,8 @@ export interface GlobEnvConfig {
   VITE_GLOB_API_URL_PREFIX?: string;
   // Project abbreviation
   VITE_GLOB_APP_SHORT_NAME: string;
+  /** 界面展示用短标题（可选，如中文品牌名） */
+  VITE_GLOB_APP_SHORT_TITLE?: string;
   //是否开启单点登录
   VITE_GLOB_APP_OPEN_SSO: string;
   //是否开启微应用模式

@@ -11,9 +11,6 @@ import { doLogout, getUserInfo, loginApi, phoneLoginApi, thirdLogin } from '/@/a
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { router } from '/@/router';
-import { usePermissionStore } from '/@/store/modules/permission';
-import { RouteRecordRaw } from 'vue-router';
-import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { isArray } from '/@/utils/is';
 import { useGlobSetting } from '/@/hooks/setting';
 import { JDragConfigEnum } from '/@/enums/jeecgEnum';
@@ -226,7 +223,7 @@ export const useUserStore = defineStore({
         // update-end-author:sunjianlei date:20230306 for: 修复登录成功后，没有正确重定向的问题
 
         //update-begin---author:wangshuai---date:2024-04-03---for:【issues/1102】设置单点登录后页面，进入首页提示404，也没有绘制侧边栏 #1102---
-        let ticket = getUrlParam('ticket');
+        const ticket = getUrlParam('ticket');
         if (ticket) {
           goHome && window.location.replace((userInfo && userInfo.homePath) || PageEnum.BASE_HOME);
         } else {
@@ -328,7 +325,7 @@ export const useUserStore = defineStore({
       //update-begin---author:wangshuai ---date:20230224  for：[QQYUN-3440]新建企业微信和钉钉配置表，通过租户模式隔离------------
       //退出登录的时候需要用的应用id
       if (isOAuth2AppEnv()) {
-        let tenantId = getAuthCache(OAUTH2_THIRD_LOGIN_TENANT_ID);
+        const tenantId = getAuthCache(OAUTH2_THIRD_LOGIN_TENANT_ID);
         removeAuthCache(OAUTH2_THIRD_LOGIN_TENANT_ID);
         goLogin && (await router.push({ name: 'Login', query: { tenantId: tenantId } }));
       } else {

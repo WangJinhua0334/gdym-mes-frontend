@@ -10,7 +10,8 @@
     />
 
     <title><%= title %></title>
-    <link rel="icon" href="/logo.png" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="/logo.png" />
     <!-- 全局配置 -->
     <script>
       window._CONFIG = {};
@@ -77,9 +78,13 @@
 
         .app-loading .app-loading-logo {
           display: block;
-          width: 90px;
+          width: auto;
+          max-width: min(280px, 85vw);
+          height: auto;
+          max-height: 56px;
           margin: 0 auto;
           margin-bottom: 20px;
+          object-fit: contain;
         }
 
         .dot {
