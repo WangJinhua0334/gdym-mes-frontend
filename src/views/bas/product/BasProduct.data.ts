@@ -24,6 +24,11 @@ export const columns: BasicColumn[] = [
     dataIndex: 'name',
   },
   {
+    title: '打印名称',
+    align: 'center',
+    dataIndex: 'printName',
+  },
+  {
     title: '是否默认',
     align: 'center',
     dataIndex: 'isDefault',
@@ -232,6 +237,11 @@ export const formSchema: FormSchema[] = [
     dynamicRules: () => {
       return [{ required: true, message: '请输入名称!' }];
     },
+  },
+  {
+    label: '打印名称',
+    field: 'printName',
+    component: 'Input',
   },
   {
     label: '描述',
