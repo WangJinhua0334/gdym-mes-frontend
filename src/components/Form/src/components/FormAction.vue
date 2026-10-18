@@ -1,6 +1,11 @@
 <template>
   <a-col v-bind="actionColOpt" v-if="showActionButtonGroup">
-    <div class="btnArea" style="width: 100%" :style="{ textAlign: actionColOpt.style.textAlign }">
+    <div
+      class="btnArea"
+      :class="`btnArea--${actionColOpt.style.textAlign || 'right'}`"
+      style="width: 100%"
+      :style="{ textAlign: actionColOpt.style.textAlign }"
+    >
       <FormItem>
         <!-- update-begin-author:zyf   Date:20211213  for：调换按钮前后位置-->
         <slot name="submitBefore"></slot>
@@ -134,6 +139,24 @@
       align-items: center;
       .ant-btn-link {
         padding-left: 0;
+      }
+    }
+
+    &--left {
+      :deep(.ant-form-item-control-input-content) {
+        justify-content: flex-start;
+      }
+    }
+
+    &--center {
+      :deep(.ant-form-item-control-input-content) {
+        justify-content: center;
+      }
+    }
+
+    &--right {
+      :deep(.ant-form-item-control-input-content) {
+        justify-content: flex-end;
       }
     }
   }

@@ -46,7 +46,7 @@
   import { columns, formSchema, printFormSchema } from './CoilProdReport.data';
   import { BasicModal, useModal } from '@/components/Modal';
   import { BasicForm, useForm } from '@/components/Form';
-  import { ref, unref, onMounted, onUnmounted } from 'vue';
+  import { computed, reactive, ref, unref, onMounted, onUnmounted } from 'vue';
   import { useMessage } from '@/hooks/web/useMessage';
   import { defHttp } from '@/utils/http/axios';
   import { printJimuReport } from '@/utils';
@@ -60,6 +60,11 @@
   const $message = useMessage();
   const loading = ref<boolean>(false);
   const userStore = useUserStore();
+  const sortOrders = reactive<{ startTime: 'asc' | 'desc'; endTime: 'asc' | 'desc' }>({
+    startTime: 'desc',
+    endTime: 'desc',
+  });
+  const sortInfo = computed(() => `startTime:${sortOrders.startTime},endTime:${sortOrders.endTime}`);
 
   // 注册编辑弹窗
   const [registerEditModal, { openModal:openEditModal }] = useModal();
@@ -86,7 +91,17 @@
       formConfig: {
         schemas: formSchema,
         autoSubmitOnEnter: true,
-        showAdvancedButton: false, // 不显示展开/收起按钮，所有查询输入框都显示
+        showAdvancedButton: true,
+        actionColOptions: {
+          span: 24,
+          xs: 24,
+          sm: 24,
+          md: 24,
+          lg: 24,
+          xl: 24,
+          xxl: 24,
+          style: { textAlign: 'right' },
+        },
         fieldMapToNumber: [],
         fieldMapToTime: [],
       },
@@ -97,14 +112,33 @@
         width: 160,
         fixed: 'right',
       },
+      beforeFetch: (params) => {
+        params.sortInfo = sortInfo.value;
+        return params;
+      },
+      sortFn: handleSortChange,
     },
     exportConfig: {
       name: '各个工序的钢卷加工统计报表',
       url: coilProdReportExportUrl,
+      params: { sortInfo },
     },
   });
 
   const [registerTable, { getSelectRows, reload }, { rowSelection, selectedRowKeys }] = tableContext;
+
+  function handleSortChange(sorter: any) {
+    const sorters = Array.isArray(sorter) ? sorter : [sorter];
+    sorters.forEach((item) => {
+      if (item?.order !== 'ascend' && item?.order !== 'descend') return;
+      const field = Array.isArray(item.field) ? item.field[item.field.length - 1] : item.field;
+      const order = item.order === 'ascend' ? 'asc' : 'desc';
+      if (field === 'startTime' || field === 'endTime') {
+        sortOrders[field] = order;
+      }
+    });
+    return {};
+  }
 
   // 页面加载时预加载字典数据
   onMounted(() => {
