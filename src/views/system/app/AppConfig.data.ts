@@ -37,6 +37,13 @@ export const columns: BasicColumn[] = [
     slots: { customRender: 'fileSlot' },
   },
   {
+    title: '下载地址',
+    align: 'left',
+    dataIndex: 'fullUrl',
+    slots: { customRender: 'downloadAddressSlot' },
+    ellipsis: true,
+  },
+  {
     title: '更新说明',
     align: 'center',
     dataIndex: 'releaseNote',

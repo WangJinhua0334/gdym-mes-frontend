@@ -24,6 +24,16 @@
         <span v-if="!text" style="font-size: 12px; font-style: italic">无文件</span>
         <a-button v-else :ghost="true" type="primary" preIcon="ant-design:download-outlined" size="small" @click="downloadFile(text)">下载</a-button>
       </template>
+      <template #downloadAddressSlot="{ text }">
+        <div
+          class="download-address-cell"
+          :class="{ 'download-address-clickable': text }"
+          :title="text ? `${text}（点击复制）` : ''"
+          @click="copyDownloadAddress(text)"
+        >
+          {{ text || '-' }}
+        </div>
+      </template>
     </BasicTable>
     <!-- 表单区域 -->
     <AppConfigModal @register="registerModal" @success="handleSuccess" />
@@ -39,7 +49,10 @@
   import { columns, searchFormSchema } from './AppConfig.data';
   import { list, deleteOne, batchDelete, getImportUrl, getExportUrl } from './AppConfig.api';
   import { downloadFile } from '/@/utils/common/renderUtils';
+  import { copyTextToClipboard } from '/@/hooks/web/useCopyToClipboard';
+  import { useMessage } from '/@/hooks/web/useMessage';
   const checkedKeys = ref<Array<string | number>>([]);
+  const { createMessage } = useMessage();
   //注册model
   const [registerModal, { openModal }] = useModal();
   //注册table数据
@@ -74,6 +87,15 @@
   });
 
   const [registerTable, { reload }, { rowSelection, selectedRowKeys }] = tableContext;
+
+  function copyDownloadAddress(value?: string) {
+    if (!value) return;
+    if (copyTextToClipboard(value)) {
+      createMessage.success('下载地址已复制');
+    } else {
+      createMessage.error('复制失败，请检查浏览器剪贴板权限');
+    }
+  }
 
   /**
    * 新增事件
@@ -155,4 +177,19 @@
   }
 </script>
 
-<style scoped></style>
+<style scoped>
+  .download-address-cell {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .download-address-clickable {
+    cursor: pointer;
+  }
+
+  .download-address-clickable:hover {
+    color: #1890ff;
+  }
+</style>
