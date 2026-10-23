@@ -90,6 +90,12 @@ export const columns: BasicColumn[] = [
     width: 150,
   },
   {
+    title: '默认仓位',
+    align: 'center',
+    dataIndex: 'defaultLocationId_dictText',
+    width: 150,
+  },
+  {
     title: '工序',
     align: 'center',
     dataIndex: 'operationName',
@@ -135,6 +141,12 @@ export const searchFormSchema: FormSchema[] = [
 ];
 //表单数据
 export const formSchema: FormSchema[] = [
+  {
+    label: '',
+    field: 'id',
+    component: 'Input',
+    show: false,
+  },
   {
     label: '用户',
     field: 'userId',
@@ -390,7 +402,10 @@ export const formSchema: FormSchema[] = [
           // id:'wareHouseId',//仓库编号
           code:'wareHouseNumber',//仓库编号
           name:'wareHouseName',//仓库名称
-        }]
+        }, {
+          isOpenLocation: 'warehouseIsOpenLocation',
+          defaultLocationId: 'defaultLocationId',
+        }],
       }
     },
     dynamicRules: () => {
@@ -409,6 +424,12 @@ export const formSchema: FormSchema[] = [
     field: 'wareHouseName',
     component: 'Input',
     dynamicDisabled: true,
+    show: false,
+  },
+  {
+    label: '仓位管理状态',
+    field: 'warehouseIsOpenLocation',
+    component: 'Input',
     show: false,
   },
   {
@@ -465,6 +486,35 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
     dynamicDisabled: true,
     show: false,
+  },
+  {
+    label: '默认仓位',
+    field: 'defaultLocationId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue,
+        getFieldsValue,
+        method: 'get',
+        url: '/warehousearea/basWarehouseArea/list',
+        params: { column: 'createTime', order: 'desc' },
+        columns: [
+          { name: '编码', code: 'code' },
+          { name: '区域名称', code: 'name' },
+        ],
+        queryBefore: (params) => {
+          params.whId = getFieldsValue().wareHouseId;
+          return params;
+        },
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        placeholder: '请选择默认仓位',
+        getPopupContainer: () => document.body,
+      };
+    },
+    ifShow: ({ values }) => values.warehouseIsOpenLocation === 'Y',
   },
   {
     label: '设备',

@@ -6,8 +6,14 @@ import {rules} from "@/utils/helper/validator";
 import {useUserStore} from "@/store/modules/user";
 import { getTenantId } from "/@/utils/auth";
 import { SYSTEM_DEFAULT_TEMPLATE_CODE } from "/@/enums/printTemplateEnum";
+import type { Ref } from 'vue';
 //退火扫码完工新增弹框页面表单配置（与App端保持一致：重量、物料名称、物料编码、规格型号、流转去向、质量汇报）
-export const formSchema: FormSchema[] = [
+export function getOutputFormSchema(
+  warehouseAreaOptions: Ref<Array<{ label: string; value: string }>>,
+  warehouseLocationEnabled: Ref<boolean>,
+  defaultWarehouseAreaId: Ref<string>
+): FormSchema[] {
+  return [
   {
     label: '钢卷号',
     field: 'newCoilNo',
@@ -184,28 +190,62 @@ export const formSchema: FormSchema[] = [
     label: '流转去向',
     field: 'destination',
     component: 'JDictSelectTag',
-    componentProps: {
+    componentProps: ({ formActionType }) => ({
       dictCode: 'gxlzqx',
-    },
+      onChange: (value) => {
+        if (String(value) === '2') {
+          formActionType.setFieldsValue({ warehouseAreaId: undefined });
+        } else if (warehouseLocationEnabled.value && !formActionType.getFieldsValue().warehouseAreaId) {
+          const defaultAreaId = warehouseAreaOptions.value.some((item) => item.value === String(defaultWarehouseAreaId.value))
+            ? defaultWarehouseAreaId.value
+            : undefined;
+          formActionType.setFieldsValue({ warehouseAreaId: defaultAreaId });
+        }
+      },
+    }),
     dynamicRules: () => {
       return [{ required: true, message: '请选择流转去向!' }];
     },
+  },
+  {
+    label: '仓位',
+    field: 'warehouseAreaId',
+    component: 'Select',
+    componentProps: () => ({
+      options: warehouseAreaOptions.value,
+      placeholder: '请选择仓位',
+      allowClear: true,
+      showSearch: true,
+      optionFilterProp: 'label',
+    }),
+    ifShow: ({ values }) => warehouseLocationEnabled.value && String(values.destination) === '1',
+    dynamicRules: ({ values }) =>
+      warehouseLocationEnabled.value && String(values.destination) === '1'
+        ? [{ required: true, message: '请选择仓位!' }]
+        : [],
   },
   {
     label: '质量汇报',
     field: 'qualityReport',
     component: 'InputTextArea',
   }
-];
+  ];
+}
 
 //冷轧扫码完工页面表单配置
-export function getFormSchema(): FormSchema[] {
+export function getFormSchema(onSourceChange?: () => void): FormSchema[] {
   return [
     {
       label: '流转卡号',
       field: 'flowCardId',
       component: 'Input',
       show: false,//禁止显示
+    },
+    {
+      label: '流转卡详情ID',
+      field: 'flowCardDetailId',
+      component: 'Input',
+      show: false,
     },
     {
       label: '钢卷号',
@@ -243,8 +283,10 @@ export function getFormSchema(): FormSchema[] {
               oldModelNumber: 'modelNumber',//规格型号
               startWeight: 'weight',//
               cardId:'flowCardId',//流转卡号
+              id: 'flowCardDetailId',
             },
           ],
+          onChange: () => onSourceChange?.(),
         };
       },
       dynamicRules: ({ model }) => {
@@ -301,8 +343,8 @@ export function getFormSchema(): FormSchema[] {
       label: '重量',
       field: 'weight',
       component: 'InputNumber',
-      /** 与 App 一致：领料重量可改；剩余重量 = 本字段 − 产出品明细重量之和（见页面展示） */
-      dynamicDisabled: false,
+      /** 领料重量由开工记录决定；分批重量进度仅按明细累计，不能在完工页修改源重量。 */
+      dynamicDisabled: true,
       componentProps: {
         style: { width: '100%' },
         precision: 3,
@@ -364,6 +406,13 @@ export function getFormSchema(): FormSchema[] {
       field: 'remainingWeightDisplay',
       component: 'Input',
       slot: 'remainingWeight',
+      colProps: { span: 8 },
+    },
+    {
+      label: '已提交重量',
+      field: 'submittedWeightDisplay',
+      component: 'Input',
+      slot: 'submittedWeight',
       colProps: { span: 8 },
     },
     {
@@ -435,6 +484,13 @@ export const getDetailJVxeColumns = function (showCoilNo = false) {
       type: JVxeTypes.input,
       disabled: true,   // 禁止编辑
       // width: 120
+    },
+    {
+      title: '仓位',
+      align: 'center',
+      key: 'warehouseAreaName',
+      type: JVxeTypes.input,
+      disabled: true,
     },
     /**
      * 流转去向: 1入库、2退料

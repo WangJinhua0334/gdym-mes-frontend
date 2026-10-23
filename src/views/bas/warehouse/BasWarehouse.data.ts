@@ -38,6 +38,17 @@ export const columns: BasicColumn[] = [
       ]);
     },
   },
+  {
+    title: '是否启用仓位管理',
+    align: 'center',
+    dataIndex: 'isOpenLocation',
+    customRender: ({ text }) => {
+      return render.renderSwitch(text === 'Y' ? 'Y' : 'N', [
+        { text: '是', value: 'Y', isChecked: true },
+        { text: '否', value: 'N', isChecked: false },
+      ]);
+    },
+  },
 ];
 //查询数据
 export const searchFormSchema: FormSchema[] = [
@@ -59,9 +70,24 @@ export const searchFormSchema: FormSchema[] = [
     defaultValue: 'N',
     component: 'JSwitch',
     componentProps: {
-      dictCode: 'is_open',
-      checkedChildren: '是',
-      unCheckedChildren: '否',
+      query: true,
+      options: ['Y', 'N'],
+      labelOptions: ['是', '否'],
+      allowClear: true,
+      placeholder: '全部',
+    },
+    colProps: { span: 6 },
+  },
+  {
+    label: '是否启用仓位',
+    field: 'isOpenLocation',
+    component: 'JSwitch',
+    componentProps: {
+      query: true,
+      options: ['Y', 'N'],
+      labelOptions: ['是', '否'],
+      allowClear: true,
+      placeholder: '全部',
     },
     colProps: { span: 6 },
   },
@@ -97,6 +123,15 @@ export const formSchema: FormSchema[] = [
   {
     label: '是否锁定',
     field: 'isLock',
+    defaultValue: 'N',
+    component: 'JSwitch',
+    componentProps: {
+      dictCode: 'is_open',
+    },
+  },
+  {
+    label: '是否启用仓位管理',
+    field: 'isOpenLocation',
     defaultValue: 'N',
     component: 'JSwitch',
     componentProps: {

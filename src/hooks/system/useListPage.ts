@@ -340,7 +340,8 @@ export function useListTable(tableProps: TableProps): [
    * @param formConfig
    */
   function setTableProps(formConfig: any) {
-    const replaceAttributeArray: string[] = ['baseColProps','labelCol'];
+    // 操作列配置由 BasicForm 按当前可见字段动态计算宽度，避免继承默认响应式列宽后覆盖计算结果。
+    const replaceAttributeArray: string[] = ['baseColProps','labelCol','actionColOptions'];
     for (let item of replaceAttributeArray) {
       if(formConfig && formConfig[item]){
         if(defaultTableProps.formConfig){

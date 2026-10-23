@@ -27,7 +27,7 @@
       </template>
       <!--操作栏-->
       <template #action="{ record }">
-        <TableAction :actions="getTableAction(record)" :dropDownActions="getDropDownAction(record)" />
+        <TableAction :actions="getTableAction(record)" />
       </template>
       <!--字段回显插槽-->
       <template #htmlSlot="{ text }">
@@ -174,16 +174,6 @@
     });
   }
   /**
-   * 详情
-   */
-  function handleDetail(record: Recordable) {
-    openModal(true, {
-      record,
-      isUpdate: true,
-      showFooter: false,
-    });
-  }
-  /**
    * 删除事件
    */
   async function handleDelete(record) {
@@ -210,18 +200,6 @@
         label: '编辑',
         onClick: handleEdit.bind(null, record),
         auth: 'bas:bas_product:edit',
-      },
-    ];
-  }
-
-  /**
-   * 下拉操作栏
-   */
-  function getDropDownAction(record) {
-    return [
-      {
-        label: '详情',
-        onClick: handleDetail.bind(null, record),
       },
       {
         label: '删除',

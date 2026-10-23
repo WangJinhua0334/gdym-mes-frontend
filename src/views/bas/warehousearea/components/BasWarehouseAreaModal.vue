@@ -34,6 +34,7 @@
     // Emits声明
     const emit = defineEmits(['register','success']);
     const isUpdate = ref(true);
+    const lockWarehouse = ref(false);
     const formDisabled = ref(false);
     const refKeys = ref(['basWarehouseBin', ]);
     const activeKey = ref('basWarehouseBin');
@@ -44,10 +45,13 @@
           dataSource: [],
           columns:basWarehouseBinJVxeColumns
     })
+    const areaFormSchema = formSchema.map((schema) =>
+      schema.field === 'whId' ? { ...schema, dynamicDisabled: () => lockWarehouse.value } : schema
+    );
     //表单配置
     const [registerForm, {setProps,resetFields, setFieldsValue, validate}] = useForm({
         //labelWidth: 150,
-        schemas: formSchema,
+        schemas: areaFormSchema,
         showActionButtonGroup: false,
         baseColProps: {span: 12}
     });
@@ -57,6 +61,7 @@
         await reset();
         setModalProps({confirmLoading: false,showCancelBtn:data?.showFooter,showOkBtn:data?.showFooter});
         isUpdate.value = !!data?.isUpdate;
+        lockWarehouse.value = !!data?.lockWarehouse;
         formDisabled.value = !data?.showFooter;
         if (unref(isUpdate)) {
             //表单赋值
@@ -64,6 +69,11 @@
                 ...data.record,
             });
              requestSubTableData(queryBasWarehouseBin, {id:data?.record?.id}, basWarehouseBinTable)
+        } else if (data?.record) {
+            // 新增时允许调用方传入默认值，例如从仓库区域展开列表新增时预填仓库。
+            await setFieldsValue({
+                ...data.record,
+            });
         }
         // 隐藏底部时禁用整个表单
        setProps({ disabled: !data?.showFooter })

@@ -1,5 +1,5 @@
 <script setup lang="ts" name="mo-AnnealingStopwork">
-  import { getFormSchema ,getDetailJVxeColumns,formSchema, printFormSchema} from './AnnealingStopwork';
+  import { getFormSchema ,getDetailJVxeColumns,getOutputFormSchema, printFormSchema} from './AnnealingStopwork';
   import {BasicForm, useForm} from "@/components/Form";
   import {saveOrUpdate} from "./AnnealingStopwork.api";
   import {useMessage} from "@/hooks/web/useMessage";
@@ -12,6 +12,7 @@
   import { getPrintTemplateCode, getReportIdByTemplateCode } from '@/utils/printTemplate';
   import {getToken, getTenantId} from "@/utils/auth";
   import {useUserStore} from "@/store/modules/user";
+  import { defHttp } from '/@/utils/http/axios';
   // 提示方法声明
   const $message = useMessage();
   // Emits声明
@@ -34,12 +35,34 @@
   const submitLoading = ref(false);
   // 打码完工按钮禁用状态（成功后禁用）
   const submitDisabled = ref(false);
+  const flowCardDetailId = ref<number | undefined>();
+  const submittedWeight = ref('0.000');
+  const submittedProducts = ref<any[]>([]);
+  const completed = ref(false);
+  const submissionId = ref(buildUUID());
+  const warehouseLocationEnabled = ref(false);
+  const warehouseAreaOptions = ref<Array<{ label: string; value: string }>>([]);
+  const defaultWarehouseAreaId = ref('');
+  const warehouseLocationConfigLoaded = ref(false);
   const remainingWeight = ref('0.000');
   const remainingWeightValue = computed(() => {
     const n = parseFloat(remainingWeight.value);
     return Number.isFinite(n) ? n : 0;
   });
   let remainingWeightTimer: ReturnType<typeof setInterval> | null = null;
+
+  function compareDecimalSums(left: Array<string | number>, right: Array<string | number>) {
+    const parts = [...left, ...right].map((value) => {
+      const [whole = '0', fraction = ''] = String(value ?? '0').trim().split('.');
+      return { whole: whole || '0', fraction };
+    });
+    const scale = Math.max(0, ...parts.map((value) => value.fraction.length));
+    const toUnits = (value: { whole: string; fraction: string }) =>
+      Number(value.whole) * 10 ** scale + Number((value.fraction + '0'.repeat(scale)).slice(0, scale) || '0');
+    const leftTotal = parts.slice(0, left.length).reduce((sum, value) => sum + toUnits(value), 0);
+    const rightTotal = parts.slice(left.length).reduce((sum, value) => sum + toUnits(value), 0);
+    return leftTotal === rightTotal ? 0 : leftTotal > rightTotal ? 1 : -1;
+  }
 
   function updateRemainingWeight() {
     try {
@@ -49,7 +72,8 @@
         const rows = mesProductPickDetail.value.getTableData() || [];
         detailSum = rows.reduce((acc, r: any) => acc + parseFloat(String(r?.weight ?? '0')), 0);
       }
-      remainingWeight.value = (main - detailSum).toFixed(3);
+      const committed = parseFloat(submittedWeight.value) || 0;
+      remainingWeight.value = (main - committed - detailSum).toFixed(3);
     } catch {
       remainingWeight.value = '0.000';
     }
@@ -77,7 +101,7 @@
   //表单配置 退火扫码完工表单
   const [registerForm,{validate,setFieldsValue,getFieldsValue,resetFields,updateSchema}] = useForm({
     labelWidth: 160,
-    schemas: getFormSchema(),
+    schemas: getFormSchema(onSourceChanged),
     showActionButtonGroup: false,
     baseColProps: { span: 8 },
     disabled: false,
@@ -87,10 +111,113 @@
   //冷轧扫码完工新增引用弹框
   const [registerExtendedFormModal, { validate: validateExtendedForm, resetFields: resetExtendedFields,setFieldsValue: setExtendedFieldsValue }] = useForm({
     labelWidth: 160,
-    schemas: formSchema,
+    schemas: getOutputFormSchema(warehouseAreaOptions, warehouseLocationEnabled, defaultWarehouseAreaId),
     showActionButtonGroup: false,
     disabled: false,
   });
+
+  async function loadWarehouseLocationOptions() {
+    const username = useUserStore().getUserInfo?.username;
+    if (!username) {
+      warehouseLocationConfigLoaded.value = true;
+      return;
+    }
+    try {
+      const extendResponse: any = await defHttp.get({
+        url: '/userextend/basUserExtend/queryByUsername',
+        params: { username },
+      });
+      const extend = extendResponse?.result ?? extendResponse;
+      const warehouseId = extend?.wareHouseId;
+      defaultWarehouseAreaId.value = extend?.defaultLocationId || '';
+      if (!warehouseId) {
+        warehouseLocationConfigLoaded.value = true;
+        return;
+      }
+
+      const warehouseResponse: any = await defHttp.get({
+        url: '/basic/wareHouse/queryById',
+        params: { id: warehouseId },
+      });
+      const warehouse = warehouseResponse?.result ?? warehouseResponse;
+      warehouseLocationEnabled.value = warehouse?.isOpenLocation === 'Y';
+      if (!warehouseLocationEnabled.value) {
+        warehouseLocationConfigLoaded.value = true;
+        return;
+      }
+
+      const areaResponse: any = await defHttp.get({
+        url: '/warehousearea/basWarehouseArea/list',
+        params: { whId: warehouseId, pageNo: 1, pageSize: 1000, column: 'code', order: 'asc' },
+      });
+      const areaResult = areaResponse?.result ?? areaResponse;
+      const areas = Array.isArray(areaResult?.records) ? areaResult.records : [];
+      warehouseAreaOptions.value = areas.map((area: any) => ({
+        label: area.name,
+        value: String(area.id),
+      }));
+      if (defaultWarehouseAreaId.value && !warehouseAreaOptions.value.some((item) => item.value === String(defaultWarehouseAreaId.value))) {
+        defaultWarehouseAreaId.value = '';
+      }
+      warehouseLocationConfigLoaded.value = true;
+    } catch (error) {
+      warehouseLocationEnabled.value = false;
+      warehouseAreaOptions.value = [];
+      defaultWarehouseAreaId.value = '';
+      warehouseLocationConfigLoaded.value = false;
+      $message.createMessage.error('加载仓库仓位信息失败，请稍后重试');
+      console.error('加载仓库仓位信息失败', error);
+    }
+  }
+
+  async function loadEndProgress(id = flowCardDetailId.value) {
+    if (!id) return;
+    try {
+      const response: any = await defHttp.get({ url: '/etl/annealing/end/progress', params: { flowCardDetailId: id } });
+      const progress = response?.result ?? response;
+      flowCardDetailId.value = Number(progress.flowCardDetailId || id);
+      if (progress.sourceWeight !== undefined && progress.sourceWeight !== null) {
+        setFieldsValue({ weight: progress.sourceWeight });
+      }
+      submittedWeight.value = String(progress.submittedWeight ?? '0.000');
+      completed.value = Boolean(progress.completed);
+      submittedProducts.value = (progress.submittedProducts || []).map((row: any) => ({
+        ...row,
+        warehouseAreaName: getWarehouseAreaName(row.warehouseAreaId),
+      }));
+      selectedRows.value = submittedProducts.value.slice(-1);
+      submitDisabled.value = completed.value;
+      showPrintButton.value = submittedProducts.value.length > 0;
+      updateRemainingWeight();
+    } catch (error) {
+      $message.createMessage.error('加载已提交产出品进度失败');
+      console.error('加载退火完工进度失败', error);
+    }
+  }
+
+  function onSourceChanged() {
+    setTimeout(async () => {
+      const values = getFieldsValue();
+      flowCardDetailId.value = values.flowCardDetailId ? Number(values.flowCardDetailId) : undefined;
+      submittedProducts.value = [];
+      submittedWeight.value = '0.000';
+      completed.value = false;
+      submitDisabled.value = false;
+      selectedRows.value = [];
+      mesProductPickDetailTable.dataSource = [];
+      if (flowCardDetailId.value) {
+        localStorage.setItem('annealing-end-source', JSON.stringify({ id: flowCardDetailId.value, values }));
+        await loadEndProgress(flowCardDetailId.value);
+      } else {
+        localStorage.removeItem('annealing-end-source');
+      }
+    }, 0);
+  }
+
+  function getWarehouseAreaName(areaId: string | undefined) {
+    if (!areaId) return '';
+    return warehouseAreaOptions.value.find((area) => area.value === String(areaId))?.label || '';
+  }
 
   //注册弹框打印
   const [registerModaldy, { setModalProps, closeModal:closeDyModal, openModal:openDyModal }] = useModal();
@@ -122,6 +249,10 @@
     }
 
     try {
+      if (!warehouseLocationConfigLoaded.value) {
+        $message.createMessage.warning('仓库仓位信息尚未加载完成，请稍后重试');
+        return;
+      }
       // 验证表单（验证阶段不显示 loading）
       const mainFormValues = await validate();
 
@@ -145,6 +276,10 @@
           detailData = tableData;
         }
       }
+      if (warehouseLocationEnabled.value && detailData.some((item) => String(item.destination) === '1' && !item.warehouseAreaId)) {
+        $message.createMessage.warning('仓库已启用仓位管理，请为每条入库产出品选择仓位');
+        return;
+      }
 
       // 校验表单中的重量输入框是否有值
       if (!mainFormValues.weight || mainFormValues.weight === '' || mainFormValues.weight === null || mainFormValues.weight === undefined) {
@@ -152,8 +287,6 @@
         return;
       }
 
-      // 计算表格中所有行的重量之和
-      let totalWeight = 0;
       for (let i = 0; i < detailData.length; i++) {
         const item = detailData[i];
         const itemWeight = parseFloat(item?.weight || '0');
@@ -161,7 +294,6 @@
           $message.createMessage.warning(`表格中第${i + 1}行的重量格式不正确，请检查！`);
           return;
         }
-        totalWeight += itemWeight;
       }
 
       // 获取表单中的重量
@@ -172,16 +304,9 @@
         return;
       }
 
-      // 比较前统一到两位小数，避免浮点数精度问题
-      const totalWeightRounded = Math.round(totalWeight * 100) / 100;
-      const formWeightRounded = Math.round(formWeight * 100) / 100;
-      // 浮点容差（用于判断两个浮点数是否相等）
-      const tolerance = 0.01;
-      // 校验规则：表格重量总和必须等于表单中的重量
-      if (Math.abs(totalWeightRounded - formWeightRounded) > tolerance) {
-        $message.createMessage.error(
-          `重量校验未通过：表格重量总和（${totalWeightRounded.toFixed(2)}）与表单重量（${formWeightRounded.toFixed(2)}）不一致，请检查！`
-        );
+      const pendingWeights = detailData.map((item) => String(item.weight ?? '0'));
+      if (compareDecimalSums([submittedWeight.value, ...pendingWeights], [String(mainFormValues.weight)]) > 0) {
+        $message.createMessage.error(`本批产出重量超过剩余重量 ${remainingWeight.value}，请调整后再提交`);
         return;
       }
 
@@ -189,25 +314,24 @@
       submitLoading.value = true;
 
       // 组装完整数据 - 将主表数据和子表数据平级合并，包含表格中所有的行数据
-      const { remainingWeightDisplay: _rw, ...mainRest } = mainFormValues as Record<string, unknown>;
+      const { remainingWeightDisplay: _rw, submittedWeightDisplay: _sw, ...mainRest } = mainFormValues as Record<string, unknown>;
       const submitData = {
         ...mainRest,
-        productInfoList: detailData  // 包含表格中所有的行数据
+        flowCardDetailId: flowCardDetailId.value,
+        submissionId: submissionId.value,
+        productInfoList: detailData.map(({ warehouseAreaName: _warehouseAreaName, ...item }) => item)  // 区域名称仅展示，提交区域ID
       };
       // 调用提交方法
       const success = await requestAddOrEdit(submitData);
       // 只有请求成功后才显示打印按钮
       if (success) {
-        // 提交成功后，禁用"打码完工"按钮
-        submitDisabled.value = true;
-        showPrintButton.value = true;
-        // 清空选中行，确保打印按钮默认禁用（需要重新选中行才能打印）
-        selectedRows.value = [];
-        // 清空表格选中状态
-        if (mesProductPickDetail.value && typeof mesProductPickDetail.value.clearSelection === 'function') {
-          mesProductPickDetail.value.clearSelection();
-        }
-        // $message.createMessage.success('提交成功');
+        submissionId.value = buildUUID();
+        await loadEndProgress(flowCardDetailId.value);
+        selectedRows.value = submittedProducts.value.slice(-detailData.length);
+        mesProductPickDetailTable.dataSource = [];
+        tableData.value = [];
+        if (mesProductPickDetail.value && typeof mesProductPickDetail.value.clearSelection === 'function') mesProductPickDetail.value.clearSelection();
+        $message.createMessage.success(completed.value ? '产出品已提交，母卷已完工' : '本批产出品提交成功，可继续提交下一批');
       } else {
         // 提交失败时，确保按钮可以再次点击
         submitDisabled.value = false;
@@ -246,6 +370,10 @@
   //新增按钮点击事件
   function handleAddDetail() {
     if (submitDisabled.value) return;
+    if (!warehouseLocationConfigLoaded.value) {
+      $message.createMessage.warning('仓库仓位信息尚未加载完成，请稍后重试');
+      return;
+    }
     // 获取表单数据中的钢卷号
     const formData = getFieldsValue();
     const flowCardId = formData.flowCardId;
@@ -259,7 +387,7 @@
     // const oldMaterialId = formData.materialId;
     // 获取当前子表的数据源长度作为序号（确保每次都获取最新的数据长度）
     const currentDataSource = mesProductPickDetail.value ? mesProductPickDetail.value.getTableData() : mesProductPickDetailTable.dataSource;
-    const currentIndex = Array.isArray(currentDataSource) ? currentDataSource.length + 1 : 1;
+    const currentIndex = (Array.isArray(currentDataSource) ? currentDataSource.length : 0) + submittedProducts.value.length + 1;
     // 拼接新的钢卷号
     const newCoilNo = currentIndex > 9? `40-${coilNo}-${currentIndex}`: `40-${coilNo}-0${currentIndex}`;
 
@@ -276,6 +404,7 @@
         flowCardId: flowCardId,
         weight: formData.weight || '',
         destination: '1',
+        warehouseAreaId: warehouseLocationEnabled.value ? defaultWarehouseAreaId.value : undefined,
         oldMaterialNumber: formData.materialNumber || '', // 物料选择接口需要，从主表单获取
       });
     }, 100);
@@ -283,6 +412,7 @@
 
   //编辑按钮点击事件
   function handleEditDetail() {
+    if (submitDisabled.value) return;
     if (!mesProductPickDetail.value) {
       $message.createMessage.warning('表格未初始化');
       return;
@@ -345,6 +475,7 @@
           newMaterialName: selectedRow.newMaterialName || '',
           newModelNumber: selectedRow.newModelNumber || '',
           destination: selectedRow.destination || '',
+          warehouseAreaId: String(selectedRow.destination) === '1' ? selectedRow.warehouseAreaId || undefined : undefined,
           qualityReport: selectedRow.qualityReport || '',
         });
       } catch (e) {
@@ -396,6 +527,7 @@
 
   //子表单弹框确定按钮点击事件
   async function handleModalOk() {
+    if (submitDisabled.value) return;
     try {
       const values = await validateExtendedForm();
       // 验证必填字段（与App端保持一致）
@@ -411,6 +543,14 @@
         $message.createMessage.warning('请选择流转去向');
         return;
       }
+      const isInbound = String(values.destination) === '1';
+      if (isInbound && warehouseLocationEnabled.value && !values.warehouseAreaId) {
+        $message.createMessage.warning('仓库已启用仓位管理，请选择仓位');
+        return;
+      }
+      const warehouseAreaName = isInbound && warehouseLocationEnabled.value
+        ? getWarehouseAreaName(values.warehouseAreaId)
+        : '';
       // 获取字典标签（如果需要显示中文）
       let destinationLabel = values.destination;
 
@@ -428,6 +568,8 @@
               newMaterialName: values.newMaterialName || '',
               newModelNumber: values.newModelNumber || '',
               destination: destinationLabel || values.destination || '',
+              warehouseAreaId: isInbound && warehouseLocationEnabled.value ? values.warehouseAreaId : undefined,
+              warehouseAreaName,
               qualityReport: values.qualityReport || '',
             }
           }]);
@@ -444,6 +586,8 @@
           newMaterialName: values.newMaterialName || '',   // 物料名称
           newModelNumber: values.newModelNumber || '',   // 规格型号
           destination: destinationLabel || values.destination || '',   // 流转去向
+          warehouseAreaId: isInbound && warehouseLocationEnabled.value ? values.warehouseAreaId : undefined,
+          warehouseAreaName,
           qualityReport: values.qualityReport || '',   // 质检报告
         };
         // 添加到表格
@@ -475,7 +619,8 @@
     // 关闭弹窗
     closeModal();
   }
-  onMounted(() => {
+  onMounted(async () => {
+    await loadWarehouseLocationOptions();
     updateSchema({
       field: 'weight',
       componentProps: {
@@ -486,6 +631,16 @@
       setFieldsValue({
         endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       });
+      try {
+        const saved = JSON.parse(localStorage.getItem('annealing-end-source') || 'null');
+        if (saved?.id && saved?.values) {
+          setFieldsValue(saved.values);
+          flowCardDetailId.value = Number(saved.id);
+          void loadEndProgress(flowCardDetailId.value);
+        }
+      } catch (error) {
+        console.warn('恢复退火母卷进度失败', error);
+      }
       updateRemainingWeight();
     }, 100);
     remainingWeightTimer = setInterval(updateRemainingWeight, 400);
@@ -611,33 +766,9 @@
    */
   async function handlePrint() {
     try{
-      // 获取选中的行数据
-      if (!mesProductPickDetail.value) {
-        $message.createMessage.warning('表格未初始化!');
-        return;
-      }
-
-      // 优先使用已保存的选中行数据
-      let currentSelectedRows = selectedRows.value;
-
-      // 如果保存的选中行为空，尝试从表格获取
-      if (!currentSelectedRows || currentSelectedRows.length === 0) {
-        try {
-          // 尝试使用 getSelectionData 方法（JVxeTable 的标准方法）
-          if (typeof mesProductPickDetail.value.getSelectionData === 'function') {
-            currentSelectedRows = mesProductPickDetail.value.getSelectionData();
-          } else if (typeof mesProductPickDetail.value.getSelectRows === 'function') {
-            currentSelectedRows = mesProductPickDetail.value.getSelectRows();
-          }
-        } catch (e) {
-          console.error('获取选中行失败:', e);
-        }
-      }
-
-      // 如果表格中没有选中行，使用已保存的选中行数据
-      if (!currentSelectedRows || currentSelectedRows.length === 0) {
-        currentSelectedRows = selectedRows.value;
-      }
+      // 标签数据只取已提交记录，避免打印尚未提交的草稿产出品。
+      const currentSelectedRows = submittedProducts.value.slice(-1);
+      selectedRows.value = currentSelectedRows;
 
       // 检查是否选中了行
       if (!currentSelectedRows || currentSelectedRows.length === 0) {
@@ -748,10 +879,30 @@
           :class="{ 'remaining-negative': remainingWeightValue < 0 }"
         />
       </template>
+      <template #submittedWeight>
+        <a-input-number :value="parseFloat(submittedWeight) || 0" :precision="3" :controls="false" disabled class="remaining-input" />
+      </template>
     </BasicForm>
     <!-- 子表单区域 -->
     <a-tabs v-model:activeKey="activeKey">
       <a-tab-pane tab="产出品明细" key="mesProductPickDetail" :forceRender="true">
+        <a-alert
+          v-if="getFieldsValue()?.oldCoilNo"
+          show-icon
+          :type="completed ? 'success' : 'info'"
+          :message="`领料重量：${getFieldsValue()?.weight || '0.000'}；已提交：${submittedWeight}；剩余：${remainingWeight}${completed ? '；母卷已完工' : ''}`"
+          style="margin-bottom: 12px"
+        />
+        <a-card v-if="submittedProducts.length" title="已提交产出品（只读，可打印）" size="small" style="margin-bottom: 12px">
+          <a-table :data-source="submittedProducts" :pagination="false" row-key="id" size="small">
+            <a-table-column title="钢卷号" data-index="newCoilNo" />
+            <a-table-column title="物料名称" data-index="newMaterialName" />
+            <a-table-column title="重量" data-index="endWeight" />
+            <a-table-column title="去向" data-index="destination" />
+            <a-table-column title="仓位" data-index="warehouseAreaName" />
+            <a-table-column title="状态" key="status"><template #default>已提交</template></a-table-column>
+          </a-table>
+        </a-card>
         <JVxeTable
           keep-source
           resizable
@@ -788,7 +939,7 @@
               class="submit-button"
               :loading="submitLoading"
               :disabled="submitDisabled || submitLoading"
-              >完工</a-button
+              >{{ completed ? '已完工' : '提交本批' }}</a-button
             >
           </div>
         </div>

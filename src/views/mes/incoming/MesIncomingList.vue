@@ -109,6 +109,14 @@
     { title: '牌号', dataIndex: 'brand', key: 'brand', width: 140, align: 'center' },
     { title: '重量', dataIndex: 'weight', key: 'weight', width: 120, align: 'center' },
     { title: '生产编号', dataIndex: 'productNumber', key: 'productNumber', width: 140, align: 'center' },
+    {
+      title: '第一道工序',
+      dataIndex: 'firstOperation',
+      key: 'firstOperation',
+      width: 120,
+      align: 'center',
+      customRender: ({ text }) => (String(text) === 'sx' ? '酸洗' : String(text) === 'th' ? '退火' : ''),
+    },
     { title: '车牌号', dataIndex: 'licensePlateNumber', key: 'licensePlateNumber', width: 140, align: 'center' },
     { title: '物料编码', dataIndex: 'materialNumber', key: 'materialNumber', width: 200, align: 'center' },
     { title: '采购订单号', dataIndex: 'purchaseOrderNo', key: 'purchaseOrderNo', width: 200, align: 'center' ,fixed: 'right'},
@@ -149,12 +157,13 @@
     setFieldsValue({ existCoilNoList: list });
   }
 
-  async function initForm() {
+  async function initForm(firstOperation?: string) {
     await resetFields();
     const savedMaterialDesc = sessionStorage.getItem(MATERIAL_DESC_CACHE_KEY) || '';
     await setFieldsValue({
       inStockTime: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
       materialDesc: savedMaterialDesc,
+      ...(firstOperation ? { firstOperation } : {}),
     });
     syncExistCoilNoList();
   }
@@ -217,6 +226,7 @@
         allAmountLc: values?.allAmountLc != null ? String(values.allAmountLc) : '',
         licensePlateNumber: values?.licensePlateNumber ?? '',
         productNumber: values?.productNumber ?? '',
+        firstOperation: values?.firstOperation,
       };
       if (editingRowId.value) {
         const idx = currentData.findIndex((r) => r.rowId === editingRowId.value);
@@ -231,7 +241,7 @@
       }
       saveMaterialDesc();
       $message.createMessage.success('保存成功!');
-      await initForm();
+      await initForm(row.firstOperation);
       await nextTick();
       const coilInput = document.querySelector('.receive-page input[data-field="coilNo"]') as HTMLInputElement | null;
       coilInput?.focus();
@@ -297,6 +307,7 @@
       allAmountLc: record.allAmountLc,
       licensePlateNumber: record.licensePlateNumber,
       productNumber: record.productNumber,
+      firstOperation: record.firstOperation,
       existCoilNoList: getDataSource()
         .filter((r) => r.rowId !== record.rowId)
         .map((r) => r.coilNo)
@@ -333,7 +344,6 @@
     }
     try {
       const formValues = getFieldsValue();
-      const firstOperation = formValues?.firstOperation ?? (userStore.getTenant === '1003' ? 'th' : 'sx');
       const productionTimeStr = formValues?.inStockTime ?? dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
       const items = currentData.map((r) => ({
         coilNo: r.coilNo,
@@ -365,7 +375,7 @@
         licensePlateNumber: r.licensePlateNumber ?? '',
         productNumber: r.productNumber ?? '',
         productionTime: productionTimeStr,
-        firstOperation,
+        firstOperation: r.firstOperation,
       }));
       const params = {
         items,

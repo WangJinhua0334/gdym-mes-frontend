@@ -2,6 +2,11 @@ import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { render } from '/@/utils/common/renderUtils';
 import { JVxeTypes, JVxeColumn } from '/@/components/jeecg/JVxeTable/types';
+
+function formatMaterialText(value: unknown): string {
+  return String(value ?? '').trim() || '—';
+}
+
 //列表数据
 export const columns: BasicColumn[] = [
   {
@@ -9,30 +14,47 @@ export const columns: BasicColumn[] = [
     align: 'center',
     sorter: true,
     dataIndex: 'code',
-    width: 150,
+    width: 240,
+    customRender: ({ text }) => formatMaterialText(text),
+  },
+  {
+    title: '物料名称',
+    align: 'center',
+    sorter: true,
+    dataIndex: 'name',
+    width: 260,
+    customRender: ({ text }) => formatMaterialText(text),
+  },
+  {
+    title: '规格型号',
+    align: 'center',
+    sorter: true,
+    // 金蝶同步的规格型号保存在 modelNumber，specification 是独立的规格字段。
+    dataIndex: 'modelNumber',
+    width: 200,
+    customRender: ({ text }) => formatMaterialText(text),
+  },
+  {
+    title: '打印名称',
+    align: 'center',
+    dataIndex: 'printName',
+    width: 260,
+    customRender: ({ text }) => formatMaterialText(text),
   },
   {
     title: '版本',
     align: 'center',
     dataIndex: 'version',
     width: 80,
-  },
-  {
-    title: '名称',
-    align: 'center',
-    sorter: true,
-    dataIndex: 'name',
-  },
-  {
-    title: '打印名称',
-    align: 'center',
-    dataIndex: 'printName',
+    defaultHidden: true,
+    customRender: ({ text }) => formatMaterialText(text),
   },
   {
     title: '是否默认',
     align: 'center',
     dataIndex: 'isDefault',
     width: 80,
+    defaultHidden: true,
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
         { text: '是', value: 'Y', isChecked: true },
@@ -46,6 +68,7 @@ export const columns: BasicColumn[] = [
     sorter: true,
     dataIndex: 'isKey',
     width: 80,
+    defaultHidden: true,
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
         { text: '是', value: 'Y', isChecked: true },
@@ -59,6 +82,7 @@ export const columns: BasicColumn[] = [
     sorter: true,
     dataIndex: 'status',
     width: 80,
+    defaultHidden: true,
     customRender: ({ text }) => {
       return render.renderSwitch(text, [
         { text: '启用', value: 'enable', isChecked: true },
@@ -72,18 +96,16 @@ export const columns: BasicColumn[] = [
     sorter: true,
     dataIndex: 'prodGrId_dictText',
     width: 120,
+    defaultHidden: true,
+    customRender: ({ text }) => formatMaterialText(text),
   },
   {
     title: '描述',
     align: 'center',
     sorter: true,
     dataIndex: 'description',
-  },
-  {
-    title: '规格',
-    align: 'center',
-    sorter: true,
-    dataIndex: 'specification',
+    defaultHidden: true,
+    customRender: ({ text }) => formatMaterialText(text),
   },
   {
     title: '检验方案列表',
@@ -91,6 +113,7 @@ export const columns: BasicColumn[] = [
     dataIndex: 'listSlot',
     slots: { customRender: 'listSlot' },
     width: 180,
+    defaultHidden: true,
   },
 ];
 //查询数据
@@ -102,28 +125,21 @@ export const searchFormSchema: FormSchema[] = [
     colProps: { span: 6 },
   },
   {
-    label: '名称',
+    label: '物料名称',
     field: 'name',
     component: 'JInput',
     colProps: { span: 6 },
   },
   {
-    label: '状态',
-    field: 'status',
-    defaultValue: 'enable',
-    component: 'JDictSelectTag',
-    componentProps: {
-      dictCode: 'prod_status',
-    },
+    label: '规格型号',
+    field: 'modelNumber',
+    component: 'JInput',
     colProps: { span: 6 },
   },
   {
-    label: '物料分类',
-    field: 'category',
-    component: 'JDictSelectTag',
-    componentProps: {
-      dictCode: 'prod_category',
-    },
+    label: '打印名称',
+    field: 'printName',
+    component: 'JInput',
     colProps: { span: 6 },
   },
 ];

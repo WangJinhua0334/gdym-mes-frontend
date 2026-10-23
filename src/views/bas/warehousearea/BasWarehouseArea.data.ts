@@ -76,7 +76,7 @@ export const searchFormSchema: FormSchema[] = [
         setFieldsValue: setFieldsValue,
         getFieldsValue: getFieldsValue,
         method: 'get',
-        url: '/warehouse/basWarehouse/list',
+        url: '/basic/wareHouse/list',
         params: { column: 'code', order: 'asc', searchFields: 'code,name' /*, code: '${code}'*/ },
         columns: [
           {
@@ -152,7 +152,7 @@ export const formSchema: FormSchema[] = [
         setFieldsValue: setFieldsValue,
         getFieldsValue: getFieldsValue,
         method: 'get',
-        url: '/warehouse/basWarehouse/list',
+        url: '/basic/wareHouse/list',
         params: { column: 'code', order: 'asc', searchFields: 'code,name' /*, code: '${code}'*/ },
         columns: [
           {

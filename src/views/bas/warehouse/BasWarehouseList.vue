@@ -1,7 +1,17 @@
 <template>
   <div>
     <!--引用表格-->
-    <BasicTable @register="registerTable" :rowSelection="rowSelection" @row-click="clickRow">
+    <BasicTable
+      @register="registerTable"
+      :rowSelection="rowSelection"
+      :expandedRowKeys="expandedRowKeys"
+      :rowExpandable="(record) => record.isOpenLocation === 'Y'"
+      @expand="handleExpand"
+      @row-click="clickRow"
+    >
+      <template #expandedRowRender="{ record }">
+        <BasWarehouseAreaSubTable :id="record.id" />
+      </template>
       <!--插槽:table标题-->
       <template #tableTitle>
         <a-button type="primary" @click="handleAdd" preIcon="ant-design:plus-outlined" v-auth="'bas:bas_warehouse:add'"> 新增</a-button>
@@ -56,6 +66,7 @@
   import { useModal } from '/@/components/Modal';
   import { useListPage } from '/@/hooks/system/useListPage';
   import BasWarehouseModal from './components/BasWarehouseModal.vue';
+  import BasWarehouseAreaSubTable from './components/BasWarehouseAreaSubTable.vue';
   import { columns, searchFormSchema } from './BasWarehouse.data';
   import { list, deleteOne, batchDelete, getImportUrl, getExportUrl } from './BasWarehouse.api';
   import { downloadFile } from '/@/utils/common/renderUtils';
@@ -70,6 +81,7 @@
   const $message = useMessage();
 
   const checkedKeys = ref<Array<string | number>>([]);
+  const expandedRowKeys = ref<string[]>([]);
   //注册model
   const [registerModal, { openModal }] = useModal();
   //注册table数据
@@ -84,6 +96,12 @@
         schemas: searchFormSchema,
         autoSubmitOnEnter: true,
         showAdvancedButton: true,
+        autoAdvancedCol: 3,
+        autoAdvancedLine: 1,
+        alwaysShowLines: 1,
+        actionColOptions: {
+          style: { textAlign: 'right' },
+        },
         fieldMapToNumber: [],
         fieldMapToTime: [],
       },
@@ -103,6 +121,10 @@
   });
 
   const [registerTable, { reload }, { rowSelection, selectedRowKeys }] = tableContext;
+
+  function handleExpand(expanded: boolean, record: Recordable) {
+    expandedRowKeys.value = expanded && record.isOpenLocation === 'Y' ? [record.id] : [];
+  }
 
   const mainId = ref<string>();
 
