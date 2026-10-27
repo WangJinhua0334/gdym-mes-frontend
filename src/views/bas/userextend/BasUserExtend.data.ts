@@ -159,7 +159,12 @@ export const formSchema: FormSchema[] = [
         getFieldsValue: getFieldsValue,
         method: 'get',
         url: '/sys/user/list',
-        params: { searchFields: 'username,realname' },
+        pageSize: 20,
+        params: {
+          column: 'id',
+          order: 'asc',
+          searchFields: 'username,realname,workNo',
+        },
         columns: [
           {
             name: '账号',
@@ -181,7 +186,7 @@ export const formSchema: FormSchema[] = [
         isShowNum: false,
         rowKey: 'id',
         labelKey: ['realname'],
-        placeholder: '请选择用户',
+        placeholder: '请输入账号、姓名或工号',
         multi: false,
         linkmap: [
           { realname: 'realName' },
@@ -216,7 +221,8 @@ export const formSchema: FormSchema[] = [
       dictCode: 'plant_name',
       triggerChange: true,
       placeholder: '请选择生产厂区',
-      showCode: true
+      showCode: true,
+      showSearch: true,
     },
     dynamicRules: () => {
       return [{ required: true, message: '请选择用户' }];
@@ -446,7 +452,7 @@ export const formSchema: FormSchema[] = [
         url: '/basic/operation/list',
         params: {
           column: 'createTime', order: 'desc',
-          searchFields: 'id,,operationName,operationNumber',
+          searchFields: 'id,operationNumber,operationName',
         },
         columns: [
           { name: '编号', code: 'id' },
@@ -498,7 +504,11 @@ export const formSchema: FormSchema[] = [
         getFieldsValue,
         method: 'get',
         url: '/warehousearea/basWarehouseArea/list',
-        params: { column: 'createTime', order: 'desc' },
+        params: {
+          column: 'createTime',
+          order: 'desc',
+          searchFields: 'code,name',
+        },
         columns: [
           { name: '编码', code: 'code' },
           { name: '区域名称', code: 'name' },
