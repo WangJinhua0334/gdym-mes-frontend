@@ -163,14 +163,26 @@ export const searchFormSchema: FormSchema[] = [
 ];
 
 export const operationSearchFormSchema: FormSchema[] = [
-  ...searchFormSchema,
+  ...searchFormSchema.map((schema) =>
+    schema.field === 'keyWord'
+      ? {
+          ...schema,
+          colProps: {
+            span: 6,
+          },
+        }
+      : schema,
+  ),
   {
     field: 'operateType',
     label: '操作类型',
     component: 'JDictSelectTag',
-    colProps: { span: 4 },
+    colProps: {
+      span: 6,
+    },
     componentProps: {
       dictCode: 'operate_type',
+      showSearch: true,
     },
   },
 ];
