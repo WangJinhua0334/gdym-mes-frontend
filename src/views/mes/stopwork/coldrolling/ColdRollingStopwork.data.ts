@@ -7,7 +7,7 @@ import { useUserStore } from '@/store/modules/user';
 import { getTenantId } from '/@/utils/auth';
 import { SYSTEM_DEFAULT_TEMPLATE_CODE } from '/@/enums/printTemplateEnum';
 // import { getUserInfo } from '@/api/sys/user';
-//冷轧扫码完工新增弹框页面表单配置（与App端保持一致：重量、物料名称、物料编码、规格型号、流转去向、质量汇报）
+//冷轧扫码完工新增弹框页面表单配置（与App端保持一致：重量、物料名称、物料编码、规格型号、流转去向、生产数据）
 export const formSchema: FormSchema[] = [
   {
     label: '钢卷号',
@@ -131,7 +131,7 @@ export const formSchema: FormSchema[] = [
           column: 'defaultMapping',
           order: 'desc',
           oldMaterialNumber: '${oldMaterialNumber}',
-          tenantId: getTenantId?.() || useUserStore().getUserInfo?.tenantId || '',
+          tenantId: getTenantId?.() || useUserStore().getUserInfo?.tenantid || '',
           searchFields: 'newMaterialNumber,newMaterialName',
           pageNo: 1,
           pageSize: 10,
@@ -192,7 +192,7 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
-    label: '质量汇报',
+    label: '生产数据',
     field: 'qualityReport',
     component: 'InputTextArea',
   },
@@ -440,7 +440,7 @@ export const getDetailJVxeColumns = function (showCoilNo = false) {
       disabled: true, // 禁止编辑
     },
     {
-      title: '质量汇报',
+      title: '生产数据',
       align: 'center',
       fixed: true,
       key: 'qualityReport',

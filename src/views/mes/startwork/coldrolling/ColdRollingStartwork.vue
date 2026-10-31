@@ -14,6 +14,8 @@
   const $message = useMessage();
   const emit = defineEmits(['register', 'success']);
   const loading = ref(false);
+  const previousQualityReport = ref('');
+  let coilRequestId = 0;
 
   function focusInputById(id: string) {
     nextTick(() => {
@@ -35,6 +37,8 @@
   });
 
   function clearCoilFields() {
+    coilRequestId++;
+    previousQualityReport.value = '';
     setFieldsValue({
       flowCardId: undefined,
       oldCoilNo: '',
@@ -53,7 +57,20 @@
     const v = typeof e === 'string' ? e : (e?.target as HTMLInputElement)?.value;
     if (v === undefined || v === null || String(v).trim() === '') {
       clearCoilFields();
+      return;
     }
+    coilRequestId++;
+    previousQualityReport.value = '';
+    setFieldsValue({
+      flowCardId: undefined,
+      materialId: undefined,
+      materialNumber: undefined,
+      materialName: undefined,
+      modelNumber: undefined,
+      updateTime: undefined,
+      exceptedWeight: undefined,
+      weight: undefined,
+    });
   }
 
   /** GET /etl/rolling/start/getByCoilNo */
@@ -63,6 +80,8 @@
       $message.createMessage.warning('请输入钢卷号');
       return;
     }
+    const requestId = ++coilRequestId;
+    previousQualityReport.value = '';
     try {
       const d: any = await defHttp.get(
         {
@@ -71,6 +90,7 @@
         },
         { successMessageMode: 'none' }
       );
+      if (requestId !== coilRequestId || String(getFieldsValue()?.oldCoilNo ?? '').trim() !== coilNo) return;
       if (!d) {
         $message.createMessage.warning('未找到钢卷数据');
         return;
@@ -88,9 +108,13 @@
         weight: endW,
         startTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       });
+      if (requestId !== coilRequestId || String(getFieldsValue()?.oldCoilNo ?? '').trim() !== d.newCoilNo) return;
+      previousQualityReport.value = d.qualityReport ?? '';
       $message.createMessage.success(`获取成功: ${d.newCoilNo}`);
       focusInputById(COLD_ROLLING_START_TIME_ID);
     } catch (error: any) {
+      if (requestId !== coilRequestId || String(getFieldsValue()?.oldCoilNo ?? '').trim() !== coilNo) return;
+      previousQualityReport.value = '';
       const msg =
         error?.response?.data?.message ||
         error?.message ||
@@ -110,6 +134,8 @@
         weight: parseFloat(String(w ?? 0)),
       });
       await resetFields();
+      coilRequestId++;
+      previousQualityReport.value = '';
       setFieldsValue({
         startTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       });
@@ -143,6 +169,10 @@
 <template>
   <div class="custom-form-wrapper mes-process-page-bold">
     <BasicForm @register="registerForm" :width="896" />
+    <div class="previous-production-data">
+      <div class="previous-production-label">上一道工序生产数据</div>
+      <div class="previous-production-value">{{ previousQualityReport || '-' }}</div>
+    </div>
     <div class="button-container">
       <a-button @click="handleSubmit" :loading="loading" type="primary">开工</a-button>
     </div>
@@ -156,6 +186,23 @@
     padding: 20px;
     border-radius: 4px;
     min-height: calc(100vh - 40px);
+  }
+  .previous-production-data {
+    display: flex;
+    gap: 12px;
+    padding: 12px 16px;
+    margin: 8px 0 16px;
+    background: #fafafa;
+    border-radius: 4px;
+  }
+  .previous-production-label {
+    flex: 0 0 160px;
+    font-weight: 600;
+  }
+  .previous-production-value {
+    min-width: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
   }
   .button-container {
     display: flex;

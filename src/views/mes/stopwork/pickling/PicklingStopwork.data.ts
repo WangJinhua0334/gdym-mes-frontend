@@ -121,7 +121,7 @@ export const getDetailJVxeColumns = function (showCoilNo = false) {
       disabled: true, // 禁止编辑
     },
     {
-      title: '质量汇报',
+      title: '生产数据',
       key: 'qualityReport',
       align: 'center',
       type: JVxeTypes.textarea, // 文本框
@@ -144,7 +144,7 @@ export const getDetailJVxeColumns = function (showCoilNo = false) {
   );
   return arr;
 };
-//酸洗扫码完工新增弹框页面表单配置（与App端保持一致：重量、物料名称、物料编码、规格型号、流转去向、质量汇报）
+//酸洗扫码完工新增弹框页面表单配置（与App端保持一致：重量、物料名称、物料编码、规格型号、流转去向、生产数据）
 export const formSchema: FormSchema[] = [
   // 用于物料选择接口的隐藏参数，从主表单 materialNumber 传入
   {
@@ -333,7 +333,7 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
-    label: '质量汇报',
+    label: '生产数据',
     field: 'qualityReport',
     component: 'InputTextArea',
   }

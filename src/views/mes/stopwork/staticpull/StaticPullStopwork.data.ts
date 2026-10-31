@@ -6,7 +6,7 @@ import {rules} from "@/utils/helper/validator";
 import {useUserStore} from "@/store/modules/user";
 import { getTenantId } from "/@/utils/auth";
 import { SYSTEM_DEFAULT_TEMPLATE_CODE } from "/@/enums/printTemplateEnum";
-//精拉扫码完工新增弹框页面表单配置（与App端保持一致：重量、物料名称、物料编码、规格型号、流转去向、质量汇报）
+//精拉扫码完工新增弹框页面表单配置（与App端保持一致：重量、物料名称、物料编码、规格型号、流转去向、生产数据）
 export const formSchema: FormSchema[] = [
   {
     label: '钢卷号',
@@ -195,7 +195,7 @@ export const formSchema: FormSchema[] = [
     trigger: ['change', 'blur'],
   } as FormSchema,
   {
-    label: '质量汇报',
+    label: '生产数据',
     field: 'qualityReport',
     component: 'InputTextArea',
   }
@@ -417,7 +417,7 @@ export const getDetailJVxeColumns = function (showCoilNo = false) {
       disabled: true,   // 禁止编辑
     },
     {
-      title: '质量汇报',
+      title: '生产数据',
       key: 'qualityReport',
       type: JVxeTypes.textarea,// 使用 select 类型
       disabled: true,   // 禁止编辑

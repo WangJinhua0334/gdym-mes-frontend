@@ -4,7 +4,12 @@
     <BasicTable @register="registerTable" :rowSelection="rowSelection">
       <!--插槽:table标题-->
       <template #tableTitle>
-        <a-button v-if="selectedRowKeys && selectedRowKeys.length > 0" type="primary" preIcon="ant-design:printer-outlined" @click="handlePrint"
+        <a-button
+          v-if="selectedRowKeys && selectedRowKeys.length > 0"
+          type="primary"
+          :loading="printing"
+          preIcon="ant-design:printer-outlined"
+          @click="handlePrint"
           >打印</a-button
         >
       </template>
@@ -33,7 +38,7 @@
 </template>
 
 <script lang="ts" name="incomingnote-incomingNote" setup>
-  import { reactive, unref } from 'vue';
+  import { reactive, unref, ref } from 'vue';
   import { BasicTable, TableAction } from '/@/components/Table';
   import { BasicModal, useModal } from '/@/components/Modal';
   import { useListPage } from '/@/hooks/system/useListPage';
@@ -45,8 +50,10 @@
   import { getPrintTemplateCode, getReportIdByTemplateCode } from '/@/utils/printTemplate';
   import { getToken } from '@/utils/auth';
   import { useUserStore } from '@/store/modules/user';
+  import { printReceiptLabels } from '../incomingOriented/MesIncomingOriented.api';
   import IncomingNoteEditModal from './components/IncomingNoteEditModal.vue';
 
+  const printing = ref(false);
   const queryParam = reactive<any>({});
   const $message = useMessage();
 
@@ -74,7 +81,7 @@
       formConfig: {
         schemas: searchFormSchema,
         autoSubmitOnEnter: true,
-        showAdvancedButton: true,
+        showAdvancedButton: false,
         fieldMapToNumber: [],
         fieldMapToTime: [],
         submitButtonOptions: {
@@ -158,6 +165,9 @@
    * 打印-直接打印（使用指定模板）
    */
   async function handlePrint() {
+    if (printing.value) return;
+    printing.value = true;
+    const tenant = Number(useUserStore().getTenant);
     try {
       if (!unref(selectedRowKeys) || unref(selectedRowKeys).length <= 0) {
         $message.createMessage.warning('请选择待打印的记录!');
@@ -186,17 +196,25 @@
 
       const templateCode = await getPrintTemplateCode();
 
-      // 按模板方案编码获取报表ID
-      getReportIdByTemplateCode(templateCode, 'pick_material_sn').then(async (reportId) => {
-        // 打印数据集 { reportId, parameters }，使用钢卷号作为参数
-        const printSet: any = { [reportId]: { id: `${coilNumbers.join(',')}` } };
-
-        loopPrintJimuReport(printSet, getToken, () => {
+      const orientedNumbers = coilNumbers.filter((number) => /^ZQ\d{12}$/.test(number));
+      const normalNumbers = coilNumbers.filter((number) => !/^ZQ\d{12}$/.test(number));
+      if (orientedNumbers.length) {
+        const reportId = await getReportIdByTemplateCode(templateCode, 'oriented_pick_material_sn');
+        if (Number(useUserStore().getTenant) !== tenant) return;
+        await printReceiptLabels(reportId, orientedNumbers, tenant);
+      }
+      if (normalNumbers.length) {
+        const reportId = await getReportIdByTemplateCode(templateCode, 'pick_material_sn');
+        if (Number(useUserStore().getTenant) !== tenant) return;
+        await loopPrintJimuReport({ [reportId]: { id: normalNumbers.join(',') } }, getToken, () => {
           $message.createMessage.success('打印成功!');
         });
-      });
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      $message.createMessage.warning('打印失败，可重新选择记录补打');
+    } finally {
+      printing.value = false;
     }
   }
 

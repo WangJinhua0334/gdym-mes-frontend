@@ -27,8 +27,6 @@
     dataSource: [] as any[],
     columns: detailJVxeColumns,
   });
-  // 保存上次输入的质量汇报信息
-  const lastQualityReport = ref('');
   // 编辑模式标识
   const isEditMode = ref(false);
   // 当前编辑的行ID
@@ -231,7 +229,7 @@ async function handleSubmit() {
       setExtendedFieldsValue({
         weight: formWeight, // 设置重量默认值为表单中的重量
         destination: '1', // 设置流转去向默认值为入库
-        qualityReport: lastQualityReport.value, // 恢复上次输入的质量汇报
+        qualityReport: '',
         oldMaterialNumber: formData.materialNumber || '', // 物料选择接口需要，从主表单获取
       });
     }, 100);
@@ -425,14 +423,11 @@ async function handleSubmit() {
           newMaterialName: values.newMaterialName || '',
           newModelNumber: values.newModelNumber || '',
           destination: destinationLabel || values.destination || '', // 流转去向
-          qualityReport: values.qualityReport || '', // 质量汇报
+          qualityReport: values.qualityReport || '', // 生产数据
         };
         // 添加到表格
         mesProductPickDetail.value.addRows([rowData]);
       }
-
-      // 保存当前输入的质量汇报值
-      lastQualityReport.value = values.qualityReport || '';
 
       // 更新表格数据
       setTimeout(() => {
@@ -457,11 +452,6 @@ async function handleSubmit() {
   }
   // 弹框取消事件处理
   function handleModalCancel() {
-    // 在重置前保存当前输入的质量汇报值
-    const currentValues = getExtendedFieldsValue();
-    if (currentValues && currentValues.qualityReport) {
-      lastQualityReport.value = currentValues.qualityReport;
-    }
     // 重置表单数据
     resetFields();
     // 重置编辑模式

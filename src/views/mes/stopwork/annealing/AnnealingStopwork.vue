@@ -405,6 +405,7 @@
         weight: formData.weight || '',
         destination: '1',
         warehouseAreaId: warehouseLocationEnabled.value ? defaultWarehouseAreaId.value : undefined,
+        qualityReport: '',
         oldMaterialNumber: formData.materialNumber || '', // 物料选择接口需要，从主表单获取
       });
     }, 100);
@@ -588,7 +589,7 @@
           destination: destinationLabel || values.destination || '',   // 流转去向
           warehouseAreaId: isInbound && warehouseLocationEnabled.value ? values.warehouseAreaId : undefined,
           warehouseAreaName,
-          qualityReport: values.qualityReport || '',   // 质检报告
+          qualityReport: values.qualityReport || '',   // 生产数据
         };
         // 添加到表格
         mesProductPickDetail.value.addRows([rowData]);
@@ -898,6 +899,7 @@
             <a-table-column title="钢卷号" data-index="newCoilNo" />
             <a-table-column title="物料名称" data-index="newMaterialName" />
             <a-table-column title="重量" data-index="endWeight" />
+            <a-table-column title="生产数据" data-index="qualityReport" />
             <a-table-column title="去向" data-index="destination" />
             <a-table-column title="仓位" data-index="warehouseAreaName" />
             <a-table-column title="状态" key="status"><template #default>已提交</template></a-table-column>

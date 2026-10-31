@@ -27,8 +27,6 @@
     dataSource: [],
     columns: detailJVxeColumns,
   });
-  // 保存上一次质量汇报的值
-  const lastQualityReport = ref('');
   // 编辑模式标识
   const isEditMode = ref(false);
   // 当前编辑的行ID
@@ -245,7 +243,7 @@ async function handleSubmit() {
         flowCardId: flowCardId,
         weight: formData.weight || '',
         destination: '1',
-        qualityReport: lastQualityReport.value,
+        qualityReport: '',
         oldMaterialNumber: formData.materialNumber || '', // 物料选择接口需要，从主表单获取
       });
     }, 100);
@@ -414,15 +412,10 @@ async function handleSubmit() {
           newMaterialName: values.newMaterialName || '', // 物料名称
           newModelNumber: values.newModelNumber || '', // 规格型号
           destination: destinationLabel || values.destination || '', // 流转去向
-          qualityReport: values.qualityReport || '', // 质检报告
+          qualityReport: values.qualityReport || '', // 生产数据
         };
         // 添加到表格
         mesProductPickDetail.value.addRows([rowData]);
-      }
-
-      // 保存质量汇报的值，以便下次使用
-      if (values.qualityReport) {
-        lastQualityReport.value = values.qualityReport;
       }
 
       // 更新表格数据

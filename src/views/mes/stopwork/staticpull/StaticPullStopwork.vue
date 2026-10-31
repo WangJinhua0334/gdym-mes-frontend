@@ -244,6 +244,7 @@ async function handleSubmit() {
         flowCardId: flowCardId,
         weight: formData.weight || '',
         destination: '1',
+        qualityReport: '',
         oldMaterialNumber: formData.materialNumber || '', // 物料选择接口需要，从主表单获取
       });
     }, 100);

@@ -5,6 +5,13 @@ import { SYSTEM_DEFAULT_TEMPLATE_CODE } from '/@/enums/printTemplateEnum';
 // 收料记录列表数据
 export const columns: BasicColumn[] = [
   {
+    title: '源钢卷号',
+    align: 'center',
+    dataIndex: 'originalCoilNumber',
+    width: 180,
+    fixed: 'left',
+  },
+  {
     title: '钢卷号',
     align: 'center',
     dataIndex: 'internalCoilNumber',
@@ -82,6 +89,12 @@ export const columns: BasicColumn[] = [
 // 查询表单配置
 export const searchFormSchema: FormSchema[] = [
   {
+    label: '源钢卷号',
+    field: 'originalCoilNumber',
+    component: 'JInput',
+    colProps: { span: 6 },
+  },
+  {
     label: '钢卷号',
     field: 'internalCoilNumber',
     component: 'JInput',
@@ -141,7 +154,19 @@ export const searchFormSchema: FormSchema[] = [
 
 // 编辑弹窗表单配置
 export const editFormSchema: FormSchema[] = [
-  { field: 'id', label: 'id', component: 'Input', show: false },
+  {
+    label: '源钢卷号',
+    field: 'originalCoilNumber',
+    component: 'Input',
+    componentProps: { disabled: true },
+    colProps: { span: 12 },
+  },
+  {
+    field: 'id',
+    label: 'id',
+    component: 'Input',
+    show: false,
+  },
   {
     label: '钢卷号',
     field: 'internalCoilNumber',
@@ -161,7 +186,11 @@ export const editFormSchema: FormSchema[] = [
       ],
     },
     dynamicRules: () => [
-      { required: true, message: '请选择钢卷的第一道工序!', trigger: 'change' },
+      {
+        required: true,
+        message: '请选择钢卷的第一道工序!',
+        trigger: 'change',
+      },
     ],
   },
   {
