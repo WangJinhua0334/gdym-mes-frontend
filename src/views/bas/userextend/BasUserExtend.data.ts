@@ -1,8 +1,15 @@
+import { ref } from 'vue';
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 import { render } from '@/utils/common/renderUtils';
 import { useUserStore } from '@/store/modules/user';
 import {getTenantId} from "@/utils/auth";
+
+/**
+ * 编辑回显用的当前工序。
+ * 工序档案主键是整数，这里保持整数，便于和表单里的工序主键对上并显示工序名称。
+ */
+export const operationEchoOptions = ref<Recordable[]>([]);
 //列表数据
 export const columns: BasicColumn[] = [
   {
@@ -138,6 +145,191 @@ export const searchFormSchema: FormSchema[] = [
     field: 'realName',
     component: 'JInput',
   },
+  {
+    label: '生产厂区',
+    field: 'plantName',
+    component: 'JDictSelectTag',
+    componentProps: {
+      dictCode: 'plant_name',
+      triggerChange: true,
+      placeholder: '请选择生产厂区',
+      showCode: true,
+      showSearch: true,
+    },
+  },
+  {
+    label: '部门',
+    field: 'deptId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue,
+        getFieldsValue,
+        method: 'get',
+        url: '/sys/sysDepart/list',
+        params: {
+          column: 'createTime',
+          order: 'desc',
+          searchFields: 'id,departName,orgCode',
+        },
+        columns: [
+          { name: '编号', code: 'id' },
+          { name: '编码', code: 'orgCode' },
+          { name: '名称', code: 'departName' },
+        ],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['departName'],
+        placeholder: '请选择部门',
+        multi: false,
+      };
+    },
+  },
+  {
+    label: '班组',
+    field: 'workTeamId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue,
+        getFieldsValue,
+        method: 'get',
+        url: '/basic/basWorkTeam/list',
+        params: {
+          column: 'createTime',
+          order: 'desc',
+          searchFields: 'id,name,code',
+        },
+        columns: [
+          { name: '编号', code: 'id' },
+          { name: '编码', code: 'code' },
+          { name: '名称', code: 'name' },
+        ],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        placeholder: '请选择班组',
+        multi: false,
+      };
+    },
+  },
+  {
+    label: '仓库',
+    field: 'wareHouseId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue,
+        getFieldsValue,
+        method: 'get',
+        url: '/basic/wareHouse/list',
+        params: {
+          column: 'createTime',
+          order: 'desc',
+          searchFields: 'id,name,code',
+        },
+        columns: [
+          { name: '编号', code: 'id' },
+          { name: '编码', code: 'code' },
+          { name: '名称', code: 'name' },
+        ],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        placeholder: '请选择仓库',
+        multi: false,
+        // 仓库变了，原先选的仓位不一定还属于这个仓库
+        onChange: () => {
+          setFieldsValue({
+            defaultLocationId: undefined,
+          });
+        },
+      };
+    },
+  },
+  {
+    label: '仓位',
+    field: 'defaultLocationId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue,
+        getFieldsValue,
+        method: 'get',
+        url: '/warehousearea/basWarehouseArea/list',
+        params: {
+          column: 'createTime',
+          order: 'desc',
+          searchFields: 'code,name',
+        },
+        columns: [
+          { name: '编码', code: 'code' },
+          { name: '区域名称', code: 'name' },
+        ],
+        queryBefore: (params) => {
+          const wareHouseId = getFieldsValue().wareHouseId;
+          if (wareHouseId) {
+            params.whId = wareHouseId;
+          }
+          return params;
+        },
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        placeholder: '请选择仓位',
+        getPopupContainer: () => document.body,
+      };
+    },
+  },
+  {
+    label: '工序',
+    field: 'operationId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue,
+        getFieldsValue,
+        method: 'get',
+        url: '/basic/operation/list',
+        params: {
+          column: 'createTime',
+          order: 'desc',
+          searchFields: 'id,operationNumber,operationName',
+        },
+        columns: [
+          { name: '编号', code: 'id' },
+          { name: '编码', code: 'operationNumber' },
+          { name: '名称', code: 'operationName' },
+        ],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['operationName'],
+        placeholder: '请选择工序',
+        multi: false,
+      };
+    },
+  },
 ];
 //表单数据
 export const formSchema: FormSchema[] = [
@@ -225,7 +417,7 @@ export const formSchema: FormSchema[] = [
       showSearch: true,
     },
     dynamicRules: () => {
-      return [{ required: true, message: '请选择用户' }];
+      return [{ required: true, message: '请选择生产厂区' }];
     },
   },
   {
@@ -262,7 +454,7 @@ export const formSchema: FormSchema[] = [
       }
     },
     dynamicRules: () => {
-      return [{ required: true, message: '请选择生产车间' }];
+      return [{ required: true, message: '请选择部门' }];
     },
   },
   {
@@ -275,106 +467,6 @@ export const formSchema: FormSchema[] = [
   {
     label: '生产车间编码',
     field: 'deptNumber',
-    component: 'Input',
-    dynamicDisabled: true,
-    show: false,
-  },
-  {
-    label: '生产车间',
-    // label: '生产车间编号',
-    field: 'workShopId',
-    component: 'JSearchSelectCustom',
-    componentProps: ({ formActionType }) => {
-      const { setFieldsValue, getFieldsValue } = formActionType;
-      return {
-        setFieldsValue: setFieldsValue,
-        getFieldsValue: getFieldsValue,
-        method: 'get',
-        url: '/basic/basWorkShop/list',
-        params: { column: 'createTime', order: 'desc', searchFields: 'id,name,code' },
-        columns: [
-          { name: '编号', code: 'id' },
-          { name: '编码', code: 'code'},
-          { name: '名称', code: 'name'},
-        ],
-        queryBefore: (params) => {
-          params.tenantId = getTenantId();
-          return params;
-        },
-        isShowNum: false,
-        rowKey: 'id',
-        labelKey: ['name'],
-        linkmap: [
-          { code:'workShopNumber' },
-          { name:'workShopName' },
-        ],
-        placeholder: '请选择生产车间',
-        multi: false,
-      }
-    },
-    dynamicRules: () => {
-      return [{ required: true, message: '请选择生产车间' }];
-    },
-  },
-  {
-    label: '生产车间名称',
-    field: 'workShopName',
-    component: 'Input',
-    dynamicDisabled: true,
-    show: false,
-  },
-  {
-    label: '生产车间编码',
-    field: 'workShopNumber',
-    component: 'Input',
-    dynamicDisabled: true,
-    show: false,
-  },
-  {
-    label: '生产班组',
-    // label: '生产班组编号',
-    field: 'workTeamId',
-    component: 'JSearchSelectCustom',
-    componentProps: ({ formActionType }) => {
-      const { setFieldsValue, getFieldsValue } = formActionType;
-      return {
-        setFieldsValue: setFieldsValue,
-        getFieldsValue: getFieldsValue,
-        method: 'get',
-        url: '/basic/basWorkTeam/list',
-        params: { column: 'createTime', order: 'desc', searchFields: 'id,name,code' },
-        columns: [
-          { name: '编号', code: 'id' },
-          { name: '编码', code: 'code' },
-          { name: '名称', code: 'name' },
-        ],
-        queryBefore: (params) => {
-          params.tenantId = getTenantId();
-          return params;
-        },
-        isShowNum: false,
-        rowKey: 'id',
-        labelKey: ['name'],
-        linkmap: [{
-          name:'workTeamName',//班组名称
-          code:'workTeamNumber',//班组编号
-        }]
-      }
-    },
-    dynamicRules: () => {
-      return [{ required: true, message: '请选择生产班组' }];
-    },
-  },
-  {
-    label: '生产班组编码',
-    field: 'workTeamNumber',
-    component: 'Input',
-    dynamicDisabled: true,
-    show: false,
-  },
-  {
-    label: '生产班组名称',
-    field: 'workTeamName',
     component: 'Input',
     dynamicDisabled: true,
     show: false,
@@ -439,6 +531,100 @@ export const formSchema: FormSchema[] = [
     show: false,
   },
   {
+    label: '生产班组',
+    // label: '生产班组编号',
+    field: 'workTeamId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/basic/basWorkTeam/list',
+        params: { column: 'createTime', order: 'desc', searchFields: 'id,name,code' },
+        columns: [
+          { name: '编号', code: 'id' },
+          { name: '编码', code: 'code' },
+          { name: '名称', code: 'name' },
+        ],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        linkmap: [{
+          name:'workTeamName',//班组名称
+          code:'workTeamNumber',//班组编号
+        }]
+      }
+    },
+  },
+  {
+    label: '生产班组编码',
+    field: 'workTeamNumber',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: false,
+  },
+  {
+    label: '生产班组名称',
+    field: 'workTeamName',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: false,
+  },
+  {
+    label: '生产车间',
+    // label: '生产车间编号',
+    field: 'workShopId',
+    component: 'JSearchSelectCustom',
+    componentProps: ({ formActionType }) => {
+      const { setFieldsValue, getFieldsValue } = formActionType;
+      return {
+        setFieldsValue: setFieldsValue,
+        getFieldsValue: getFieldsValue,
+        method: 'get',
+        url: '/basic/basWorkShop/list',
+        params: { column: 'createTime', order: 'desc', searchFields: 'id,name,code' },
+        columns: [
+          { name: '编号', code: 'id' },
+          { name: '编码', code: 'code'},
+          { name: '名称', code: 'name'},
+        ],
+        queryBefore: (params) => {
+          params.tenantId = getTenantId();
+          return params;
+        },
+        isShowNum: false,
+        rowKey: 'id',
+        labelKey: ['name'],
+        linkmap: [
+          { code:'workShopNumber' },
+          { name:'workShopName' },
+        ],
+        placeholder: '请选择生产车间',
+        multi: false,
+      }
+    },
+  },
+  {
+    label: '生产车间名称',
+    field: 'workShopName',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: false,
+  },
+  {
+    label: '生产车间编码',
+    field: 'workShopNumber',
+    component: 'Input',
+    dynamicDisabled: true,
+    show: false,
+  },
+  {
     label: '工序',
     // label: '工序编号',
     field: 'operationId',
@@ -466,17 +652,14 @@ export const formSchema: FormSchema[] = [
         isShowNum: false,
         rowKey: 'id',
         labelKey: ['operationName'],
+        dictOptions: operationEchoOptions.value,
         linkmap: [
           {
-            id:'id',//工序编号
-            operationNumber: 'operationNumber', //工序编号
-            operationName: 'operationName', //工序名称
+            operationNumber: 'operationNumber',
+            operationName: 'operationName',
           },
         ],
       };
-    },
-    dynamicRules: () => {
-      return [{ required: true, message: '请选择工序' }];
     },
   },
   {
@@ -557,9 +740,6 @@ export const formSchema: FormSchema[] = [
           name:'equipmentName',//设备分类名称
         }]
       }
-    },
-    dynamicRules: () => {
-      return [{ required: true, message: '请选择设备' }];
     },
   },
   {

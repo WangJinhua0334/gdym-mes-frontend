@@ -415,7 +415,6 @@
       const params = {
         items,
         operatorNumber: userStore.getUserInfo?.username ?? '',
-        tenantId: Number(userStore.getTenant),
       };
       const tenantAtSubmit = Number(userStore.getTenant);
       const response = await submitReceipt(params);

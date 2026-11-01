@@ -96,7 +96,6 @@ export const formSchema: FormSchema[] = [
                 url: '/etl/orientedReceiptMaterial/getDetailByCoilNo',
                 params: {
                   coilNo: coilNoValue,
-                  tenantId: useUserStore().getTenant,
                 },
               });
               console.log('返回的数据：', result);

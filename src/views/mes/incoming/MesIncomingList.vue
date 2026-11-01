@@ -148,7 +148,7 @@
     labelWidth: 100,
     schemas: formSchemaWithCache,
     showActionButtonGroup: false,
-    baseColProps: { span: 5 },
+    baseColProps: { span: 24 },
   });
 
   function syncExistCoilNoList(excludeRowId?: string) {
@@ -380,7 +380,6 @@
       const params = {
         items,
         operatorNumber: formValues?.operatorNumber ?? userStore.getUserInfo?.username ?? '',
-        tenantId: Number(formValues?.tenantId ?? userStore.getTenant ?? 0),
       };
       await saveOrUpdate(params, false);
       setTableData([]);

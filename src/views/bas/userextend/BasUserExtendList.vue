@@ -79,6 +79,14 @@
         schemas: searchFormSchema,
         autoSubmitOnEnter: true,
         showAdvancedButton: true,
+        // 一行三列。收起时只留前两个条件，查询和重置占第一行最右列。
+        autoAdvancedCol: 2,
+        baseColProps: {
+          span: 8,
+        },
+        actionColOptions: {
+          style: { textAlign: 'right' },
+        },
         fieldMapToNumber: [],
         fieldMapToTime: [],
       },

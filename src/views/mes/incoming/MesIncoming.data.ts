@@ -26,7 +26,7 @@ export const formSchema: FormSchema[] = [
     label: '钢卷号',
     field: 'coilNo',
     component: 'Input',
-    colProps: { span: 7 },
+    colProps: { xs: 24, sm: 12, lg: 8 },
     componentProps: ({ formActionType }) => {
       const { setFieldsValue, getFieldsValue } = formActionType;
       return {
@@ -93,7 +93,6 @@ export const formSchema: FormSchema[] = [
                 url: '/etl/preDeliveryBill/getDetailByCoilNo',
                 params: {
                   coilNo: coilNoValue,
-                  tenantId: useUserStore().getTenant,
                 },
               });
               console.log('返回的数据：', result);
@@ -148,7 +147,7 @@ export const formSchema: FormSchema[] = [
     label: '车牌号',
     field: 'licensePlateNumber',
     component: 'Input',
-    colProps: { span: 4},
+    colProps: { xs: 24, sm: 12, lg: 8 },
     componentProps: {
       'data-field': 'licensePlateNumber',
       autocomplete: 'off',
@@ -167,7 +166,7 @@ export const formSchema: FormSchema[] = [
   {
     label: '生产编号',
     field: 'productNumber',
-    colProps: { span: 4},
+    colProps: { xs: 24, sm: 12, lg: 8 },
     component: 'Input',
     componentProps: {
       'data-field': 'productNumber',
@@ -190,7 +189,7 @@ export const formSchema: FormSchema[] = [
   {
     label: '牌号',
     field: 'brand',
-    colProps: { span: 5},
+    colProps: { xs: 24, sm: 12, lg: 8 },
     component: 'Input',
     dynamicDisabled: false,
     show: true,
@@ -202,7 +201,7 @@ export const formSchema: FormSchema[] = [
     label: '重量',
     field: 'weight',
     component: 'InputNumber',
-    colProps: { span: 4 },
+    colProps: { xs: 24, sm: 12, lg: 8 },
     dynamicDisabled: true,
     show: true,
     dynamicRules: () => {
@@ -213,7 +212,7 @@ export const formSchema: FormSchema[] = [
     label: '规格型号',
     field: 'modelNumber',
     component: 'Input',
-    colProps: { span: 4},
+    colProps: { xs: 24, sm: 12, lg: 8 },
     dynamicDisabled: true,
     show: true,
     dynamicRules: () => {
@@ -224,7 +223,7 @@ export const formSchema: FormSchema[] = [
     label: '入库时间',
     field: 'inStockTime',
     component: 'DatePicker',
-    colProps: { span: 5},
+    colProps: { xs: 24, sm: 12, lg: 8 },
     defaultValue: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
     componentProps: {
       showTime: true,
@@ -239,7 +238,7 @@ export const formSchema: FormSchema[] = [
     label: '第一道工序',
     field: 'firstOperation',
     component: 'RadioButtonGroup',
-    colProps: { span: 4},
+    colProps: { xs: 24, sm: 12, lg: 8 },
     componentProps: {
       options: [
         {
@@ -268,7 +267,7 @@ export const formSchema: FormSchema[] = [
     label: '物料名称',
     field: 'materialName',
     component: 'Input',
-    colProps: { span: 5 },
+    colProps: { xs: 24, sm: 12, lg: 8 },
     dynamicDisabled: true,
     show: true,
     dynamicRules: () => {
@@ -414,6 +413,7 @@ export const formSchema: FormSchema[] = [
     label: '收料员',
     field: 'operatorNumber',
     component: 'Input',
+    colProps: { xs: 24, sm: 12, lg: 8 },
     defaultValue: useUserStore().getUserInfo.username,
     dynamicDisabled: true,
     show: true,
